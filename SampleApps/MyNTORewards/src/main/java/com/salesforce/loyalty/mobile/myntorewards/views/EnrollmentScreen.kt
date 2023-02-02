@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,9 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Enrollment Screen UI
 @Composable
@@ -52,10 +55,43 @@ fun EnrollmentUI(openPopup: (popupStatus: String) -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                OnboardingForm()
+                var firstNameText by remember { mutableStateOf(TextFieldValue("")) }
+                var lastNameText by remember { mutableStateOf(TextFieldValue("")) }
+                var mobileNumberText by remember { mutableStateOf(TextFieldValue("")) }
+                var emailAddressText by remember { mutableStateOf(TextFieldValue("")) }
+                var passwordText by remember { mutableStateOf(TextFieldValue("")) }
+                var confirmPasswordText by remember { mutableStateOf(TextFieldValue("")) }
+
+                OutlineFieldText(firstNameText, stringResource(id = R.string.onboard_form_first_name)) {
+                    firstNameText = it
+                }
+                OutlineFieldText(lastNameText, stringResource(id = R.string.onboard_form_last_name)) {
+                    lastNameText = it
+                }
+                OutlineFieldText(mobileNumberText, stringResource(id = R.string.onboard_form_mobile_number)) {
+                    mobileNumberText = it
+                }
+                OutlineFieldText(emailAddressText, stringResource(id = R.string.onboard_form_email_address)) {
+                    emailAddressText = it
+                }
+                OutlineFieldText(passwordText, stringResource(id = R.string.form_password)) {
+                    passwordText = it
+                }
+                OutlineFieldText(confirmPasswordText, stringResource(id = R.string.onboard_form_confirm_password)) {
+                    confirmPasswordText = it
+                }
 
                 //calling checkBox UI
                 SimpleCheckboxComponent()
+
+                val model: OnboardingScreenViewModel = viewModel()
+               val enrollmentStatusLiveData by model.enrollmentStatusLiveData.observeAsState("Enrollment Flow")
+/*
+                if(enrollmentStatusLiveData=="Enrollment Success")
+                {
+                    Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG).show()
+
+                }*/
 
                 //join button
                 Text(
@@ -68,7 +104,10 @@ fun EnrollmentUI(openPopup: (popupStatus: String) -> Unit) {
                     modifier = Modifier
                         .width(327.dp)
                         .background(VibrantPurple40, RoundedCornerShape(100.dp))
-                        .padding(top = 10.dp, bottom = 10.dp)
+                        .padding(top = 10.dp, bottom = 10.dp).clickable {
+                            model.invokeEnrollmentApi(firstNameText.text, lastNameText.text, mobileNumberText.text, emailAddressText.text, passwordText.text, confirmPasswordText.text)
+                            openPopup("None")
+                        }
                 )
 
                 //Text Already a member Login

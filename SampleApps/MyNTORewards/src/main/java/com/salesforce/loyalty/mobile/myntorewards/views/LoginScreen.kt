@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,9 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import java.time.Duration
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 @Composable
@@ -74,6 +78,14 @@ fun LoginUI(openPopup: (popupStatus: String) -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
+
+                val model: OnboardingScreenViewModel = viewModel()
+                val loginStatus by model.loginStatusLiveData.observeAsState()
+             /*   if(loginStatus=="Login Success")
+                {
+                   Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
+                }*/
+
                 Text(
                     text = stringResource(id = R.string.login_text_header),
                     fontFamily = font_sf_pro,
@@ -85,8 +97,11 @@ fun LoginUI(openPopup: (popupStatus: String) -> Unit) {
                         .width(327.dp)
                         .background(VibrantPurple40, RoundedCornerShape(100.dp))
                         .padding(top = 10.dp, bottom = 10.dp)
+                        .clickable {
+                            model.invokeTokenGenerationApi(emailAddressPhoneNumberText.text, passwordtext.text)
+                            openPopup("None")
+                        }
                 )
-
                 //Link to open Join UI if user is not onboarded
 
                 Text(
