@@ -29,6 +29,6 @@ val Typography = Typography(
     */
 )
 
-val loyoaltyApp = FontFamily(
-    Font(R.font.sfpro)
+val font_sf_pro = FontFamily(
+    Font(R.font.sf_pro)
 )
