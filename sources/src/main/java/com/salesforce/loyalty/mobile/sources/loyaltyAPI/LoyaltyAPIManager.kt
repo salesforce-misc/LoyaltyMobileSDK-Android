@@ -27,7 +27,14 @@ object LoyaltyAPIManager {
         lastName: String,
         email: String,
         phone: String,
-        emailNotification: Boolean
+        emailNotification: Boolean,
+        memberStatus: MemberStatus,
+        createTransactionJournals: Boolean,
+        transactionalJournalStatementFrequency: TransactionalJournalStatementFrequency,
+        transactionalJournalStatementMethod: TransactionalJournalStatementMethod,
+        enrollmentChannel: EnrollmentChannel,
+        canReceivePromotions: Boolean,
+        canReceivePartnerPromotions: Boolean
     ): Result<EnrollmentResponse> {
         Log.d(TAG, "postEnrollment() $firstName $lastName $email $phone $emailNotification")
         val associatedContactDetails = AssociatedContactDetails(
@@ -41,13 +48,13 @@ object LoyaltyAPIManager {
             enrollmentDate = DateUtils.getCurrentDateInYYYYMMDDTHHMMSS(),
             membershipNumber = LoyaltyUtils.generateRandomString(),
             associatedContactDetails = associatedContactDetails,
-            memberStatus = "Active",
-            createTransactionJournals = true,
-            transactionJournalStatementFrequency = "Monthly",
-            transactionJournalStatementMethod = "Mail",
-            enrollmentChannel = "Email",
-            canReceivePromotions = true,
-            canReceivePartnerPromotions = true,
+            memberStatus = memberStatus.status,
+            createTransactionJournals = createTransactionJournals,
+            transactionJournalStatementFrequency = transactionalJournalStatementFrequency.frequency,
+            transactionJournalStatementMethod = transactionalJournalStatementMethod.method,
+            enrollmentChannel = enrollmentChannel.channel,
+            canReceivePromotions = canReceivePromotions,
+            canReceivePartnerPromotions = canReceivePartnerPromotions,
             membershipEndDate = null,
             AdditionalMemberFieldValues(MemberAttributes(emailNotifications = emailNotification))
         )
