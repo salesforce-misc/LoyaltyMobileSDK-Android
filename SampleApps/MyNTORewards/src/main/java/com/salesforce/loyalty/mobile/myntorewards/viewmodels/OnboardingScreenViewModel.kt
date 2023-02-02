@@ -29,7 +29,7 @@ private val enrollmentStatus = MutableLiveData<String>()
 //invoke token API
     fun invokeTokenGenerationApi(emailAddressText:String, passwordText:String) {
 
-    Log.d("Akash","email: "+ emailAddressText+ "password: "+passwordText )
+    Log.d("OnboardingScreenViewModel","email: "+ emailAddressText+ "password: "+passwordText )
         viewModelScope.launch {
             var accessTokenResponse: String? = null
             ForceAuthManager.getAccessToken().onSuccess {
@@ -37,12 +37,12 @@ private val enrollmentStatus = MutableLiveData<String>()
 
             }
                 .onFailure {
-                    Log.d("Akash", "Access token request failed: ${it.message}")
+                    Log.d("OnboardingScreenViewModel", "Access token request failed: ${it.message}")
                     loginStatus.value= "Login Failure"
                 }
             if (accessTokenResponse != null) {
                 loginStatus.value= "Login Success"
-                Log.d("Akash", "Access token Success: $accessTokenResponse")
+                Log.d("OnboardingScreenViewModel", "Access token Success: $accessTokenResponse")
             }
         }
     }
@@ -51,7 +51,7 @@ private val enrollmentStatus = MutableLiveData<String>()
 //invoke enrollment API
      fun invokeEnrollmentApi(firstNameText:String, lastNameText:String, mobileNumberText:String, emailAddressText:String, passwordText:String, confirmPasswordText:String) {
 
-    Log.d("Akash","name is"+ firstNameText)
+    Log.d("OnboardingScreenViewModel","name is"+ firstNameText)
     viewModelScope.launch {
             var enrollmentResponse: EnrollmentResponse? = null
             LoyaltyAPIManager.postEnrollment(
@@ -65,11 +65,11 @@ private val enrollmentStatus = MutableLiveData<String>()
             }
                 .onFailure {
                     enrollmentStatus.value= "Enrollment Failure"
-                    Log.d("Akash", "Enrollment request failed: ${it.message}")
+                    Log.d("OnboardingScreenViewModel", "Enrollment request failed: ${it.message}")
                 }
             if (enrollmentResponse != null) {
                 enrollmentStatus.value= "Enrollment Success"
-                Log.d("Akash", "Enrollment request Success: $enrollmentResponse")
+                Log.d("OnboardingScreenViewModel", "Enrollment request Success: $enrollmentResponse")
             }
         }
     }
