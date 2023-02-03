@@ -20,6 +20,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
@@ -28,7 +29,7 @@ import java.time.Duration
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 @Composable
-fun LoginUI(openPopup: (popupStatus: String) -> Unit) {
+fun LoginUI(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
     val cornerSize = 16.dp
     Box(
         Modifier
@@ -100,6 +101,7 @@ fun LoginUI(openPopup: (popupStatus: String) -> Unit) {
                         .clickable {
                             model.invokeTokenGenerationApi(emailAddressPhoneNumberText.text, passwordtext.text)
                             openPopup("None")
+                            navController.navigate(Screen.HomeScreen.route)
                         }
                 )
                 //Link to open Join UI if user is not onboarded

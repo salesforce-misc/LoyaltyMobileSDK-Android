@@ -1,15 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
-import android.os.Bundle
-import android.view.WindowManager
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.*
-
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import com.google.accompanist.pager.rememberPagerState
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,40 +10,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowCompat
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.imageID
-import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.screenText
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
 
-
-//Main Activity Application Entry Point
-class MainActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
-        setContent {
-            OnboardingScreenBox()
-        }
-    }
-}
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun OnboardingScreenBox() {
+fun OnboardingScreenBox(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize())
     {
 
@@ -58,7 +33,7 @@ fun OnboardingScreenBox() {
         val pagerState = rememberPagerState()
         HorizontalPager(count = 3, state = pagerState) { page ->
             Image(
-                painter = painterResource(id = imageID(page)),
+                painter = painterResource(id = ViewPagerSupport.imageID(page)),
                 contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillWidth,
@@ -109,7 +84,7 @@ fun OnboardingScreenBox() {
                 val stringText = remember { mutableStateOf("") }
                 LaunchedEffect(pagerState) {
                     snapshotFlow { pagerState.currentPage }.collect { page ->
-                        stringText.value = screenText(page)
+                        stringText.value = ViewPagerSupport.screenText(page)
                     }
                 }
                 Text(
@@ -126,7 +101,7 @@ fun OnboardingScreenBox() {
                 verticalArrangement = Arrangement.Bottom,
             )
             {
-                JoinLoginButtonBox()
+                JoinLoginButtonBox(navController)
             }
 
             //Only for spacing
@@ -139,10 +114,4 @@ fun OnboardingScreenBox() {
             {}
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    OnboardingScreenBox()
 }

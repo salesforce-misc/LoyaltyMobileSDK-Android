@@ -81,4 +81,9 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-pager:0.29.0-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.29.0-alpha"
+
+    //navigation
+    def nav_version = "2.5.3"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
 }

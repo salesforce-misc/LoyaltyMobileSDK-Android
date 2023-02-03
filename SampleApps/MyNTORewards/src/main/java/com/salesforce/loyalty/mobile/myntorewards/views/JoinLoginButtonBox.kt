@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -28,7 +29,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 // Combine UI of Onboarding screen having buttons to open join Popup and Login Popup
 @Composable
-fun JoinLoginButtonBox() {
+fun JoinLoginButtonBox(navController: NavController) {
     var popupControlLogin by remember { mutableStateOf(false) }
     var popupControlJoin by remember { mutableStateOf(false) }
     Column(
@@ -89,7 +90,7 @@ fun JoinLoginButtonBox() {
             }, modifier = Modifier
                 .fillMaxWidth(1f)
                 .clickable {
-                    popupControlLogin = true
+                   popupControlLogin = true
                 },
             textAlign = TextAlign.Center
 
@@ -134,8 +135,9 @@ fun JoinLoginButtonBox() {
                 onDismissRequest = { popupControlLogin = false },
                 properties = PopupProperties(focusable = true)
             ) {
+
                 //Launch Join UI or close Login UI logic
-                LoginUI {
+              LoginUI(navController) {
                     when (it) {
                         "Join" -> {
                             popupControlLogin = false
