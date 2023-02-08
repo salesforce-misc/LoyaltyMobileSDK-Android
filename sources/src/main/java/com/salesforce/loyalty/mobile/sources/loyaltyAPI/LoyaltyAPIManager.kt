@@ -45,7 +45,7 @@ object LoyaltyAPIManager {
             AdditionalContactFieldValues(additionalContactAttributes)
         )
         val body = EnrollmentRequest(
-            enrollmentDate = DateUtils.getCurrentDateInYYYYMMDDTHHMMSS(),
+            enrollmentDate = DateUtils.getCurrentDateTime(DateUtils.DATE_FORMAT_YYYYMMDDTHHMMSS),
             membershipNumber = LoyaltyUtils.generateRandomString(),
             associatedContactDetails = associatedContactDetails,
             memberStatus = memberStatus.status,
