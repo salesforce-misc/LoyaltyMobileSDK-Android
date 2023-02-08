@@ -74,4 +74,16 @@ object LoyaltyAPIManager {
             memberId
         )
     }
+
+    suspend fun getMemberBenefits(
+        memberId: String,
+        membershipNumber: String
+    ): Result<MemberBenefitsResponse> {
+        Log.d(TAG, "getMemberBenefits() $memberId")
+
+        return LoyaltyClient.loyaltyApi.getMemberBenefits(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.MemberBenefits(memberId)),
+            membershipNumber
+        )
+    }
 }
