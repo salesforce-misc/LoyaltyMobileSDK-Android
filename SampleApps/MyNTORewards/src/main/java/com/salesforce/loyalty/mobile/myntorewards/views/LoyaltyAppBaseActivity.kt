@@ -19,12 +19,12 @@ class MainActivity : ComponentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         setContent {
-            Navigation()
+            HomeTabScreen()
         }
     }
 }
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    Navigation()
+    HomeTabScreen()
 }
