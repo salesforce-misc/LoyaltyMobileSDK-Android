@@ -26,7 +26,7 @@ object LoyaltyAPIManager {
         firstName: String,
         lastName: String,
         email: String,
-        phone: String,
+        additionalContactAttributes: Map<String, Any?>?,
         emailNotification: Boolean,
         memberStatus: MemberStatus,
         createTransactionJournals: Boolean,
@@ -36,13 +36,13 @@ object LoyaltyAPIManager {
         canReceivePromotions: Boolean,
         canReceivePartnerPromotions: Boolean
     ): Result<EnrollmentResponse> {
-        Log.d(TAG, "postEnrollment() $firstName $lastName $email $phone $emailNotification")
+        Log.d(TAG, "postEnrollment() $firstName $lastName $email $emailNotification")
         val associatedContactDetails = AssociatedContactDetails(
             firstName = firstName,
             lastName = lastName,
             email = email,
             allowDuplicateRecords = false,
-            AdditionalContactFieldValues(Attributes(phone = phone))
+            AdditionalContactFieldValues(additionalContactAttributes)
         )
         val body = EnrollmentRequest(
             enrollmentDate = DateUtils.getCurrentDateInYYYYMMDDTHHMMSS(),
@@ -56,9 +56,10 @@ object LoyaltyAPIManager {
             canReceivePromotions = canReceivePromotions,
             canReceivePartnerPromotions = canReceivePartnerPromotions,
             membershipEndDate = null,
-            AdditionalMemberFieldValues(MemberAttributes(emailNotifications = emailNotification))
+            AdditionalMemberFieldValues()
         )
         return LoyaltyClient.loyaltyApi.postEnrollment(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.IndividualEnrollment(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
             body
         )
     }
