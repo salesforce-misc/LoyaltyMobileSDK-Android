@@ -63,4 +63,15 @@ object LoyaltyAPIManager {
             body
         )
     }
+
+    suspend fun getMemberProfile(
+        memberId: String
+    ): Result<MemberProfileResponse> {
+        Log.d(TAG, "getMemberProfile() $memberId")
+
+        return LoyaltyClient.loyaltyApi.getMemberProfile(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.MemberProfile(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
+            memberId
+        )
+    }
 }
