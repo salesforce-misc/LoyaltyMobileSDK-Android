@@ -90,7 +90,7 @@ fun JoinLoginButtonBox(navController: NavController) {
             }, modifier = Modifier
                 .fillMaxWidth(1f)
                 .clickable {
-                   popupControlLogin = true
+                    popupControlLogin = true
                 },
             textAlign = TextAlign.Center
 
@@ -98,14 +98,15 @@ fun JoinLoginButtonBox(navController: NavController) {
 
         //Popup Control Join
         if (popupControlJoin) {
-            Popup(alignment = Alignment.Center,
+            Popup(
+                alignment = Alignment.Center,
                 offset = IntOffset(0, 700),
                 onDismissRequest = { popupControlJoin = false },
                 properties = PopupProperties(focusable = true)
             ) {
 
                 //Launch Login UI or close Join UI logic
-                EnrollmentUI {
+                EnrollmentUI(navController) {
                     when (it) {
                         "Join" -> {
                             popupControlLogin = false
@@ -130,14 +131,15 @@ fun JoinLoginButtonBox(navController: NavController) {
         }
         //Popup Control Login
         if (popupControlLogin) {
-            Popup(alignment = Alignment.Center,
+            Popup(
+                alignment = Alignment.Center,
                 offset = IntOffset(0, 700),
                 onDismissRequest = { popupControlLogin = false },
                 properties = PopupProperties(focusable = true)
             ) {
 
                 //Launch Join UI or close Login UI logic
-              LoginUI(navController) {
+                LoginUI(navController) {
                     when (it) {
                         "Join" -> {
                             popupControlLogin = false
