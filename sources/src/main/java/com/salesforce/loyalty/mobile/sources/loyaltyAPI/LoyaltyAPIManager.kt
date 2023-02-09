@@ -64,6 +64,12 @@ object LoyaltyAPIManager {
         )
     }
 
+    /**
+     * API to retrieve Member Profile details
+     *
+     * @param memberId Loyalty Program Member Id
+     * @return MemberProfileResponse
+     */
     suspend fun getMemberProfile(
         memberId: String
     ): Result<MemberProfileResponse> {
@@ -75,6 +81,13 @@ object LoyaltyAPIManager {
         )
     }
 
+    /**
+     * API to retrieve Member Benefits detail
+     *
+     * @param memberId Loyalty Program Member Id
+     * @param membershipNumber Unique membership number of the user
+     * @return MemberBenefitsResponse
+     */
     suspend fun getMemberBenefits(
         memberId: String,
         membershipNumber: String

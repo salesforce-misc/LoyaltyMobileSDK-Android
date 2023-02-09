@@ -2,6 +2,9 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * MemberBenefitsResponse data class holds response parameters of Member Benefits API.
+ */
 data class MemberBenefitsResponse(
     @SerializedName("memberBenefits")
     val memberBenefits: List<MemberBenefit>

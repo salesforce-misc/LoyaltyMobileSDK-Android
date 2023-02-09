@@ -2,6 +2,9 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * MemberProfileResponse data class holds response parameters of Member Profile API.
+ */
 data class MemberProfileResponse(
     @SerializedName("additionalLoyaltyProgramMemberFields")
     val additionalLoyaltyProgramMemberFields: Map<String, Any?>? = mutableMapOf(),
