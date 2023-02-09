@@ -1,0 +1,117 @@
+package com.salesforce.loyalty.mobile.myntorewards.views
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
+import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
+
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun OnboardingScreenBox(navController: NavController) {
+    Box(modifier = Modifier.fillMaxSize())
+    {
+
+        //setting up swipe pager and images accordingly
+        val pagerState = rememberPagerState()
+        HorizontalPager(count = 3, state = pagerState) { page ->
+            Image(
+                painter = painterResource(id = ViewPagerSupport.imageID(page)),
+                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillWidth,
+            )
+        }
+        Image(
+            painter = painterResource(id = R.drawable.screen_bottom_black_fading),
+            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .align(alignment = Alignment.BottomEnd),
+            verticalArrangement = Arrangement.Bottom,
+
+            )
+        {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.5f)
+                    .padding(start = 24.dp),
+                verticalArrangement = Arrangement.Bottom,
+            )
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.application_logo),
+                    contentDescription = stringResource(id = R.string.cd_app_logo)
+                )
+
+                //Swipe indicator
+                HorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    activeColor = Color.White,
+                    inactiveColor = Color.Gray,
+                    modifier = Modifier
+                        .padding(16.dp)
+                )
+
+
+                //Updating the screen text dynamically as page swipe
+                val stringText = remember { mutableStateOf("") }
+                LaunchedEffect(pagerState) {
+                    snapshotFlow { pagerState.currentPage }.collect { page ->
+                        stringText.value = ViewPagerSupport.screenText(page)
+                    }
+                }
+                Text(
+                    text = stringText.value,
+                    fontFamily = font_sf_pro,
+                    color = Color.White,
+                    fontSize = 34.sp
+                )
+
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Bottom,
+            )
+            {
+                JoinLoginButtonBox(navController)
+            }
+
+            //Only for spacing
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.3f),
+                verticalArrangement = Arrangement.Bottom,
+            )
+            {}
+        }
+    }
+}

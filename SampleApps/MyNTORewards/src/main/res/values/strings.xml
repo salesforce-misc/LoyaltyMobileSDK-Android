@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">LoyaltyMobileSDK-Sample</string>
+    <string name="cd_onboard_screen_onboard_image">"onboarding screen Image"</string>
+    <string name="cd_onboard_screen_bottom_fade">"onboarding screen bottom fading"</string>
+    <string name="cd_close_popup">"Close Popup"</string>
+    <string name="cd_app_logo">"Application Logo"</string>
+
+    <string name="onboard_screen_text_1">"Get personalized \noffers"</string>
+    <string name="onboard_screen_text_2">"Redeem your points for exciting vouchers"</string>
+    <string name="onboard_screen_text_3"> "Accumulate points and unlock new \n rewards"</string>
+    <string name="onboard_form_first_name"> "First name"</string>
+    <string name="onboard_form_last_name"> "Last name"</string>
+    <string name="onboard_form_mobile_number"> "Mobile number"</string>
+    <string name="onboard_form_email_address"> "Email Address"</string>
+    <string name="form_password"> "Password"</string>
+    <string name="onboard_form_confirm_password">"Confirm Password"</string>
+    <string name="existing_member_text">"Already a Member?"</string>
+    <string name="login_text">" Log In"</string>
+    <string name="login_text_header">"Log In"</string>
+    <string name="join_text">"Join"</string>
+    <string name="onboard_form_checkbox_text_mailing_list"> "Add me to the loyalty program’s mailing list"</string>
+    <string name="onboard_form_checkbox_text_TnC"> " terms and conditions"</string>
+    <string name="onboard_form_checkbox_text_i_agree"> "I agree to the "</string>
+    <string name="join_now_text">"Join Now"</string>
+    <string name="not_a_member_text">"Not a Member?"</string>
+    <string name="forget_your_password_text">"Forget Your Password?"</string>
+    <string name="email_address_phone_number_text">"Email address or Phone number"</string>
 </resources>
