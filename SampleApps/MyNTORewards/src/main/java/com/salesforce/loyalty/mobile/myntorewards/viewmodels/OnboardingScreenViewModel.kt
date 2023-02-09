@@ -39,7 +39,7 @@ class OnboardingScreenViewModel : ViewModel() {
 
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
-    fun invokeLoginApi(emailAddressText: String, passwordText: String) {
+    fun loginUser(emailAddressText: String, passwordText: String) {
 
         Log.d(
             "OnboardingScreenViewModel",
@@ -69,7 +69,7 @@ class OnboardingScreenViewModel : ViewModel() {
     * Status is being updated in the form of Live data which is being observed inside EnrollementUI
     * Based om status change State change will trigger and corresponding flow will be executed
     * */
-    fun invokeEnrollmentApi(
+    fun enrollUser(
         firstNameText: String,
         lastNameText: String,
         mobileNumberText: String,

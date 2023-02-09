@@ -111,7 +111,7 @@ fun LoginUI(navController: NavController, openPopup: (popupStatus: String) -> Un
                         .padding(top = 10.dp, bottom = 10.dp)
                         .clickable {
                             //invoking the login API
-                            model.invokeLoginApi(
+                            model.loginUser(
                                 emailAddressPhoneNumberText.text,
                                 passwordtext.text
                             )

@@ -137,7 +137,7 @@ fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: String) 
                         .padding(top = 10.dp, bottom = 10.dp)
                         .clickable {
                             //invoking the enrollment API
-                            model.invokeEnrollmentApi(
+                            model.enrollUser(
                                 firstNameText.text,
                                 lastNameText.text,
                                 mobileNumberText.text,
