@@ -22,3 +22,51 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+@Composable
+fun MyProfileScreen() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .background(Color.White),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+
+    {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.13f)
+                .fillMaxWidth()
+        ) {
+            ScreenTabHeader()
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.13f)
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center)
+        ) {
+            UserInfoRow()
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.4f)
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center)
+                .background(TextPurpoleLightBG)
+        ) {
+            ProfileCard()
+        }
+        //Transaction
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .background(TextPurpoleLightBG)
+                .wrapContentSize(Alignment.Center)
+        ) {
+            TransactionCard()
+        }
+    }
+}
