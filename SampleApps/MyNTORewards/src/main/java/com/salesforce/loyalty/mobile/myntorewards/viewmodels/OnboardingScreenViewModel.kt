@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.EnrollmentResponse
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.launch
 
 //view model
@@ -84,9 +84,16 @@ class OnboardingScreenViewModel : ViewModel() {
                 firstNameText,
                 lastNameText,
                 emailAddressText,
-                mobileNumberText,
+                null,
+                true,
+                MemberStatus.ACTIVE,
+                true,
+                TransactionalJournalStatementFrequency.MONTHLY,
+                TransactionalJournalStatementMethod.EMAIL,
+                EnrollmentChannel.EMAIL,
+                true,
                 true
-            ).onSuccess {
+                ).onSuccess {
                 enrollmentResponse = it
             }
                 .onFailure {

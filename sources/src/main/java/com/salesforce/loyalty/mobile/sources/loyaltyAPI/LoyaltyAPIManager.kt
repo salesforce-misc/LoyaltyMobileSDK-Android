@@ -26,32 +26,40 @@ object LoyaltyAPIManager {
         firstName: String,
         lastName: String,
         email: String,
-        phone: String,
-        emailNotification: Boolean
+        additionalContactAttributes: Map<String, Any?>?,
+        emailNotification: Boolean,
+        memberStatus: MemberStatus,
+        createTransactionJournals: Boolean,
+        transactionalJournalStatementFrequency: TransactionalJournalStatementFrequency,
+        transactionalJournalStatementMethod: TransactionalJournalStatementMethod,
+        enrollmentChannel: EnrollmentChannel,
+        canReceivePromotions: Boolean,
+        canReceivePartnerPromotions: Boolean
     ): Result<EnrollmentResponse> {
-        Log.d(TAG, "postEnrollment() $firstName $lastName $email $phone $emailNotification")
+        Log.d(TAG, "postEnrollment() $firstName $lastName $email $emailNotification")
         val associatedContactDetails = AssociatedContactDetails(
             firstName = firstName,
             lastName = lastName,
             email = email,
             allowDuplicateRecords = false,
-            AdditionalContactFieldValues(Attributes(phone = phone))
+            AdditionalContactFieldValues(additionalContactAttributes)
         )
         val body = EnrollmentRequest(
-            enrollmentDate = DateUtils.getCurrentDateInYYYYMMDDTHHMMSS(),
+            enrollmentDate = DateUtils.getCurrentDateTime(DateUtils.DATE_FORMAT_YYYYMMDDTHHMMSS),
             membershipNumber = LoyaltyUtils.generateRandomString(),
             associatedContactDetails = associatedContactDetails,
-            memberStatus = "Active",
-            createTransactionJournals = true,
-            transactionJournalStatementFrequency = "Monthly",
-            transactionJournalStatementMethod = "Mail",
-            enrollmentChannel = "Email",
-            canReceivePromotions = true,
-            canReceivePartnerPromotions = true,
+            memberStatus = memberStatus.status,
+            createTransactionJournals = createTransactionJournals,
+            transactionJournalStatementFrequency = transactionalJournalStatementFrequency.frequency,
+            transactionJournalStatementMethod = transactionalJournalStatementMethod.method,
+            enrollmentChannel = enrollmentChannel.channel,
+            canReceivePromotions = canReceivePromotions,
+            canReceivePartnerPromotions = canReceivePartnerPromotions,
             membershipEndDate = null,
-            AdditionalMemberFieldValues(MemberAttributes(emailNotifications = emailNotification))
+            AdditionalMemberFieldValues()
         )
         return LoyaltyClient.loyaltyApi.postEnrollment(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.IndividualEnrollment(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
             body
         )
     }
