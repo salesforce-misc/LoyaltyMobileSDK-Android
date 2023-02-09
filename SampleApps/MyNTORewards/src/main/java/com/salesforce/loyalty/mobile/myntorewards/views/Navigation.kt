@@ -35,43 +35,43 @@ fun Navigation(navController: NavHostController)
     NavHost(navController=navController, startDestination= Screen.OnboardingScreen.route)
     {
         composable(route = Screen.OnboardingScreen.route){
-            MainScreen(navController)
+            OnboardingScreenBox(navController)
         }
         composable(route = Screen.HomeScreen.route){
             HomeTabScreen()
-           // HomeScreen(navController)
         }
-        composable(route = Screen.LoginScreen.route){
-            LoginScreen(navController)
-        }
+    }
+}
+
+@Composable
+fun TabNavigation(navController: NavHostController)
+{
+    NavHost(navController=navController, startDestination= BottomNavTabs.Home.route)
+    {
         composable(route = BottomNavTabs.Home.route){
+
             HomeScreen()
         }
         composable(route = BottomNavTabs.MyOffers.route){
             MyOfferScreen()
         }
         composable(route = BottomNavTabs.MyProfile.route){
-           MyProfileScreen()
+            MyProfileScreen()
         }
         composable(route = BottomNavTabs.Redeem.route){
-            MyOfferScreen()
+            RedeemScreen()
         }
         composable(route = BottomNavTabs.More.route){
-           RedeemScreen()
+            MoreScreen()
         }
     }
 }
-
 @Composable
-fun MainScreen(navController: NavController){
-   // OnboardingScreenBox(navController)
-  // HomeScreen(navController)
+fun MainScreenStart(){
+    val navController = rememberNavController()
+    Navigation(navController)
 }
 
-@Composable
-fun LoginScreen(navController: NavController){
-        //LoginUI(navController)
-}
 
 @Composable
 fun HomeTabScreen(){
@@ -86,9 +86,8 @@ fun HomeTabScreen(){
                 .padding(padding)
                 .background(TextPurpoleLightBG)
         ){
-            Navigation(navController)
+            TabNavigation(navController)
         }
-
     }
 }
 
@@ -112,9 +111,7 @@ fun BottomNavigationUI(navController: NavController) {
         items.forEach { item ->
             BottomNavigationItem(
                 modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
-                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title, modifier = Modifier.size(24.dp, 24.dp)) },
-                label = { Text(text = item.title,
-                    fontSize = 12.sp)},
+                icon = { Icon(painterResource(id = item.icon), contentDescription = item.title, modifier = Modifier.size(76.dp, 49.dp)) },
                 selectedContentColor = VibrantPurple40,
                 unselectedContentColor =TextDarkGray,
                 alwaysShowLabel = true,

@@ -54,24 +54,6 @@ fun MyOfferScreen() {
     }
 }
 
-@Composable
-fun MyProfileScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(TextPurpoleLightBG)
-            .wrapContentSize(Alignment.Center)
-    ) {
-        Text(
-            text = "Add Profile Screen",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
-    }
-}
 
 
 @Composable

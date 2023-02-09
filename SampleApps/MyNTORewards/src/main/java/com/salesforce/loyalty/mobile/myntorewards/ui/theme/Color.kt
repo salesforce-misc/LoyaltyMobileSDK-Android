@@ -13,3 +13,6 @@ val VeryLightPurple = Color(0xFFF6F2FB)
 val TextGray = Color(0xFF6E6E6E)
 val TextDarkGray = Color(0xFF747474)
 val TextPurpoleLightBG = Color(0xFFF9F0FF)
+val MembershipTierBG = Color(0xFFFCC003)
+val TextGreen = Color(0xFF2E844A
+)
