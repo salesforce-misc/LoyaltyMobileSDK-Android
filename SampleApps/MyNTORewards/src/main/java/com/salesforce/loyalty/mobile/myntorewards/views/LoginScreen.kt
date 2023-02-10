@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -80,12 +82,22 @@ fun LoginUI(navController: NavController, openPopup: (popupStatus: String) -> Un
                 )
 
 
-                val model: OnboardingScreenViewModel = viewModel()
-                val loginStatus by model.loginStatusLiveData.observeAsState()
-             /*   if(loginStatus=="Login Success")
-                {
-                   Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
-                }*/
+                val model: OnboardingScreenViewModel =
+                    viewModel()  //fetching reference of viewmodel
+                val loginStatus by model.loginStatusLiveData.observeAsState() // collecting livedata as state
+
+                //loginStatus state being change to Success after token fetch
+                if (loginStatus == "Login Success") {
+                    Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
+                    navController.navigate(Screen.HomeScreen.route) //navigate to home screen
+                    openPopup("None")  // closing popup
+                    model.resetLoginStatusDefault()
+                }
+                //loginStatus state being change to Failed after token fetch
+                if (loginStatus == "Login Failure") {
+                    Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
+                    model.resetLoginStatusDefault()//reset login status to default
+                }
 
                 Text(
                     text = stringResource(id = R.string.login_text_header),
@@ -99,7 +111,7 @@ fun LoginUI(navController: NavController, openPopup: (popupStatus: String) -> Un
                         .background(VibrantPurple40, RoundedCornerShape(100.dp))
                         .padding(top = 10.dp, bottom = 10.dp)
                         .clickable {
-                            model.invokeTokenGenerationApi(emailAddressPhoneNumberText.text, passwordtext.text)
+                            model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
                             openPopup("None")
                             navController.navigate(Screen.HomeScreen.route)
                         }
