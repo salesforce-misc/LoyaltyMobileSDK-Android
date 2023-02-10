@@ -26,26 +26,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 fun TransactionCard()
 {
     Column() {
-        Row(horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth().padding(end = 16.dp, start = 16.dp, top = 16.dp)
-        ) {
-            Text(
-                text = "My Transactions",
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-            )
-            Text(
-                text = "View All",
-                fontWeight = FontWeight.Bold,
-                color = VibrantPurple40,
-                textAlign = TextAlign.Center,
-                fontSize = 13.sp,
-            )
-        }
+        TransactionViewHeader()
     }
     Column(modifier = Modifier
         .fillMaxWidth().fillMaxHeight().padding(16.dp)) {
@@ -55,6 +36,31 @@ fun TransactionCard()
     }
 }
 
+
+@Composable
+fun TransactionViewHeader()
+{
+    Row(horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth().padding(end = 16.dp, start = 16.dp, top = 16.dp)
+    ) {
+        Text(
+            text = "My Transactions",
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+        )
+        Text(
+            text = "View All",
+            fontWeight = FontWeight.Bold,
+            color = VibrantPurple40,
+            textAlign = TextAlign.Center,
+            fontSize = 13.sp,
+        )
+    }
+}
 
 @Composable
 fun ListItemTransaction()

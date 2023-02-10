@@ -54,9 +54,7 @@ fun PopupHeader(headingText: String, openPopup: (popupStatus: String) -> Unit) {
         )
     }
 
-
     Box(modifier = Modifier.fillMaxWidth()) {
         Divider(color = Color.LightGray, thickness = 1.dp)
-
     }
 }
