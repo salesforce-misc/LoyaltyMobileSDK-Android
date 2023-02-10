@@ -29,9 +29,8 @@ data class EnrollmentRequest(
     @SerializedName("membershipEndDate")
     val membershipEndDate: String?,
     @SerializedName("additionalMemberFieldValues")
-    val additionalMemberFieldValues: AdditionalMemberFieldValues,
-
-    )
+    val additionalMemberFieldValues: AdditionalMemberFieldValues
+)
 
 data class AssociatedContactDetails(
     @SerializedName("firstName")
@@ -48,20 +47,10 @@ data class AssociatedContactDetails(
 
 data class AdditionalContactFieldValues(
     @SerializedName("attributes")
-    val attributes: Attributes
-)
-
-data class Attributes(
-    @SerializedName("Phone")
-    val phone: String
+    val attributes: Map<String, Any?>? = mutableMapOf()
 )
 
 data class AdditionalMemberFieldValues(
     @SerializedName("attributes")
-    val attributes: MemberAttributes
-)
-
-data class MemberAttributes(
-    @SerializedName("Email_Notifications__c")
-    val emailNotifications: Boolean
+    val attributes: Map<String, Any?>? = mutableMapOf()
 )
