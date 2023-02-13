@@ -1,5 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +21,8 @@ fun ScreenTabHeader() {
         color = Color.Black,
         textAlign = TextAlign.Start,
         fontSize = 24.sp,
-        modifier = Modifier.padding(start = 16.dp, top = 50.dp)
+        modifier = Modifier
+            .padding(start = 16.dp)
+            .fillMaxWidth()
     )
 }

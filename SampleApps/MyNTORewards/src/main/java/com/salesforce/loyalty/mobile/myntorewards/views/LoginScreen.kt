@@ -32,123 +32,121 @@ import java.time.Duration
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 @Composable
 fun LoginUI(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
-    val cornerSize = 16.dp
-    Box(
-        Modifier
-            .fillMaxWidth()
+    Column(
+        modifier = Modifier
             .fillMaxHeight(0.5f)
-            .background(Color.White, RoundedCornerShape(cornerSize))
+            .background(Color.White, RoundedCornerShape(16.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-        Column {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(top = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                PopupHeader(headingText = stringResource(id = R.string.login_text))
-                {
-                    openPopup(it)
-                }
+        PopupHeader(headingText = stringResource(id = R.string.login_text))
+        {
+            openPopup(it)
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+        )
+        {
+            LoginForm(navController) {
+                openPopup(it)
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                var emailAddressPhoneNumberText by remember { mutableStateOf(TextFieldValue("")) }
-                var passwordtext by remember { mutableStateOf(TextFieldValue("")) }
-
-                OutlineFieldText(
-                    emailAddressPhoneNumberText,
-                    stringResource(id = R.string.email_address_phone_number_text)
-                ) {
-                    emailAddressPhoneNumberText = it
-                }
-                OutlineFieldText(passwordtext, stringResource(id = R.string.form_password)) {
-                    passwordtext = it
-                }
-
-                //Form Fields
-
-                Text(
-                    text = stringResource(id = R.string.forget_your_password_text),
-                    fontFamily = font_sf_pro,
-                    color = VibrantPurple40,
-                    fontSize = 14.sp,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-
-                val model: OnboardingScreenViewModel =
-                    viewModel()  //fetching reference of viewmodel
-                val loginStatus by model.loginStatusLiveData.observeAsState() // collecting livedata as state
-
-                //loginStatus state being change to Success after token fetch
-                if (loginStatus == "Login Success") {
-                    Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
-                    navController.navigate(Screen.HomeScreen.route) //navigate to home screen
-                    openPopup("None")  // closing popup
-                    model.resetLoginStatusDefault()
-                }
-                //loginStatus state being change to Failed after token fetch
-                if (loginStatus == "Login Failure") {
-                    Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
-                    model.resetLoginStatusDefault()//reset login status to default
-                }
-
-                Text(
-                    text = stringResource(id = R.string.login_text_header),
-                    fontFamily = font_sf_pro,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .width(327.dp)
-                        .background(VibrantPurple40, RoundedCornerShape(100.dp))
-                        .padding(top = 10.dp, bottom = 10.dp)
-                        .clickable {
-                            model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
-                            openPopup("None")
-                            navController.navigate(Screen.HomeScreen.route)
-                        }
-                )
-                //Link to open Join UI if user is not onboarded
-
-                Text(
-                    buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = Color.Black,
-                                fontFamily = font_sf_pro,
-                                fontSize = 16.sp
-                            )
-                        ) {
-                            append(stringResource(id = R.string.not_a_member_text))
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.Bold,
-                                color = VibrantPurple40,
-                                fontFamily = font_sf_pro,
-                                fontSize = 16.sp
-                            )
-                        ) {
-                            append(stringResource(id = R.string.join_now_text))
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                        .clickable {
-                            openPopup("Join")
-                        },
-                    textAlign = TextAlign.Center
-                )
-
+            LinkNewMemberJoin {
+                openPopup(it)
             }
         }
     }
+}
+
+@Composable
+fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
+    var emailAddressPhoneNumberText by remember { mutableStateOf(TextFieldValue("")) }
+    var passwordtext by remember { mutableStateOf(TextFieldValue("")) }
+
+    OutlineFieldText(
+        emailAddressPhoneNumberText,
+        stringResource(id = R.string.email_address_phone_number_text)
+    ) {
+        emailAddressPhoneNumberText = it
+    }
+    OutlineFieldText(passwordtext, stringResource(id = R.string.form_password)) {
+        passwordtext = it
+    }
+
+    //Form Fields
+
+    Text(
+        text = stringResource(id = R.string.forget_your_password_text),
+        fontFamily = font_sf_pro,
+        color = VibrantPurple40,
+        fontSize = 14.sp,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+
+    val model: OnboardingScreenViewModel = viewModel()  //fetching reference of viewmodel
+    val loginStatus by model.loginStatusLiveData.observeAsState() // collecting livedata as state
+
+    //loginStatus state being change to Success after token fetch
+    if (loginStatus == "Login Success") {
+        Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
+        navController.navigate(Screen.HomeScreen.route) //navigate to home screen
+        openPopup("None")  // closing popup
+        model.resetLoginStatusDefault()
+    }
+    //loginStatus state being change to Failed after token fetch
+    if (loginStatus == "Login Failure") {
+        Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
+        model.resetLoginStatusDefault()//reset login status to default
+    }
+
+    Text(
+        text = stringResource(id = R.string.login_text_header),
+        fontFamily = font_sf_pro,
+        color = Color.White,
+        textAlign = TextAlign.Center,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(VibrantPurple40, RoundedCornerShape(100.dp))
+            .padding(top = 10.dp, bottom = 10.dp)
+            .clickable {
+                model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
+                navController.navigate(Screen.HomeScreen.route)
+            }
+    )
+}
+
+@Composable
+fun LinkNewMemberJoin(openPopup: (popupStatus: String) -> Unit) {
+    Text(
+        buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(
+                    color = Color.Black,
+                    fontFamily = font_sf_pro,
+                    fontSize = 16.sp
+                )
+            ) {
+                append(stringResource(id = R.string.not_a_member_text))
+            }
+            withStyle(
+                style = SpanStyle(
+                    fontWeight = FontWeight.Bold,
+                    color = VibrantPurple40,
+                    fontFamily = font_sf_pro,
+                    fontSize = 16.sp
+                )
+            ) {
+                append(stringResource(id = R.string.join_now_text))
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .clickable {
+                openPopup("Join")
+            },
+        textAlign = TextAlign.Center
+    )
 }

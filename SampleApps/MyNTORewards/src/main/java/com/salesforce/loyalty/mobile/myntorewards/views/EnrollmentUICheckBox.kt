@@ -29,68 +29,74 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 //Check Box UI being used in Enrollment UI
 @Composable
 fun SimpleCheckboxComponent() {
-    val checkedStateTnC = remember { mutableStateOf(true) }
+    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        CheckBoxTnC()
+        CheckBoxMailingList()
+    }
+}
+
+@Composable
+fun CheckBoxMailingList() {
     val checkedStateMailing = remember { mutableStateOf(true) }
-    Column(
-        verticalArrangement = Arrangement.spacedBy(0.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = checkedStateTnC.value,
-                onCheckedChange = { checkedStateTnC.value = it },
-                colors = myCheckBoxColors()
-            )
-            Text(
-                buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            color = Color.Black,
-                            fontFamily = font_sf_pro,
-                            fontSize = 14.sp
-                        )
-                    ) {
-                        append(stringResource(id = R.string.onboard_form_checkbox_text_i_agree))
-                    }
-                    withStyle(
-                        style = SpanStyle(
-                            fontWeight = FontWeight.Bold,
-                            color = VibrantPurple40,
-                            fontFamily = font_sf_pro,
-                            fontSize = 14.sp
-                        )
-                    ) {
-                        append(stringResource(id = R.string.onboard_form_checkbox_text_TnC))
-                    }
-                }, modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .clickable {
-                    }
-            )
-        }
+        Checkbox(
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
+            checked = checkedStateMailing.value,
+            onCheckedChange = { checkedStateMailing.value = it },
+            colors = myCheckBoxColors()
+        )
+        Text(
+            text = stringResource(id = R.string.onboard_form_checkbox_text_mailing_list),
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 14.sp
+        )
+    }
+}
 
-                checked = checkedStateMailing.value,
-                onCheckedChange = { checkedStateMailing.value = it },
-                colors = myCheckBoxColors()
-            )
-            Text(
-                text = stringResource(id = R.string.onboard_form_checkbox_text_mailing_list),
-                fontFamily = font_sf_pro,
-                color = Color.Black,
-                fontSize = 14.sp
-            )
-        }
+@Composable
+fun CheckBoxTnC() {
+    val checkedStateTnC = remember { mutableStateOf(true) }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = checkedStateTnC.value,
+            onCheckedChange = { checkedStateTnC.value = it },
+            colors = myCheckBoxColors()
+        )
+        Text(
+            buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.Black,
+                        fontFamily = font_sf_pro,
+                        fontSize = 14.sp
+                    )
+                ) {
+                    append(stringResource(id = R.string.onboard_form_checkbox_text_i_agree))
+                }
+                withStyle(
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold,
+                        color = VibrantPurple40,
+                        fontFamily = font_sf_pro,
+                        fontSize = 14.sp
+                    )
+                ) {
+                    append(stringResource(id = R.string.onboard_form_checkbox_text_TnC))
+                }
+            }, modifier = Modifier
+                .fillMaxWidth(1f)
+                .clickable {
+                }
+        )
     }
 }
 

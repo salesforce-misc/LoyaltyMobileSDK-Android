@@ -25,7 +25,8 @@ fun PopupHeader(headingText: String, openPopup: (popupStatus: String) -> Unit) {
 
     Row(
         horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = 17.dp, bottom = 17.dp)
     )
 
     {

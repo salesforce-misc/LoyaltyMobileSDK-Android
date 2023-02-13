@@ -31,36 +31,26 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenVie
 //Enrollment Screen UI
 @Composable
 fun EnrollmentUI(navController:NavController, openPopup: (popupStatus: String) -> Unit) {
-    val cornerSize = 16.dp
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.92f)
-            .background(Color.White, RoundedCornerShape(cornerSize))
-    )
+
+    Column(
+        modifier = Modifier.fillMaxHeight(0.92f).
+        background(Color.White, RoundedCornerShape(16.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally)
     {
+
+        PopupHeader(headingText = stringResource(id = R.string.join_text)) {
+            openPopup(it)
+        }
+
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(top = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        )
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp))
         {
-            PopupHeader(headingText = stringResource(id = R.string.join_text)) {
+            OnboardingForm(navController) {
                 openPopup(it)
             }
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                OnboardingForm(navController) {
-                    openPopup(it)
-                }
-                LinkAlreadyAMember {
-                    openPopup(it)
-                }
+            LinkAlreadyAMember {
+                openPopup(it)
             }
         }
     }
@@ -129,7 +119,7 @@ fun OnboardingForm(navController:NavController, openPopup: (popupStatus: String)
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
-            .width(327.dp)
+            .fillMaxWidth()
             .background(VibrantPurple40, RoundedCornerShape(100.dp))
             .padding(top = 10.dp, bottom = 10.dp)
             .clickable {
@@ -141,7 +131,6 @@ fun OnboardingForm(navController:NavController, openPopup: (popupStatus: String)
                     passwordText.text,
                     confirmPasswordText.text
                 )
-                openPopup("None")
             }
     )
 
@@ -180,4 +169,3 @@ fun LinkAlreadyAMember(openPopup: (popupStatus: String) -> Unit) {
         textAlign = TextAlign.Center
     )
 }
-

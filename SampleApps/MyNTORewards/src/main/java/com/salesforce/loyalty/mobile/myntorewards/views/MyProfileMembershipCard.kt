@@ -11,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -31,7 +33,8 @@ fun ProfileCard()
             .fillMaxWidth()
             .background(TextPurpoleLightBG)) {
         Box(
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
                 .fillMaxHeight()
                 .background(Color.White, RoundedCornerShape(4.dp))) {
             CardBackground()
@@ -58,32 +61,16 @@ fun CardContent()
     Column(
         modifier = Modifier
             .height(220.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(start = 32.dp, end = 30.dp),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, top = 16.dp)
-            .weight(0.25f),
-            verticalArrangement = Arrangement.Top,) {
-            MembershipTierRow()
-        }
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .weight(0.35f)
-            .padding(start = 32.dp),
-            verticalArrangement = Arrangement.Top,) {
-            RewardPointsAndExpiry()
-        }
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 30.dp)
-            .weight(0.3f),
-            horizontalAlignment = Alignment.End) {
-            QRCodeRow()
-        }
-
+        Spacer(modifier = Modifier.height(16.dp))
+        MembershipTierRow()
+        Spacer(modifier = Modifier.height(24.dp))
+        RewardPointsAndExpiry()
+        QRCodeRow()
     }
 }
 
@@ -94,7 +81,6 @@ fun MembershipTierRow()
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(end = 32.dp)
     ) {
     Text(
         text = "Gold",

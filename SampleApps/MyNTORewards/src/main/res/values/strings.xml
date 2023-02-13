@@ -7,7 +7,7 @@
 
     <string name="onboard_screen_text_1">"Get personalized \noffers"</string>
     <string name="onboard_screen_text_2">"Redeem your points for exciting vouchers"</string>
-    <string name="onboard_screen_text_3"> "Accumulate points and unlock new \n rewards"</string>
+    <string name="onboard_screen_text_3"> "Accumulate points and unlock new rewards"</string>
     <string name="onboard_form_first_name"> "First name"</string>
     <string name="onboard_form_last_name"> "Last name"</string>
     <string name="onboard_form_mobile_number"> "Mobile number"</string>

@@ -6,11 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
 
 @Composable
 fun MyProfileScreen() {
-
     Column(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -20,39 +21,14 @@ fun MyProfileScreen() {
     )
 
     {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.13f)
-                .fillMaxWidth()
-        ) {
-            ScreenTabHeader()
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.13f)
-                .fillMaxWidth()
-                .wrapContentSize(Alignment.Center)
-        ) {
-            UserInfoRow()
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.4f)
-                .fillMaxWidth()
-                .wrapContentSize(Alignment.Center)
-                .background(TextPurpoleLightBG)
-        ) {
-            ProfileCard()
-        }
-        //Transaction
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .background(TextPurpoleLightBG)
-                .wrapContentSize(Alignment.Center)
-        ) {
-            TransactionCard()
-        }
+        Spacer(modifier = Modifier.height(50.dp))
+        ScreenTabHeader()
+        Spacer(modifier = Modifier.height(24.dp))
+        UserInfoRow()
+        Spacer(modifier = Modifier.height(24.dp))
+        ProfileCard()
+        Spacer(modifier = Modifier.height(24.dp))
+        TransactionCard()
     }
 }
+

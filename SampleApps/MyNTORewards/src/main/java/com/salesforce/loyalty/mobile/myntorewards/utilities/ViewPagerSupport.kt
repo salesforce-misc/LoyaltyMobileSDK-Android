@@ -35,13 +35,19 @@ class ViewPagerSupport {
                     return "Redeem your points for exciting vouchers"
                 }
                 2 -> {
-                    return "Accumulate points and unlock new \n rewards"
+                    return "Accumulate points and unlock new rewards"
                 }
                 else->
                 {
                     return ""
                 }
             }
+        }
+        fun joinPopupStatus(joinStatus: String):Boolean {
+            return joinStatus == "Join"
+        }
+        fun loginPopupStatus(loginStatus: String):Boolean {
+            return loginStatus == "Login"
         }
 
 /*

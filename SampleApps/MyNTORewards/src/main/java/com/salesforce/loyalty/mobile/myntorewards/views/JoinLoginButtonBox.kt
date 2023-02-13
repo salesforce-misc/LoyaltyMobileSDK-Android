@@ -25,6 +25,8 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.joinPopupStatus
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.loginPopupStatus
 
 
 // Combine UI of Onboarding screen having buttons to open join Popup and Login Popup
@@ -32,135 +34,65 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 fun JoinLoginButtonBox(navController: NavController) {
     var popupControlLogin by remember { mutableStateOf(false) }
     var popupControlJoin by remember { mutableStateOf(false) }
-    Column(
+
+    Spacer(modifier = Modifier.height(24.dp))
+
+    JoinButton { popupControlJoin = true }
+
+    Spacer(modifier = Modifier.height(24.dp))
+
+    AlreadyAMemberButton{ popupControlLogin= true }
+
+    //Popup Control Join
+    if (popupControlJoin) {
+        Popup(
+            alignment = Alignment.Center,
+            offset = IntOffset(0, 700),
+            onDismissRequest = { popupControlJoin = false },
+            properties = PopupProperties(focusable = true)
+        ) {
+            //Launch Login UI or close Join UI logic
+            EnrollmentUI(navController) {
+                popupControlJoin= (it == "Join")
+                popupControlLogin= (it == "Login")
+            }
+        }
+    }
+
+    //Popup Control Login
+    if (popupControlLogin) {
+        Popup(
+            alignment = Alignment.Center,
+            offset = IntOffset(0, 700),
+            onDismissRequest = { popupControlLogin = false },
+            properties = PopupProperties(focusable = true)
+        ) {
+            //Launch Join UI or close Login UI logic
+            LoginUI(navController) {
+                popupControlJoin= (it == "Join")
+                popupControlLogin= (it == "Login")
+            }
+        }
+    }
+}
+
+@Composable
+fun JoinButton(openJoinPopup: () -> Unit)
+{
+    Text(
+        text = stringResource(id = R.string.join_text),
+        fontFamily = font_sf_pro,
+        color = VibrantPurple40,
+        textAlign = TextAlign.Center,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 24.dp),
-        verticalArrangement = Arrangement.Bottom,
-    )
-    {
-
-        //Join Button
-        Text(
-            text = stringResource(id = R.string.join_text),
-            fontFamily = font_sf_pro,
-            color = VibrantPurple40,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .width(327.dp)
-                .background(LightPurple, RoundedCornerShape(100.dp))
-                .padding(top = 10.dp, bottom = 10.dp)
-                .clickable {
-                    popupControlJoin = true
-                }
-        )
-    }
-
-    //Already a member login clickable text
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Bottom,
-    )
-    {
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        color = Color.White,
-                        fontFamily = font_sf_pro,
-                        fontSize = 16.sp
-                    )
-                ) {
-                    append(stringResource(id = R.string.existing_member_text))
-                }
-                withStyle(
-                    style = SpanStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontFamily = font_sf_pro,
-                        fontSize = 16.sp
-                    )
-                ) {
-                    append(stringResource(id = R.string.login_text))
-                }
-            }, modifier = Modifier
-                .fillMaxWidth(1f)
-                .clickable {
-                    popupControlLogin = true
-                },
-            textAlign = TextAlign.Center
-
-        )
-
-        //Popup Control Join
-        if (popupControlJoin) {
-            Popup(
-                alignment = Alignment.Center,
-                offset = IntOffset(0, 700),
-                onDismissRequest = { popupControlJoin = false },
-                properties = PopupProperties(focusable = true)
-            ) {
-
-                //Launch Login UI or close Join UI logic
-                EnrollmentUI(navController) {
-                    when (it) {
-                        "Join" -> {
-                            popupControlLogin = false
-                            popupControlJoin = true
-                        }
-
-                        "Login" -> {
-                            popupControlLogin = true
-                            popupControlJoin = false
-                        }
-                        "None" -> {
-                            popupControlLogin = false
-                            popupControlJoin = false
-                        }
-                        else -> {
-                            popupControlLogin = false
-                            popupControlJoin = false
-                        }
-                    }
-                }
+            .background(LightPurple, RoundedCornerShape(100.dp))
+            .padding(top = 10.dp, bottom = 10.dp)
+            .clickable {
+                openJoinPopup()
             }
-        }
-        //Popup Control Login
-        if (popupControlLogin) {
-            Popup(
-                alignment = Alignment.Center,
-                offset = IntOffset(0, 700),
-                onDismissRequest = { popupControlLogin = false },
-                properties = PopupProperties(focusable = true)
-            ) {
+    )
 
-                //Launch Join UI or close Login UI logic
-                LoginUI(navController) {
-                    when (it) {
-                        "Join" -> {
-                            popupControlLogin = false
-                            popupControlJoin = true
-                        }
-
-                        "Login" -> {
-                            popupControlLogin = true
-                            popupControlJoin = false
-                        }
-                        "None" -> {
-                            popupControlLogin = false
-                            popupControlJoin = false
-                        }
-                        else -> {
-                            popupControlLogin = false
-                            popupControlJoin = false
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

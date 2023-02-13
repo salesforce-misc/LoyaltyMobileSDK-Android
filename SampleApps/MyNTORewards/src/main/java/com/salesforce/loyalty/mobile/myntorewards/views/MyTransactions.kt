@@ -17,19 +17,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGreen
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 
 @Composable
 fun TransactionCard()
 {
-    Column() {
-        TransactionViewHeader()
-    }
     Column(modifier = Modifier
-        .fillMaxWidth().fillMaxHeight().padding(16.dp)) {
+        .background(TextPurpoleLightBG).fillMaxWidth().fillMaxHeight().padding(16.dp)) {
+        TransactionViewHeader()
         ListItemTransaction()
         ListItemTransaction()
         ListItemTransaction()
@@ -42,8 +37,7 @@ fun TransactionViewHeader()
 {
     Row(horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth().padding(end = 16.dp, start = 16.dp, top = 16.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             text = "My Transactions",
