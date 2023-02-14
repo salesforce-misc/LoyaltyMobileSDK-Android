@@ -71,13 +71,17 @@ object LoyaltyAPIManager {
      * @return MemberProfileResponse
      */
     suspend fun getMemberProfile(
-        memberId: String
+        memberId: String?,
+        memberShipNumber: String?,
+        programCurrencyName: String?
     ): Result<MemberProfileResponse> {
-        Log.d(TAG, "getMemberProfile() $memberId")
+        Log.d(TAG, "getMemberProfile() $memberId $memberShipNumber")
 
         return LoyaltyClient.loyaltyApi.getMemberProfile(
             LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.MemberProfile(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
-            memberId
+            memberId = memberId,
+            membershipNumber = memberShipNumber,
+            programCurrencyName = programCurrencyName
         )
     }
 
