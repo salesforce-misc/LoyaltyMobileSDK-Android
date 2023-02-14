@@ -63,4 +63,44 @@ object LoyaltyAPIManager {
             body
         )
     }
+
+    /**
+     * API to retrieve Member Profile details
+     *
+     * @param memberId Loyalty Program Member Id
+     * @return MemberProfileResponse
+     */
+    suspend fun getMemberProfile(
+        memberId: String?,
+        memberShipNumber: String?,
+        programCurrencyName: String?
+    ): Result<MemberProfileResponse> {
+        Log.d(TAG, "getMemberProfile() $memberId $memberShipNumber")
+
+        return LoyaltyClient.loyaltyApi.getMemberProfile(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.MemberProfile(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
+            memberId = memberId,
+            membershipNumber = memberShipNumber,
+            programCurrencyName = programCurrencyName
+        )
+    }
+
+    /**
+     * API to retrieve Member Benefits detail
+     *
+     * @param memberId Loyalty Program Member Id
+     * @param membershipNumber Unique membership number of the user
+     * @return MemberBenefitsResponse
+     */
+    suspend fun getMemberBenefits(
+        memberId: String,
+        membershipNumber: String
+    ): Result<MemberBenefitsResponse> {
+        Log.d(TAG, "getMemberBenefits() $memberId")
+
+        return LoyaltyClient.loyaltyApi.getMemberBenefits(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.MemberBenefits(memberId)),
+            membershipNumber
+        )
+    }
 }
