@@ -4,23 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 
 @Composable
 fun HomeTabScreen() {

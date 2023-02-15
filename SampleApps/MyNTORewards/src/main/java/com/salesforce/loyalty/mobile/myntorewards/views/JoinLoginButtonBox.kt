@@ -8,13 +8,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +27,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 fun JoinLoginButtonBox(navController: NavController) {
     var popupControlLogin by remember { mutableStateOf(false) }
     var popupControlJoin by remember { mutableStateOf(false) }
+    var popupControlCongratulations by remember { mutableStateOf(false) }
 
     Spacer(modifier = Modifier.height(24.dp))
 
@@ -52,6 +49,7 @@ fun JoinLoginButtonBox(navController: NavController) {
             EnrollmentUI(navController) {
                 popupControlJoin = (it == "Join")
                 popupControlLogin = (it == "Login")
+                popupControlCongratulations = (it == "Congratulations")
             }
         }
     }
@@ -68,6 +66,23 @@ fun JoinLoginButtonBox(navController: NavController) {
             LoginUI(navController) {
                 popupControlJoin = (it == "Join")
                 popupControlLogin = (it == "Login")
+            }
+        }
+    }
+
+    if (popupControlCongratulations) {
+        Popup(
+            alignment = Alignment.Center,
+            offset = IntOffset(0, 700),
+            onDismissRequest = { popupControlLogin = false },
+            properties = PopupProperties(focusable = true)
+        ) {
+            //Launch Join UI or close Login UI logic
+            EnrollmentCongratulationsView(navController = navController)
+            {
+                popupControlJoin = false
+                popupControlLogin = false
+                popupControlCongratulations = false
             }
         }
     }

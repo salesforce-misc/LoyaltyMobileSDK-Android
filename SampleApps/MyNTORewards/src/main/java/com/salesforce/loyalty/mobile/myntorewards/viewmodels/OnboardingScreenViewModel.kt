@@ -97,6 +97,10 @@ class OnboardingScreenViewModel : ViewModel() {
                     .set("membershipNumber_key", enrollmentResponse!!.membershipNumber)
                 PrefHelper.customPrefs(context)
                     .set("loyaltyProgramMemberId_key", enrollmentResponse!!.loyaltyProgramMemberId)
+                PrefHelper.customPrefs(context)
+                    .set("programName_key", enrollmentResponse!!.loyaltyProgramName)
+                PrefHelper.customPrefs(context)
+                    .set("emailID_key", emailAddressText)
             }
                 .onFailure {
                     enrollmentStatus.value =

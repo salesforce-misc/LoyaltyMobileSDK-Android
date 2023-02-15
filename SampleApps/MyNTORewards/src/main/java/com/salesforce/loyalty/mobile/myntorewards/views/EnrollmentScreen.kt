@@ -111,8 +111,9 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
     if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_SUCCESS) {
         Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG)
             .show()
-        openPopup("None") //closing the popup
-        navController.navigate(Screen.HomeScreen.route) // routing to homescreen
+        openPopup("Congratulations")
+        //closing the popup
+       // navController.navigate(Screen.HomeScreen.route) // routing to homescreen
         model.resetEnrollmentStatusDefault()
     }
     //after enrollment state change to failure

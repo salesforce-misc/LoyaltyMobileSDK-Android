@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,9 +27,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MembershipTierBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
-import kotlin.math.floor
 
 @Composable
 fun ProfileCard() {
