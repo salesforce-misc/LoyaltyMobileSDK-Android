@@ -4,7 +4,9 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,6 +28,7 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 import java.time.Duration
 
@@ -85,17 +88,17 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> 
 
 
     val model: OnboardingScreenViewModel = viewModel()  //fetching reference of viewmodel
-    val loginStatus by model.loginStatusLiveData.observeAsState() // collecting livedata as state
+    val loginStatus by model.loginStatusLiveData.observeAsState(LoginState.LOGIN_DEFAULT_EMPTY) // collecting livedata as state
 
     //loginStatus state being change to Success after token fetch
-    if (loginStatus == "Login Success") {
+    if (loginStatus == LoginState.LOGIN_SUCCESS) {
         Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
         navController.navigate(Screen.HomeScreen.route) //navigate to home screen
         openPopup("None")  // closing popup
         model.resetLoginStatusDefault()
     }
     //loginStatus state being change to Failed after token fetch
-    if (loginStatus == "Login Failure") {
+    if (loginStatus == LoginState.LOGIN_SUCCESS) {
         Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
         model.resetLoginStatusDefault()//reset login status to default
     }

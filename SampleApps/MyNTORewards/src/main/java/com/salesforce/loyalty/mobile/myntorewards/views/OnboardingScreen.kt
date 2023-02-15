@@ -1,4 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -20,6 +21,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.screenTextID
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -48,8 +50,10 @@ fun OnboardingScreenBox(navController: NavController) {
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .align(alignment = Alignment.BottomEnd).padding(start = 24.dp, end = 24.dp),
-            verticalArrangement = Arrangement.Bottom)
+                .align(alignment = Alignment.BottomEnd)
+                .padding(start = 24.dp, end = 24.dp),
+            verticalArrangement = Arrangement.Bottom
+        )
         {
 
             Image(
@@ -58,14 +62,14 @@ fun OnboardingScreenBox(navController: NavController) {
             )
 
             //Updating the screen text dynamically as page swipe
-            val stringText = remember { mutableStateOf("") }
+            val stringTextID = remember { mutableStateOf(R.string.onboard_screen_text_1) }
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.currentPage }.collect { page ->
-                    stringText.value = ViewPagerSupport.screenText(page)
+                    stringTextID.value = screenTextID(page)
                 }
             }
             Text(
-                text = stringText.value,
+                text = stringResource(stringTextID.value),
                 fontFamily = font_sf_pro,
                 color = Color.White,
                 fontSize = 34.sp

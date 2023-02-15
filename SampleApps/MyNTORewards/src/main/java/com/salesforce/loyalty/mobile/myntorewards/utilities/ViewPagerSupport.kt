@@ -3,72 +3,23 @@ package com.salesforce.loyalty.mobile.myntorewards.utilities
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 
 class ViewPagerSupport {
-
     companion object ViewPagerSupport {
-        fun imageID(page: Int):Int {
-
-            when (page) {
-                0 -> {
-                    return R.drawable.onboarding_image_1
-                }
-
-                1 -> {
-                    return R.drawable.onboarding_image_2
-                }
-                2 -> {
-                    return R.drawable.onboarding_image_3
-                }
-                else->
-                {
-                    return 0
-                }
+        fun imageID(page: Int): Int {
+            return when (page) {
+                0 -> R.drawable.onboarding_image_1
+                1 -> R.drawable.onboarding_image_2
+                2 -> R.drawable.onboarding_image_3
+                else -> 0
             }
         }
 
-        fun screenText(page: Int):String {
-            when (page) {
-                0 -> {
-                    return "Get personalized \noffers"
-                }
-
-                1 -> {
-                    return "Redeem your points for exciting vouchers"
-                }
-                2 -> {
-                    return "Accumulate points and unlock new rewards"
-                }
-                else->
-                {
-                    return ""
-                }
+        fun screenTextID(page: Int): Int {
+            return when (page) {
+                0 -> R.string.onboard_screen_text_1
+                1 -> R.string.onboard_screen_text_2
+                2 -> R.string.onboard_screen_text_3
+                else -> R.string.onboard_screen_text_1
             }
         }
-        fun joinPopupStatus(joinStatus: String):Boolean {
-            return joinStatus == "Join"
-        }
-        fun loginPopupStatus(loginStatus: String):Boolean {
-            return loginStatus == "Login"
-        }
-
-/*
-        @Composable
-        fun screenText(page: Int):String {
-            when (page) {
-                0 -> {
-                    return stringResource(R.string.onboard_screen_text_1)
-                }
-
-                1 -> {
-                    return stringResource(R.string.onboard_screen_text_2)
-                }
-                2 -> {
-                    return stringResource(R.string.onboard_screen_text_3)
-                }
-                else->
-                {
-                    return ""
-                }
-            }
-        }*/
     }
 }

@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,12 +16,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 @Composable
-fun UserInfoRow()
-{
+fun UserInfoRow() {
+
+    val model: MembershipProfileViewModel = viewModel()
+    val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
+
+    val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
+    val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
+    val userName = "$firstName $lastName"
+    val membershipNumber = membershipProfile?.membershipNumber ?: ""
+//fetching reference of viewmodel
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
@@ -34,13 +48,14 @@ fun UserInfoRow()
                 .padding(start = 16.dp),
             contentScale = ContentScale.FillWidth
         )
-        Column( modifier = Modifier
-            .wrapContentSize(Alignment.Center)
-            .padding(start = 5.dp)
+        Column(
+            modifier = Modifier
+                .wrapContentSize(Alignment.Center)
+                .padding(start = 5.dp)
         ) {
 
             Text(
-                text = "Julia Green",
+                text = userName,
                 fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -48,7 +63,7 @@ fun UserInfoRow()
                 fontSize = 16.sp
             )
             Text(
-                text = "24252627",
+                text = membershipNumber,
                 fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Bold,
                 color = Color.LightGray,
@@ -56,15 +71,16 @@ fun UserInfoRow()
                 fontSize = 14.sp
             )
         }
-        Column( modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 16.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 16.dp),
             horizontalAlignment = Alignment.End
         ) {
             Image(
                 painter = painterResource(id = R.drawable.edit_icon),
                 contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
-                modifier= Modifier.width(42.dp),
+                modifier = Modifier.width(42.dp),
                 contentScale = ContentScale.FillWidth
             )
         }

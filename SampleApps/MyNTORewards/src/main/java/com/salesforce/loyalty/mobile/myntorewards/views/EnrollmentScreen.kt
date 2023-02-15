@@ -4,7 +4,9 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -26,16 +28,19 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Enrollment Screen UI
 @Composable
-fun EnrollmentUI(navController:NavController, openPopup: (popupStatus: String) -> Unit) {
+fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
 
     Column(
-        modifier = Modifier.fillMaxHeight(0.92f).
-        background(Color.White, RoundedCornerShape(16.dp)),
-        horizontalAlignment = Alignment.CenterHorizontally)
+        modifier = Modifier
+            .fillMaxHeight(0.92f)
+            .background(Color.White, RoundedCornerShape(16.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
     {
 
         PopupHeader(headingText = stringResource(id = R.string.join_text)) {
@@ -44,7 +49,12 @@ fun EnrollmentUI(navController:NavController, openPopup: (popupStatus: String) -
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp))
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                .verticalScroll(
+                    rememberScrollState()
+                )
+        )
         {
             OnboardingForm(navController) {
                 openPopup(it)
@@ -55,8 +65,9 @@ fun EnrollmentUI(navController:NavController, openPopup: (popupStatus: String) -
         }
     }
 }
+
 @Composable
-fun OnboardingForm(navController:NavController, openPopup: (popupStatus: String) -> Unit) {
+fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
     var firstNameText by remember { mutableStateOf(TextFieldValue("")) }
     var lastNameText by remember { mutableStateOf(TextFieldValue("")) }
     var mobileNumberText by remember { mutableStateOf(TextFieldValue("")) }
@@ -93,11 +104,11 @@ fun OnboardingForm(navController:NavController, openPopup: (popupStatus: String)
     val model: OnboardingScreenViewModel = viewModel() // fetching view mode reference
 
     //Observing the enrollment status live data as state. As per the Success or failure state will be changed
-    val enrollmentStatusLiveData by model.enrollmentStatusLiveData.observeAsState("Enrollment Flow")
+    val enrollmentStatusLiveData by model.enrollmentStatusLiveData.observeAsState(EnrollmentState.ENROLLMENT_DEFAULT_EMPTY)
 
 
     //after enrollment state change to success
-    if (enrollmentStatusLiveData == "Enrollment Success") {
+    if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_SUCCESS) {
         Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG)
             .show()
         openPopup("None") //closing the popup
@@ -105,12 +116,12 @@ fun OnboardingForm(navController:NavController, openPopup: (popupStatus: String)
         model.resetEnrollmentStatusDefault()
     }
     //after enrollment state change to failure
-    if (enrollmentStatusLiveData == "Enrollment Failure") {
+    if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_FAILURE) {
         Toast.makeText(LocalContext.current, "Enrollment Failure", Toast.LENGTH_LONG)
             .show()
         model.resetEnrollmentStatusDefault() //reset status of enrollment to default
     }
-
+    val context = LocalContext.current
     Text(
         text = stringResource(id = R.string.join_text),
         fontFamily = font_sf_pro,
@@ -129,7 +140,8 @@ fun OnboardingForm(navController:NavController, openPopup: (popupStatus: String)
                     mobileNumberText.text,
                     emailAddressText.text,
                     passwordText.text,
-                    confirmPasswordText.text
+                    confirmPasswordText.text,
+                    context
                 )
             }
     )

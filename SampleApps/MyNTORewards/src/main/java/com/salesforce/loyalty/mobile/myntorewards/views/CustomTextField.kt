@@ -31,7 +31,8 @@ fun OutlineFieldText(
     OutlinedTextField(
         value = textfieldValue,
         onValueChange = {
-            hideLoginOpenJoin(it)},
+            hideLoginOpenJoin(it)
+        },
 
         placeholder = {
             Text(
@@ -40,7 +41,8 @@ fun OutlineFieldText(
                 color = TextGray,
                 fontSize = 14.sp,
                 modifier = Modifier.background(VeryLightPurple, RoundedCornerShape(16.dp))
-            ) },
+            )
+        },
 
         modifier = Modifier
             .fillMaxWidth()
@@ -52,12 +54,15 @@ fun OutlineFieldText(
         textStyle = TextStyle(
             fontFamily = font_sf_pro,
             color = Color.Black,
-            fontSize = 14.sp),
+            fontSize = 14.sp
+        ),
 
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = VeryLightPurple,
             focusedIndicatorColor = Color.Transparent, //hide the indicator
-            unfocusedIndicatorColor = Color.Transparent),
+            unfocusedIndicatorColor = Color.Transparent
+        ),
 
-        shape = RoundedCornerShape(16.dp))
+        shape = RoundedCornerShape(16.dp)
+    )
 }

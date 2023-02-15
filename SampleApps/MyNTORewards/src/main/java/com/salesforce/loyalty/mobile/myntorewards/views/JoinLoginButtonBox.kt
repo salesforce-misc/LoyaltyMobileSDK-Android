@@ -25,9 +25,6 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.joinPopupStatus
-import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.loginPopupStatus
-
 
 // Combine UI of Onboarding screen having buttons to open join Popup and Login Popup
 @Composable
@@ -41,7 +38,7 @@ fun JoinLoginButtonBox(navController: NavController) {
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    AlreadyAMemberButton{ popupControlLogin= true }
+    AlreadyAMemberButton { popupControlLogin = true }
 
     //Popup Control Join
     if (popupControlJoin) {
@@ -53,8 +50,8 @@ fun JoinLoginButtonBox(navController: NavController) {
         ) {
             //Launch Login UI or close Join UI logic
             EnrollmentUI(navController) {
-                popupControlJoin= (it == "Join")
-                popupControlLogin= (it == "Login")
+                popupControlJoin = (it == "Join")
+                popupControlLogin = (it == "Login")
             }
         }
     }
@@ -69,16 +66,15 @@ fun JoinLoginButtonBox(navController: NavController) {
         ) {
             //Launch Join UI or close Login UI logic
             LoginUI(navController) {
-                popupControlJoin= (it == "Join")
-                popupControlLogin= (it == "Login")
+                popupControlJoin = (it == "Join")
+                popupControlLogin = (it == "Login")
             }
         }
     }
 }
 
 @Composable
-fun JoinButton(openJoinPopup: () -> Unit)
-{
+fun JoinButton(openJoinPopup: () -> Unit) {
     Text(
         text = stringResource(id = R.string.join_text),
         fontFamily = font_sf_pro,

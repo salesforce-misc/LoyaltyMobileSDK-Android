@@ -3,7 +3,9 @@ package com.salesforce.loyalty.mobile.myntorewards.views
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,10 +22,17 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 
 @Composable
-fun TransactionCard()
-{
-    Column(modifier = Modifier
-        .background(TextPurpoleLightBG).fillMaxWidth().fillMaxHeight().padding(16.dp)) {
+fun TransactionCard() {
+    Column(
+        modifier = Modifier
+            .background(TextPurpoleLightBG)
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(16.dp)
+            .verticalScroll(
+                rememberScrollState()
+            )
+    ) {
         TransactionViewHeader()
         ListItemTransaction()
         ListItemTransaction()
@@ -31,11 +40,10 @@ fun TransactionCard()
     }
 }
 
-
 @Composable
-fun TransactionViewHeader()
-{
-    Row(horizontalArrangement = Arrangement.SpaceBetween,
+fun TransactionViewHeader() {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -57,17 +65,19 @@ fun TransactionViewHeader()
 }
 
 @Composable
-fun ListItemTransaction()
-{
+fun ListItemTransaction() {
     Spacer(modifier = Modifier.height(12.dp))
 
-    Row(horizontalArrangement = Arrangement.SpaceBetween,
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .fillMaxWidth().background(Color.White,shape = RoundedCornerShape(8.dp)).padding(16.dp)
+            .fillMaxWidth()
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .padding(16.dp)
     ) {
 
-        Column(  modifier = Modifier.weight(0.15f)) {
+        Column(modifier = Modifier.weight(0.15f)) {
             Image(
                 painter = painterResource(id = R.drawable.transaction_icon_1),
                 contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
@@ -77,7 +87,7 @@ fun ListItemTransaction()
                 contentScale = ContentScale.FillWidth
             )
         }
-        Column(  modifier = Modifier.weight(0.6f)) {
+        Column(modifier = Modifier.weight(0.6f)) {
             Text(
                 text = "Promotion Enrollment",
                 fontWeight = FontWeight.Bold,
@@ -95,7 +105,7 @@ fun ListItemTransaction()
             )
 
         }
-        Column(  modifier = Modifier.weight(0.25f)) {
+        Column(modifier = Modifier.weight(0.25f)) {
             Text(
                 text = "+1500 Pts",
                 fontFamily = font_sf_pro,
