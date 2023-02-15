@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -90,20 +92,24 @@ fun JoinLoginButtonBox(navController: NavController) {
 
 @Composable
 fun JoinButton(openJoinPopup: () -> Unit) {
-    Text(
-        text = stringResource(id = R.string.join_text),
-        fontFamily = font_sf_pro,
-        color = VibrantPurple40,
-        textAlign = TextAlign.Center,
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(LightPurple, RoundedCornerShape(100.dp))
-            .padding(top = 10.dp, bottom = 10.dp)
-            .clickable {
-                openJoinPopup()
-            }
-    )
 
+
+    Button(  modifier = Modifier
+        .fillMaxWidth(), onClick = {
+        openJoinPopup()
+    },
+        colors = ButtonDefaults.buttonColors(LightPurple),
+        shape = RoundedCornerShape(100.dp)
+
+    ) {
+        Text(
+            text = stringResource(id = R.string.join_text),
+            fontFamily = font_sf_pro,
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(top = 3.dp, bottom = 3.dp)
+        )
+    }
 }

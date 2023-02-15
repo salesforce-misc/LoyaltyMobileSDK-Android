@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -123,29 +125,31 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
         model.resetEnrollmentStatusDefault() //reset status of enrollment to default
     }
     val context = LocalContext.current
-    Text(
-        text = stringResource(id = R.string.join_text),
-        fontFamily = font_sf_pro,
-        color = Color.White,
-        textAlign = TextAlign.Center,
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(VibrantPurple40, RoundedCornerShape(100.dp))
-            .padding(top = 10.dp, bottom = 10.dp)
-            .clickable {
-                model.enrollUser(
-                    firstNameText.text,
-                    lastNameText.text,
-                    mobileNumberText.text,
-                    emailAddressText.text,
-                    passwordText.text,
-                    confirmPasswordText.text,
-                    context
-                )
-            }
-    )
+
+    Button(  modifier = Modifier
+        .fillMaxWidth(), onClick = {  model.enrollUser(
+        firstNameText.text,
+        lastNameText.text,
+        mobileNumberText.text,
+        emailAddressText.text,
+        passwordText.text,
+        confirmPasswordText.text,
+        context
+    )},
+    colors = buttonColors(VibrantPurple40),
+        shape = RoundedCornerShape(100.dp)
+
+        ) {
+        Text(
+            text = stringResource(id = R.string.join_text),
+            fontFamily = font_sf_pro,
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(top = 3.dp, bottom = 3.dp)
+        )
+    }
 
 }
 

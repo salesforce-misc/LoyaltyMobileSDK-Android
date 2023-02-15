@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
@@ -100,22 +103,27 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> 
         model.resetLoginStatusDefault()//reset login status to default
     }
 
-    Text(
-        text = stringResource(id = R.string.login_text_header),
-        fontFamily = font_sf_pro,
-        color = Color.White,
-        textAlign = TextAlign.Center,
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(VibrantPurple40, RoundedCornerShape(100.dp))
-            .padding(top = 10.dp, bottom = 10.dp)
-            .clickable {
-                model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
-                navController.navigate(Screen.HomeScreen.route)
-            }
-    )
+    Button(  modifier = Modifier
+        .fillMaxWidth(), onClick = {
+        model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
+        navController.navigate(Screen.HomeScreen.route)
+    },
+        colors = ButtonDefaults.buttonColors(VibrantPurple40),
+        shape = RoundedCornerShape(100.dp)
+
+    ) {
+        Text(
+            text = stringResource(id = R.string.login_text_header),
+            fontFamily = font_sf_pro,
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(top = 3.dp, bottom = 3.dp)
+        )
+    }
+
 }
 
 @Composable

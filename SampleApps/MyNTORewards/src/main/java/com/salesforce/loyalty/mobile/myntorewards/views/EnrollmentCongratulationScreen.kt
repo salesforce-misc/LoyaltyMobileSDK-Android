@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -118,22 +120,29 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
 
             Spacer(modifier = Modifier.height(92.dp))
 
-            Text(
-                text = stringResource(id = R.string.join_text),
-                fontFamily = font_sf_pro,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(VibrantPurple40, RoundedCornerShape(100.dp))
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    .clickable {
-                        closePopups()
-                        navController.navigate(Screen.HomeScreen.route)
-                    }
-            )
+
+            Button(  modifier = Modifier
+                .fillMaxWidth(), onClick = {
+                closePopups()
+                navController.navigate(Screen.HomeScreen.route)
+            },
+                colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                shape = RoundedCornerShape(100.dp)
+
+            ) {
+                Text(
+                    text = stringResource(id = R.string.join_text),
+                    fontFamily = font_sf_pro,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(top = 10.dp, bottom = 10.dp)
+                )
+            }
+
+
             Spacer(modifier = Modifier.height(100.dp))
         }
     }
