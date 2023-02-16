@@ -117,32 +117,22 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
                 modifier = Modifier.padding(start = 59.dp, end = 59.dp),
                 textAlign = TextAlign.Center
             )
-
             Spacer(modifier = Modifier.height(92.dp))
-
-
             Button(  modifier = Modifier
                 .fillMaxWidth(), onClick = {
                 closePopups()
                 navController.navigate(Screen.HomeScreen.route)
             },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
-                shape = RoundedCornerShape(100.dp)
-
-            ) {
-                Text(
-                    text = stringResource(id = R.string.join_text),
+                shape = RoundedCornerShape(100.dp)) {
+                Text(text = stringResource(id = R.string.shop_now_text),
                     fontFamily = font_sf_pro,
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp)
-                )
-            }
-
-
+                        .padding(top = 3.dp, bottom = 3.dp)) }
             Spacer(modifier = Modifier.height(100.dp))
         }
     }
