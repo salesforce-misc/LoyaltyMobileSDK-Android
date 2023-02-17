@@ -1,67 +1,64 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
+import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.launch
 
+
 //view model
 class OnboardingScreenViewModel : ViewModel() {
+    private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
     //live data for login status
-    val loginStatusLiveData: LiveData<String>
+    val loginStatusLiveData: LiveData<LoginState>
         get() = loginStatus
 
-    private val loginStatus = MutableLiveData<String>()
+    private val loginStatus = MutableLiveData<LoginState>()
 
     //live data for join status
-    val enrollmentStatusLiveData: LiveData<String>
+    val enrollmentStatusLiveData: LiveData<EnrollmentState>
         get() = enrollmentStatus
 
-    private val enrollmentStatus = MutableLiveData<String>()
+    private val enrollmentStatus = MutableLiveData<EnrollmentState>()
 
     //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
     fun resetEnrollmentStatusDefault() {
-        enrollmentStatus.value = "Enrollment Status Empty"
+        enrollmentStatus.value = EnrollmentState.ENROLLMENT_DEFAULT_EMPTY
     }
     //Setting up login status as default after enrollment result. this is to avoid duplicate observation when compose recreate
 
     fun resetLoginStatusDefault() {
-        loginStatus.value = "Login Status Empty"
+        loginStatus.value = LoginState.LOGIN_DEFAULT_EMPTY
     }
 
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
     fun loginUser(emailAddressText: String, passwordText: String) {
-
-        Log.d(
-            "OnboardingScreenViewModel",
-            "email: " + emailAddressText + "password: " + passwordText
-        )
+        Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         viewModelScope.launch {
             var accessTokenResponse: String? = null
             ForceAuthManager.getAccessToken().onSuccess {
                 accessTokenResponse = it.accessToken
-
             }
                 .onFailure {
-                    Log.d("OnboardingScreenViewModel", "Access token request failed: ${it.message}")
-                    loginStatus.value = "Login Failure"
+                    loginStatus.value = LoginState.LOGIN_FAILURE
+                    Log.d(TAG, "Access token request failed: ${it.message}")
                 }
             if (accessTokenResponse != null) {
-                loginStatus.value = "Login Success"
-                Log.d("OnboardingScreenViewModel", "Access token Success: $accessTokenResponse")
+                loginStatus.value = LoginState.LOGIN_SUCCESS
+                Log.d(TAG, "Access token Success: $accessTokenResponse")
             }
         }
     }
-
 
     //invoke enrollment API
     /*
@@ -75,7 +72,8 @@ class OnboardingScreenViewModel : ViewModel() {
         mobileNumberText: String,
         emailAddressText: String,
         passwordText: String,
-        confirmPasswordText: String
+        confirmPasswordText: String,
+        context: Context
     ) {
 
         viewModelScope.launch {
@@ -92,22 +90,27 @@ class OnboardingScreenViewModel : ViewModel() {
                 TransactionalJournalStatementMethod.EMAIL,
                 EnrollmentChannel.EMAIL,
                 true,
-                true
-                ).onSuccess {
+                true,
+            ).onSuccess {
                 enrollmentResponse = it
+                PrefHelper.customPrefs(context)
+                    .set("membershipNumber_key", enrollmentResponse!!.membershipNumber)
+                PrefHelper.customPrefs(context)
+                    .set("loyaltyProgramMemberId_key", enrollmentResponse!!.loyaltyProgramMemberId)
+                PrefHelper.customPrefs(context)
+                    .set("programName_key", enrollmentResponse!!.loyaltyProgramName)
+                PrefHelper.customPrefs(context)
+                    .set("emailID_key", emailAddressText)
             }
                 .onFailure {
                     enrollmentStatus.value =
-                        "Enrollment Failure"    // enrollment state is being observed in Enrollment UI Composable
-                    Log.d("OnboardingScreenViewModel", "Enrollment request failed: ${it.message}")
+                        EnrollmentState.ENROLLMENT_FAILURE   // enrollment state is being observed in Enrollment UI Composable
+                    Log.d(TAG, "Enrollment request failed: ${it.message}")
                 }
             if (enrollmentResponse != null) {
                 enrollmentStatus.value =
-                    "Enrollment Success"   // enrollment state is being observed in Enrollment UI Composable
-                Log.d(
-                    "OnboardingScreenViewModel",
-                    "Enrollment request Success: $enrollmentResponse"
-                )
+                    EnrollmentState.ENROLLMENT_SUCCESS   // enrollment state is being observed in Enrollment UI Composable
+                Log.d(TAG, "Enrollment request Success: $enrollmentResponse")
             }
         }
     }

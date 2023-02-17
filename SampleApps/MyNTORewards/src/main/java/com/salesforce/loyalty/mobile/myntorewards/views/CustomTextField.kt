@@ -33,6 +33,7 @@ fun OutlineFieldText(
         onValueChange = {
             hideLoginOpenJoin(it)
         },
+
         placeholder = {
             Text(
                 text = placeholderText,
@@ -46,7 +47,6 @@ fun OutlineFieldText(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)),
-
 
         enabled = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -62,7 +62,7 @@ fun OutlineFieldText(
             focusedIndicatorColor = Color.Transparent, //hide the indicator
             unfocusedIndicatorColor = Color.Transparent
         ),
-        shape = RoundedCornerShape(16.dp),
 
-        )
+        shape = RoundedCornerShape(16.dp)
+    )
 }

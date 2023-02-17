@@ -1,9 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
-sealed class Screen(val route:String)
-{
-    object OnboardingScreen: Screen("onboarding_screen")
-    object HomeScreen: Screen("home_screen")
-    object LoginScreen: Screen("login_screen")
-
+sealed class Screen(val route: String) {
+    object OnboardingScreen : Screen("onboarding_screen")
+    object HomeScreen : Screen("home_screen")
 }

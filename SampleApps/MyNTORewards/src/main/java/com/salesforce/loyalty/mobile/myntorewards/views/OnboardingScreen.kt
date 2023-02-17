@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -21,14 +20,13 @@ import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
-
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.screenTextID
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun OnboardingScreenBox(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize())
     {
-
         //setting up swipe pager and images accordingly
         val pagerState = rememberPagerState()
         HorizontalPager(count = 3, state = pagerState) { page ->
@@ -51,67 +49,42 @@ fun OnboardingScreenBox(navController: NavController) {
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .align(alignment = Alignment.BottomEnd),
-            verticalArrangement = Arrangement.Bottom,
-
-            )
+                .align(alignment = Alignment.BottomEnd)
+                .padding(start = 24.dp, end = 24.dp),
+            verticalArrangement = Arrangement.Bottom
+        )
         {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
-                    .padding(start = 24.dp),
-                verticalArrangement = Arrangement.Bottom,
+            Image(
+                painter = painterResource(id = R.drawable.application_logo),
+                contentDescription = stringResource(id = R.string.cd_app_logo)
             )
-            {
-                Image(
-                    painter = painterResource(id = R.drawable.application_logo),
-                    contentDescription = stringResource(id = R.string.cd_app_logo)
-                )
 
-                //Swipe indicator
-                HorizontalPagerIndicator(
-                    pagerState = pagerState,
-                    activeColor = Color.White,
-                    inactiveColor = Color.Gray,
-                    modifier = Modifier
-                        .padding(16.dp)
-                )
-
-
-                //Updating the screen text dynamically as page swipe
-                val stringText = remember { mutableStateOf("") }
-                LaunchedEffect(pagerState) {
-                    snapshotFlow { pagerState.currentPage }.collect { page ->
-                        stringText.value = ViewPagerSupport.screenText(page)
-                    }
+            //Updating the screen text dynamically as page swipe
+            val stringTextID = remember { mutableStateOf(R.string.onboard_screen_text_1) }
+            LaunchedEffect(pagerState) {
+                snapshotFlow { pagerState.currentPage }.collect { page ->
+                    stringTextID.value = screenTextID(page)
                 }
-                Text(
-                    text = stringText.value,
-                    fontFamily = font_sf_pro,
-                    color = Color.White,
-                    fontSize = 34.sp
-                )
-
             }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.Bottom,
+            Text(
+                text = stringResource(stringTextID.value),
+                fontFamily = font_sf_pro,
+                color = Color.White,
+                fontSize = 34.sp
             )
-            {
-                JoinLoginButtonBox(navController)
-            }
 
-            //Only for spacing
-            Column(
+            //Swipe indicator
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                activeColor = Color.White,
+                inactiveColor = Color.Gray,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.3f),
-                verticalArrangement = Arrangement.Bottom,
+                    .padding(top = 16.dp)
             )
-            {}
+            Spacer(modifier = Modifier.height(48.dp))
+            JoinLoginButtonBox(navController)
+            Spacer(modifier = Modifier.height(55.dp))
         }
     }
 }

@@ -7,7 +7,7 @@
 
     <string name="onboard_screen_text_1">"Get personalized \noffers"</string>
     <string name="onboard_screen_text_2">"Redeem your points for exciting vouchers"</string>
-    <string name="onboard_screen_text_3"> "Accumulate points and unlock new \n rewards"</string>
+    <string name="onboard_screen_text_3"> "Accumulate points and unlock new rewards"</string>
     <string name="onboard_form_first_name"> "First name"</string>
     <string name="onboard_form_last_name"> "Last name"</string>
     <string name="onboard_form_mobile_number"> "Mobile number"</string>
@@ -18,6 +18,7 @@
     <string name="login_text">" Log In"</string>
     <string name="login_text_header">"Log In"</string>
     <string name="join_text">"Join"</string>
+    <string name="shop_now_text">"Shop Now"</string>
     <string name="onboard_form_checkbox_text_mailing_list"> "Add me to the loyalty program’s mailing list"</string>
     <string name="onboard_form_checkbox_text_TnC"> " terms and conditions"</string>
     <string name="onboard_form_checkbox_text_i_agree"> "I agree to the "</string>
