@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -22,8 +24,8 @@ class MembershipProfileViewModel : ViewModel() {
     private val membershipProfile = MutableLiveData<MemberProfileResponse>()
     fun getMemberProfile(context: Context) {
         viewModelScope.launch {
-            var memberID = PrefHelper.customPrefs(context)["loyaltyProgramMemberId_key", ""]
-            var membershipKey = PrefHelper.customPrefs(context)["membershipNumber_key", ""]
+            var memberID = PrefHelper.customPrefs(context)[KEY_PROGRAM_MEMBER_ID, ""]
+            var membershipKey = PrefHelper.customPrefs(context)[KEY_MEMBERSHIP_NUMBER, ""]
             LoyaltyAPIManager.getMemberProfile(memberID, membershipKey, null).onSuccess {
                 membershipProfile.value = it
                 Log.d(TAG, "member success: $it")
@@ -35,8 +37,8 @@ class MembershipProfileViewModel : ViewModel() {
 
     fun memberBenefitAPI(context: Context) {
         viewModelScope.launch {
-            var memberID = PrefHelper.customPrefs(context)["loyaltyProgramMemberId_key", ""] ?: ""
-            var membershipKey = PrefHelper.customPrefs(context)["membershipNumber_key", ""] ?: ""
+            var memberID = PrefHelper.customPrefs(context)[KEY_PROGRAM_MEMBER_ID, ""] ?: ""
+            var membershipKey = PrefHelper.customPrefs(context)[KEY_MEMBERSHIP_NUMBER, ""] ?: ""
             LoyaltyAPIManager.getMemberBenefits(memberID, membershipKey).onSuccess {
                 it
                 Log.d(TAG, "success member benefit response: $it")

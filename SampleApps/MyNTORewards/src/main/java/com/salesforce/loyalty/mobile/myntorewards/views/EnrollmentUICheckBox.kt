@@ -25,18 +25,12 @@ import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 
 //Check Box UI being used in Enrollment UI
-@Composable
-fun SimpleCheckboxComponent() {
-    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
-        CheckBoxTnC()
-        CheckBoxMailingList()
-    }
-}
 
 @Composable
-fun CheckBoxMailingList() {
+fun CheckBoxMailingList(mailCheckBox: (mailCheckBox: Boolean) -> Unit) {
     val checkedStateMailing = remember { mutableStateOf(true) }
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -46,7 +40,10 @@ fun CheckBoxMailingList() {
         Checkbox(
 
             checked = checkedStateMailing.value,
-            onCheckedChange = { checkedStateMailing.value = it },
+            onCheckedChange = {
+                checkedStateMailing.value = it
+                mailCheckBox(checkedStateMailing.value)
+            },
             colors = myCheckBoxColors()
         )
         Text(
@@ -59,7 +56,7 @@ fun CheckBoxMailingList() {
 }
 
 @Composable
-fun CheckBoxTnC() {
+fun CheckBoxTnC(tncCheckBox: (tncCheckBox: Boolean) -> Unit) {
     val checkedStateTnC = remember { mutableStateOf(true) }
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -68,7 +65,10 @@ fun CheckBoxTnC() {
     ) {
         Checkbox(
             checked = checkedStateTnC.value,
-            onCheckedChange = { checkedStateTnC.value = it },
+            onCheckedChange = {
+                checkedStateTnC.value = it
+                tncCheckBox(checkedStateTnC.value)
+            },
             colors = myCheckBoxColors()
         )
         Text(

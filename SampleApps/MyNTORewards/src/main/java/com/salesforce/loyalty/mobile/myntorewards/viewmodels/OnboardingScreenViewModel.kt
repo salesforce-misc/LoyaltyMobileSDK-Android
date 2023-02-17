@@ -6,6 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthManager
@@ -73,9 +77,10 @@ class OnboardingScreenViewModel : ViewModel() {
         emailAddressText: String,
         passwordText: String,
         confirmPasswordText: String,
+        mailCheckedState: Boolean,
+        tncCheckedState: Boolean,
         context: Context
     ) {
-
         viewModelScope.launch {
             var enrollmentResponse: EnrollmentResponse? = null
             LoyaltyAPIManager.postEnrollment(
@@ -94,13 +99,13 @@ class OnboardingScreenViewModel : ViewModel() {
             ).onSuccess {
                 enrollmentResponse = it
                 PrefHelper.customPrefs(context)
-                    .set("membershipNumber_key", enrollmentResponse!!.membershipNumber)
+                    .set(KEY_MEMBERSHIP_NUMBER, enrollmentResponse!!.membershipNumber)
                 PrefHelper.customPrefs(context)
-                    .set("loyaltyProgramMemberId_key", enrollmentResponse!!.loyaltyProgramMemberId)
+                    .set(KEY_PROGRAM_MEMBER_ID, enrollmentResponse!!.loyaltyProgramMemberId)
                 PrefHelper.customPrefs(context)
-                    .set("programName_key", enrollmentResponse!!.loyaltyProgramName)
+                    .set(KEY_PROGRAM_NAME, enrollmentResponse!!.loyaltyProgramName)
                 PrefHelper.customPrefs(context)
-                    .set("emailID_key", emailAddressText)
+                    .set(KEY_EMAIL_ID, emailAddressText)
             }
                 .onFailure {
                     enrollmentStatus.value =

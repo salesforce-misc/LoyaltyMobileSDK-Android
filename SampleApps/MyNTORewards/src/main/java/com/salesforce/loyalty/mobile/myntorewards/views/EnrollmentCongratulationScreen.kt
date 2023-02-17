@@ -27,6 +27,8 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
@@ -70,13 +72,13 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
             ) {
 
             var programName = PrefHelper.customPrefs(LocalContext.current)
-                .get("programName_key", "")
+                .get(KEY_PROGRAM_NAME, "")
             var emailID = PrefHelper.customPrefs(LocalContext.current)
-                .get("emailID_key", "")
+                .get(KEY_EMAIL_ID, "")
 
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Welcome on board!",
+                text = stringResource(id = R.string.text_welcome_onboard),
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 fontSize = 24.sp,
@@ -85,7 +87,9 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "We’re thrilled that you joined ${programName}. You’re on your way to earning points and receiving exclusive rewards.\n",
+                text = stringResource(id = R.string.onboard_text_msg_part_1) + programName + stringResource(
+                    id = R.string.onboard_text_msg_part_2
+                ),
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 fontSize = 16.sp,
@@ -99,7 +103,7 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
                     withStyle(
                         style = SpanStyle()
                     ) {
-                        append("We’ve sent an email to ")
+                        append(stringResource(id = R.string.text_we_sent_email))
                     }
                     withStyle(
                         style = SpanStyle(fontWeight = FontWeight.Bold)
@@ -109,7 +113,7 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
                     withStyle(
                         style = SpanStyle()
                     ) {
-                        append(" with more details.")
+                        append(stringResource(id = R.string.text_with_more_details))
                     }
                 }, fontFamily = font_sf_pro,
                 color = Color.Black,
@@ -118,21 +122,26 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(92.dp))
-            Button(  modifier = Modifier
-                .fillMaxWidth(), onClick = {
-                closePopups()
-                navController.navigate(Screen.HomeScreen.route)
-            },
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(), onClick = {
+                    closePopups()
+                    navController.navigate(Screen.HomeScreen.route)
+                },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
-                shape = RoundedCornerShape(100.dp)) {
-                Text(text = stringResource(id = R.string.shop_now_text),
+                shape = RoundedCornerShape(100.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.shop_now_text),
                     fontFamily = font_sf_pro,
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .padding(top = 3.dp, bottom = 3.dp)) }
+                        .padding(top = 3.dp, bottom = 3.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(100.dp))
         }
     }

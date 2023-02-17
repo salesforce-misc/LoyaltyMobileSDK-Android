@@ -48,14 +48,14 @@ fun TransactionViewHeader() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = "My Transactions",
+            text = stringResource(id = R.string.my_transactions),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
         )
         Text(
-            text = "View All",
+            text = stringResource(id = R.string.view_all),
             fontWeight = FontWeight.Bold,
             color = VibrantPurple40,
             textAlign = TextAlign.Center,

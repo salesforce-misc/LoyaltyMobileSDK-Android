@@ -2,10 +2,9 @@ package com.salesforce.loyalty.mobile.sources
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PREF_NAME
 
 object PrefHelper {
-
-    const val PREF_NAME = "com.salesforce.loyalty.mobile.sources.SHARED_PREF"
     fun customPrefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 

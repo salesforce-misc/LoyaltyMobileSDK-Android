@@ -30,12 +30,13 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Enrollment Screen UI
 @Composable
-fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
+fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
 
     Column(
         modifier = Modifier
@@ -69,13 +70,15 @@ fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: String) 
 }
 
 @Composable
-fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
+fun OnboardingForm(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
     var firstNameText by remember { mutableStateOf(TextFieldValue("")) }
     var lastNameText by remember { mutableStateOf(TextFieldValue("")) }
     var mobileNumberText by remember { mutableStateOf(TextFieldValue("")) }
     var emailAddressText by remember { mutableStateOf(TextFieldValue("")) }
     var passwordText by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPasswordText by remember { mutableStateOf(TextFieldValue("")) }
+    var mailCheckedState by remember { mutableStateOf(true) }
+    var tncCheckedState by remember { mutableStateOf(true) }
 
     OutlineFieldText(firstNameText, stringResource(id = R.string.onboard_form_first_name)) {
         firstNameText = it
@@ -100,7 +103,16 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
     }
 
     //calling checkBox UI
-    SimpleCheckboxComponent()
+    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+
+        CheckBoxTnC {
+            tncCheckedState = it
+        }
+        CheckBoxMailingList {
+            mailCheckedState = it
+
+        }
+    }
 
 
     val model: OnboardingScreenViewModel = viewModel() // fetching view mode reference
@@ -113,9 +125,9 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
     if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_SUCCESS) {
         Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG)
             .show()
-        openPopup("Congratulations")
+        openPopup(PopupState.POPUP_CONGRATULATIONS)
         //closing the popup
-       // navController.navigate(Screen.HomeScreen.route) // routing to homescreen
+        // navController.navigate(Screen.HomeScreen.route) // routing to homescreen
         model.resetEnrollmentStatusDefault()
     }
     //after enrollment state change to failure
@@ -126,20 +138,25 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
     }
     val context = LocalContext.current
 
-    Button(  modifier = Modifier
-        .fillMaxWidth(), onClick = {  model.enrollUser(
-        firstNameText.text,
-        lastNameText.text,
-        mobileNumberText.text,
-        emailAddressText.text,
-        passwordText.text,
-        confirmPasswordText.text,
-        context
-    )},
-    colors = buttonColors(VibrantPurple40),
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(), onClick = {
+            model.enrollUser(
+                firstNameText.text,
+                lastNameText.text,
+                mobileNumberText.text,
+                emailAddressText.text,
+                passwordText.text,
+                confirmPasswordText.text,
+                mailCheckedState,
+                tncCheckedState,
+                context
+            )
+        },
+        colors = buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)
 
-        ) {
+    ) {
         Text(
             text = stringResource(id = R.string.join_text),
             fontFamily = font_sf_pro,
@@ -154,7 +171,7 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
 }
 
 @Composable
-fun LinkAlreadyAMember(openPopup: (popupStatus: String) -> Unit) {
+fun LinkAlreadyAMember(openPopup: (popupStatus: PopupState) -> Unit) {
     //Text Already a member Login
     Text(
         buildAnnotatedString {
@@ -181,7 +198,7 @@ fun LinkAlreadyAMember(openPopup: (popupStatus: String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .clickable {
-                openPopup("Login")
+                openPopup(PopupState.POPUP_LOGIN)
             },
         textAlign = TextAlign.Center
     )
