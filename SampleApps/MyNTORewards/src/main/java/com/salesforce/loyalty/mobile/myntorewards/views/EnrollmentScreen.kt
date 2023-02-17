@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -77,24 +78,26 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
     var passwordText by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPasswordText by remember { mutableStateOf(TextFieldValue("")) }
 
-    OutlineFieldText(firstNameText, stringResource(id = R.string.onboard_form_first_name)) {
+    OutlineFieldTextWithError(firstNameText, CustomTextField.SignUpTextFieldType.FIRSTNAME, stringResource(id = R.string.onboard_form_first_name)) {
         firstNameText = it
     }
-    OutlineFieldText(lastNameText, stringResource(id = R.string.onboard_form_last_name)) {
+    OutlineFieldTextWithError(lastNameText, CustomTextField.SignUpTextFieldType.LASTNAME, stringResource(id = R.string.onboard_form_last_name)) {
         lastNameText = it
     }
-    OutlineFieldText(mobileNumberText, stringResource(id = R.string.onboard_form_mobile_number)) {
+    OutlineFieldTextWithError(mobileNumberText, CustomTextField.SignUpTextFieldType.PHONE_NUMBER, stringResource(id = R.string.onboard_form_mobile_number)) {
         mobileNumberText = it
     }
-    OutlineFieldText(emailAddressText, stringResource(id = R.string.onboard_form_email_address)) {
+    OutlineFieldTextWithError(emailAddressText, CustomTextField.SignUpTextFieldType.EMAIL, stringResource(id = R.string.onboard_form_email_address)) {
         emailAddressText = it
     }
-    OutlineFieldText(passwordText, stringResource(id = R.string.form_password)) {
+    PasswordTextFieldWithError(passwordText, CustomTextField.SignUpTextFieldType.PASSWORD, placeholderText = stringResource(id = R.string.form_password)) {
         passwordText = it
     }
-    OutlineFieldText(
+    PasswordTextFieldWithError(
         confirmPasswordText,
-        stringResource(id = R.string.onboard_form_confirm_password)
+        CustomTextField.SignUpTextFieldType.CONFIRM_PASSWORD,
+        password = passwordText.text,
+        placeholderText = stringResource(id = R.string.onboard_form_confirm_password)
     ) {
         confirmPasswordText = it
     }
@@ -136,6 +139,14 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: String
         confirmPasswordText.text,
         context
     )},
+        enabled =
+        isJoinButtonEnabled(
+            firstNameText.text,
+            lastNameText.text,
+            emailAddressText.text,
+            passwordText.text,
+            confirmPasswordText.text
+        ),
     colors = buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)
 
@@ -185,4 +196,20 @@ fun LinkAlreadyAMember(openPopup: (popupStatus: String) -> Unit) {
             },
         textAlign = TextAlign.Center
     )
+}
+
+fun isJoinButtonEnabled(
+    firstNameText: String,
+    lastNameText: String,
+    emailAddressText: String,
+    passwordText: String,
+    confirmPasswordText: String
+): Boolean {
+    val firstNameNotEmpty = firstNameText.isNotEmpty()
+    val lastNameNotEmpty = lastNameText.isNotEmpty()
+    val emailNotEmpty = emailAddressText.isNotEmpty()
+    val passwordNotEmpty = passwordText.isNotEmpty()
+    val confirmPasswordNotEmpty = confirmPasswordText.isNotEmpty()
+    return (firstNameNotEmpty && lastNameNotEmpty && emailNotEmpty && passwordNotEmpty && confirmPasswordNotEmpty
+            && passwordText.equals(confirmPasswordText))
 }

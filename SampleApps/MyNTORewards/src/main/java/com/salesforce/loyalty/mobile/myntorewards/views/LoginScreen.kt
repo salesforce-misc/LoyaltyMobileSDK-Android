@@ -72,7 +72,7 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> 
     ) {
         emailAddressPhoneNumberText = it
     }
-    OutlineFieldText(passwordtext, stringResource(id = R.string.form_password)) {
+    PasswordTextField(passwordtext, placeholderText = stringResource(id = R.string.form_password)) {
         passwordtext = it
     }
 
@@ -108,6 +108,11 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> 
         model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
         navController.navigate(Screen.HomeScreen.route)
     },
+        enabled =
+        isLoginButtonEnabled(
+            emailAddressPhoneNumberText.text,
+            passwordtext.text,
+        ),
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)
 
@@ -124,6 +129,15 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> 
         )
     }
 
+}
+
+fun isLoginButtonEnabled(
+    emailAddressText: String,
+    passwordText: String,
+): Boolean {
+    val emailNotEmpty = emailAddressText.isNotEmpty()
+    val passwordNotEmpty = passwordText.isNotEmpty()
+    return (emailNotEmpty && passwordNotEmpty)
 }
 
 @Composable

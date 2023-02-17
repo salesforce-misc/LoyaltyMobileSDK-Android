@@ -26,4 +26,10 @@
     <string name="not_a_member_text">"Not a Member?"</string>
     <string name="forget_your_password_text">"Forget Your Password?"</string>
     <string name="email_address_phone_number_text">"Email address or Phone number"</string>
+    <string name="error_msg_invalid_first_name">Enter your first name without any special characters.</string>
+    <string name="error_msg_invalid_last_name">Enter your last name without any special characters.</string>
+    <string name="error_msg_invalid_email">Enter a valid email address.</string>
+    <string name="error_msg_invalid_phone_number">Enter a valid 10 digit mobile number..</string>
+    <string name="error_msg_invalid_password">Enter a password with at least 6 characters</string>
+    <string name="error_msg_invalid_confirm_password">Ensure that your passwords match</string>
 </resources>
