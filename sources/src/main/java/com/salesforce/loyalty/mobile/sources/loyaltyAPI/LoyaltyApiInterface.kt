@@ -33,4 +33,10 @@ interface LoyaltyApiInterface {
         @Url url: String,
         @Body requestBody: PromotionsRequest
     ): Result<PromotionsResponse>
+
+    @POST()
+    suspend fun enrollInPromotion(
+        @Url url: String,
+        @Body requestBody: PromotionsRequest
+    ): Result<EnrollPromotionsResponse>
 }

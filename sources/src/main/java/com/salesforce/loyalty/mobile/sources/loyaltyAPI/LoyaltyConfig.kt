@@ -12,13 +12,15 @@ object LoyaltyConfig {
         "https://internalmobileteam-dev-ed.develop.my.salesforce.com/services/data/"
 
     enum class ProgramProcessName(val processName: String) {
-        GET_PROMOTIONS("GetMemberPromotions")
+        GET_PROMOTIONS("GetMemberPromotions"),
+        ENROLL_IN_PROMOTION("EnrollInPromotion")
     }
     sealed class Resource {
         class IndividualEnrollment(val programName: String) : Resource()
         class MemberProfile(val programName: String) : Resource()
         class MemberBenefits(val memberId: String) : Resource()
-        class EligiblePromotions(val programName: String) : Resource()
+        class LoyaltyProgramProcess(val programName: String, val programProcessName: ProgramProcessName) : Resource()
+
     }
 
     fun getRequestUrl(resource: Resource): String {
@@ -32,9 +34,9 @@ object LoyaltyConfig {
             is Resource.MemberBenefits -> {
                 MEMBER_BASE_URL + VERSION + API_VERSION + "/connect/loyalty/member/" + resource.memberId + "/memberbenefits"
             }
-            is Resource.EligiblePromotions -> {
+            is Resource.LoyaltyProgramProcess -> {
                 MEMBER_BASE_URL + VERSION + API_VERSION_56 + "/connect/loyalty/programs/" +
-                        resource.programName + "/program-processes/" + ProgramProcessName.GET_PROMOTIONS.processName
+                        resource.programName + "/program-processes/" + resource.programProcessName.processName
             }
         }
     }
