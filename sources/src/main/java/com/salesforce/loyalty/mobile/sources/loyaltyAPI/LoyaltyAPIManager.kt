@@ -116,7 +116,7 @@ object LoyaltyAPIManager {
         Log.d(TAG, "getEligiblePromotions() $membershipNumber")
 
         val requestBody: PromotionsRequest =
-            PromotionsRequest(listOf(mapOf("MembershipNumber" to membershipNumber)))
+            PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber)))
         return LoyaltyClient.loyaltyApi.getEligiblePromotions(
             LoyaltyConfig.getRequestUrl(
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
@@ -142,8 +142,8 @@ object LoyaltyAPIManager {
         Log.d(TAG, "enrollInPromotions() $membershipNumber Promotion Name: $promotionName")
 
         val requestBody: PromotionsRequest =
-            PromotionsRequest(listOf(mapOf("MembershipNumber" to membershipNumber,
-            "PromotionName" to promotionName)))
+            PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
+            LoyaltyConfig.KEY_PROMOTION_NAME to promotionName)))
         return LoyaltyClient.loyaltyApi.enrollInPromotion(
             LoyaltyConfig.getRequestUrl(
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
