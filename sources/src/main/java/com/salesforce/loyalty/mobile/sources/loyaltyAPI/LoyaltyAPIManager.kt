@@ -103,4 +103,23 @@ object LoyaltyAPIManager {
             membershipNumber
         )
     }
+
+    /**
+     * API to retrieve Eligible Promotions
+     *
+     * @param membershipNumber Unique membership number of the user
+     * @return PromotionsResponse
+     */
+    suspend fun getEligiblePromotions(
+        membershipNumber: String
+    ): Result<PromotionsResponse> {
+        Log.d(TAG, "getEligiblePromotions() $membershipNumber")
+
+        val requestBody: PromotionsRequest =
+            PromotionsRequest(listOf(mapOf("MembershipNumber" to membershipNumber)))
+        return LoyaltyClient.loyaltyApi.getEligiblePromotions(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.EligiblePromotions(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
+            requestBody
+        )
+    }
 }
