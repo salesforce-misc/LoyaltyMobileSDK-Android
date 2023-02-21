@@ -32,4 +32,17 @@
     <string name="error_msg_invalid_phone_number">Enter a valid 10 digit mobile number..</string>
     <string name="error_msg_invalid_password">Enter a password with at least 6 characters</string>
     <string name="error_msg_invalid_confirm_password">Ensure that your passwords match</string>
+    <string name="text_welcome_onboard">"Welcome on board!"</string>
+    <string name="onboard_text_msg_part_1">"We’re thrilled that you joined "</string>
+    <string name="onboard_text_msg_part_2">". You’re on your way to earning points and receiving exclusive rewards.\n"</string>
+    <string name="text_we_sent_email">"We’ve sent an email to "</string>
+    <string name="text_with_more_details">"" with more details.""</string>
+
+    <string name="screen_title_home">"Home"</string>
+    <string name="screen_title_my_offers">"My Offers"</string>
+    <string name="screen_title_my_profiles">"My Profile"</string>
+    <string name="screen_title_redeem">"Redeem"</string>
+    <string name="screen_title_more">"More"</string>
+    <string name="my_transactions">"My Transactions"</string>
+    <string name="view_all">"View All"</string>
 </resources>

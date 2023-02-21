@@ -29,12 +29,13 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 @Composable
-fun LoginUI(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
+fun LoginUI(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight(0.5f)
@@ -62,7 +63,7 @@ fun LoginUI(navController: NavController, openPopup: (popupStatus: String) -> Un
 }
 
 @Composable
-fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> Unit) {
+fun LoginForm(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
     var emailAddressPhoneNumberText by remember { mutableStateOf(TextFieldValue("")) }
     var passwordtext by remember { mutableStateOf(TextFieldValue("")) }
 
@@ -94,7 +95,7 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: String) -> 
     if (loginStatus == LoginState.LOGIN_SUCCESS) {
         Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
         navController.navigate(Screen.HomeScreen.route) //navigate to home screen
-        openPopup("None")  // closing popup
+        openPopup(PopupState.POPUP_NONE)  // closing popup
         model.resetLoginStatusDefault()
     }
     //loginStatus state being change to Failed after token fetch
@@ -141,7 +142,7 @@ fun isLoginButtonEnabled(
 }
 
 @Composable
-fun LinkNewMemberJoin(openPopup: (popupStatus: String) -> Unit) {
+fun LinkNewMemberJoin(openPopup: (popupStatus: PopupState) -> Unit) {
     Text(
         buildAnnotatedString {
             withStyle(
@@ -167,7 +168,7 @@ fun LinkNewMemberJoin(openPopup: (popupStatus: String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .clickable {
-                openPopup("Join")
+                openPopup(PopupState.POPUP_JOIN)
             },
         textAlign = TextAlign.Center
     )

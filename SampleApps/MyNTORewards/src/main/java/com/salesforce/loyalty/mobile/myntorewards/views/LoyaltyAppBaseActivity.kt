@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         setContent {
-        MainScreenStart()
+            MainScreenStart()
         }
     }
 }
@@ -27,5 +27,5 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-MainScreenStart()
+    MainScreenStart()
 }

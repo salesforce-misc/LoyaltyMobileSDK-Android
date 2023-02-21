@@ -7,10 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
 
 
@@ -23,7 +25,7 @@ fun HomeScreen() {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Home Screen",
+            text = stringResource(id = R.string.screen_title_home),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -42,7 +44,7 @@ fun MyOfferScreen() {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "My Offers Screen",
+            text = stringResource(id = R.string.screen_title_my_offers),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -84,7 +86,7 @@ fun RedeemScreen() {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Redeem Screen",
+            text = stringResource(id = R.string.screen_title_redeem),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -104,7 +106,7 @@ fun MoreScreen() {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "More Screen",
+            text = stringResource(id = R.string.screen_title_more),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.align(Alignment.CenterHorizontally),
