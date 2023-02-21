@@ -17,3 +17,8 @@ val TextDarkGray = Color(0xFF747474)
 val TextPurpoleLightBG = Color(0xFFF9F0FF)
 val MembershipTierBG = Color(0xFFFCC003)
 val TextGreen = Color(0xFF2E844A)
+val QRCodeSreenBG = Color(0xFFF7F4FB)
+val QRCodeScreenBottomText = Color(0xFF444444)
+
+val ColourPurpleQR= 0xFF7526E3;
+val ColourWhiteQR= 0xFFFFFFFF;

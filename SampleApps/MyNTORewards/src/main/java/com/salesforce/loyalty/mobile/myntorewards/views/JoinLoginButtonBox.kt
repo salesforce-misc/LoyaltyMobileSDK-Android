@@ -32,6 +32,7 @@ fun JoinLoginButtonBox(navController: NavController) {
     var popupControlJoin by remember { mutableStateOf(false) }
     var popupControlCongratulations by remember { mutableStateOf(false) }
 
+
     Spacer(modifier = Modifier.height(24.dp))
 
     JoinButton { popupControlJoin = true }
@@ -70,6 +71,7 @@ fun JoinLoginButtonBox(navController: NavController) {
                 popupControlJoin = (it == PopupState.POPUP_JOIN)
                 popupControlLogin = (it == PopupState.POPUP_LOGIN)
             }
+            //Launch Join UI or close Login UI logic
         }
     }
 
