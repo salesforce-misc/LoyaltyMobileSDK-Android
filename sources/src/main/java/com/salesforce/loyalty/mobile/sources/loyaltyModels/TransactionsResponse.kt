@@ -7,50 +7,50 @@ import com.google.gson.annotations.SerializedName
  */
 data class TransactionsResponse (
     @SerializedName("message")
-    var message: String?,
+    val message: String?,
     @SerializedName("status")
-    var status: Boolean?,
+    val status: Boolean?,
     @SerializedName("totalCount")
-    var totalCount: Int?,
+    val totalCount: Int?,
     @SerializedName("transactionJournals")
-    var transactionJournals: List<TransactionsJournals> = mutableListOf()
+    val transactionJournals: List<TransactionsJournals> = mutableListOf()
 )
 
 data class TransactionsJournals (
     @SerializedName("Id")
     val id: String?,
     @SerializedName("JournalNumber")
-    var journalNumber: String?,
+    val journalNumber: String?,
     @SerializedName("ActivityDate")
     val activityDate: String?,
     @SerializedName("JournalType")
-    var journalType: String?,
+    val journalType: String?,
     @SerializedName("JournalSubType")
-    var journalSubType: String?,
+    val journalSubType: String?,
     @SerializedName("TransactionAmount")
-    var transactionAmount: Int?,
+    val transactionAmount: Int?,
     @SerializedName("productCategory")
-    var productCategory: String?,
+    val productCategory: String?,
     @SerializedName("product")
-    var product: String?,
+    val product: String?,
     @SerializedName("ExternalTransactionNumber")
-    var externalTransactionNumber: String?,
+    val externalTransactionNumber: String?,
     @SerializedName("loyaltyProgramCurrencyDetails")
-    var loyaltyProgramCurrencyDetails: List<LoyaltyProgramCurrencyDetails> = mutableListOf(),
+    val loyaltyProgramCurrencyDetails: List<LoyaltyProgramCurrencyDetails> = mutableListOf(),
     @SerializedName("additionalAttributes")
-    var additionalAttributes: List<AdditionalAttributes> = mutableListOf()
+    val additionalAttributes: List<AdditionalAttributes> = mutableListOf()
 )
 
 data class AdditionalAttributes (
     @SerializedName("value" )
-    var value : String?,
+    val value : String?,
     @SerializedName("key")
-    var key   : String?
+    val key   : String?
 )
 
 data class LoyaltyProgramCurrencyDetails (
     @SerializedName("value")
-    var value : Int?,
+    val value : Int?,
     @SerializedName("name")
-    var name  : String?
+    val name  : String?
 )
