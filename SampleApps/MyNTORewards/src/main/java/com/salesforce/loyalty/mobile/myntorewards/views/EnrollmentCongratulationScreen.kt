@@ -21,19 +21,37 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
+
 @Composable
-fun EnrollmentCongratulationsView(navController: NavController, closePopups: () -> Unit) {
+fun EnrollmentCongratulationsPopup(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit)
+{
+    Popup(alignment = Alignment.Center,
+        offset = IntOffset(0, 700),
+        onDismissRequest = { openPopup(PopupState.POPUP_NONE)},
+        properties = PopupProperties(focusable = true)
+    ){
+        EnrollmentCongratulationsView(navController) {
+            openPopup(it)
+        }
+    }
+}
+@Composable
+fun EnrollmentCongratulationsView(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -125,7 +143,7 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
             Button(
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
-                    closePopups()
+                    openPopup(PopupState.POPUP_NONE)
                     navController.navigate(Screen.HomeScreen.route)
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),

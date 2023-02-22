@@ -1,9 +1,11 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
@@ -19,16 +21,17 @@ class MainActivity : ComponentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         setContent {
-            //ProfileCard()
             MainScreenStart()
         }
     }
 }
 
 
+
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    ProfileCard()
+
 }
+
 

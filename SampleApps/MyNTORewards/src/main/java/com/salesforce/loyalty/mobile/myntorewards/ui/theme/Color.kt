@@ -10,6 +10,7 @@ val Teal200 = Color(0xFF03DAC5)
 
 //App Colours
 val VibrantPurple40 = Color(0xFF7526E3)
+val VibrantPurple90 = Color(0xFFECE1F9)
 val LightPurple = Color(0xFFF9F0FF)
 val VeryLightPurple = Color(0xFFF6F2FB)
 val TextGray = Color(0xFF6E6E6E)
@@ -17,8 +18,9 @@ val TextDarkGray = Color(0xFF747474)
 val TextPurpoleLightBG = Color(0xFFF9F0FF)
 val MembershipTierBG = Color(0xFFFCC003)
 val TextGreen = Color(0xFF2E844A)
-val QRCodeSreenBG = Color(0xFFF7F4FB)
-val QRCodeScreenBottomText = Color(0xFF444444)
+val MyProfileScreenBG = Color(0xFFF7F4FB)
+val LightBlack = Color(0xFF444444)
+val MyProfileBG= Color(0xFFECE1F9)
 
 val ColourPurpleQR= 0xFF7526E3;
 val ColourWhiteQR= 0xFFFFFFFF;

@@ -21,8 +21,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -34,6 +37,22 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
+
+@Composable
+fun LoginPopup(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit)
+{
+    Popup(
+        alignment = Alignment.Center,
+        offset = IntOffset(0, 700),
+        onDismissRequest = { openPopup(PopupState.POPUP_NONE)},
+        properties = PopupProperties(focusable = true)
+    ) {
+        LoginUI(navController) {
+            openPopup(it)
+        }
+    }
+}
+
 @Composable
 fun LoginUI(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
     Column(

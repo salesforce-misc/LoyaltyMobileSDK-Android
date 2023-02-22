@@ -28,8 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -40,9 +43,26 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Enrollment Screen UI
-@Composable
-fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
 
+
+@Composable
+fun EnrollmentPopup(openPopup: (popupStatus: PopupState) -> Unit)
+{
+    Popup(
+        alignment = Center,
+        offset = IntOffset(0, 700),
+        onDismissRequest = { openPopup(PopupState.POPUP_NONE)},
+        properties = PopupProperties(focusable = true)
+    ) {
+        EnrollmentUI{ openPopup(it)
+        }
+    }
+}
+
+
+
+@Composable
+fun EnrollmentUI(openPopup: (popupStatus: PopupState) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight(0.92f)
@@ -50,7 +70,6 @@ fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: PopupSta
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-
         PopupHeader(headingText = stringResource(id = R.string.join_text)) {
             openPopup(it)
         }
@@ -64,7 +83,7 @@ fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: PopupSta
                 )
         )
         {
-            OnboardingForm(navController) {
+            OnboardingForm {
                 openPopup(it)
             }
             LinkAlreadyAMember {
@@ -75,7 +94,7 @@ fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: PopupSta
 }
 
 @Composable
-fun OnboardingForm(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
+fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }

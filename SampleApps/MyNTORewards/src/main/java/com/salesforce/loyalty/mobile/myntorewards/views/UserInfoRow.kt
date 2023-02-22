@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +35,7 @@ fun UserInfoRow() {
 //fetching reference of viewmodel
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().background(Color.White),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -70,7 +71,8 @@ fun UserInfoRow() {
                 fontSize = 14.sp
             )
         }
-        Column(
+        //commented edit icon as its part of UX but not part of current MVP
+        /*Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(end = 16.dp),
@@ -82,6 +84,6 @@ fun UserInfoRow() {
                 modifier = Modifier.width(42.dp),
                 contentScale = ContentScale.FillWidth
             )
-        }
+        }*/
     }
 }

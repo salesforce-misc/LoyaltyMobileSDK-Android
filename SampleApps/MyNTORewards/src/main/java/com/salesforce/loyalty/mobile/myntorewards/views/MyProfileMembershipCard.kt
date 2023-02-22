@@ -86,8 +86,7 @@ fun CardContent() {
         val context: Context = LocalContext.current
 
         model.getMemberProfile(context)
-        //calling member benefit
-        model.memberBenefitAPI(context)
+
         val membershipNumber = membershipProfile?.membershipNumber ?: ""
         //loginStatus state being change to Success after token fetch
         Spacer(modifier = Modifier.height(16.dp))
@@ -145,7 +144,8 @@ fun RewardPointsAndExpiry(memberCurrency: MemberCurrency) {
         fontSize = 32.sp
     )
 
-    val expirablePoints: String = memberCurrency.expirablePoints.toString()
+    //commented this code its part of UX but not part of current MVP
+   /* val expirablePoints: String = memberCurrency.expirablePoints.toString()
     val expirationDate: String = memberCurrency.lastExpirationProcessRunDate.toString()
     Text(
         text = "$expirablePoints points expiring on $expirationDate",
@@ -154,7 +154,7 @@ fun RewardPointsAndExpiry(memberCurrency: MemberCurrency) {
         color = Color.White,
         textAlign = TextAlign.Center,
         fontSize = 12.sp
-    )
+    )*/
 }
 
 @Composable

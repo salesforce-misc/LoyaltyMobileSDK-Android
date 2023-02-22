@@ -42,7 +42,7 @@ fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Uni
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.85f)
-            .background(QRCodeSreenBG, shape = RoundedCornerShape(16.dp)),
+            .background(MyProfileScreenBG, shape = RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -54,7 +54,7 @@ fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Uni
         Text(
             text = "Share the referral code with your family and friends. Earn rewards every time someone uses your referral code to join the loyalty program.",
             fontFamily = font_sf_pro,
-            color = QRCodeScreenBottomText,
+            color = LightBlack,
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
@@ -134,7 +134,7 @@ fun QRCodeBox(membershipID: String, userName:String)
                 Text(
                     text = userName,
                     fontFamily = font_sf_pro,
-                    color = QRCodeScreenBottomText,
+                    color = LightBlack,
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -143,7 +143,7 @@ fun QRCodeBox(membershipID: String, userName:String)
                 Text(
                     text = "Membership QR Code",
                     fontFamily = font_sf_pro,
-                    color = QRCodeScreenBottomText,
+                    color = LightBlack,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
@@ -156,7 +156,7 @@ fun QRCodeBox(membershipID: String, userName:String)
                 Text(
                     text = "Referral Code: JULIA COM M250D",
                     fontFamily = font_sf_pro,
-                    color = QRCodeScreenBottomText,
+                    color = LightBlack,
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
