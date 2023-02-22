@@ -1,9 +1,6 @@
 package com.salesforce.loyalty.mobile.sources.loyaltyAPI
 
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.EnrollmentRequest
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.EnrollmentResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import retrofit2.http.*
 
 /**
@@ -30,4 +27,15 @@ interface LoyaltyApiInterface {
         @Url url: String,
         @Query("membershipNumber") membershipNumber: String,
     ): Result<MemberBenefitsResponse>
+
+    @GET()
+    suspend fun getTransactions(
+        @Url url: String,
+        @Query("membershipNumber") membershipNumber: String,
+        @Query("pageNumber") pageNumber: Int?,
+        @Query("journalType") journalType: String?,
+        @Query("journalSubType") journalSubType: String?,
+        @Query("periodStartDate") periodStartDate: String?,
+        @Query("periodEndDate") periodEndDate: String?
+    ): Result<TransactionsResponse>
 }

@@ -14,6 +14,7 @@ object LoyaltyConfig {
         class IndividualEnrollment(val programName: String) : Resource()
         class MemberProfile(val programName: String) : Resource()
         class MemberBenefits(val memberId: String) : Resource()
+        class TransactionsHistroy(val programName: String): Resource()
     }
 
     fun getRequestUrl(resource: Resource): String {
@@ -26,6 +27,9 @@ object LoyaltyConfig {
             }
             is Resource.MemberBenefits -> {
                 MEMBER_BASE_URL + VERSION + API_VERSION + "/connect/loyalty/member/" + resource.memberId + "/memberbenefits"
+            }
+            is Resource.TransactionsHistroy -> {
+                MEMBER_BASE_URL + VERSION + API_VERSION + "/connect/loyalty/programs/" + resource.programName + "/transaction-history"
             }
         }
     }
