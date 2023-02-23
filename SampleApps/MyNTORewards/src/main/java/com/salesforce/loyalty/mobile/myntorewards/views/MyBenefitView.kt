@@ -26,7 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets.ViewPagerSupport.getBenefitsLogo
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets.LoyaltyAppAsset.getBenefitsLogo
+
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitViewModel
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit

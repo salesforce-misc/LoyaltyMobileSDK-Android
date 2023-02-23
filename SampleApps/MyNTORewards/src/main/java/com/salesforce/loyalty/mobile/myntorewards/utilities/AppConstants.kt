@@ -23,7 +23,7 @@ class AppConstants {
         const val ROUTE_ONBOARDING_SCREEN = "onboarding_screen"
         const val ROUTE_LANDING_SCREEN = "landing_screen"
 
-
+        //benefit icon based on strings
         const val BENEFIT_TYPE_FREE_SHIPPING = "Free Shipping"
         const val BENEFIT_TYPE_EXTENDED_RETURN = "Extended Return"
         const val BENEFIT_TYPE_FREE_SAMPLE = "Free Sample"
@@ -32,6 +32,13 @@ class AppConstants {
         const val BENEFIT_TYPE_SUPPORT = "Support"
         const val BENEFIT_TYPE_COMPLIMENT_VOUCHER = "Complimentary Vouchers"
 
+        //benefit tiers
+
+        const val TIER_SILVER = "silver"
+        const val TIER_GOLD = "gold"
+        const val TIER_BRONZE = "bronze"
+        const val TIER_PLATINUM= "platinum"
+        const val TIER_RUBY= "ruby"
 
     }
 }

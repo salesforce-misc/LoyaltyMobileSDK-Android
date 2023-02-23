@@ -30,6 +30,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MembershipTierBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
@@ -117,7 +118,7 @@ fun MembershipTierRow(tierName: String) {
             fontSize = 20.sp,
             modifier = Modifier
                 .background(
-                    MembershipTierBG, RoundedCornerShape(30.dp)
+                    Assets.getTierColor(tierName.lowercase()), RoundedCornerShape(30.dp)
                 )
                 .padding(top = 3.dp, start = 16.dp, end = 16.dp, bottom = 3.dp)
         )
