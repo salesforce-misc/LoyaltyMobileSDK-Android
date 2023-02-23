@@ -18,7 +18,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 
 @Composable
-fun ProfileSubViewHeader(heading:String, openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+fun ProfileSubViewHeader(heading:String, openProfileScreen: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -38,7 +38,7 @@ fun ProfileSubViewHeader(heading:String, openProfileScreen: (profileScreenState:
             textAlign = TextAlign.Center,
             fontSize = 13.sp,
             modifier = Modifier.clickable {
-                openProfileScreen(MyProfileScreenState.BENEFIT_VIEW)
+                openProfileScreen()
             }
         )
     }

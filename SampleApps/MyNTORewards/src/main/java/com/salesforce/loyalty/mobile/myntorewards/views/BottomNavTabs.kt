@@ -26,12 +26,12 @@ sealed class BottomNavTabs(var titleID: Int, var iconID: Int, var route: String)
             R.drawable.myprofile_tab_bar_item,
             ROUTE_PROFILE_SCREEN
         )
-
-    object Redeem : BottomNavTabs(
+    //part of UX but not part of MVP
+   /* object Redeem : BottomNavTabs(
         R.string.screen_title_redeem,
         R.drawable.redeem_tab_bar_item,
         ROUTE_REDEEM_SCREEN
-    )
+    )*/
 
     object More :
         BottomNavTabs(R.string.screen_title_more, R.drawable.more_tab_bar_item, ROUTE_MORE_SCREEN)

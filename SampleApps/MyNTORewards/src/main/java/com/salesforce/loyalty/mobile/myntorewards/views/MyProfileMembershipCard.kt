@@ -87,14 +87,14 @@ fun CardContent() {
 
         model.getMemberProfile(context)
 
-        val membershipNumber = membershipProfile?.membershipNumber ?: ""
         //loginStatus state being change to Success after token fetch
         Spacer(modifier = Modifier.height(16.dp))
         membershipProfile?.memberTiers?.get(0)?.loyaltyMemberTierName?.let { MembershipTierRow(it) }
 
+        Spacer(modifier = Modifier.height(32.dp))
 
         membershipProfile?.memberCurrencies?.get(0)?.let { RewardPointsAndExpiry(it) }
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         QRCodeRow(membershipProfile)
 

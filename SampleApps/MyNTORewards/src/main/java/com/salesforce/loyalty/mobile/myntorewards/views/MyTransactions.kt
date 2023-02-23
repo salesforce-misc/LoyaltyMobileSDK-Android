@@ -19,9 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 
 @Composable
-fun TransactionCard() {
+fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
     Column(
         modifier = Modifier
             .background(MyProfileScreenBG)
@@ -31,7 +32,7 @@ fun TransactionCard() {
     ) {
         ProfileSubViewHeader(stringResource(id = R.string.my_transactions))
         {
-
+            openProfileScreen(MyProfileScreenState.TRANSACTION_VIEW)
         }
 
         ListItemTransaction()

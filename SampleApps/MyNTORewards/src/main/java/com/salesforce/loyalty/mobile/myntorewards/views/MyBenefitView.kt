@@ -32,13 +32,36 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitVi
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 
 @Composable
-fun MyBenefitView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit)
+{
+    Column(verticalArrangement = Arrangement.Top,
+        modifier = Modifier.background(Color.White)
+    )
+    {
+        Spacer(modifier = Modifier.height(50.dp))
+        Image(
+            painter = painterResource(id = R.drawable.back_arrow),
+            contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.padding(top= 10.dp, bottom = 10.dp, start=16.dp, end = 16.dp).clickable {
+                openProfileScreen(MyProfileScreenState.MAIN_VIEW)
+            }
+        )
+        Text(
+            text = "My Benefits",
+            fontFamily = font_archivo_bold,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(top= 11.5.dp, bottom = 11.5.dp, start=16.dp, end = 16.dp)
+        )
+         BenefitListView(Modifier.fillMaxHeight())
+    }
+}
 
-    val model: MembershipBenefitViewModel = viewModel()
-    val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
-    val context: Context = LocalContext.current
-    //calling member benefit
-    model.memberBenefitAPI(context)
+@Composable
+fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
 
     Column(
         modifier = Modifier
@@ -50,22 +73,27 @@ fun MyBenefitView(openProfileScreen: (profileScreenState: MyProfileScreenState) 
     ) {
         ProfileSubViewHeader("My Benefits")
         {
-            openProfileScreen(it)
+            openProfileScreen(MyProfileScreenState.BENEFIT_VIEW)
         }
-        membershipBenefit?.let { LazyRowItemsDemo(it) }
+        BenefitListView(Modifier.height(200.dp))
     }
-
 }
 
+    @Composable
+fun BenefitListView(modifier: Modifier) {
 
+        val model: MembershipBenefitViewModel = viewModel()
+        val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
+        val context: Context = LocalContext.current
+        //calling member benefit
+        model.memberBenefitAPI(context)
 
-@Composable
-fun LazyRowItemsDemo(itemViewStates: List<MemberBenefit>) {
-    LazyColumn(modifier = Modifier.height(200.dp)) {
-        items(itemViewStates) {
-            ListItemMyBenefit(it)
+        membershipBenefit?.let { LazyColumn(modifier = modifier) {
+            items(it) {
+                ListItemMyBenefit(it)
+            } }
         }
-    }
+
 }
 
 @Composable

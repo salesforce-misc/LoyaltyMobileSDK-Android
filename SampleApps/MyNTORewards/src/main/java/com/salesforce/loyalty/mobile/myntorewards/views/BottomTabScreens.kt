@@ -85,109 +85,11 @@ fun MyProfileScreen() {
         MyProfileScreenState.BENEFIT_VIEW -> MyProfileBenefitFullScreenView {
             currentMyProfileState= it
             }
-        MyProfileScreenState.TRANSACTION_VIEW -> MyProfileBenefitFullScreenView {
+        MyProfileScreenState.TRANSACTION_VIEW -> MyProfileTransactionFullScreenView {
             currentMyProfileState= it
         }
     }
 }
-
-@Composable
-fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit)
-{
-    Column(verticalArrangement = Arrangement.Top,
-        modifier = Modifier.padding(start=16.dp, end = 16.dp)
-        )
-    {
-
-        Spacer(modifier = Modifier.height(50.dp))
-        Image(
-            painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.padding(top= 10.dp, bottom = 10.dp).clickable {
-                openProfileScreen(MyProfileScreenState.MAIN_VIEW)
-            }
-        )
-
-        Text(
-            text = "My Benefits",
-            fontFamily = font_archivo_bold,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(top= 11.5.dp, bottom = 11.5.dp)
-        )
-
-        val model: MembershipBenefitViewModel = viewModel()
-        val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
-        val context: Context = LocalContext.current
-        //calling member benefit
-        model.memberBenefitAPI(context)
-        membershipBenefit?.let { LazyRowItemsDemo2(it) }
-
-    }
-
-}
-
-@Composable
-fun LazyRowItemsDemo2(itemViewStates: List<MemberBenefit>) {
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        items(itemViewStates) {
-            ListItemMyBenefit(it)
-        }
-    }
-}
-
-@Composable
-fun MyProfileLandingView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit)
-{
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .background(Color.White),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    )
-
-    {
-        Spacer(modifier = Modifier.height(50.dp))
-        ScreenTabHeader()
-
-        Column(modifier = Modifier.verticalScroll(
-            rememberScrollState()
-        ),) {
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(Color.White))
-            UserInfoRow()
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(Color.White))
-            ProfileCard()
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(MyProfileScreenBG))
-            TransactionCard()
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(MyProfileScreenBG))
-            MyBenefitView(){
-                openProfileScreen(it)
-            }
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(MyProfileScreenBG))
-
-        }
-    }
-}
-
 
 
 @Composable
