@@ -32,7 +32,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 @Composable
 fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Unit) {
 
-    val membershipID = PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
+    val membershipNumber = PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
     val userName = "$firstName $lastName"
@@ -50,9 +50,9 @@ fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Uni
         {
             closePopup()
         }
-        QRCodeBox(membershipID, userName)
+        QRCodeBox(membershipNumber, userName)
         Text(
-            text = "Share the referral code with your family and friends. Earn rewards every time someone uses your referral code to join the loyalty program.",
+            text = stringResource(id = R.string.scan_the_qr_code_text),
             fontFamily = font_sf_pro,
             color = LightBlack,
             textAlign = TextAlign.Center,
@@ -84,7 +84,7 @@ fun QRPopupHeader(closePopup: () -> Unit)
 
     {
         Text(
-            text = "My Referral Code",
+            text = stringResource(id = R.string.my_membership_code),
             fontFamily = font_sf_pro,
             color = Color.Black,
             fontSize = 16.sp,
@@ -112,7 +112,7 @@ fun QRPopupHeader(closePopup: () -> Unit)
 
 
 @Composable
-fun QRCodeBox(membershipID: String, userName:String)
+fun QRCodeBox(membershipNumber: String, userName:String)
 {
     Column(modifier = Modifier.padding(start = 32.dp, end = 32.dp)) {
 
@@ -141,7 +141,7 @@ fun QRCodeBox(membershipID: String, userName:String)
                     modifier = Modifier
                 )
                 Text(
-                    text = "Membership QR Code",
+                    text = stringResource(id = R.string.membership_qr_code),
                     fontFamily = font_sf_pro,
                     color = LightBlack,
                     textAlign = TextAlign.Center,
@@ -149,12 +149,12 @@ fun QRCodeBox(membershipID: String, userName:String)
                     fontWeight = FontWeight.Normal,
                 )
                 Spacer(modifier = Modifier.height(42.dp))
-                QRCode(membershipID, 120, 120)
+                QRCode(membershipNumber, 120, 120)
 
 
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = "Referral Code: JULIA COM M250D",
+                    text = stringResource(id = R.string.my_membership_number)+ membershipNumber,
                     fontFamily = font_sf_pro,
                     color = LightBlack,
                     textAlign = TextAlign.Center,
@@ -191,7 +191,7 @@ fun QRPopupCloseButton(closePopup: () -> Unit)
             shape = RoundedCornerShape(100.dp)
         ) {
             Text(
-                text = "Close",
+                text = stringResource(id = R.string.close_text),
                 fontFamily = font_sf_pro,
                 color = Color.White,
                 textAlign = TextAlign.Center,

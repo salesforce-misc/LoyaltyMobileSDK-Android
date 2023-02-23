@@ -45,4 +45,11 @@
     <string name="screen_title_more">"More"</string>
     <string name="my_transactions">"My Transactions"</string>
     <string name="view_all">"View All"</string>
+    <string name="my_benefits">"My Benefits"</string>
+    <string name="my_membership_code">"My Membership Code"</string>
+    <string name="membership_qr_code">"Membership QR Code"</string>
+    <string name="my_membership_number">"Membership Number: "</string>
+    <string name="close_text">"Close"</string>
+    <string name="share_this_referall_code_text">"Share the referral code with your family and friends. Earn rewards every time someone uses your referral code to join the loyalty program."</string>
+    <string name="scan_the_qr_code_text">"Scan the QR Code or enter your membership number at participating store and online sites to earn and redeem points"</string>
 </resources>

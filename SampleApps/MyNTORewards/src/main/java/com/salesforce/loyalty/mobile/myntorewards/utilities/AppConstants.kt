@@ -23,5 +23,15 @@ class AppConstants {
         const val ROUTE_ONBOARDING_SCREEN = "onboarding_screen"
         const val ROUTE_LANDING_SCREEN = "landing_screen"
 
+
+        const val BENEFIT_TYPE_FREE_SHIPPING = "Free Shipping"
+        const val BENEFIT_TYPE_EXTENDED_RETURN = "Extended Return"
+        const val BENEFIT_TYPE_FREE_SAMPLE = "Free Sample"
+        const val BENEFIT_TYPE_FREE_SUBSCRIPTION =  "Free Subscription"
+        const val BENEFIT_TYPE_OFFER = "Tier Exclusive Offer"
+        const val BENEFIT_TYPE_SUPPORT = "Support"
+        const val BENEFIT_TYPE_COMPLIMENT_VOUCHER = "Complimentary Vouchers"
+
+
     }
 }

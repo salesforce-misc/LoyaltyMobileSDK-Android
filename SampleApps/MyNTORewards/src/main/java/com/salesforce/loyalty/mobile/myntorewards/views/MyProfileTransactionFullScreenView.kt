@@ -36,7 +36,7 @@ fun MyProfileTransactionFullScreenView(openProfileScreen: (profileScreenState: M
                 }
         )
         Text(
-            text = "My Transactions",
+            text = stringResource(R.string.my_transactions),
             fontFamily = font_archivo_bold,
             fontWeight = FontWeight.Bold,
             color = Color.Black,

@@ -48,7 +48,7 @@ fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyPro
             }
         )
         Text(
-            text = "My Benefits",
+            text = stringResource(R.string.my_benefits),
             fontFamily = font_archivo_bold,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -71,7 +71,7 @@ fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScr
             .padding(16.dp)
 
     ) {
-        ProfileSubViewHeader("My Benefits")
+        ProfileSubViewHeader(stringResource(R.string.my_benefits))
         {
             openProfileScreen(MyProfileScreenState.BENEFIT_VIEW)
         }
