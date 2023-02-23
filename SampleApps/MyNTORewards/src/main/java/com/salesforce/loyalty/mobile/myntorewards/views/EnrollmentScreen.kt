@@ -44,7 +44,6 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenVie
 
 //Enrollment Screen UI
 
-
 @Composable
 fun EnrollmentPopup(openPopup: (popupStatus: PopupState) -> Unit)
 {
@@ -58,7 +57,6 @@ fun EnrollmentPopup(openPopup: (popupStatus: PopupState) -> Unit)
         }
     }
 }
-
 
 
 @Composable
