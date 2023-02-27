@@ -11,6 +11,7 @@ object LoyaltyConfig {
     const val MEMBER_BASE_URL =
         "https://internalmobileteam-dev-ed.develop.my.salesforce.com/services/data/"
     const val KEY_MEMBERSHIP_NUMBER = "MembershipNumber"
+    const val KEY_MEMBER_ID = "MemberId"
     const val KEY_PROMOTION_NAME = "PromotionName"
     enum class ProgramProcessName(val processName: String) {
         GET_PROMOTIONS("GetMemberPromotions"),

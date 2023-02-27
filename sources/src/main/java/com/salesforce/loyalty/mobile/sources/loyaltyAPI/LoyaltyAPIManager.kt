@@ -111,12 +111,20 @@ object LoyaltyAPIManager {
      * @return PromotionsResponse
      */
     suspend fun getEligiblePromotions(
-        membershipNumber: String
+        membershipNumber: String?,
+        memberId: String?
     ): Result<PromotionsResponse> {
         Log.d(TAG, "getEligiblePromotions() $membershipNumber")
 
+        var processParameterMap: MutableMap<String, Any?> = mutableMapOf()
+        if (membershipNumber?.isNotEmpty() == true) {
+            processParameterMap[LoyaltyConfig.KEY_MEMBERSHIP_NUMBER] = membershipNumber
+        } else if (memberId?.isNotEmpty() == true) {
+            processParameterMap[LoyaltyConfig.KEY_MEMBER_ID] = memberId
+        }
+
         val requestBody: PromotionsRequest =
-            PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber)))
+            PromotionsRequest(listOf(processParameterMap))
         return LoyaltyClient.loyaltyApi.getEligiblePromotions(
             LoyaltyConfig.getRequestUrl(
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
