@@ -57,5 +57,4 @@ interface LoyaltyApiInterface {
         @Query("productName") productName: String,
         @Query("productCategoryName") productCategoryName: String
     ): Result<VoucherModel>
-
 }
