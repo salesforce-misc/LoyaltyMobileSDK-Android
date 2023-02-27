@@ -162,4 +162,34 @@ object LoyaltyAPIManager {
             requestBody
         )
     }
+
+    /**
+     * API to Unenroll from Promotion
+     *
+     * @param membershipNumber Unique membership number of the user
+     * @param promotionName Name of the promotion enrolled to
+     * @return EnrollPromotionsResponse
+     */
+    suspend fun unrollPromotion(
+        membershipNumber: String,
+        promotionName: String
+    ): Result<UnenrollPromotionResponse> {
+        Log.d(TAG, "unrollPromotion() $membershipNumber Promotion Name: $promotionName")
+
+        var requestBody = mapOf(
+            LoyaltyConfig.KEY_PROGRAM_NAME to LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+            LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
+            LoyaltyConfig.KEY_PROMOTION_NAME to promotionName
+        )
+
+
+        return LoyaltyClient.loyaltyApi.unenrollPromotion(
+            LoyaltyConfig.getRequestUrl(
+                LoyaltyConfig.Resource.UnenrollPromotion(
+                    LoyaltyConfig.ProgramProcessName.UNENROLL_PROMOTION
+                )
+            ),
+            requestBody
+        )
+    }
 }

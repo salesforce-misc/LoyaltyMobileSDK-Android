@@ -39,4 +39,10 @@ interface LoyaltyApiInterface {
         @Url url: String,
         @Body requestBody: PromotionsRequest
     ): Result<EnrollPromotionsResponse>
+
+    @POST()
+    suspend fun unenrollPromotion(
+        @Url url: String,
+        @Body requestBody: Map<String, Any?>
+    ): Result<UnenrollPromotionResponse>
 }
