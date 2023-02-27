@@ -27,7 +27,7 @@ object LoyaltyConfig {
         class MemberProfile(val programName: String) : Resource()
         class MemberBenefits(val memberId: String) : Resource()
         class LoyaltyProgramProcess(val programName: String, val programProcessName: ProgramProcessName) : Resource()
-
+        class Vouchers(val programName: String, val membershipNumber: String): Resource()
     }
 
     fun getRequestUrl(resource: Resource): String {
@@ -44,6 +44,9 @@ object LoyaltyConfig {
             is Resource.LoyaltyProgramProcess -> {
                 MEMBER_BASE_URL + API_VERSION_58 + "/connect/loyalty/programs/" +
                         resource.programName + "/program-processes/" + resource.programProcessName.processName
+            }
+            is Resource.Vouchers -> {
+                MEMBER_BASE_URL + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/vouchers"
             }
         }
     }

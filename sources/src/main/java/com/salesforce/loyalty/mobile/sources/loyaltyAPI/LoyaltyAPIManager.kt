@@ -104,6 +104,7 @@ object LoyaltyAPIManager {
         )
     }
 
+
     /**
      * API to retrieve Eligible Promotions
      *
@@ -190,4 +191,29 @@ object LoyaltyAPIManager {
             requestBody
         )
     }
+
+    suspend fun getVouchers(
+        membershipNumber: String,
+        voucherStatus: Array<String>,
+        pageNumber: Int,
+        productId: Array<String>,
+        productCategoryId: Array<String>,
+        productName: Array<String>,
+        productCategoryName: Array<String>
+    ): Result<VoucherModel> {
+        Log.d(TAG, "getVouchers() $membershipNumber")
+        val voucherStatus = getStringOfArrayItems(voucherStatus)
+        val productId = getStringOfArrayItems(productId)
+        val productCategoryId = getStringOfArrayItems(productCategoryId)
+        val productName = getStringOfArrayItems(productName)
+        val productCategoryName = getStringOfArrayItems(productCategoryName)
+
+        return LoyaltyClient.loyaltyApi.getVouchers(
+            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.Vouchers(LoyaltyConfig.LOYALTY_PROGRAM_NAME, membershipNumber)),
+            membershipNumber, voucherStatus, pageNumber, productId, productCategoryId, productName, productCategoryName
+        )
+    }
+
+    private fun getStringOfArrayItems(items: Array<String>) = items.reduce { acc, item -> "$acc,$item" }
+
 }

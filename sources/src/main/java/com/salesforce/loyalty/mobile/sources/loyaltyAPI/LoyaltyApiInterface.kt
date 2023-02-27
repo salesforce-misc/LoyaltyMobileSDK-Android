@@ -45,4 +45,17 @@ interface LoyaltyApiInterface {
         @Url url: String,
         @Body requestBody: PromotionsRequest
     ): Result<UnenrollPromotionResponse>
+
+    @GET()
+    suspend fun getVouchers(
+        @Url url: String,
+        @Query("membershipNumber") membershipNumber: String,
+        @Query("voucherStatus") voucherStatus: String,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("productId") productId: String,
+        @Query("productCategoryId") productCategoryId: String,
+        @Query("productName") productName: String,
+        @Query("productCategoryName") productCategoryName: String
+    ): Result<VoucherModel>
+
 }
