@@ -6,3 +6,9 @@ enum class PopupState {
     POPUP_CONGRATULATIONS,
     POPUP_NONE,
 }
+
+enum class MyProfileScreenState {
+    MAIN_VIEW,
+    BENEFIT_VIEW,
+    TRANSACTION_VIEW,
+}

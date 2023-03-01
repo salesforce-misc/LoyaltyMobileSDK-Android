@@ -27,7 +27,7 @@ fun BottomNavigationUI(navController: NavController) {
         BottomNavTabs.Home,
         BottomNavTabs.MyOffers,
         BottomNavTabs.MyProfile,
-        BottomNavTabs.Redeem,
+        //BottomNavTabs.Redeem,  //part of UX but not part of MVP
         BottomNavTabs.More
     )
     BottomNavigation(

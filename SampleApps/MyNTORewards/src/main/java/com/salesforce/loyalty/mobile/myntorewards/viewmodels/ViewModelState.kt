@@ -11,3 +11,4 @@ enum class LoginState {
     LOGIN_FAILURE,
     LOGIN_DEFAULT_EMPTY,
 }
+

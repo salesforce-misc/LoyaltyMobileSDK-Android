@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,77 +24,39 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 
 // Combine UI of Onboarding screen having buttons to open join Popup and Login Popup
 @Composable
 fun JoinLoginButtonBox(navController: NavController) {
-    var popupControlLogin by remember { mutableStateOf(false) }
-    var popupControlJoin by remember { mutableStateOf(false) }
-    var popupControlCongratulations by remember { mutableStateOf(false) }
+
+    var currentPopupState by remember { mutableStateOf(PopupState.POPUP_NONE) }
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    JoinButton { popupControlJoin = true }
+    JoinButton { currentPopupState = PopupState.POPUP_JOIN }
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    AlreadyAMemberButton { popupControlLogin = true }
+    AlreadyAMemberButton { currentPopupState = PopupState.POPUP_LOGIN }
 
-    //Popup Control Join
-    if (popupControlJoin) {
-        Popup(
-            alignment = Alignment.Center,
-            offset = IntOffset(0, 700),
-            onDismissRequest = { popupControlJoin = false },
-            properties = PopupProperties(focusable = true)
-        ) {
-            //Launch Login UI or close Join UI logic
-            EnrollmentUI(navController) {
-                popupControlJoin = (it == PopupState.POPUP_JOIN)
-                popupControlLogin = (it == PopupState.POPUP_LOGIN)
-                popupControlCongratulations = (it == PopupState.POPUP_CONGRATULATIONS)
-            }
+    when (currentPopupState) {
+        PopupState.POPUP_JOIN -> EnrollmentPopup{
+            currentPopupState= it
         }
-    }
-
-    //Popup Control Login
-    if (popupControlLogin) {
-        Popup(
-            alignment = Alignment.Center,
-            offset = IntOffset(0, 700),
-            onDismissRequest = { popupControlLogin = false },
-            properties = PopupProperties(focusable = true)
-        ) {
-            //Launch Join UI or close Login UI logic
-            LoginUI(navController) {
-                popupControlJoin = (it == PopupState.POPUP_JOIN)
-                popupControlLogin = (it == PopupState.POPUP_LOGIN)
-            }
+        PopupState.POPUP_LOGIN -> LoginPopup(navController) {
+            currentPopupState= it
         }
-    }
-
-    if (popupControlCongratulations) {
-        Popup(
-            alignment = Alignment.Center,
-            offset = IntOffset(0, 700),
-            onDismissRequest = { popupControlLogin = false },
-            properties = PopupProperties(focusable = true)
-        ) {
-            //Launch Join UI or close Login UI logic
-            EnrollmentCongratulationsView(navController = navController)
-            {
-                popupControlJoin = false
-                popupControlLogin = false
-                popupControlCongratulations = false
-            }
+        PopupState.POPUP_CONGRATULATIONS -> EnrollmentCongratulationsPopup(navController){
+            currentPopupState= it
+        }
+        PopupState.POPUP_NONE -> { Log.d("JoinLoginButtonBox", "No-Popup")
         }
     }
 }
-
 @Composable
 fun JoinButton(openJoinPopup: () -> Unit) {
-
 
     Button(
         modifier = Modifier
