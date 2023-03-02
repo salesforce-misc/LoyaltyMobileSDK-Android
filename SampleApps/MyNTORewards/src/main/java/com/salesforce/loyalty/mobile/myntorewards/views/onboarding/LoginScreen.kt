@@ -1,10 +1,13 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.app.AlertDialog
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -29,12 +32,14 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldText
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextField
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 
@@ -51,12 +56,17 @@ fun LoginPopup(navController: NavController, openPopup: (popupStatus: PopupState
             openPopup(it)
         }
     }
+
+
 }
 
 @Composable
 fun LoginUI(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
     Column(
         modifier = Modifier
+            .navigationBarsPadding()
+            .imePadding()
+            .verticalScroll(rememberScrollState()).fillMaxWidth()
             .fillMaxHeight(0.5f)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally

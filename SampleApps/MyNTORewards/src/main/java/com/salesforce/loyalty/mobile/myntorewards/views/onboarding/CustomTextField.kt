@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
 import android.util.Patterns
 import androidx.compose.foundation.background
@@ -36,6 +36,7 @@ fun OutlineFieldText(
     placeholderText: String,
     hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit
 ) {
+
     OutlinedTextField(
         value = textfieldValue,
         onValueChange = {

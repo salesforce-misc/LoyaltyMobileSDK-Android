@@ -1,11 +1,10 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.navigation
 
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_MORE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_OFFER_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_PROFILE_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_REDEEM_SCREEN
 
 sealed class BottomNavTabs(var titleID: Int, var iconID: Int, var route: String) {
     object Home : BottomNavTabs(

@@ -41,6 +41,9 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.CustomTextField
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldTextWithError
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextFieldWithError
 
 //Enrollment Screen UI
 
