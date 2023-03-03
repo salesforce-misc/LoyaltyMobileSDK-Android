@@ -64,7 +64,7 @@ fun OnboardingScreenBox(navController: NavController) {
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
             currentPopupState?.let { bottomSheetType ->
-                openBottomSheetContent(
+                OpenBottomSheetContent(
                     bottomSheetType = bottomSheetType,
                     navController = navController,
                     setBottomSheetState = {
@@ -142,7 +142,7 @@ fun OnboardingScreenBox(navController: NavController) {
     }
 }
 @Composable
-fun openBottomSheetContent(
+fun OpenBottomSheetContent(
     bottomSheetType: BottomSheetType,
     navController: NavController,
     setBottomSheetState: (bottomSheetState: BottomSheetType) -> Unit,

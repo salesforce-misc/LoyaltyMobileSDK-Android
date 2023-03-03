@@ -56,7 +56,7 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
                         .clip(RoundedCornerShape(10.dp)),
                 )
 
-                membershipPromo?.get(page)?.imageUrl?.let {
+                membershipPromo?.get(page)?.promotionImageUrl?.let {
                     GlideImage(
                         model = it,
                         contentDescription = "Image",

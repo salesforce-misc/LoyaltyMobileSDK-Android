@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,32 +12,28 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun MyPromotionScreen() {
+fun MyPromotionScreen(membershipPromo: List<Results>?) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -89,10 +84,6 @@ fun MyPromotionScreen() {
             }
 
         }
-        val model: MyPromotionViewModel = viewModel()
-        val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
-        val context: Context = LocalContext.current
-        model.promotionAPI(context)
         membershipPromo?.let {
             LazyColumn(
                 modifier = Modifier
@@ -158,16 +149,6 @@ fun MyPromotionScreenHeader() {
 }
 
 
-@Composable
-fun PromotionScreenTabs() {
-
-}
-
-@Composable
-fun MyPromotionList(currentTabState: MutableState<PromotionTabs.TabAll>) {
-
-}
-
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun PromotionItem(results: Results) {
@@ -193,7 +174,7 @@ fun PromotionItem(results: Results) {
                 contentScale = ContentScale.FillWidth
             )
             GlideImage(
-                model = results.imageUrl,
+                model = results.promotionImageUrl,
                 contentDescription = description,
                 modifier = Modifier
                     .size(130.dp, 166.dp)

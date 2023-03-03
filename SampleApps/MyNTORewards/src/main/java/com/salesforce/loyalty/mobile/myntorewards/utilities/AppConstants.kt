@@ -10,6 +10,9 @@ class AppConstants {
         const val KEY_MEMBERSHIP_NUMBER = "membershipNumber_key"
         const val KEY_PROGRAM_NAME = "programName_key"
         const val KEY_EMAIL_ID = "emailID_key"
+        const val KEY_FIRSTNAME = "firstName_key"
+        const val KEY_LASTNAME = "lastName_key"
+
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"

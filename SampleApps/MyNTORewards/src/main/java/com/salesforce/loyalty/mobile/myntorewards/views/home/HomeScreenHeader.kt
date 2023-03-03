@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +25,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.views.RewardPointsAndExpiry
 
 
 @Composable
@@ -57,9 +60,17 @@ fun UserNameAndRewardRow() {
     val model: MembershipProfileViewModel = viewModel()
     val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
 
+    val context: Context = LocalContext.current
+    model.getMemberProfile(context)
+
+    /* val firstName = PrefHelper.customPrefs(context)[AppConstants.KEY_FIRSTNAME, ""]
+       val lastName = PrefHelper.customPrefs(context)[AppConstants.KEY_LASTNAME, ""]*/
+
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
-    val userName = "$firstName $lastName"
+    val userNameWelcomeText = "Welcome $firstName $lastName  !"
+    val points= membershipProfile?.memberCurrencies?.get(0)?.pointsBalance.toString()
+
 
     Row(
         modifier = Modifier
@@ -73,7 +84,7 @@ fun UserNameAndRewardRow() {
 
     ) {
         Text(
-            text = "Welcome, Akash Agrawal !",
+            text = userNameWelcomeText,
             fontWeight = FontWeight.Normal,
             fontFamily = font_sf_pro,
             color = Color.Black,
@@ -81,15 +92,19 @@ fun UserNameAndRewardRow() {
             fontSize = 16.sp,
             modifier = Modifier.padding(start = 16.dp)
         )
-        Text(
-            text = "17850 Points",
-            fontWeight = FontWeight.Normal,
-            fontFamily = font_sf_pro,
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(end = 16.dp)
-        )
+
+        membershipProfile?.memberCurrencies?.get(0)?.pointsBalance.let {
+            Text(
+                text = "${it.toString()} Points",
+                fontWeight = FontWeight.Normal,
+                fontFamily = font_sf_pro,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(end = 16.dp)
+            )
+        }
+
     }
 }
 
