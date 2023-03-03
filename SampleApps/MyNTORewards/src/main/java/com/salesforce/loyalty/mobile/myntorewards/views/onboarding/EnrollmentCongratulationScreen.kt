@@ -38,20 +38,27 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
 
 @Composable
-fun EnrollmentCongratulationsPopup(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit)
-{
-    Popup(alignment = Alignment.Center,
+fun EnrollmentCongratulationsPopup(
+    navController: NavController,
+    openPopup: (popupStatus: PopupState) -> Unit
+) {
+    Popup(
+        alignment = Alignment.Center,
         offset = IntOffset(0, 700),
-        onDismissRequest = { openPopup(PopupState.POPUP_NONE)},
+        onDismissRequest = { openPopup(PopupState.POPUP_NONE) },
         properties = PopupProperties(focusable = true)
-    ){
+    ) {
         EnrollmentCongratulationsView(navController) {
             openPopup(it)
         }
     }
 }
+
 @Composable
-fun EnrollmentCongratulationsView(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
+fun EnrollmentCongratulationsView(
+    navController: NavController,
+    openPopup: (popupStatus: PopupState) -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier

@@ -13,8 +13,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 
 @Composable
-fun MyProfileLandingView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit)
-{
+fun MyProfileLandingView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -27,37 +26,49 @@ fun MyProfileLandingView(openProfileScreen: (profileScreenState: MyProfileScreen
         Spacer(modifier = Modifier.height(50.dp))
         ScreenTabHeader()
 
-        Column(modifier = Modifier.verticalScroll(
-            rememberScrollState()
-        ),) {
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(Color.White))
+        Column(
+            modifier = Modifier.verticalScroll(
+                rememberScrollState()
+            ),
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp)
+                    .fillMaxWidth()
+                    .background(Color.White)
+            )
             UserInfoRow()
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(Color.White))
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp)
+                    .fillMaxWidth()
+                    .background(Color.White)
+            )
             ProfileCard()
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(MyProfileScreenBG))
-            TransactionCard{
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp)
+                    .fillMaxWidth()
+                    .background(MyProfileScreenBG)
+            )
+            TransactionCard {
                 openProfileScreen(it)
             }
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(MyProfileScreenBG))
-            MyBenefitMiniScreenView{
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp)
+                    .fillMaxWidth()
+                    .background(MyProfileScreenBG)
+            )
+            MyBenefitMiniScreenView {
                 openProfileScreen(it)
             }
-            Spacer(modifier = Modifier
-                .height(24.dp)
-                .fillMaxWidth()
-                .background(MyProfileScreenBG))
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp)
+                    .fillMaxWidth()
+                    .background(MyProfileScreenBG)
+            )
 
         }
     }

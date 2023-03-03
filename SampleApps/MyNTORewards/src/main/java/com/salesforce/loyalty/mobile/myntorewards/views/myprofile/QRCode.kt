@@ -28,8 +28,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 @Composable
-fun QRCode(value: String, width: Int, height:Int)
-{
+fun QRCode(value: String, width: Int, height: Int) {
 
     val qrCodeBitmap = remember { mutableStateOf<ImageBitmap?>(null) }
     val scope = rememberCoroutineScope()
@@ -44,7 +43,15 @@ fun QRCode(value: String, width: Int, height:Int)
             withContext(Dispatchers.Default) {
                 qrCodeBitmap.value = try {
 
-                    createBitmap(MultiFormatWriter().encode(value, BarcodeFormat.QR_CODE, width, height, hints))?.asImageBitmap()
+                    createBitmap(
+                        MultiFormatWriter().encode(
+                            value,
+                            BarcodeFormat.QR_CODE,
+                            width,
+                            height,
+                            hints
+                        )
+                    )?.asImageBitmap()
                 } catch (e: Exception) {
                     Log.e("ComposeBarcodes", "Invalid Barcode Format", e)
                     null
@@ -53,7 +60,7 @@ fun QRCode(value: String, width: Int, height:Int)
         }
     }
 
-    qrCodeBitmap.value?.let {qrCode->
+    qrCodeBitmap.value?.let { qrCode ->
         Image(
             painter = BitmapPainter(qrCode),
             contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),

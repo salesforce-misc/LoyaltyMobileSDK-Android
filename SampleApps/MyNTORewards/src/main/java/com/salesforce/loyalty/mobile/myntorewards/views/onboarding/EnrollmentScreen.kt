@@ -48,15 +48,15 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextF
 //Enrollment Screen UI
 
 @Composable
-fun EnrollmentPopup(openPopup: (popupStatus: PopupState) -> Unit)
-{
+fun EnrollmentPopup(openPopup: (popupStatus: PopupState) -> Unit) {
     Popup(
         alignment = Center,
         offset = IntOffset(0, 700),
-        onDismissRequest = { openPopup(PopupState.POPUP_NONE)},
+        onDismissRequest = { openPopup(PopupState.POPUP_NONE) },
         properties = PopupProperties(focusable = true)
     ) {
-        EnrollmentUI{ openPopup(it)
+        EnrollmentUI {
+            openPopup(it)
         }
     }
 }
@@ -112,19 +112,39 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
             var mailCheckedState by remember { mutableStateOf(true) }
             var tncCheckedState by remember { mutableStateOf(true) }
 
-            OutlineFieldTextWithError(firstNameText, CustomTextField.SignUpTextFieldType.FIRSTNAME, stringResource(id = R.string.onboard_form_first_name)) {
+            OutlineFieldTextWithError(
+                firstNameText,
+                CustomTextField.SignUpTextFieldType.FIRSTNAME,
+                stringResource(id = R.string.onboard_form_first_name)
+            ) {
                 firstNameText = it
             }
-            OutlineFieldTextWithError(lastNameText, CustomTextField.SignUpTextFieldType.LASTNAME, stringResource(id = R.string.onboard_form_last_name)) {
+            OutlineFieldTextWithError(
+                lastNameText,
+                CustomTextField.SignUpTextFieldType.LASTNAME,
+                stringResource(id = R.string.onboard_form_last_name)
+            ) {
                 lastNameText = it
             }
-            OutlineFieldTextWithError(mobileNumberText, CustomTextField.SignUpTextFieldType.PHONE_NUMBER, stringResource(id = R.string.onboard_form_mobile_number)) {
+            OutlineFieldTextWithError(
+                mobileNumberText,
+                CustomTextField.SignUpTextFieldType.PHONE_NUMBER,
+                stringResource(id = R.string.onboard_form_mobile_number)
+            ) {
                 mobileNumberText = it
             }
-            OutlineFieldTextWithError(emailAddressText, CustomTextField.SignUpTextFieldType.EMAIL, stringResource(id = R.string.onboard_form_email_address)) {
+            OutlineFieldTextWithError(
+                emailAddressText,
+                CustomTextField.SignUpTextFieldType.EMAIL,
+                stringResource(id = R.string.onboard_form_email_address)
+            ) {
                 emailAddressText = it
             }
-            PasswordTextFieldWithError(passwordText, CustomTextField.SignUpTextFieldType.PASSWORD, placeholderText = stringResource(id = R.string.form_password)) {
+            PasswordTextFieldWithError(
+                passwordText,
+                CustomTextField.SignUpTextFieldType.PASSWORD,
+                placeholderText = stringResource(id = R.string.form_password)
+            ) {
                 passwordText = it
             }
             PasswordTextFieldWithError(
@@ -135,7 +155,6 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
             ) {
                 confirmPasswordText = it
             }
-
 
 
             //calling checkBox UI
@@ -155,12 +174,14 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
             val model: OnboardingScreenViewModel = viewModel() // fetching view mode reference
 
             //Observing the enrollment status live data as state. As per the Success or failure state will be changed
-            val enrollmentStatusLiveData by model.enrollmentStatusLiveData.observeAsState(EnrollmentState.ENROLLMENT_DEFAULT_EMPTY)
+            val enrollmentStatusLiveData by model.enrollmentStatusLiveData.observeAsState(
+                EnrollmentState.ENROLLMENT_DEFAULT_EMPTY
+            )
 
 
             //after enrollment state change to success
             if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_SUCCESS) {
-                isInProgress= false
+                isInProgress = false
                 Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG)
                     .show()
                 openPopup(PopupState.POPUP_CONGRATULATIONS)
@@ -169,28 +190,30 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
                 model.resetEnrollmentStatusDefault()
             } //after enrollment state change to failure
             else if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_FAILURE) {
-                isInProgress= false
+                isInProgress = false
                 Toast.makeText(LocalContext.current, "Enrollment Failure", Toast.LENGTH_LONG)
                     .show()
                 model.resetEnrollmentStatusDefault() //reset status of enrollment to default
             }
             val context = LocalContext.current
 
-            Button(  modifier = Modifier
-                .fillMaxWidth(), onClick = {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(), onClick = {
 
-                isInProgress= true
-                model.enrollUser(
-                    firstNameText.text,
-                    lastNameText.text,
-                    mobileNumberText.text,
-                    emailAddressText.text,
-                    passwordText.text,
-                    confirmPasswordText.text,
-                    mailCheckedState,
-                    tncCheckedState,
-                    context
-                )},
+                    isInProgress = true
+                    model.enrollUser(
+                        firstNameText.text,
+                        lastNameText.text,
+                        mobileNumberText.text,
+                        emailAddressText.text,
+                        passwordText.text,
+                        confirmPasswordText.text,
+                        mailCheckedState,
+                        tncCheckedState,
+                        context
+                    )
+                },
                 enabled =
                 isJoinButtonEnabled(
                     firstNameText.text,

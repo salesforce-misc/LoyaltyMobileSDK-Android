@@ -33,6 +33,6 @@ val font_sf_pro = FontFamily(
     Font(R.font.sf_pro)
 )
 
-val font_archivo_bold= FontFamily(
+val font_archivo_bold = FontFamily(
     Font(R.font.archivo_bold)
 )

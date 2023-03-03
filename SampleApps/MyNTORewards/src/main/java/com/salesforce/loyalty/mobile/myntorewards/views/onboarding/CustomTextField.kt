@@ -226,7 +226,8 @@ fun PasswordTextField(
     OutlinedTextField(
         value = textFieldValue,
         onValueChange = {
-            hideLoginOpenJoin(it)},
+            hideLoginOpenJoin(it)
+        },
 
         placeholder = {
             Text(
@@ -235,7 +236,8 @@ fun PasswordTextField(
                 color = TextGray,
                 fontSize = 14.sp,
                 modifier = Modifier.background(VeryLightPurple, RoundedCornerShape(16.dp))
-            ) },
+            )
+        },
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)),
@@ -245,12 +247,14 @@ fun PasswordTextField(
         textStyle = TextStyle(
             fontFamily = font_sf_pro,
             color = Color.Black,
-            fontSize = 14.sp),
+            fontSize = 14.sp
+        ),
 
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = VeryLightPurple,
             focusedIndicatorColor = Color.Transparent, //hide the indicator
-            unfocusedIndicatorColor = Color.Transparent),
+            unfocusedIndicatorColor = Color.Transparent
+        ),
 
         shape = RoundedCornerShape(16.dp),
 

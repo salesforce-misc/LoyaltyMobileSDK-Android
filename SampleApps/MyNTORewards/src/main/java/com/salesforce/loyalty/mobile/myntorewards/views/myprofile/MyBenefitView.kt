@@ -33,9 +33,9 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitVi
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 
 @Composable
-fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit)
-{
-    Column(verticalArrangement = Arrangement.Top,
+fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Top,
         modifier = Modifier.background(Color.White)
     )
     {
@@ -44,9 +44,11 @@ fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyPro
             painter = painterResource(id = R.drawable.back_arrow),
             contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier.padding(top= 10.dp, bottom = 10.dp, start=16.dp, end = 16.dp).clickable {
-                openProfileScreen(MyProfileScreenState.MAIN_VIEW)
-            }
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)
+                .clickable {
+                    openProfileScreen(MyProfileScreenState.MAIN_VIEW)
+                }
         )
         Text(
             text = stringResource(R.string.my_benefits),
@@ -55,9 +57,9 @@ fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyPro
             color = Color.Black,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
-            modifier = Modifier.padding(top= 11.5.dp, bottom = 11.5.dp, start=16.dp, end = 16.dp)
+            modifier = Modifier.padding(top = 11.5.dp, bottom = 11.5.dp, start = 16.dp, end = 16.dp)
         )
-         BenefitListView(Modifier.fillMaxHeight())
+        BenefitListView(Modifier.fillMaxHeight())
     }
 }
 
@@ -80,20 +82,22 @@ fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScr
     }
 }
 
-    @Composable
+@Composable
 fun BenefitListView(modifier: Modifier) {
 
-        val model: MembershipBenefitViewModel = viewModel()
-        val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
-        val context: Context = LocalContext.current
-        //calling member benefit
-        model.memberBenefitAPI(context)
+    val model: MembershipBenefitViewModel = viewModel()
+    val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
+    val context: Context = LocalContext.current
+    //calling member benefit
+    model.memberBenefitAPI(context)
 
-        membershipBenefit?.let { LazyColumn(modifier = modifier) {
+    membershipBenefit?.let {
+        LazyColumn(modifier = modifier) {
             items(it) {
                 ListItemMyBenefit(it)
-            } }
+            }
         }
+    }
 
 }
 
@@ -108,10 +112,11 @@ fun ListItemMyBenefit(benefit: MemberBenefit) {
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
 
-        Column(modifier = Modifier
-            .size(32.dp)
-            .background(Color.White, CircleShape)
-            .wrapContentSize(Alignment.Center)
+        Column(
+            modifier = Modifier
+                .size(32.dp)
+                .background(Color.White, CircleShape)
+                .wrapContentSize(Alignment.Center)
 
         ) {
 

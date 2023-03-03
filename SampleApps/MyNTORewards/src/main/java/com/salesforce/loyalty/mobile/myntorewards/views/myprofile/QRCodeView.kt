@@ -32,7 +32,8 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 @Composable
 fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Unit) {
 
-    val membershipNumber = PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+    val membershipNumber =
+        PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
     val userName = "$firstName $lastName"
@@ -74,8 +75,7 @@ fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Uni
 }
 
 @Composable
-fun QRPopupHeader(closePopup: () -> Unit)
-{
+fun QRPopupHeader(closePopup: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
@@ -112,58 +112,57 @@ fun QRPopupHeader(closePopup: () -> Unit)
 
 
 @Composable
-fun QRCodeBox(membershipNumber: String, userName:String)
-{
+fun QRCodeBox(membershipNumber: String, userName: String) {
     Column(modifier = Modifier.padding(start = 32.dp, end = 32.dp)) {
 
         Box {
 
-            Column(  verticalArrangement = Arrangement.Top) {
-            Spacer(modifier = Modifier.height(22.dp))
-            Column(
-                verticalArrangement = Arrangement.Top,
-                modifier = Modifier
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-
-                Spacer(modifier = Modifier.height(37.dp))
-
-                Text(
-                    text = userName,
-                    fontFamily = font_sf_pro,
-                    color = LightBlack,
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
+            Column(verticalArrangement = Arrangement.Top) {
+                Spacer(modifier = Modifier.height(22.dp))
+                Column(
+                    verticalArrangement = Arrangement.Top,
                     modifier = Modifier
-                )
-                Text(
-                    text = stringResource(id = R.string.membership_qr_code),
-                    fontFamily = font_sf_pro,
-                    color = LightBlack,
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                )
-                Spacer(modifier = Modifier.height(42.dp))
-                QRCode(membershipNumber, 120, 120)
+                        .background(Color.White, shape = RoundedCornerShape(16.dp))
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
 
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = stringResource(id = R.string.my_membership_number)+ membershipNumber,
-                    fontFamily = font_sf_pro,
-                    color = LightBlack,
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-                Spacer(modifier = Modifier.height(52.dp))
+                    Spacer(modifier = Modifier.height(37.dp))
 
-            }
+                    Text(
+                        text = userName,
+                        fontFamily = font_sf_pro,
+                        color = LightBlack,
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                    )
+                    Text(
+                        text = stringResource(id = R.string.membership_qr_code),
+                        fontFamily = font_sf_pro,
+                        color = LightBlack,
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                    )
+                    Spacer(modifier = Modifier.height(42.dp))
+                    QRCode(membershipNumber, 120, 120)
+
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = stringResource(id = R.string.my_membership_number) + membershipNumber,
+                        fontFamily = font_sf_pro,
+                        color = LightBlack,
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                    )
+                    Spacer(modifier = Modifier.height(52.dp))
+
+                }
             }
             Image(
                 painter = painterResource(id = R.drawable.user_pic),
@@ -177,9 +176,9 @@ fun QRCodeBox(membershipNumber: String, userName:String)
         }
     }
 }
+
 @Composable
-fun QRPopupCloseButton(closePopup: () -> Unit)
-{
+fun QRPopupCloseButton(closePopup: () -> Unit) {
 
     Column(modifier = Modifier.padding(start = 32.dp, end = 32.dp)) {
         Button(

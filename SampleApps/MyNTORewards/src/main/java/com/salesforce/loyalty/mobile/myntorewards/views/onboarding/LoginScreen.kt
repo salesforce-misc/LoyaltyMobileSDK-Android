@@ -44,12 +44,11 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextF
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 
 @Composable
-fun LoginPopup(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit)
-{
+fun LoginPopup(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 700),
-        onDismissRequest = { openPopup(PopupState.POPUP_NONE)},
+        onDismissRequest = { openPopup(PopupState.POPUP_NONE) },
         properties = PopupProperties(focusable = true)
     ) {
         LoginUI(navController) {
@@ -66,7 +65,8 @@ fun LoginUI(navController: NavController, openPopup: (popupStatus: PopupState) -
         modifier = Modifier
             .navigationBarsPadding()
             .imePadding()
-            .verticalScroll(rememberScrollState()).fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
             .fillMaxHeight(0.5f)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -133,11 +133,12 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: PopupState)
         model.resetLoginStatusDefault()//reset login status to default
     }
 
-    Button(  modifier = Modifier
-        .fillMaxWidth(), onClick = {
-        model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
-        navController.navigate(Screen.HomeScreen.route)
-    },
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(), onClick = {
+            model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
+            navController.navigate(Screen.HomeScreen.route)
+        },
         enabled =
         isLoginButtonEnabled(
             emailAddressPhoneNumberText.text,

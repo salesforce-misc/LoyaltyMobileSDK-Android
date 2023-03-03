@@ -53,6 +53,6 @@ data class Results(
     val promEnrollmentStartDate: String?,
     @SerializedName("promotionEnrollmentEndDate")
     val promotionEnrollmentEndDate: String?,
-    @SerializedName("imageUrl")
+    @SerializedName("promotionImageUrl")
     val imageUrl: String?,
 )

@@ -17,7 +17,7 @@ fun HomeTabScreen() {
     val navController = rememberNavController()
     Scaffold(
         Modifier.background(TextPurpoleLightBG),
-        topBar = { BottomNavigationUI(navController) }
+        bottomBar = { BottomNavigationUI(navController) }
 
     )
     { padding ->
@@ -37,7 +37,7 @@ fun TabNavigation(navController: NavHostController) {
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreen()
+            HomeScreen(navController)
         }
         composable(route = BottomNavTabs.MyOffers.route) {
             MyOfferScreen()
@@ -46,9 +46,9 @@ fun TabNavigation(navController: NavHostController) {
             MyProfileScreen()
         }
         //part of UX but not part of MVP
-      /*  composable(route = BottomNavTabs.Redeem.route) {
-            RedeemScreen()
-        }*/
+        /*  composable(route = BottomNavTabs.Redeem.route) {
+              RedeemScreen()
+          }*/
         composable(route = BottomNavTabs.More.route) {
             MoreScreen()
         }

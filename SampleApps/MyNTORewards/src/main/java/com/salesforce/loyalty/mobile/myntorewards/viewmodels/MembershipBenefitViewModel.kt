@@ -14,7 +14,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
 import kotlinx.coroutines.launch
 
-class MembershipBenefitViewModel : ViewModel(){
+class MembershipBenefitViewModel : ViewModel() {
 
     private val TAG = MembershipBenefitViewModel::class.java.simpleName
 
@@ -26,10 +26,12 @@ class MembershipBenefitViewModel : ViewModel(){
 
     fun memberBenefitAPI(context: Context) {
         viewModelScope.launch {
-            var memberID = PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
-            var membershipKey = PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            var memberID =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
+            var membershipKey =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
             LoyaltyAPIManager.getMemberBenefits(memberID, membershipKey).onSuccess {
-                membershipBenefit.value= it.memberBenefits
+                membershipBenefit.value = it.memberBenefits
                 Log.d(TAG, "success member benefit response: $it")
             }.onFailure {
                 Log.d(TAG, "failed: member benefit ${it.message}")

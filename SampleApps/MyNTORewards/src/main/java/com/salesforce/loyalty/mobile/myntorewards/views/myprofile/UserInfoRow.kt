@@ -35,7 +35,9 @@ fun UserInfoRow() {
 //fetching reference of viewmodel
 
     Row(
-        modifier = Modifier.fillMaxWidth().background(Color.White),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {

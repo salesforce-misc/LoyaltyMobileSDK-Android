@@ -42,19 +42,21 @@ fun JoinLoginButtonBox(navController: NavController) {
     AlreadyAMemberButton { currentPopupState = PopupState.POPUP_LOGIN }
 
     when (currentPopupState) {
-        PopupState.POPUP_JOIN -> EnrollmentPopup{
-            currentPopupState= it
+        PopupState.POPUP_JOIN -> EnrollmentPopup {
+            currentPopupState = it
         }
         PopupState.POPUP_LOGIN -> LoginPopup(navController) {
-            currentPopupState= it
+            currentPopupState = it
         }
-        PopupState.POPUP_CONGRATULATIONS -> EnrollmentCongratulationsPopup(navController){
-            currentPopupState= it
+        PopupState.POPUP_CONGRATULATIONS -> EnrollmentCongratulationsPopup(navController) {
+            currentPopupState = it
         }
-        PopupState.POPUP_NONE -> { Log.d("JoinLoginButtonBox", "No-Popup")
+        PopupState.POPUP_NONE -> {
+            Log.d("JoinLoginButtonBox", "No-Popup")
         }
     }
 }
+
 @Composable
 fun JoinButton(openJoinPopup: () -> Unit) {
 

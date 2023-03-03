@@ -19,11 +19,11 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 
 @Composable
-fun MyProfileTransactionFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit)
-{
-    Column(verticalArrangement = Arrangement.Top,
-        modifier = Modifier.padding(start=16.dp, end = 16.dp)
-    ){
+fun MyProfileTransactionFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+    ) {
         Spacer(modifier = Modifier.height(50.dp))
         Image(
             painter = painterResource(id = R.drawable.back_arrow),
@@ -42,7 +42,7 @@ fun MyProfileTransactionFullScreenView(openProfileScreen: (profileScreenState: M
             color = Color.Black,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
-            modifier = Modifier.padding(top= 11.5.dp, bottom = 11.5.dp)
+            modifier = Modifier.padding(top = 11.5.dp, bottom = 11.5.dp)
         )
     }
 

@@ -146,22 +146,24 @@ fun RewardPointsAndExpiry(memberCurrency: MemberCurrency) {
     )
 
     //commented this code its part of UX but not part of current MVP
-   /* val expirablePoints: String = memberCurrency.expirablePoints.toString()
-    val expirationDate: String = memberCurrency.lastExpirationProcessRunDate.toString()
-    Text(
-        text = "$expirablePoints points expiring on $expirationDate",
-        fontFamily = font_sf_pro,
-        fontWeight = FontWeight.Bold,
-        color = Color.White,
-        textAlign = TextAlign.Center,
-        fontSize = 12.sp
-    )*/
+    /* val expirablePoints: String = memberCurrency.expirablePoints.toString()
+     val expirationDate: String = memberCurrency.lastExpirationProcessRunDate.toString()
+     Text(
+         text = "$expirablePoints points expiring on $expirationDate",
+         fontFamily = font_sf_pro,
+         fontWeight = FontWeight.Bold,
+         color = Color.White,
+         textAlign = TextAlign.Center,
+         fontSize = 12.sp
+     )*/
 }
 
 @Composable
 fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
-    val membershipID = PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
-    val loyaltyMemberCurrencyName = membershipProfile?.memberCurrencies?.get(0)?.loyaltyMemberCurrencyName ?: ""
+    val membershipID =
+        PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
+    val loyaltyMemberCurrencyName =
+        membershipProfile?.memberCurrencies?.get(0)?.loyaltyMemberCurrencyName ?: ""
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -179,9 +181,9 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
             fontSize = 14.sp
         )
         Column(modifier = Modifier.clickable {
-            popupControlQRCOde= true
+            popupControlQRCOde = true
         }) {
-            QRCode(value = membershipID, width =46 , height = 46)
+            QRCode(value = membershipID, width = 46, height = 46)
         }
 
         if (popupControlQRCOde) {
