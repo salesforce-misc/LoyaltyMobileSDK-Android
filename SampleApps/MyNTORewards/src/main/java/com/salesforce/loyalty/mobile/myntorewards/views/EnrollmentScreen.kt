@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -34,47 +33,37 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Enrollment Screen UI
 
 @Composable
-fun EnrollmentPopup(openPopup: (popupStatus: PopupState) -> Unit)
-{
-    Popup(
-        alignment = Center,
-        offset = IntOffset(0, 700),
-        onDismissRequest = { openPopup(PopupState.POPUP_NONE)},
-        properties = PopupProperties(focusable = true)
-    ) {
-        EnrollmentUI{ openPopup(it)
-        }
-    }
-}
-
-
-@Composable
-fun EnrollmentUI(openPopup: (popupStatus: PopupState) -> Unit) {
+fun EnrollmentUI(openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet : () -> Unit) {
     Column(
         modifier = Modifier
+            .navigationBarsPadding()
+            .imePadding()
+            .fillMaxWidth()
             .fillMaxHeight(0.92f)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
         PopupHeader(headingText = stringResource(id = R.string.join_text)) {
-            openPopup(it)
+            closeSheet()
         }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
+                .navigationBarsPadding()
+                .imePadding()
+                .fillMaxHeight()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 .verticalScroll(
                     rememberScrollState()
@@ -92,7 +81,7 @@ fun EnrollmentUI(openPopup: (popupStatus: PopupState) -> Unit) {
 }
 
 @Composable
-fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
+fun OnboardingForm(openPopup: (popupStatus: BottomSheetType) -> Unit) {
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
@@ -160,7 +149,7 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
                 isInProgress= false
                 Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG)
                     .show()
-                openPopup(PopupState.POPUP_CONGRATULATIONS)
+                openPopup(BottomSheetType.POPUP_CONGRATULATIONS)
                 //closing the popup
                 // navController.navigate(Screen.HomeScreen.route) // routing to homescreen
                 model.resetEnrollmentStatusDefault()
@@ -225,7 +214,7 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
 }
 
 @Composable
-fun LinkAlreadyAMember(openPopup: (popupStatus: PopupState) -> Unit) {
+fun LinkAlreadyAMember(openPopup: (popupStatus: BottomSheetType) -> Unit) {
     //Text Already a member Login
     Text(
         buildAnnotatedString {
@@ -252,7 +241,7 @@ fun LinkAlreadyAMember(openPopup: (popupStatus: PopupState) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .clickable {
-                openPopup(PopupState.POPUP_LOGIN)
+                openPopup(BottomSheetType.POPUP_LOGIN)
             },
         textAlign = TextAlign.Center
     )
