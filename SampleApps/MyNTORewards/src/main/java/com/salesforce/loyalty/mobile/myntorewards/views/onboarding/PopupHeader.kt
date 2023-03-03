@@ -18,11 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
 
 //header Component being used in Popup
 @Composable
-fun PopupHeader(headingText: String, openPopup: (popupStatus: PopupState) -> Unit) {
+fun PopupHeader(headingText: String, closeSheet : () -> Unit) {
 
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -50,7 +49,7 @@ fun PopupHeader(headingText: String, openPopup: (popupStatus: PopupState) -> Uni
                 .width(16.dp)
                 .height(16.dp)
                 .clickable {
-                    openPopup(PopupState.POPUP_NONE)
+                    closeSheet()
                 },
             contentScale = ContentScale.FillWidth,
         )

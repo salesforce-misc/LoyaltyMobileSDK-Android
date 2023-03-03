@@ -176,16 +176,14 @@ object LoyaltyAPIManager {
     ): Result<UnenrollPromotionResponse> {
         Log.d(TAG, "unrollPromotion() $membershipNumber Promotion Name: $promotionName")
 
-        var requestBody = mapOf(
-            LoyaltyConfig.KEY_PROGRAM_NAME to LoyaltyConfig.LOYALTY_PROGRAM_NAME,
-            LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
-            LoyaltyConfig.KEY_PROMOTION_NAME to promotionName
-        )
-
+        val requestBody: PromotionsRequest =
+            PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
+                LoyaltyConfig.KEY_PROMOTION_NAME to promotionName)))
 
         return LoyaltyClient.loyaltyApi.unenrollPromotion(
             LoyaltyConfig.getRequestUrl(
-                LoyaltyConfig.Resource.UnenrollPromotion(
+                LoyaltyConfig.Resource.LoyaltyProgramProcess(
+                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
                     LoyaltyConfig.ProgramProcessName.UNENROLL_PROMOTION
                 )
             ),

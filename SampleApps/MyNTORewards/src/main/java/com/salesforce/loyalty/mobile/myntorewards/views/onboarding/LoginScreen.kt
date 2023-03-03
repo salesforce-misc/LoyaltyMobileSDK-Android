@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
-import android.app.AlertDialog
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,57 +23,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
-import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldText
-import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextField
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 
 @Composable
-fun LoginPopup(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
-    Popup(
-        alignment = Alignment.Center,
-        offset = IntOffset(0, 700),
-        onDismissRequest = { openPopup(PopupState.POPUP_NONE) },
-        properties = PopupProperties(focusable = true)
-    ) {
-        LoginUI(navController) {
-            openPopup(it)
-        }
-    }
-
-
-}
-
-@Composable
-fun LoginUI(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
+fun LoginUI(navController: NavController, openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet : () -> Unit) {
     Column(
         modifier = Modifier
-            .navigationBarsPadding()
-            .imePadding()
+            .navigationBarsPadding().imePadding()
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
-            .fillMaxHeight(0.5f)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
         PopupHeader(headingText = stringResource(id = R.string.login_text))
         {
-            openPopup(it)
+            closeSheet()
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -82,7 +57,7 @@ fun LoginUI(navController: NavController, openPopup: (popupStatus: PopupState) -
         )
         {
             LoginForm(navController) {
-                openPopup(it)
+                closeSheet()
             }
             LinkNewMemberJoin {
                 openPopup(it)
@@ -92,7 +67,7 @@ fun LoginUI(navController: NavController, openPopup: (popupStatus: PopupState) -
 }
 
 @Composable
-fun LoginForm(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
+fun LoginForm(navController: NavController, closeSheet : () -> Unit) {
     var emailAddressPhoneNumberText by remember { mutableStateOf(TextFieldValue("")) }
     var passwordtext by remember { mutableStateOf(TextFieldValue("")) }
 
@@ -124,7 +99,7 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: PopupState)
     if (loginStatus == LoginState.LOGIN_SUCCESS) {
         Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
         navController.navigate(Screen.HomeScreen.route) //navigate to home screen
-        openPopup(PopupState.POPUP_NONE)  // closing popup
+        closeSheet()  // closing popup
         model.resetLoginStatusDefault()
     }
     //loginStatus state being change to Failed after token fetch
@@ -133,12 +108,11 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: PopupState)
         model.resetLoginStatusDefault()//reset login status to default
     }
 
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(), onClick = {
-            model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
-            navController.navigate(Screen.HomeScreen.route)
-        },
+    Button(  modifier = Modifier
+        .fillMaxWidth(), onClick = {
+        model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
+        navController.navigate(Screen.HomeScreen.route)
+    },
         enabled =
         isLoginButtonEnabled(
             emailAddressPhoneNumberText.text,
@@ -172,7 +146,7 @@ fun isLoginButtonEnabled(
 }
 
 @Composable
-fun LinkNewMemberJoin(openPopup: (popupStatus: PopupState) -> Unit) {
+fun LinkNewMemberJoin(openPopup: (popupStatus: BottomSheetType) -> Unit) {
     Text(
         buildAnnotatedString {
             withStyle(
@@ -198,7 +172,7 @@ fun LinkNewMemberJoin(openPopup: (popupStatus: PopupState) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .clickable {
-                openPopup(PopupState.POPUP_JOIN)
+                openPopup(BottomSheetType.POPUP_JOIN)
             },
         textAlign = TextAlign.Center
     )

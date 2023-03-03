@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -34,50 +33,37 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
-import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.CustomTextField
-import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldTextWithError
-import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextFieldWithError
 
 //Enrollment Screen UI
 
 @Composable
-fun EnrollmentPopup(openPopup: (popupStatus: PopupState) -> Unit) {
-    Popup(
-        alignment = Center,
-        offset = IntOffset(0, 700),
-        onDismissRequest = { openPopup(PopupState.POPUP_NONE) },
-        properties = PopupProperties(focusable = true)
-    ) {
-        EnrollmentUI {
-            openPopup(it)
-        }
-    }
-}
-
-
-@Composable
-fun EnrollmentUI(openPopup: (popupStatus: PopupState) -> Unit) {
+fun EnrollmentUI(openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet : () -> Unit) {
     Column(
         modifier = Modifier
+            .navigationBarsPadding()
+            .imePadding()
+            .fillMaxWidth()
             .fillMaxHeight(0.92f)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
         PopupHeader(headingText = stringResource(id = R.string.join_text)) {
-            openPopup(it)
+            closeSheet()
         }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
+                .navigationBarsPadding()
+                .imePadding()
+                .fillMaxHeight()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 .verticalScroll(
                     rememberScrollState()
@@ -95,7 +81,7 @@ fun EnrollmentUI(openPopup: (popupStatus: PopupState) -> Unit) {
 }
 
 @Composable
-fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
+fun OnboardingForm(openPopup: (popupStatus: BottomSheetType) -> Unit) {
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
@@ -112,39 +98,19 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
             var mailCheckedState by remember { mutableStateOf(true) }
             var tncCheckedState by remember { mutableStateOf(true) }
 
-            OutlineFieldTextWithError(
-                firstNameText,
-                CustomTextField.SignUpTextFieldType.FIRSTNAME,
-                stringResource(id = R.string.onboard_form_first_name)
-            ) {
+            OutlineFieldTextWithError(firstNameText, CustomTextField.SignUpTextFieldType.FIRSTNAME, stringResource(id = R.string.onboard_form_first_name)) {
                 firstNameText = it
             }
-            OutlineFieldTextWithError(
-                lastNameText,
-                CustomTextField.SignUpTextFieldType.LASTNAME,
-                stringResource(id = R.string.onboard_form_last_name)
-            ) {
+            OutlineFieldTextWithError(lastNameText, CustomTextField.SignUpTextFieldType.LASTNAME, stringResource(id = R.string.onboard_form_last_name)) {
                 lastNameText = it
             }
-            OutlineFieldTextWithError(
-                mobileNumberText,
-                CustomTextField.SignUpTextFieldType.PHONE_NUMBER,
-                stringResource(id = R.string.onboard_form_mobile_number)
-            ) {
+            OutlineFieldTextWithError(mobileNumberText, CustomTextField.SignUpTextFieldType.PHONE_NUMBER, stringResource(id = R.string.onboard_form_mobile_number)) {
                 mobileNumberText = it
             }
-            OutlineFieldTextWithError(
-                emailAddressText,
-                CustomTextField.SignUpTextFieldType.EMAIL,
-                stringResource(id = R.string.onboard_form_email_address)
-            ) {
+            OutlineFieldTextWithError(emailAddressText, CustomTextField.SignUpTextFieldType.EMAIL, stringResource(id = R.string.onboard_form_email_address)) {
                 emailAddressText = it
             }
-            PasswordTextFieldWithError(
-                passwordText,
-                CustomTextField.SignUpTextFieldType.PASSWORD,
-                placeholderText = stringResource(id = R.string.form_password)
-            ) {
+            PasswordTextFieldWithError(passwordText, CustomTextField.SignUpTextFieldType.PASSWORD, placeholderText = stringResource(id = R.string.form_password)) {
                 passwordText = it
             }
             PasswordTextFieldWithError(
@@ -155,6 +121,7 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
             ) {
                 confirmPasswordText = it
             }
+
 
 
             //calling checkBox UI
@@ -174,46 +141,42 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
             val model: OnboardingScreenViewModel = viewModel() // fetching view mode reference
 
             //Observing the enrollment status live data as state. As per the Success or failure state will be changed
-            val enrollmentStatusLiveData by model.enrollmentStatusLiveData.observeAsState(
-                EnrollmentState.ENROLLMENT_DEFAULT_EMPTY
-            )
+            val enrollmentStatusLiveData by model.enrollmentStatusLiveData.observeAsState(EnrollmentState.ENROLLMENT_DEFAULT_EMPTY)
 
 
             //after enrollment state change to success
             if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_SUCCESS) {
-                isInProgress = false
+                isInProgress= false
                 Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG)
                     .show()
-                openPopup(PopupState.POPUP_CONGRATULATIONS)
+                openPopup(BottomSheetType.POPUP_CONGRATULATIONS)
                 //closing the popup
                 // navController.navigate(Screen.HomeScreen.route) // routing to homescreen
                 model.resetEnrollmentStatusDefault()
             } //after enrollment state change to failure
             else if (enrollmentStatusLiveData == EnrollmentState.ENROLLMENT_FAILURE) {
-                isInProgress = false
+                isInProgress= false
                 Toast.makeText(LocalContext.current, "Enrollment Failure", Toast.LENGTH_LONG)
                     .show()
                 model.resetEnrollmentStatusDefault() //reset status of enrollment to default
             }
             val context = LocalContext.current
 
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(), onClick = {
+            Button(  modifier = Modifier
+                .fillMaxWidth(), onClick = {
 
-                    isInProgress = true
-                    model.enrollUser(
-                        firstNameText.text,
-                        lastNameText.text,
-                        mobileNumberText.text,
-                        emailAddressText.text,
-                        passwordText.text,
-                        confirmPasswordText.text,
-                        mailCheckedState,
-                        tncCheckedState,
-                        context
-                    )
-                },
+                isInProgress= true
+                model.enrollUser(
+                    firstNameText.text,
+                    lastNameText.text,
+                    mobileNumberText.text,
+                    emailAddressText.text,
+                    passwordText.text,
+                    confirmPasswordText.text,
+                    mailCheckedState,
+                    tncCheckedState,
+                    context
+                )},
                 enabled =
                 isJoinButtonEnabled(
                     firstNameText.text,
@@ -252,7 +215,7 @@ fun OnboardingForm(openPopup: (popupStatus: PopupState) -> Unit) {
 }
 
 @Composable
-fun LinkAlreadyAMember(openPopup: (popupStatus: PopupState) -> Unit) {
+fun LinkAlreadyAMember(openPopup: (popupStatus: BottomSheetType) -> Unit) {
     //Text Already a member Login
     Text(
         buildAnnotatedString {
@@ -279,7 +242,7 @@ fun LinkAlreadyAMember(openPopup: (popupStatus: PopupState) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .clickable {
-                openPopup(PopupState.POPUP_LOGIN)
+                openPopup(BottomSheetType.POPUP_LOGIN)
             },
         textAlign = TextAlign.Center
     )
