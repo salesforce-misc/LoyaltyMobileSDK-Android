@@ -103,4 +103,91 @@ object LoyaltyAPIManager {
             membershipNumber
         )
     }
+
+    /**
+     * API to retrieve Eligible Promotions
+     *
+     * @param membershipNumber Unique membership number of the user
+     * @return PromotionsResponse
+     */
+    suspend fun getEligiblePromotions(
+        membershipNumber: String?,
+        memberId: String?
+    ): Result<PromotionsResponse> {
+        Log.d(TAG, "getEligiblePromotions() $membershipNumber")
+
+        var processParameterMap: MutableMap<String, Any?> = mutableMapOf()
+        if (membershipNumber?.isNotEmpty() == true) {
+            processParameterMap[LoyaltyConfig.KEY_MEMBERSHIP_NUMBER] = membershipNumber
+        } else if (memberId?.isNotEmpty() == true) {
+            processParameterMap[LoyaltyConfig.KEY_MEMBER_ID] = memberId
+        }
+
+        val requestBody: PromotionsRequest =
+            PromotionsRequest(listOf(processParameterMap))
+        return LoyaltyClient.loyaltyApi.getEligiblePromotions(
+            LoyaltyConfig.getRequestUrl(
+                LoyaltyConfig.Resource.LoyaltyProgramProcess(
+                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    LoyaltyConfig.ProgramProcessName.GET_PROMOTIONS
+                )
+            ),
+            requestBody
+        )
+    }
+
+    /**
+     * API to Enroll in Promotion
+     *
+     * @param membershipNumber Unique membership number of the user
+     * @param promotionName Name of the promotion enrolled to
+     * @return EnrollPromotionsResponse
+     */
+    suspend fun enrollInPromotions(
+        membershipNumber: String,
+        promotionName: String
+    ): Result<EnrollPromotionsResponse> {
+        Log.d(TAG, "enrollInPromotions() $membershipNumber Promotion Name: $promotionName")
+
+        val requestBody: PromotionsRequest =
+            PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
+            LoyaltyConfig.KEY_PROMOTION_NAME to promotionName)))
+        return LoyaltyClient.loyaltyApi.enrollInPromotion(
+            LoyaltyConfig.getRequestUrl(
+                LoyaltyConfig.Resource.LoyaltyProgramProcess(
+                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    LoyaltyConfig.ProgramProcessName.ENROLL_IN_PROMOTION
+                )
+            ),
+            requestBody
+        )
+    }
+
+    /**
+     * API to Unenroll from Promotion
+     *
+     * @param membershipNumber Unique membership number of the user
+     * @param promotionName Name of the promotion enrolled to
+     * @return EnrollPromotionsResponse
+     */
+    suspend fun unrollPromotion(
+        membershipNumber: String,
+        promotionName: String
+    ): Result<UnenrollPromotionResponse> {
+        Log.d(TAG, "unrollPromotion() $membershipNumber Promotion Name: $promotionName")
+
+        val requestBody: PromotionsRequest =
+            PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
+                LoyaltyConfig.KEY_PROMOTION_NAME to promotionName)))
+
+        return LoyaltyClient.loyaltyApi.unenrollPromotion(
+            LoyaltyConfig.getRequestUrl(
+                LoyaltyConfig.Resource.LoyaltyProgramProcess(
+                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    LoyaltyConfig.ProgramProcessName.UNENROLL_PROMOTION
+                )
+            ),
+            requestBody
+        )
+    }
 }

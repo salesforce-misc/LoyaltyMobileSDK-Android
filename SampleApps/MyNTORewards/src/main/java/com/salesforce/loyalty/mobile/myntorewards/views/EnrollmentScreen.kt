@@ -183,7 +183,8 @@ fun OnboardingForm(openPopup: (popupStatus: BottomSheetType) -> Unit) {
                     lastNameText.text,
                     emailAddressText.text,
                     passwordText.text,
-                    confirmPasswordText.text
+                    confirmPasswordText.text,
+                    tncCheckedState
                 ),
                 colors = buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)
@@ -252,13 +253,14 @@ fun isJoinButtonEnabled(
     lastNameText: String,
     emailAddressText: String,
     passwordText: String,
-    confirmPasswordText: String
+    confirmPasswordText: String,
+    tncAcceptance: Boolean
 ): Boolean {
     val firstNameNotEmpty = firstNameText.isNotEmpty()
     val lastNameNotEmpty = lastNameText.isNotEmpty()
     val emailNotEmpty = emailAddressText.isNotEmpty()
     val passwordNotEmpty = passwordText.isNotEmpty()
     val confirmPasswordNotEmpty = confirmPasswordText.isNotEmpty()
-    return (firstNameNotEmpty && lastNameNotEmpty && emailNotEmpty && passwordNotEmpty && confirmPasswordNotEmpty
+    return (tncAcceptance && firstNameNotEmpty && lastNameNotEmpty && emailNotEmpty && passwordNotEmpty && confirmPasswordNotEmpty
             && passwordText.equals(confirmPasswordText))
 }
