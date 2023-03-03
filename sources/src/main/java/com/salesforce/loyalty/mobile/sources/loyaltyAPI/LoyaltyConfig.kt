@@ -20,15 +20,13 @@ object LoyaltyConfig {
     enum class ProgramProcessName(val processName: String) {
         GET_PROMOTIONS("GetMemberPromotions"),
         ENROLL_IN_PROMOTION("EnrollInPromotion"),
-        UNENROLL_PROMOTION("UnenrollInPromotion")
+        UNENROLL_PROMOTION("OptOutOfPromotion")
     }
     sealed class Resource {
         class IndividualEnrollment(val programName: String) : Resource()
         class MemberProfile(val programName: String) : Resource()
         class MemberBenefits(val memberId: String) : Resource()
         class LoyaltyProgramProcess(val programName: String, val programProcessName: ProgramProcessName) : Resource()
-
-        class UnenrollPromotion(val programProcessName: ProgramProcessName) : Resource()
 
     }
 
@@ -46,9 +44,6 @@ object LoyaltyConfig {
             is Resource.LoyaltyProgramProcess -> {
                 MEMBER_BASE_URL + API_VERSION_58 + "/connect/loyalty/programs/" +
                         resource.programName + "/program-processes/" + resource.programProcessName.processName
-            }
-            is Resource.UnenrollPromotion -> {
-                MEMBER_BASE_URL_APEXREST + resource.programProcessName.processName + "/"
             }
         }
     }
