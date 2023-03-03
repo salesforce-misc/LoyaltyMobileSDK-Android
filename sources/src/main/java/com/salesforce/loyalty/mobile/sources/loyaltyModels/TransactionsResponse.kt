@@ -10,47 +10,27 @@ data class TransactionsResponse (
     val message: String?,
     @SerializedName("status")
     val status: Boolean?,
-    @SerializedName("totalCount")
-    val totalCount: Int?,
+    @SerializedName("transactionJournalCount" )
+    val transactionJournalCount: Int?,
     @SerializedName("transactionJournals")
     val transactionJournals: List<TransactionsJournals> = mutableListOf()
 )
 
 data class TransactionsJournals (
-    @SerializedName("Id")
-    val id: String?,
-    @SerializedName("JournalNumber")
-    val journalNumber: String?,
-    @SerializedName("ActivityDate")
+    @SerializedName("activityDate")
     val activityDate: String?,
-    @SerializedName("JournalType")
-    val journalType: String?,
-    @SerializedName("JournalSubType")
-    val journalSubType: String?,
-    @SerializedName("TransactionAmount")
-    val transactionAmount: Int?,
-    @SerializedName("productCategory")
-    val productCategory: String?,
-    @SerializedName("product")
-    val product: String?,
-    @SerializedName("ExternalTransactionNumber")
-    val externalTransactionNumber: String?,
-    @SerializedName("loyaltyProgramCurrencyDetails")
-    val loyaltyProgramCurrencyDetails: List<LoyaltyProgramCurrencyDetails> = mutableListOf(),
-    @SerializedName("additionalAttributes")
-    val additionalAttributes: List<AdditionalAttributes> = mutableListOf()
+    @SerializedName("journalTypeName")
+    val journalTypeName: String?,
+    @SerializedName("pointsChange")
+    val pointsChange: List<PointsChange> = mutableListOf(),
+    @SerializedName("transactionJournalId")
+    val transactionJournalId: String?
+
 )
 
-data class AdditionalAttributes (
-    @SerializedName("value" )
-    val value : String?,
-    @SerializedName("key")
-    val key   : String?
-)
-
-data class LoyaltyProgramCurrencyDetails (
-    @SerializedName("value")
-    val value : Int?,
+data class PointsChange (
     @SerializedName("name")
-    val name  : String?
+    val name: String?,
+    @SerializedName("value")
+    val value: String?
 )
