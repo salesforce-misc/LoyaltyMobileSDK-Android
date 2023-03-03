@@ -34,6 +34,7 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
     var endDate = membershipPromo?.get(page)?.endDate ?: ""
+    var promotionEnrollmentRqr = membershipPromo?.get(page)?.promotionEnrollmentRqr ?: false
 
     Card(
         shape = RoundedCornerShape(4.dp),
@@ -110,9 +111,16 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
 
             Spacer(modifier = Modifier.height(44.dp))
 
-            JoinButtonProm {
 
-            }
+                Row(modifier = Modifier.height(45.dp))
+                {
+                    if(promotionEnrollmentRqr) {
+                        JoinButtonProm {
+
+                        }
+                    }
+                }
+
         }
     }
 }

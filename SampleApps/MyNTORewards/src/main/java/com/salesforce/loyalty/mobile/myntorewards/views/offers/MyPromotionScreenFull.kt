@@ -27,11 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
@@ -54,10 +54,72 @@ fun MyPromotionScreen() {
         )
 
         MyPromotionScreenHeader()
+        var selectedTab by remember { mutableStateOf(0) }
 
-        PromotionScreenTabs()
+        Row(modifier = Modifier.background(Color.White)) {
 
-        MyPromotionList()
+            val tabItems =
+                listOf(PromotionTabs.TabAll, PromotionTabs.TabActive, PromotionTabs.TabUnEnrolled)
+
+            TabRow(selectedTabIndex = selectedTab,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White),
+                containerColor = Color.White,
+                divider = {},
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier
+                            .tabIndicatorOffset(tabPositions[selectedTab])
+                            .background(Color.White),
+                        height = 2.dp,
+                        color = VibrantPurple40
+                    )
+                })
+            {
+                tabItems.forEachIndexed { index, it ->
+                    Tab(
+                        selected = selectedTab == index,
+                        onClick = { selectedTab = index },
+                        text = { Text(text = stringResource(it.tabName)) },
+                        selectedContentColor = VibrantPurple40,
+                        unselectedContentColor = TextGray,
+                    )
+                }
+            }
+
+        }
+        val model: MyPromotionViewModel = viewModel()
+        val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
+        val context: Context = LocalContext.current
+        model.promotionAPI(context)
+        membershipPromo?.let {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            ) {
+                items(it) {
+
+                    when (selectedTab) {
+                        0 -> {
+                            PromotionItem(it)
+                        }
+                        1 -> {
+                            if (it.promotionEnrollmentRqr == false) {
+                                PromotionItem(it)
+                            }
+                        }
+                        2 -> {
+                            if (it.promotionEnrollmentRqr == true) {
+                                PromotionItem(it)
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
 
     }
 
@@ -98,62 +160,12 @@ fun MyPromotionScreenHeader() {
 
 @Composable
 fun PromotionScreenTabs() {
-    Row(modifier = Modifier.background(Color.White)) {
 
-        val tabItems =
-            listOf(PromotionTabs.TabAll, PromotionTabs.TabActive, PromotionTabs.TabUnEnrolled)
-        var selectedTab by remember { mutableStateOf(0) }
-
-
-        TabRow(selectedTabIndex = selectedTab,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White),
-            containerColor = Color.White,
-            divider = {},
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier
-                        .tabIndicatorOffset(tabPositions[selectedTab])
-                        .background(Color.White),
-                    height = 2.dp,
-                    color = VibrantPurple40
-                )
-            })
-        {
-            tabItems.forEachIndexed { index, it ->
-                Tab(
-                    selected = selectedTab == index,
-                    onClick = { selectedTab = index },
-                    text = { Text(text = stringResource(it.tabName)) },
-                    selectedContentColor = VibrantPurple40,
-                    unselectedContentColor = TextGray,
-                )
-            }
-        }
-        when (selectedTab) {
-        }
-    }
 }
 
 @Composable
-fun MyPromotionList() {
-    val model: MyPromotionViewModel = viewModel()
-    val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
-    val context: Context = LocalContext.current
-    model.promotionAPI(context)
+fun MyPromotionList(currentTabState: MutableState<PromotionTabs.TabAll>) {
 
-    membershipPromo?.let {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-        ) {
-            items(it) {
-                PromotionItem(it)
-            }
-        }
-    }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)

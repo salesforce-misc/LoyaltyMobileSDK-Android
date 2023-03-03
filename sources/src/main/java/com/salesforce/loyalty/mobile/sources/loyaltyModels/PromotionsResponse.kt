@@ -31,6 +31,11 @@ data class Results(
     val loyaltyPromotionType: String?,
     @SerializedName("maximumPromotionRewardValue")
     val maximumPromotionRewardValue: Int?,
+
+
+    @SerializedName("promotionEnrollmentRqr")
+    val promotionEnrollmentRqr: Boolean?,
+
     @SerializedName("totalPromotionRewardPointsVal")
     val totalPromotionRewardPointsVal: Int?,
     @SerializedName("loyaltyProgramCurrency")
