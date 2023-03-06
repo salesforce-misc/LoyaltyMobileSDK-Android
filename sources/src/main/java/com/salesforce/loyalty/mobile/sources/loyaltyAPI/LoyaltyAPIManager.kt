@@ -229,12 +229,12 @@ object LoyaltyAPIManager {
 
     suspend fun getVouchers(
         membershipNumber: String,
-        voucherStatus: Array<String>,
-        pageNumber: Int,
-        productId: Array<String>,
-        productCategoryId: Array<String>,
-        productName: Array<String>,
-        productCategoryName: Array<String>
+        voucherStatus: Array<String>?,
+        pageNumber: Int?,
+        productId: Array<String>?,
+        productCategoryId: Array<String>?,
+        productName: Array<String>?,
+        productCategoryName: Array<String>?
     ): Result<VoucherModel> {
         Log.d(TAG, "getVouchers() $membershipNumber")
         val voucherStatus = getStringOfArrayItems(voucherStatus)
@@ -245,10 +245,10 @@ object LoyaltyAPIManager {
 
         return LoyaltyClient.loyaltyApi.getVouchers(
             LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.Vouchers(LoyaltyConfig.LOYALTY_PROGRAM_NAME, membershipNumber)),
-            membershipNumber, voucherStatus, pageNumber, productId, productCategoryId, productName, productCategoryName
+            voucherStatus, pageNumber, productId, productCategoryId, productName, productCategoryName
         )
     }
 
-    private fun getStringOfArrayItems(items: Array<String>) = items.reduce { acc, item -> "$acc,$item" }
+    private fun getStringOfArrayItems(items: Array<String>?) = items?.reduce { acc, item -> "$acc,$item" }
 
 }
