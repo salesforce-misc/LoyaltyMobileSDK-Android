@@ -2,7 +2,7 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
 import com.google.gson.annotations.SerializedName
 
-data class VoucherModel(
+data class VoucherResponse(
     @SerializedName("id")
     val id: String?,
     @SerializedName("voucherDefinition")
