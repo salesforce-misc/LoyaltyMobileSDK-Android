@@ -31,7 +31,6 @@ interface LoyaltyApiInterface {
     @GET()
     suspend fun getTransactions(
         @Url url: String,
-        @Query("membershipNumber") membershipNumber: String,
         @Query("pageNumber") pageNumber: Int?,
         @Query("journalType") journalType: String?,
         @Query("journalSubType") journalSubType: String?,

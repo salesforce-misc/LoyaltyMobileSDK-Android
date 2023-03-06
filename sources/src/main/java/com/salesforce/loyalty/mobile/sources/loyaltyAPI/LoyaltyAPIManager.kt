@@ -125,7 +125,18 @@ object LoyaltyAPIManager {
     ): Result<TransactionsResponse> {
         Log.d(TAG, "getTransactions() $membershipNumber")
         val transPageNumber = pageNumber ?: 1
-        return LoyaltyClient.loyaltyApi.getTransactions(LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.TransactionsHistroy(LoyaltyConfig.LOYALTY_PROGRAM_NAME)), membershipNumber, transPageNumber, journalType, journalSubType, periodStartDate, periodEndDate)
+        return LoyaltyClient.loyaltyApi.getTransactions(
+            LoyaltyConfig.getRequestUrl(
+                LoyaltyConfig.Resource.TransactionsHistory(
+                    LoyaltyConfig.LOYALTY_PROGRAM_NAME, membershipNumber
+                )
+            ),
+            transPageNumber,
+            journalType,
+            journalSubType,
+            periodStartDate,
+            periodEndDate
+        )
     }
 
     /**

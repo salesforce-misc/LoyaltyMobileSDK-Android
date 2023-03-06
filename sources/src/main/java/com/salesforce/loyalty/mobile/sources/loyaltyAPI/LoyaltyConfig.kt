@@ -26,7 +26,7 @@ object LoyaltyConfig {
         class IndividualEnrollment(val programName: String) : Resource()
         class MemberProfile(val programName: String) : Resource()
         class MemberBenefits(val memberId: String) : Resource()
-        class TransactionsHistroy(val programName: String): Resource()
+        class TransactionsHistory(val programName: String, val membershipNumber: String): Resource()
         class LoyaltyProgramProcess(val programName: String, val programProcessName: ProgramProcessName) : Resource()
     }
 
@@ -45,8 +45,8 @@ object LoyaltyConfig {
                 MEMBER_BASE_URL + API_VERSION_58 + "/connect/loyalty/programs/" +
                         resource.programName + "/program-processes/" + resource.programProcessName.processName
             }
-            is Resource.TransactionsHistroy -> {
-                MEMBER_BASE_URL + API_VERSION_58 + "/connect/loyalty/programs/" + resource.programName + "/transaction-history"
+            is Resource.TransactionsHistory -> {
+                MEMBER_BASE_URL + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/transaction-ledger-summary"
             }
         }
     }
