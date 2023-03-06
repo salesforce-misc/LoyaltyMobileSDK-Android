@@ -4,64 +4,73 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+
+
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PopupState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 
 //Enrollment Screen UI
-@Composable
-fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
 
+@Composable
+fun EnrollmentUI(openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet : () -> Unit) {
     Column(
         modifier = Modifier
+            .navigationBarsPadding()
+            .imePadding()
+            .fillMaxWidth()
             .fillMaxHeight(0.92f)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
-
         PopupHeader(headingText = stringResource(id = R.string.join_text)) {
-            openPopup(it)
+            closeSheet()
         }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
+                .navigationBarsPadding()
+                .imePadding()
+                .fillMaxHeight()
                 .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 .verticalScroll(
                     rememberScrollState()
                 )
         )
         {
-            OnboardingForm(navController) {
+            OnboardingForm {
                 openPopup(it)
             }
             LinkAlreadyAMember {
@@ -72,7 +81,7 @@ fun EnrollmentUI(navController: NavController, openPopup: (popupStatus: PopupSta
 }
 
 @Composable
-fun OnboardingForm(navController: NavController, openPopup: (popupStatus: PopupState) -> Unit) {
+fun OnboardingForm(openPopup: (popupStatus: BottomSheetType) -> Unit) {
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
@@ -140,7 +149,7 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: PopupS
                 isInProgress= false
                 Toast.makeText(LocalContext.current, "Enrollment Success", Toast.LENGTH_LONG)
                     .show()
-                openPopup(PopupState.POPUP_CONGRATULATIONS)
+                openPopup(BottomSheetType.POPUP_CONGRATULATIONS)
                 //closing the popup
                 // navController.navigate(Screen.HomeScreen.route) // routing to homescreen
                 model.resetEnrollmentStatusDefault()
@@ -174,7 +183,8 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: PopupS
                     lastNameText.text,
                     emailAddressText.text,
                     passwordText.text,
-                    confirmPasswordText.text
+                    confirmPasswordText.text,
+                    tncCheckedState
                 ),
                 colors = buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)
@@ -205,7 +215,7 @@ fun OnboardingForm(navController: NavController, openPopup: (popupStatus: PopupS
 }
 
 @Composable
-fun LinkAlreadyAMember(openPopup: (popupStatus: PopupState) -> Unit) {
+fun LinkAlreadyAMember(openPopup: (popupStatus: BottomSheetType) -> Unit) {
     //Text Already a member Login
     Text(
         buildAnnotatedString {
@@ -232,7 +242,7 @@ fun LinkAlreadyAMember(openPopup: (popupStatus: PopupState) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .clickable {
-                openPopup(PopupState.POPUP_LOGIN)
+                openPopup(BottomSheetType.POPUP_LOGIN)
             },
         textAlign = TextAlign.Center
     )
@@ -243,13 +253,14 @@ fun isJoinButtonEnabled(
     lastNameText: String,
     emailAddressText: String,
     passwordText: String,
-    confirmPasswordText: String
+    confirmPasswordText: String,
+    tncAcceptance: Boolean
 ): Boolean {
     val firstNameNotEmpty = firstNameText.isNotEmpty()
     val lastNameNotEmpty = lastNameText.isNotEmpty()
     val emailNotEmpty = emailAddressText.isNotEmpty()
     val passwordNotEmpty = passwordText.isNotEmpty()
     val confirmPasswordNotEmpty = confirmPasswordText.isNotEmpty()
-    return (firstNameNotEmpty && lastNameNotEmpty && emailNotEmpty && passwordNotEmpty && confirmPasswordNotEmpty
+    return (tncAcceptance && firstNameNotEmpty && lastNameNotEmpty && emailNotEmpty && passwordNotEmpty && confirmPasswordNotEmpty
             && passwordText.equals(confirmPasswordText))
 }

@@ -3,7 +3,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -20,47 +19,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 
 @Composable
-fun TransactionCard() {
+fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
     Column(
         modifier = Modifier
-            .background(TextPurpoleLightBG)
+            .background(MyProfileScreenBG)
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(16.dp)
-            .verticalScroll(
-                rememberScrollState()
-            )
     ) {
-        TransactionViewHeader()
-        ListItemTransaction()
-        ListItemTransaction()
-        ListItemTransaction()
-    }
-}
+        ProfileSubViewHeader(stringResource(id = R.string.my_transactions))
+        {
+            openProfileScreen(MyProfileScreenState.TRANSACTION_VIEW)
+        }
 
-@Composable
-fun TransactionViewHeader() {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = stringResource(id = R.string.my_transactions),
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-        )
-        Text(
-            text = stringResource(id = R.string.view_all),
-            fontWeight = FontWeight.Bold,
-            color = VibrantPurple40,
-            textAlign = TextAlign.Center,
-            fontSize = 13.sp,
-        )
+        ListItemTransaction()
+        ListItemTransaction()
+        ListItemTransaction()
     }
 }
 

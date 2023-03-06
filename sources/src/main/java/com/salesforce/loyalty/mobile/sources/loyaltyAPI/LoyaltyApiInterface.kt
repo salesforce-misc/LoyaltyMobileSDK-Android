@@ -38,4 +38,23 @@ interface LoyaltyApiInterface {
         @Query("periodStartDate") periodStartDate: String?,
         @Query("periodEndDate") periodEndDate: String?
     ): Result<TransactionsResponse>
+
+    @POST()
+    suspend fun getEligiblePromotions(
+        @Url url: String,
+        @Body requestBody: PromotionsRequest
+    ): Result<PromotionsResponse>
+
+    @POST()
+    suspend fun enrollInPromotion(
+        @Url url: String,
+        @Body requestBody: PromotionsRequest
+    ): Result<EnrollPromotionsResponse>
+
+    @POST()
+    suspend fun unenrollPromotion(
+        @Url url: String,
+        @Body requestBody: PromotionsRequest
+    ): Result<UnenrollPromotionResponse>
+
 }

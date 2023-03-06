@@ -43,9 +43,10 @@ fun TabNavigation(navController: NavHostController) {
         composable(route = BottomNavTabs.MyProfile.route) {
             MyProfileScreen()
         }
-        composable(route = BottomNavTabs.Redeem.route) {
+        //part of UX but not part of MVP
+      /*  composable(route = BottomNavTabs.Redeem.route) {
             RedeemScreen()
-        }
+        }*/
         composable(route = BottomNavTabs.More.route) {
             MoreScreen()
         }

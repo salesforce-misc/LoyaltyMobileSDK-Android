@@ -71,7 +71,7 @@ fun OutlineFieldText(
             unfocusedIndicatorColor = Color.Transparent
         ),
 
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
     )
 }
 

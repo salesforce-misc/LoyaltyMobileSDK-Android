@@ -2,7 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -33,7 +32,7 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
 @Composable
-fun EnrollmentCongratulationsView(navController: NavController, closePopups: () -> Unit) {
+fun EnrollmentCongratulationsView(navController: NavController, closeSheet : () -> Unit) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -125,7 +124,7 @@ fun EnrollmentCongratulationsView(navController: NavController, closePopups: () 
             Button(
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
-                    closePopups()
+                    closeSheet()
                     navController.navigate(Screen.HomeScreen.route)
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),

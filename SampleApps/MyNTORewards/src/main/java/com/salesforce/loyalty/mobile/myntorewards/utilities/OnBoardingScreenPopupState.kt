@@ -1,8 +1,13 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
-enum class PopupState {
+enum class BottomSheetType {
     POPUP_LOGIN,
     POPUP_JOIN,
-    POPUP_CONGRATULATIONS,
-    POPUP_NONE,
+    POPUP_CONGRATULATIONS
+}
+
+enum class MyProfileScreenState {
+    MAIN_VIEW,
+    BENEFIT_VIEW,
+    TRANSACTION_VIEW,
 }
