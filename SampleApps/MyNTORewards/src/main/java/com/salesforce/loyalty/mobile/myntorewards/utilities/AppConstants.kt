@@ -41,6 +41,10 @@ class AppConstants {
         const val TIER_BRONZE = "bronze"
         const val TIER_PLATINUM = "platinum"
         const val TIER_RUBY = "ruby"
+        const val MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED = "EligibleButNotEnrolled"
+        const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
+
+
 
     }
 }

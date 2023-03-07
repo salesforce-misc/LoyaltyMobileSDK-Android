@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -35,6 +36,7 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
     var endDate = membershipPromo?.get(page)?.endDate ?: ""
     var promotionEnrollmentRqr = membershipPromo?.get(page)?.promotionEnrollmentRqr ?: false
+    var memberEligibilityCategory = membershipPromo?.get(page)?.memberEligibilityCategory ?: ""
 
     Card(
         shape = RoundedCornerShape(4.dp),
@@ -59,7 +61,7 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
                 membershipPromo?.get(page)?.promotionImageUrl?.let {
                     GlideImage(
                         model = it,
-                        contentDescription = "Image",
+                        contentDescription = stringResource(id = R.string.content_description_promotion_image),
                         modifier = Modifier
                             .size(289.dp, 154.dp)
                             .clip(RoundedCornerShape(10.dp)),
@@ -98,7 +100,7 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
 
             if (endDate.isNotEmpty()) {
                 Text(
-                    text = "Expiration: $endDate",
+                    text = stringResource(id = R.string.prom_screen_expiration_text)+" $endDate",
                     fontWeight = FontWeight.Bold,
                     fontFamily = font_sf_pro,
                     color = Color.Black,
@@ -114,13 +116,12 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
 
                 Row(modifier = Modifier.height(45.dp))
                 {
-                    if(promotionEnrollmentRqr) {
+                    if(memberEligibilityCategory==MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
                         JoinButtonProm {
 
                         }
                     }
                 }
-
         }
     }
 }

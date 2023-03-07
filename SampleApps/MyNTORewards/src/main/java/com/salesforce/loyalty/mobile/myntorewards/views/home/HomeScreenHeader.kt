@@ -68,7 +68,7 @@ fun UserNameAndRewardRow() {
 
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
-    val userNameWelcomeText = "Welcome $firstName $lastName  !"
+    val userNameWelcomeText = stringResource(id = R.string.home_screen_welcome_start_text)+" $firstName $lastName "+ stringResource(id = R.string.home_screen_welcome_end_text)
     val points= membershipProfile?.memberCurrencies?.get(0)?.pointsBalance.toString()
 
 
@@ -95,7 +95,7 @@ fun UserNameAndRewardRow() {
 
         membershipProfile?.memberCurrencies?.get(0)?.pointsBalance.let {
             Text(
-                text = "${it.toString()} Points",
+                text = "${it.toString()} "+ stringResource(id = R.string.reward_type_points),
                 fontWeight = FontWeight.Normal,
                 fontFamily = font_sf_pro,
                 color = Color.Black,

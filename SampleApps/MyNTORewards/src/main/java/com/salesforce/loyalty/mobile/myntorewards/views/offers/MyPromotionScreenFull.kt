@@ -27,6 +27,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
@@ -97,12 +99,12 @@ fun MyPromotionScreen(membershipPromo: List<Results>?) {
                             PromotionItem(it)
                         }
                         1 -> {
-                            if (it.promotionEnrollmentRqr == false) {
+                            if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE) {
                                 PromotionItem(it)
                             }
                         }
                         2 -> {
-                            if (it.promotionEnrollmentRqr == true) {
+                            if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
                                 PromotionItem(it)
                             }
                         }
@@ -254,7 +256,7 @@ fun PromotionItem(results: Results) {
 
                 if (endDate.isNotEmpty()) {
                     Text(
-                        text = "Exp $endDate  ",
+                        text = stringResource(id = R.string.prom_full_screen_expiration_text)+" $endDate  ",
                         fontWeight = FontWeight.Bold,
                         fontFamily = font_sf_pro,
                         color = Color.White,
