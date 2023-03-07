@@ -12,6 +12,8 @@ data class TransactionsResponse (
     val status: Boolean?,
     @SerializedName("transactionJournalCount" )
     val transactionJournalCount: Int?,
+    @SerializedName("externalTransactionNumber" )
+    val externalTransactionNumber: String?,
     @SerializedName("transactionJournals")
     val transactionJournals: List<TransactionsJournals> = mutableListOf()
 )
@@ -19,18 +21,33 @@ data class TransactionsResponse (
 data class TransactionsJournals (
     @SerializedName("activityDate")
     val activityDate: String?,
+    @SerializedName("additionalTransactionJournalAttributes")
+    val additionalTransactionJournalAttributes: List<AdditionalAttributes> = mutableListOf(),
     @SerializedName("journalTypeName")
     val journalTypeName: String?,
+    @SerializedName("journalSubTypeName")
+    val journalSubTypeName: String?,
+    @SerializedName("transactionAmount")
+    val transactionAmount: String?,
     @SerializedName("pointsChange")
     val pointsChange: List<PointsChange> = mutableListOf(),
     @SerializedName("transactionJournalId")
-    val transactionJournalId: String?
+    val transactionJournalId: String?,
+    @SerializedName("transactionJournalNumber")
+    val transactionJournalNumber: String?
 
 )
 
 data class PointsChange (
-    @SerializedName("name")
-    val name: String?,
+    @SerializedName("changeInPoints")
+    val changeInPoints: Double?,
+    @SerializedName("loyaltyMemberCurrency")
+    val loyaltyMemberCurrency: String?
+)
+
+data class AdditionalAttributes(
+    @SerializedName("fieldName")
+    val fieldName: String?,
     @SerializedName("value")
     val value: String?
 )

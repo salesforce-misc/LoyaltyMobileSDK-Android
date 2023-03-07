@@ -32,8 +32,8 @@ interface LoyaltyApiInterface {
     suspend fun getTransactions(
         @Url url: String,
         @Query("pageNumber") pageNumber: Int?,
-        @Query("journalType") journalType: String?,
-        @Query("journalSubType") journalSubType: String?,
+        @Query("journalTypeName") journalTypeName: String?,
+        @Query("journalSubTypeName") journalSubTypeName: String?,
         @Query("periodStartDate") periodStartDate: String?,
         @Query("periodEndDate") periodEndDate: String?
     ): Result<TransactionsResponse>

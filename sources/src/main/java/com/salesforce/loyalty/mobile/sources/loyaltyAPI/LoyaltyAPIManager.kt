@@ -118,8 +118,8 @@ object LoyaltyAPIManager {
     suspend fun getTransactions(
         membershipNumber: String,
         pageNumber: Int?,
-        journalType: String,
-        journalSubType: String?,
+        journalTypeName: String?,
+        journalSubTypeName: String?,
         periodStartDate: String?,
         periodEndDate: String?
     ): Result<TransactionsResponse> {
@@ -132,8 +132,8 @@ object LoyaltyAPIManager {
                 )
             ),
             transPageNumber,
-            journalType,
-            journalSubType,
+            journalTypeName,
+            journalSubTypeName,
             periodStartDate,
             periodEndDate
         )
