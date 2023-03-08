@@ -140,6 +140,7 @@ object LoyaltyAPIManager {
     }
 
 
+
     /**
      * API to retrieve Eligible Promotions
      *
