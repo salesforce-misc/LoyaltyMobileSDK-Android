@@ -28,6 +28,16 @@ interface LoyaltyApiInterface {
         @Query("membershipNumber") membershipNumber: String,
     ): Result<MemberBenefitsResponse>
 
+    @GET()
+    suspend fun getTransactions(
+        @Url url: String,
+        @Query("pageNumber") pageNumber: Int?,
+        @Query("journalTypeName") journalTypeName: String?,
+        @Query("journalSubTypeName") journalSubTypeName: String?,
+        @Query("periodStartDate") periodStartDate: String?,
+        @Query("periodEndDate") periodEndDate: String?
+    ): Result<TransactionsResponse>
+
     @POST()
     suspend fun getEligiblePromotions(
         @Url url: String,
@@ -45,4 +55,5 @@ interface LoyaltyApiInterface {
         @Url url: String,
         @Body requestBody: PromotionsRequest
     ): Result<UnenrollPromotionResponse>
+
 }

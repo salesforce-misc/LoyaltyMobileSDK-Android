@@ -103,6 +103,41 @@ object LoyaltyAPIManager {
             membershipNumber
         )
     }
+    
+    /**
+     * API to get Transactions - Makes an asynchronous request for transactions data from the Salesforce
+     *
+     * @param membershipNumber The membership number of the loyalty program member.
+     * @param pageNumber Number of the page you want returned.
+     * @param journalType The journal type of transaction journals that are retrieved.
+     * @param journalSubType The journal subtype of transaction journals that are retrieved.
+     * @param periodStartDate Retrieve transaction journals until this date.
+     * @param periodEndDate Retrieve transaction journals until this date.
+     * @return TransactionModel JSON of the Transactions API response.
+     */
+    suspend fun getTransactions(
+        membershipNumber: String,
+        pageNumber: Int?,
+        journalTypeName: String?,
+        journalSubTypeName: String?,
+        periodStartDate: String?,
+        periodEndDate: String?
+    ): Result<TransactionsResponse> {
+        Log.d(TAG, "getTransactions() $membershipNumber")
+        val transPageNumber = pageNumber ?: 1
+        return LoyaltyClient.loyaltyApi.getTransactions(
+            LoyaltyConfig.getRequestUrl(
+                LoyaltyConfig.Resource.TransactionsHistory(
+                    LoyaltyConfig.LOYALTY_PROGRAM_NAME, membershipNumber
+                )
+            ),
+            transPageNumber,
+            journalTypeName,
+            journalSubTypeName,
+            periodStartDate,
+            periodEndDate
+        )
+    }
 
     /**
      * API to retrieve Eligible Promotions
