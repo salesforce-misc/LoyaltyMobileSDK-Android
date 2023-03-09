@@ -14,8 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,9 +102,20 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
             Spacer(modifier = Modifier.height(10.dp))
 
             if (endDate.isNotEmpty()) {
-                Text(
-                    text = stringResource(id = R.string.prom_screen_expiration_text)+" $endDate",
-                    fontWeight = FontWeight.Bold,
+
+                androidx.compose.material.Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle()
+                        ) {
+                            append(stringResource(id = R.string.prom_screen_expiration_text))
+                        }
+                        withStyle(
+                            style = SpanStyle(fontWeight = FontWeight.Bold)
+                        ) {
+                            append(endDate)
+                        }
+                    },
                     fontFamily = font_sf_pro,
                     color = Color.Black,
                     modifier = Modifier
