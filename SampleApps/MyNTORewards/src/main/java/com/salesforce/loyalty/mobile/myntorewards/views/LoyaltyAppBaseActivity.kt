@@ -1,17 +1,19 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
-import android.os.Build
+
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavController
+import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionCardRow
 
 //Main Activity Application Entry Point
-class MainActivity : ComponentActivity() {
+class LoyaltyAppBaseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,17 +24,17 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
+
+            //HomeTabScreen()
             MainScreenStart()
         }
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MainScreenStart()
+    PromotionCardRow(NavController(context = LocalContext.current))
+    //MainScreenStart()
 }
-
 

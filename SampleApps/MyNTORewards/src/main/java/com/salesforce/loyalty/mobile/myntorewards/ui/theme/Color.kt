@@ -20,15 +20,16 @@ val MembershipTierBG = Color(0xFFFCC003)
 val TextGreen = Color(0xFF2E844A)
 val MyProfileScreenBG = Color(0xFFF7F4FB)
 val LightBlack = Color(0xFF444444)
-val MyProfileBG= Color(0xFFECE1F9)
+val MyProfileBG = Color(0xFFECE1F9)
 
-val ColourPurpleQR= 0xFF7526E3;
-val ColourWhiteQR= 0xFFFFFFFF;
+val ColourPurpleQR = 0xFF7526E3;
+val ColourWhiteQR = 0xFFFFFFFF;
 
 
 val TierColourSilver = Color(0xFFA0A0A0)
-val TierColourGold =Color(0xFFFCC003)
-val TierColourBronze =Color(0xFFCA9b8C)
+val TierColourGold = Color(0xFFFCC003)
+val TierColourBronze = Color(0xFFCA9b8C)
 val TierColourPlatinum = Color(0xFFE3E3E3)
 val TierColourRuby = Color(0xFFE28787)
-val TierColourWhite= Color(0xFFFFFFFF)
+val TierColourWhite = Color(0xFFFFFFFF)
+val PromotionCardBG = Color(0xFFF5F5F5)

@@ -19,8 +19,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 class Assets {
 
     companion object LoyaltyAppAsset {
-        fun getBenefitsLogo(type:String?):Int
-        {
+        fun getBenefitsLogo(type: String?): Int {
             return when (type) {
                 BENEFIT_TYPE_FREE_SHIPPING -> R.drawable.benefit_icon_free_shipping
                 BENEFIT_TYPE_EXTENDED_RETURN -> R.drawable.benefit_icon_extended_return
@@ -33,8 +32,7 @@ class Assets {
             }
         }
 
-        fun getTierColor(tierName:String?): Color
-        {
+        fun getTierColor(tierName: String?): Color {
             return when (tierName) {
                 TIER_SILVER -> TierColourSilver
                 TIER_GOLD -> TierColourGold
