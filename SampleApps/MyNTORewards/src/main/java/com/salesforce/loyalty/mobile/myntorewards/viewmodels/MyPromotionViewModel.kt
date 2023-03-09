@@ -37,4 +37,20 @@ class MyPromotionViewModel : ViewModel() {
         }
     }
 
+    fun enrollInPromotions(context: Context, promotionName: String) {
+        viewModelScope.launch {
+            val membershipNumber =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            val memberID =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
+            LoyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
+
+                Log.d(TAG, "promotion enrolled: $it")
+            }.onFailure {
+
+                Log.d(TAG, "promotion success ${it.message}")
+            }
+        }
+    }
+
 }

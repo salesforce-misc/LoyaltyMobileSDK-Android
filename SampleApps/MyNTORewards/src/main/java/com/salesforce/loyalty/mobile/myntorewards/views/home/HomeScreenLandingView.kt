@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +22,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
+import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 
 @Composable
 fun HomeScreenLandingView(navController: NavController) {
@@ -43,6 +46,13 @@ fun HomeScreenLandingView(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         PromotionCardRow(navController)
+
+        val currentPopupState by remember { mutableStateOf(true) }
+
+        if(currentPopupState)
+        {
+            PromotionEnrollPopup()
+        }
 
     }
 }
