@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -19,6 +20,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 
 @Composable
@@ -44,6 +47,8 @@ fun HomeScreenLandingView(navController: NavController) {
 
         PromotionCardRow(navController)
 
+        Log.d("Akash", formatPromotionDate("2022-07-09"))
+
     }
 }
 
@@ -65,8 +70,11 @@ fun PromotionCardRow(navController: NavController) {
 
         model.promotionAPI(context)
 
-        val pageCount = membershipPromo?.size ?: 0
+
+        val promListListSize = membershipPromo?.size ?: 0
         val pagerState = rememberPagerState()
+
+        val pageCount = if(promListListSize>MAX_PAGE_COUNT_PROMOTION) { MAX_PAGE_COUNT_PROMOTION } else{ promListListSize }
 
         membershipPromo?.let {
             HorizontalPager(count = pageCount, state = pagerState) { page ->
