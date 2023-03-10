@@ -116,7 +116,6 @@ fun TransactionFullScreenListView() {
             Column(modifier = Modifier.wrapContentHeight()) {
                 Text(
                     text = stringResource(id = R.string.label_transactions_recent),
-                    fontFamily = font_sf_pro,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
@@ -142,7 +141,6 @@ fun TransactionFullScreenListView() {
             Column(modifier = Modifier.wrapContentHeight()) {
                 Text(
                     text = stringResource(id = R.string.label_transactions_one_month_ago),
-                    fontFamily = font_sf_pro,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
@@ -202,7 +200,6 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
             Text(
                 text = transactionName,
                 fontWeight = FontWeight.Bold,
-                fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
                 fontSize = 13.sp,
@@ -216,7 +213,7 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
             )
 
         }
-        Column(modifier = Modifier.weight(0.25f)) {
+        Column(modifier = Modifier.weight(0.3f)) {
             val pointsString =
                 if (points > 0) {
                     "+" + points.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
@@ -225,7 +222,6 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
                 }
             Text(
                 text = pointsString,
-                fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Bold,
                 color = TextGreen,
                 textAlign = TextAlign.Center,
