@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class TransactionsViewModel : ViewModel() {
     private val TAG = TransactionsViewModel::class.java.simpleName
 
-    //live data for login status
+    //live data for transaction data
     val transactionsLiveData: LiveData<TransactionsResponse>
         get() = transactions
 
@@ -27,7 +27,7 @@ class TransactionsViewModel : ViewModel() {
             var membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
             membershipKey?.let { membershipNumber ->
-                LoyaltyAPIManager.getTransactions("M0001", null, null, null, null, null)
+                LoyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)
                     .onSuccess {
                         transactions.value = it
                         Log.d(TAG, "getTransactions success: $it")
