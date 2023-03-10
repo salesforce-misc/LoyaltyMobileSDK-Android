@@ -44,7 +44,6 @@ fun MyProfileTransactionFullScreenView(openProfileScreen: (profileScreenState: M
             fontSize = 18.sp,
             modifier = Modifier.padding(top = 11.5.dp, bottom = 11.5.dp)
         )
+        TransactionFullScreenListView()
     }
-
-
 }
