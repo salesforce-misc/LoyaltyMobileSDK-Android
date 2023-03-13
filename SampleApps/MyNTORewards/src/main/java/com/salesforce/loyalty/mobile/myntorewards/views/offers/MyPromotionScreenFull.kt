@@ -27,6 +27,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
@@ -276,7 +277,7 @@ fun PromotionItem(results: Results) {
 
                 if (endDate.isNotEmpty()) {
                     Text(
-                        text = stringResource(id = R.string.prom_full_screen_expiration_text) + " $endDate  ",
+                        text = stringResource(id = R.string.prom_full_screen_expiration_text)+" "+ formatPromotionDate(endDate),
                         fontWeight = FontWeight.Bold,
                         fontFamily = font_sf_pro,
                         color = Color.White,

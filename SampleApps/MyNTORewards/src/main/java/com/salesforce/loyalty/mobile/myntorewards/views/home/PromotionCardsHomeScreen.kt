@@ -122,7 +122,7 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(endDate)
+                            append(formatPromotionDate(endDate))
                         }
                     },
                     fontFamily = font_sf_pro,

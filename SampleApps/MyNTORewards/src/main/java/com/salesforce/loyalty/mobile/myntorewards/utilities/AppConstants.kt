@@ -43,6 +43,11 @@ class AppConstants {
         const val TIER_RUBY = "ruby"
         const val MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED = "EligibleButNotEnrolled"
         const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
+        const val MAX_PAGE_COUNT_PROMOTION = 4
+        const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
+        const val PROMOTION_DATE_SAMPLE_APP_FORMAT = "dd/MM/yyyy"
+
+
 
 
     }

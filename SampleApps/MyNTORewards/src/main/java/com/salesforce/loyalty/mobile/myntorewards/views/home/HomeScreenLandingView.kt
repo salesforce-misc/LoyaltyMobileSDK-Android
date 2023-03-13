@@ -25,6 +25,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 
 @Composable
@@ -81,8 +83,11 @@ fun PromotionCardRow(navController: NavController) {
 
         model.promotionAPI(context)
 
-        val pageCount = membershipPromo?.size ?: 0
+
+        val promListListSize = membershipPromo?.size ?: 0
         val pagerState = rememberPagerState()
+
+        val pageCount = if(promListListSize>MAX_PAGE_COUNT_PROMOTION) { MAX_PAGE_COUNT_PROMOTION } else{ promListListSize }
 
         membershipPromo?.let {
             HorizontalPager(count = pageCount, state = pagerState) { page ->
