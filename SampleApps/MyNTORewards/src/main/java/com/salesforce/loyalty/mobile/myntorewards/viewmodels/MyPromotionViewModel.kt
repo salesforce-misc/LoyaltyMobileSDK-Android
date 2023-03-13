@@ -22,6 +22,28 @@ class MyPromotionViewModel : ViewModel() {
 
     private val membershipPromo = MutableLiveData<List<Results>>()
 
+    val promEnrollmentStatusLiveData: LiveData<PromotionEnrollmentUpdateState>
+        get() = promEnrollmentStatus
+
+    private val promEnrollmentStatus = MutableLiveData<PromotionEnrollmentUpdateState>()
+
+    //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
+    fun resetPromEnrollmentStatusDefault() {
+        promEnrollmentStatus.value = PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
+    }
+
+
+
+    /*val promUnEnrollmentStatusLiveData: LiveData<PromotionUnEnrollmentState>
+        get() = promUnEnrollmentStatus
+
+    private val promUnEnrollmentStatus = MutableLiveData<PromotionUnEnrollmentState>()
+
+    //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
+    fun resetPromUnEnrollmentStatusDefault() {
+        promUnEnrollmentStatus.value = PromotionUnEnrollmentState.PROMOTION_UNENROLLMENT_DEFAULT_EMPTY
+    }*/
+
     fun promotionAPI(context: Context) {
         viewModelScope.launch {
             val membershipKey =
@@ -44,13 +66,30 @@ class MyPromotionViewModel : ViewModel() {
             val memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
             LoyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
-
+                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
+                promotionAPI(context)
                 Log.d(TAG, "promotion enrolled: $it")
             }.onFailure {
-
+                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
                 Log.d(TAG, "promotion success ${it.message}")
             }
         }
     }
 
+    fun unEnrollInPromotions(context: Context, promotionName: String) {
+        viewModelScope.launch {
+            val membershipNumber =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            val memberID =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
+            LoyaltyAPIManager.unrollPromotion(membershipNumber, promotionName).onSuccess {
+                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
+                promotionAPI(context)
+                Log.d(TAG, "promotion enrolled: $it")
+            }.onFailure {
+                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
+                Log.d(TAG, "promotion success ${it.message}")
+            }
+        }
+    }
 }

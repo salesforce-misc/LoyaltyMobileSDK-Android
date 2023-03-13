@@ -46,6 +46,7 @@
     <string name="my_transactions">"My Transactions"</string>
     <string name="view_all">"View All"</string>
     <string name="my_benefits">"My Benefits"</string>
+    <string name="vouchers">"Vouchers"</string>
     <string name="my_membership_code">"My Membership Code"</string>
     <string name="membership_qr_code">"Membership QR Code"</string>
     <string name="my_membership_number">"Membership Number: "</string>

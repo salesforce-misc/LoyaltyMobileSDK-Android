@@ -3,14 +3,15 @@ package com.salesforce.loyalty.mobile.myntorewards.views.home
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,19 +22,21 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
-import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 
 @Composable
-fun HomeScreenLandingView(navController: NavController) {
+fun HomeScreenLandingView(navController: NavController, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
 
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
-            .background(MyProfileScreenBG)
-    ) {
-
+            .background(MyProfileScreenBG).verticalScroll(rememberScrollState())
+    )
+    {
         Spacer(modifier = Modifier
             .height(50.dp)
             .fillMaxWidth()
@@ -46,13 +49,10 @@ fun HomeScreenLandingView(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         PromotionCardRow(navController)
-
-        val currentPopupState by remember { mutableStateOf(true) }
-
-        if(currentPopupState)
-        {
-            PromotionEnrollPopup()
+        VoucherRow(navController){
+            openHomeScreen(it)
         }
+
 
     }
 }
@@ -92,6 +92,64 @@ fun PromotionCardRow(navController: NavController) {
                 .padding(top = 16.dp)
                 .align(Alignment.CenterHorizontally)
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun VoucherRow(navController: NavController, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .wrapContentSize(Alignment.Center)
+            .background(PromotionCardBG)
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+    ) {
+
+        HomeSubViewHeaderVoucher("Voucher", navController)
+        {
+            openHomeScreen(it)
+        }
+        val model: MyPromotionViewModel = viewModel()
+       // val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
+        //val context: Context = LocalContext.current
+
+        //model.promotionAPI(context)
+
+        //val pageCount = membershipPromo?.size ?: 0
+        val pagerState = rememberPagerState()
+
+       /* membershipPromo?.let {
+            HorizontalPager(count = pageCount, state = pagerState) { page ->
+                PromotionCard(page, membershipPromo)
+            }
+        }*/
+
+
+        //dummy voucher number for testing.
+        listOf(1,2,3).let {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                items(it) {
+                    Spacer(modifier = Modifier.width(12.dp))
+                    VoucherView(it, "")
+                }
+            }
+        }
+
+    /*    HorizontalPagerIndicator(
+            pagerState = pagerState,
+            activeColor = VibrantPurple40,
+            inactiveColor = VibrantPurple90,
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .align(Alignment.CenterHorizontally)
+        )*/
 
         Spacer(modifier = Modifier.height(16.dp))
     }

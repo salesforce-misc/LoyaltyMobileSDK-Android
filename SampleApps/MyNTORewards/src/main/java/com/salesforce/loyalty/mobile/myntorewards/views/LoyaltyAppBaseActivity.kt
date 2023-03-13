@@ -12,6 +12,8 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionCardRow
+import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopupUI
+
 //Main Activity Application Entry Point
 class LoyaltyAppBaseActivity : ComponentActivity() {
 
@@ -25,18 +27,13 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
 
         setContent {
 
-            //HomeTabScreen()
-            MainScreenStart()
+            HomeTabScreen()
+            //MainScreenStart()
            // PromotionScreenPopup()
-            //HomeScreenLandingView(NavController(context = LocalContext.current))
+         //   HomeScreenLandingView(NavController(context = LocalContext.current))
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    PromotionCardRow(NavController(context = LocalContext.current))
-    //MainScreenStart()
-}
+
 
