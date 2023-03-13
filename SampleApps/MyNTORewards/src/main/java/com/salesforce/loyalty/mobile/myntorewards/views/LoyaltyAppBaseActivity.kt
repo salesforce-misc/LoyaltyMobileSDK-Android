@@ -26,14 +26,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         )
 
         setContent {
-
-            HomeTabScreen()
-            //MainScreenStart()
-           // PromotionScreenPopup()
-         //   HomeScreenLandingView(NavController(context = LocalContext.current))
+            MainScreenStart()
         }
     }
 }
-
-
-

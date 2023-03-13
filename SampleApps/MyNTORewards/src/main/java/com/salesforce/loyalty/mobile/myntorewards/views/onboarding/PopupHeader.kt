@@ -21,7 +21,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 //header Component being used in Popup
 @Composable
-fun PopupHeader(headingText: String, closeSheet : () -> Unit) {
+fun PopupHeader(headingText: String, closeSheet: () -> Unit) {
 
     Row(
         horizontalArrangement = Arrangement.Start,

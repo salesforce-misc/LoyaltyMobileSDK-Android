@@ -161,11 +161,10 @@ fun PromotionItem(results: Results) {
 
     var currentPopupState by remember { mutableStateOf(false) }
 
-    if(currentPopupState)
-    {
+    if (currentPopupState) {
         PromotionEnrollPopup(results)
         {
-            currentPopupState=false
+            currentPopupState = false
         }
     }
 
@@ -178,7 +177,7 @@ fun PromotionItem(results: Results) {
             .fillMaxWidth()
             .clickable {
 
-                currentPopupState= true
+                currentPopupState = true
             }
             .background(Color.White, shape = RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -251,8 +250,10 @@ fun PromotionItem(results: Results) {
                 color = TextDarkGray,
                 textAlign = TextAlign.Start,
                 fontSize = 14.sp,
-                maxLines= 2,
-                modifier = Modifier.padding(start = 16.dp) .padding(end = 16.dp)
+                maxLines = 2,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .padding(end = 16.dp)
             )
 
             Row(
@@ -275,7 +276,7 @@ fun PromotionItem(results: Results) {
 
                 if (endDate.isNotEmpty()) {
                     Text(
-                        text = stringResource(id = R.string.prom_full_screen_expiration_text)+" $endDate  ",
+                        text = stringResource(id = R.string.prom_full_screen_expiration_text) + " $endDate  ",
                         fontWeight = FontWeight.Bold,
                         fontFamily = font_sf_pro,
                         color = Color.White,

@@ -60,7 +60,11 @@ fun HomeSubViewHeader(heading: String, navController: NavController) {
 }
 
 @Composable
-fun HomeSubViewHeaderVoucher(heading: String, navController: NavController, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun HomeSubViewHeaderVoucher(
+    heading: String,
+    navController: NavController,
+    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,

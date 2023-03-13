@@ -29,9 +29,9 @@ class MyPromotionViewModel : ViewModel() {
 
     //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
     fun resetPromEnrollmentStatusDefault() {
-        promEnrollmentStatus.value = PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
+        promEnrollmentStatus.value =
+            PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
     }
-
 
 
     /*val promUnEnrollmentStatusLiveData: LiveData<PromotionUnEnrollmentState>
@@ -66,11 +66,13 @@ class MyPromotionViewModel : ViewModel() {
             val memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
             LoyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
-                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 promotionAPI(context)
                 Log.d(TAG, "promotion enrolled: $it")
             }.onFailure {
-                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
                 Log.d(TAG, "promotion success ${it.message}")
             }
         }
@@ -83,11 +85,13 @@ class MyPromotionViewModel : ViewModel() {
             val memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
             LoyaltyAPIManager.unrollPromotion(membershipNumber, promotionName).onSuccess {
-                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 promotionAPI(context)
                 Log.d(TAG, "promotion enrolled: $it")
             }.onFailure {
-                promEnrollmentStatus.value= PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
                 Log.d(TAG, "promotion success ${it.message}")
             }
         }

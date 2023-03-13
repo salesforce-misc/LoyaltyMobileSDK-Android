@@ -43,8 +43,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit)
-{
+fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
@@ -52,32 +51,35 @@ fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit)
         properties = PopupProperties(focusable = true),
     ) {
 
-        PromotionEnrollPopupUI(results){
+        PromotionEnrollPopupUI(results) {
             closePopup()
         }
 
     }
 }
+
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit)
-{
+fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
 
 
-    var memberEligibilityCategory=results.memberEligibilityCategory
-    var promotionEnrollmentRqr= results.promotionEnrollmentRqr
+    var memberEligibilityCategory = results.memberEligibilityCategory
+    var promotionEnrollmentRqr = results.promotionEnrollmentRqr
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
-        Column(    modifier = Modifier
-            .fillMaxHeight(0.9f)
-            .background(Color.White, RoundedCornerShape(16.dp)).verticalScroll(
-            rememberScrollState()
-        ),
-            horizontalAlignment = Alignment.CenterHorizontally)
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.9f)
+                .background(Color.White, RoundedCornerShape(16.dp))
+                .verticalScroll(
+                    rememberScrollState()
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
 
         {
 
@@ -93,7 +95,8 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit)
                         painter = painterResource(id = R.drawable.promotion_card_placeholder),
                         contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                         modifier = Modifier
-                            .fillMaxWidth().height(250.dp)
+                            .fillMaxWidth()
+                            .height(250.dp)
                             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                         contentScale = ContentScale.Crop
                     )
@@ -102,16 +105,18 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit)
                         model = results.promotionImageUrl,
                         contentDescription = description,
                         modifier = Modifier
-                            .fillMaxWidth().height(250.dp)
+                            .fillMaxWidth()
+                            .height(250.dp)
                             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
 
                         contentScale = ContentScale.Crop
                     )
                 }
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     horizontalArrangement = Arrangement.End
 
                 ) {
@@ -121,7 +126,8 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit)
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .background(White, CircleShape)
-                            .padding(3.dp).clickable {
+                            .padding(3.dp)
+                            .clickable {
                                 closePopup()
                             }
 
@@ -142,7 +148,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit)
                     textAlign = TextAlign.Start,
                     fontSize = 24.sp,
                     modifier = Modifier
-                        .padding(start = 16.dp, end= 16.dp)
+                        .padding(start = 16.dp, end = 16.dp)
                         .fillMaxWidth()
                 )
             }
@@ -167,7 +173,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit)
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp,
                 modifier = Modifier
-                    .padding(start = 16.dp, end= 16.dp)
+                    .padding(start = 16.dp, end = 16.dp)
                     .fillMaxWidth()
             )
 
@@ -303,9 +309,6 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit)
     }
 
 
-
-
-
 }
 
 @Preview(showBackground = true)
@@ -314,20 +317,19 @@ fun DefaultPreview() {
     // PromotionCardRow(NavController(context = LocalContext.current))
     //MainScreenStart()
 
-   /* PromotionEnrollPopupUI(results) {
+    /* PromotionEnrollPopupUI(results) {
 
-    }*/
+     }*/
 }
 
 
 @Composable
-fun ShopButton(width: Dp)
-{
+fun ShopButton(width: Dp) {
 
     Button(
         modifier = Modifier
             .width(width), onClick = {
-          //  model.enrollInPromotions(context, "PromoName")
+            //  model.enrollInPromotions(context, "PromoName")
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)
@@ -338,7 +340,7 @@ fun ShopButton(width: Dp)
             fontFamily = font_sf_pro,
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
-            color= White,
+            color = White,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(top = 3.dp, bottom = 3.dp)

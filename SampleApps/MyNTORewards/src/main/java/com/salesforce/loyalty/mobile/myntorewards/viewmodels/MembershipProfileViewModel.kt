@@ -38,8 +38,10 @@ class MembershipProfileViewModel : ViewModel() {
             var membershipKey = PrefHelper.customPrefs(context)[KEY_MEMBERSHIP_NUMBER, ""]
             LoyaltyAPIManager.getMemberProfile(memberID, membershipKey, null).onSuccess {
                 membershipProfile.value = it
-                PrefHelper.customPrefs(context).set(KEY_FIRSTNAME, (it.associatedContact?.firstName) ?: "")
-                PrefHelper.customPrefs(context).set(KEY_LASTNAME, (it.associatedContact?.lastName) ?: "")
+                PrefHelper.customPrefs(context)
+                    .set(KEY_FIRSTNAME, (it.associatedContact?.firstName) ?: "")
+                PrefHelper.customPrefs(context)
+                    .set(KEY_LASTNAME, (it.associatedContact?.lastName) ?: "")
 
 
                 Log.d(TAG, "member success: $it")

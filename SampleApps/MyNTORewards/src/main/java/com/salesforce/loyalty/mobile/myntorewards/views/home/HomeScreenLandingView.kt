@@ -28,19 +28,25 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 
 @Composable
-fun HomeScreenLandingView(navController: NavController, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun HomeScreenLandingView(
+    navController: NavController,
+    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+) {
 
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
-            .background(MyProfileScreenBG).verticalScroll(rememberScrollState())
+            .background(MyProfileScreenBG)
+            .verticalScroll(rememberScrollState())
     )
     {
-        Spacer(modifier = Modifier
-            .height(50.dp)
-            .fillMaxWidth()
-            .background(VibrantPurple40))
+        Spacer(
+            modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
+                .background(VibrantPurple40)
+        )
 
         AppLogoAndSearchRow()
 
@@ -49,7 +55,7 @@ fun HomeScreenLandingView(navController: NavController, openHomeScreen: (homeScr
         Spacer(modifier = Modifier.height(16.dp))
 
         PromotionCardRow(navController)
-        VoucherRow(navController){
+        VoucherRow(navController) {
             openHomeScreen(it)
         }
 
@@ -100,7 +106,10 @@ fun PromotionCardRow(navController: NavController) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun VoucherRow(navController: NavController, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun VoucherRow(
+    navController: NavController,
+    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -114,7 +123,7 @@ fun VoucherRow(navController: NavController, openHomeScreen: (homeScreenState: H
             openHomeScreen(it)
         }
         val model: MyPromotionViewModel = viewModel()
-       // val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
+        // val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
         //val context: Context = LocalContext.current
 
         //model.promotionAPI(context)
@@ -122,15 +131,15 @@ fun VoucherRow(navController: NavController, openHomeScreen: (homeScreenState: H
         //val pageCount = membershipPromo?.size ?: 0
         val pagerState = rememberPagerState()
 
-       /* membershipPromo?.let {
-            HorizontalPager(count = pageCount, state = pagerState) { page ->
-                PromotionCard(page, membershipPromo)
-            }
-        }*/
+        /* membershipPromo?.let {
+             HorizontalPager(count = pageCount, state = pagerState) { page ->
+                 PromotionCard(page, membershipPromo)
+             }
+         }*/
 
 
         //dummy voucher number for testing.
-        listOf(1,2,3).let {
+        listOf(1, 2, 3).let {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -142,14 +151,14 @@ fun VoucherRow(navController: NavController, openHomeScreen: (homeScreenState: H
             }
         }
 
-    /*    HorizontalPagerIndicator(
-            pagerState = pagerState,
-            activeColor = VibrantPurple40,
-            inactiveColor = VibrantPurple90,
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .align(Alignment.CenterHorizontally)
-        )*/
+        /*    HorizontalPagerIndicator(
+                pagerState = pagerState,
+                activeColor = VibrantPurple40,
+                inactiveColor = VibrantPurple90,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally)
+            )*/
 
         Spacer(modifier = Modifier.height(16.dp))
     }

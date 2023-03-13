@@ -45,6 +45,5 @@ class AppConstants {
         const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
 
 
-
     }
 }

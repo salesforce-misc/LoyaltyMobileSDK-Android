@@ -31,8 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.BenefitListView
 import com.salesforce.loyalty.mobile.myntorewards.views.ListItemMyBenefit
 
 @Composable
-fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
-{
+fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier.background(Color.White)
@@ -67,18 +66,18 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
 @Composable
 fun VoucherListView(modifier: Modifier) {
 
-   /* val model: MembershipBenefitViewModel = viewModel()
-    val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
-    val context: Context = LocalContext.current
-    //calling member benefit
-    model.memberBenefitAPI(context)
+    /* val model: MembershipBenefitViewModel = viewModel()
+     val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
+     val context: Context = LocalContext.current
+     //calling member benefit
+     model.memberBenefitAPI(context)
 
-    membershipBenefit?.let {
-        LazyColumn(modifier = modifier) {
-            items(it) {
-                ListItemMyBenefit(it)
-            }
-        }
-    }*/
+     membershipBenefit?.let {
+         LazyColumn(modifier = modifier) {
+             items(it) {
+                 ListItemMyBenefit(it)
+             }
+         }
+     }*/
 
 }

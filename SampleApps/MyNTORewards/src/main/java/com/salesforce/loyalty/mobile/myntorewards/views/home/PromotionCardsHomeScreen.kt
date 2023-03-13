@@ -47,8 +47,9 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-            .background(Color.White).clickable {
-                currentPopupState= true
+            .background(Color.White)
+            .clickable {
+                currentPopupState = true
             }
     ) {
         Column(
@@ -86,7 +87,8 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 modifier = Modifier
-                    .align(Alignment.Start).width(289.dp),
+                    .align(Alignment.Start)
+                    .width(289.dp),
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp
             )
@@ -99,7 +101,8 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 modifier = Modifier
-                    .align(Alignment.Start).width(289.dp),
+                    .align(Alignment.Start)
+                    .width(289.dp),
                 textAlign = TextAlign.Start,
                 fontSize = 12.sp,
                 maxLines = 2
@@ -134,21 +137,20 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
             Spacer(modifier = Modifier.height(44.dp))
 
             //commenting as ios platform also removed this
-             /*   Row(modifier = Modifier.height(45.dp))
-                {
-                    if(memberEligibilityCategory==MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-                        JoinButtonProm {
+            /*   Row(modifier = Modifier.height(45.dp))
+               {
+                   if(memberEligibilityCategory==MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
+                       JoinButtonProm {
 
-                        }
-                    }
-                }*/
+                       }
+                   }
+               }*/
 
 
         }
     }
 
-    if(currentPopupState)
-    {
+    if (currentPopupState) {
         membershipPromo?.get(page)?.let {
             PromotionEnrollPopup(it)
             {

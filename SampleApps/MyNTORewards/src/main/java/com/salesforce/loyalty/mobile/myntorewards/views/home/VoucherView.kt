@@ -35,11 +35,13 @@ import com.salesforce.loyalty.mobile.myntorewards.views.MainScreenStart
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.ShopButton
 
 @Composable
-fun VoucherView(page: Int, membershipPromo: Any?)
-{
+fun VoucherView(page: Int, membershipPromo: Any?) {
     Column(
-        modifier = Modifier.width(165.dp)
-        .background(Color.White, RoundedCornerShape(16.dp)).padding(bottom = 16.dp))
+        modifier = Modifier
+            .width(165.dp)
+            .background(Color.White, RoundedCornerShape(16.dp))
+            .padding(bottom = 16.dp)
+    )
 
     {
         Image(
@@ -48,12 +50,16 @@ fun VoucherView(page: Int, membershipPromo: Any?)
             modifier = Modifier
                 .width(165.dp)
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-            contentScale = ContentScale.FillWidth)
+            contentScale = ContentScale.FillWidth
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Column(
-            modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end=16.dp))
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp)
+        )
 
         {
             Text(
@@ -133,11 +139,15 @@ fun VoucherView(page: Int, membershipPromo: Any?)
                 Image(
                     painter = painterResource(id = R.drawable.voucher_frame),
                     contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
-                    modifier = Modifier.height(32.dp).height(145.dp),
+                    modifier = Modifier
+                        .height(32.dp)
+                        .height(145.dp),
                     contentScale = ContentScale.FillWidth
                 )
 
-                Row(modifier = Modifier.height(32.dp).height(145.dp)) {
+                Row(modifier = Modifier
+                    .height(32.dp)
+                    .height(145.dp)) {
 
                     Text(
                         text = "84KFF88S",

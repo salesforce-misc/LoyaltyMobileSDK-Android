@@ -59,7 +59,7 @@ fun OnboardingScreenBox(navController: NavController) {
     }
 
     BottomSheetScaffold(
-        scaffoldState= bottomSheetScaffoldState,
+        scaffoldState = bottomSheetScaffoldState,
 
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
@@ -73,7 +73,7 @@ fun OnboardingScreenBox(navController: NavController) {
                 )
             }
         },
-        sheetPeekHeight= 0.dp
+        sheetPeekHeight = 0.dp
     ) {
         Box(modifier = Modifier.fillMaxSize())
         {
@@ -141,6 +141,7 @@ fun OnboardingScreenBox(navController: NavController) {
         }
     }
 }
+
 @Composable
 fun OpenBottomSheetContent(
     bottomSheetType: BottomSheetType,
