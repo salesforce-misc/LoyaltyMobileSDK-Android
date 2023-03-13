@@ -38,6 +38,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
@@ -156,7 +158,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Details",
+                text = stringResource(id = R.string.text_details),
                 fontWeight = FontWeight.Bold,
                 color = TextDarkGray,
                 textAlign = TextAlign.Start,
@@ -208,7 +210,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
             Spacer(modifier = Modifier.height(80.dp))
 
             results.promotionName?.let {
-                if (memberEligibilityCategory == "EligibleButNotEnrolled") {
+                if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
 
 
                     val model: MyPromotionViewModel = viewModel()
@@ -262,7 +264,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
                     }
 
 
-                } else if (memberEligibilityCategory == "Eligible" && promotionEnrollmentRqr == true) {
+                } else if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE && promotionEnrollmentRqr == true) {
 
                     Row() {
                         ShopButton(150.dp)
@@ -279,7 +281,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
 
                         ) {
                             Text(
-                                text = "Leave",
+                                text = stringResource(id = R.string.text_leave),
                                 fontFamily = font_sf_pro,
                                 textAlign = TextAlign.Center,
                                 fontSize = 16.sp,
@@ -311,17 +313,6 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    // PromotionCardRow(NavController(context = LocalContext.current))
-    //MainScreenStart()
-
-    /* PromotionEnrollPopupUI(results) {
-
-     }*/
-}
-
 
 @Composable
 fun ShopButton(width: Dp) {
@@ -336,7 +327,7 @@ fun ShopButton(width: Dp) {
 
     ) {
         Text(
-            text = "Shop",
+            text = stringResource(id = R.string.text_shop),
             fontFamily = font_sf_pro,
             textAlign = TextAlign.Center,
             fontSize = 16.sp,

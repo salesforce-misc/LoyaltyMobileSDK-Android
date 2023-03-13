@@ -167,9 +167,3 @@ fun VoucherView(page: Int, membershipPromo: Any?) {
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MainScreenStart()
-}

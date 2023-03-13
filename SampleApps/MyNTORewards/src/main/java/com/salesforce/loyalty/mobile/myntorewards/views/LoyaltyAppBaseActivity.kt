@@ -30,3 +30,9 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    MainScreenStart()
+}
