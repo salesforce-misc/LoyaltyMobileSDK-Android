@@ -40,6 +40,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
@@ -183,28 +184,32 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle()
-                    ) {
-                        append(stringResource(id = R.string.prom_screen_expiration_text))
-                    }
-                    withStyle(
-                        style = SpanStyle(fontWeight = FontWeight.Bold)
-                    ) {
-                        append(endDate)
-                    }
-                },
-                fontFamily = font_sf_pro,
-                color = Color.Black,
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(start = 16.dp),
-                textAlign = TextAlign.Start,
-                fontSize = 12.sp
+            if (endDate.isNotEmpty())
+            {
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle()
+                        ) {
+                            append(stringResource(id = R.string.prom_screen_expiration_text))
+                        }
+                        withStyle(
+                            style = SpanStyle(fontWeight = FontWeight.Bold)
+                        ) {
+                            append(formatPromotionDate(endDate))
+                        }
+                    },
+                    fontFamily = font_sf_pro,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(start = 16.dp),
+                    textAlign = TextAlign.Start,
+                    fontSize = 12.sp
 
-            )
+                )
+            }
+
 
 
             Spacer(modifier = Modifier.height(80.dp))
