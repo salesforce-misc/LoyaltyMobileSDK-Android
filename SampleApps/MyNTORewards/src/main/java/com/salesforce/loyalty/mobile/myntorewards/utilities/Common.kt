@@ -1,7 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_APP_DATE_FORMAT
@@ -28,7 +26,6 @@ class Common {
             return date.format(promotionDateFormat)
         }
 
-        @RequiresApi(Build.VERSION_CODES.O)
         fun isTransactionDateWithinCurrentMonth(apiDateTime: String): Boolean {
             val currentDate = LocalDate.now()
             val currentDateMinus30Days = currentDate.minusDays(30)

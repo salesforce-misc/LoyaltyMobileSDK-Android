@@ -1,9 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
 import android.content.Context
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -35,10 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.for
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PointsChange
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
     Column(
@@ -58,7 +52,6 @@ fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TransactionListView(modifier: Modifier) {
     val model: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
