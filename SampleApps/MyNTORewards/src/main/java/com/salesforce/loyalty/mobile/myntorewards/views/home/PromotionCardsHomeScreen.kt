@@ -44,13 +44,13 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
     var promotionEnrollmentRqr = membershipPromo?.get(page)?.promotionEnrollmentRqr ?: false
     var memberEligibilityCategory = membershipPromo?.get(page)?.memberEligibilityCategory ?: ""
 
-    var currentPopupState by remember { mutableStateOf(false) }
+    var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
             .background(Color.White)
             .clickable {
-                currentPopupState = true
+                currentPromotionDetailPopupState = true
             }
     ) {
         Column(
@@ -151,11 +151,11 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
         }
     }
 
-    if (currentPopupState) {
+    if (currentPromotionDetailPopupState) {
         membershipPromo?.get(page)?.let {
             PromotionEnrollPopup(it)
             {
-                currentPopupState = false
+                currentPromotionDetailPopupState = false
             }
         }
     }

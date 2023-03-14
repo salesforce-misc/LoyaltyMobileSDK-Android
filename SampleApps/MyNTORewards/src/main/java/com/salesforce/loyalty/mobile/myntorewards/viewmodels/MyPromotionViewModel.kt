@@ -57,11 +57,11 @@ class MyPromotionViewModel : ViewModel() {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 promotionAPI(context)
-                Log.d(TAG, "promotion enrolled: $it")
+                Log.d(TAG, "promotion enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
-                Log.d(TAG, "promotion success ${it.message}")
+                Log.d(TAG, "promotion enrolled failed ${it.message}")
             }
         }
     }
@@ -75,11 +75,11 @@ class MyPromotionViewModel : ViewModel() {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 promotionAPI(context)
-                Log.d(TAG, "promotion enrolled: $it")
+                Log.d(TAG, "promotion un enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
-                Log.d(TAG, "promotion success ${it.message}")
+                Log.d(TAG, "promotion un enrolled failed ${it.message}")
             }
         }
     }

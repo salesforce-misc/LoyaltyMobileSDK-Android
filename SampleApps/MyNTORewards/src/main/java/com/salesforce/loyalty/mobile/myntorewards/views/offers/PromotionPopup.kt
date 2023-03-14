@@ -257,7 +257,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
 
                     ) {
                         Text(
-                            text = "Join",
+                            text = stringResource(id = R.string.join_text),
                             fontFamily = font_sf_pro,
                             textAlign = TextAlign.Center,
                             fontSize = 16.sp,

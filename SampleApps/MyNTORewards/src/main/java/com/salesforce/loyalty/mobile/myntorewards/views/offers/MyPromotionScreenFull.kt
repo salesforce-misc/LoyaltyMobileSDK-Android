@@ -160,12 +160,12 @@ fun PromotionItem(results: Results) {
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
 
-    var currentPopupState by remember { mutableStateOf(false) }
+    var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
-    if (currentPopupState) {
+    if (currentPromotionDetailPopupState) {
         PromotionEnrollPopup(results)
         {
-            currentPopupState = false
+            currentPromotionDetailPopupState = false
         }
     }
 
@@ -178,7 +178,7 @@ fun PromotionItem(results: Results) {
             .fillMaxWidth()
             .clickable {
 
-                currentPopupState = true
+                currentPromotionDetailPopupState = true
             }
             .background(Color.White, shape = RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.SpaceBetween,
