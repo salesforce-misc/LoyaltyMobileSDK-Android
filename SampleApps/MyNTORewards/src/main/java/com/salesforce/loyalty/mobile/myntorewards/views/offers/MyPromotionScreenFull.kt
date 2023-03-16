@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views.home
+package com.salesforce.loyalty.mobile.myntorewards.views.offers
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
