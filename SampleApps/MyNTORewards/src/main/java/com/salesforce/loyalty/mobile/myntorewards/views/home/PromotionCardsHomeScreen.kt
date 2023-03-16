@@ -2,11 +2,12 @@ package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -42,10 +44,14 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
     var promotionEnrollmentRqr = membershipPromo?.get(page)?.promotionEnrollmentRqr ?: false
     var memberEligibilityCategory = membershipPromo?.get(page)?.memberEligibilityCategory ?: ""
 
+    var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
             .background(Color.White)
+            .clickable {
+                currentPromotionDetailPopupState = true
+            }
     ) {
         Column(
             modifier = Modifier
@@ -82,7 +88,8 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 modifier = Modifier
-                    .align(Alignment.Start),
+                    .align(Alignment.Start)
+                    .width(289.dp),
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp
             )
@@ -95,9 +102,11 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 modifier = Modifier
-                    .align(Alignment.Start),
+                    .align(Alignment.Start)
+                    .width(289.dp),
                 textAlign = TextAlign.Start,
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                maxLines = 2
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -128,15 +137,26 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
 
             Spacer(modifier = Modifier.height(44.dp))
 
+            //commenting as ios platform also removed this
+            /*   Row(modifier = Modifier.height(45.dp))
+               {
+                   if(memberEligibilityCategory==MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
+                       JoinButtonProm {
 
-                Row(modifier = Modifier.height(45.dp))
-                {
-                    if(memberEligibilityCategory==MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-                        JoinButtonProm {
+                       }
+                   }
+               }*/
 
-                        }
-                    }
-                }
+
+        }
+    }
+
+    if (currentPromotionDetailPopupState) {
+        membershipPromo?.get(page)?.let {
+            PromotionEnrollPopup(it)
+            {
+                currentPromotionDetailPopupState = false
+            }
         }
     }
 }

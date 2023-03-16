@@ -46,6 +46,7 @@
     <string name="my_transactions">"My Transactions"</string>
     <string name="view_all">"View All"</string>
     <string name="my_benefits">"My Benefits"</string>
+    <string name="vouchers">"Vouchers"</string>
     <string name="my_membership_code">"My Membership Code"</string>
     <string name="membership_qr_code">"Membership QR Code"</string>
     <string name="my_membership_number">"Membership Number: "</string>
@@ -59,6 +60,9 @@
     <string name="prom_screen_expiration_text">"Expiration:"</string>
     <string name="prom_full_screen_expiration_text">"Exp"</string>
     <string name="reward_type_points">"Points"</string>
+    <string name="text_details">"Details"</string>
+    <string name="text_leave">"Leave"</string>
+    <string name="text_shop">"Shop"</string>
     <string name="scan_the_qr_code_text">"Scan the QR Code or enter your membership number at participating store and online sites to earn and redeem points"</string>
 
     <string name="label_transactions_recent">Recent</string>

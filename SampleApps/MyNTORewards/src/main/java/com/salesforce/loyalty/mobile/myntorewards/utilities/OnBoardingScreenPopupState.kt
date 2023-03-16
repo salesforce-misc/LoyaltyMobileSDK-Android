@@ -11,3 +11,8 @@ enum class MyProfileScreenState {
     BENEFIT_VIEW,
     TRANSACTION_VIEW,
 }
+
+enum class HomeScreenState {
+    MAIN_VIEW,
+    VOUCHER_VIEW,
+}

@@ -2,15 +2,13 @@ package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,11 +29,13 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
+import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
 fun MyPromotionScreen(membershipPromo: List<Results>?) {
+
 
     Column(
         modifier = Modifier
@@ -43,7 +43,6 @@ fun MyPromotionScreen(membershipPromo: List<Results>?) {
             .background(LightPurple)
             .padding(bottom = 16.dp)
     ) {
-
         Spacer(
             modifier = Modifier
                 .height(50.dp)
@@ -87,6 +86,7 @@ fun MyPromotionScreen(membershipPromo: List<Results>?) {
             }
 
         }
+
         membershipPromo?.let {
             LazyColumn(
                 modifier = Modifier
@@ -94,6 +94,7 @@ fun MyPromotionScreen(membershipPromo: List<Results>?) {
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             ) {
                 items(it) {
+
 
                     when (selectedTab) {
                         0 -> {
@@ -159,10 +160,26 @@ fun PromotionItem(results: Results) {
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
 
+    var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
+
+    if (currentPromotionDetailPopupState) {
+        PromotionEnrollPopup(results)
+        {
+            currentPromotionDetailPopupState = false
+        }
+    }
+
+
+
+
     Spacer(modifier = Modifier.height(16.dp))
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+
+                currentPromotionDetailPopupState = true
+            }
             .background(Color.White, shape = RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -234,7 +251,10 @@ fun PromotionItem(results: Results) {
                 color = TextDarkGray,
                 textAlign = TextAlign.Start,
                 fontSize = 14.sp,
-                modifier = Modifier.padding(start = 16.dp)
+                maxLines = 2,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .padding(end = 16.dp)
             )
 
             Row(

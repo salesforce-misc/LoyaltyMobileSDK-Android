@@ -34,7 +34,7 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
 
 @Composable
-fun EnrollmentCongratulationsView(navController: NavController, closeSheet : () -> Unit) {
+fun EnrollmentCongratulationsView(navController: NavController, closeSheet: () -> Unit) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier

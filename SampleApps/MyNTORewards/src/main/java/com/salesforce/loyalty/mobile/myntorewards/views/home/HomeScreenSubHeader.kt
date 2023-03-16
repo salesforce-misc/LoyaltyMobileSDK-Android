@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
@@ -53,6 +54,39 @@ fun HomeSubViewHeader(heading: String, navController: NavController) {
                     launchSingleTop = true
                     restoreState = true
                 }
+            }
+        )
+    }
+}
+
+@Composable
+fun HomeSubViewHeaderVoucher(
+    heading: String,
+    navController: NavController,
+    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 16.dp)
+    ) {
+        Text(
+            text = heading,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontSize = 16.sp,
+        )
+        Text(
+            text = stringResource(id = R.string.view_all),
+            fontWeight = FontWeight.Bold,
+            color = VibrantPurple40,
+            textAlign = TextAlign.Center,
+            fontSize = 13.sp,
+            modifier = Modifier.clickable {
+                openHomeScreen(HomeScreenState.VOUCHER_VIEW)
             }
         )
     }

@@ -22,6 +22,17 @@ class MyPromotionViewModel : ViewModel() {
 
     private val membershipPromo = MutableLiveData<List<Results>>()
 
+    val promEnrollmentStatusLiveData: LiveData<PromotionEnrollmentUpdateState>
+        get() = promEnrollmentStatus
+
+    private val promEnrollmentStatus = MutableLiveData<PromotionEnrollmentUpdateState>()
+
+    //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
+    fun resetPromEnrollmentStatusDefault() {
+        promEnrollmentStatus.value =
+            PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
+    }
+
     fun promotionAPI(context: Context) {
         viewModelScope.launch {
             val membershipKey =
@@ -37,4 +48,39 @@ class MyPromotionViewModel : ViewModel() {
         }
     }
 
+    fun enrollInPromotions(context: Context, promotionName: String) {
+        viewModelScope.launch {
+            val membershipNumber =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+
+            LoyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
+                promotionAPI(context)
+                Log.d(TAG, "promotion enrolled success: $it")
+            }.onFailure {
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
+                Log.d(TAG, "promotion enrolled failed ${it.message}")
+            }
+        }
+    }
+
+    fun unEnrollInPromotions(context: Context, promotionName: String) {
+        viewModelScope.launch {
+            val membershipNumber =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+
+            LoyaltyAPIManager.unEnrollPromotion(membershipNumber, promotionName).onSuccess {
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
+                promotionAPI(context)
+                Log.d(TAG, "promotion un enrolled success: $it")
+            }.onFailure {
+                promEnrollmentStatus.value =
+                    PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
+                Log.d(TAG, "promotion un enrolled failed ${it.message}")
+            }
+        }
+    }
 }
