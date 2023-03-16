@@ -1,25 +1,37 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatTransactionDateTime
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.PointsChange
 
 @Composable
 fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
@@ -35,14 +47,127 @@ fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState
             openProfileScreen(MyProfileScreenState.TRANSACTION_VIEW)
         }
 
-        ListItemTransaction()
-        ListItemTransaction()
-        ListItemTransaction()
+        TransactionListView(modifier = Modifier.height(200.dp))
+
     }
 }
 
 @Composable
-fun ListItemTransaction() {
+fun TransactionListView(modifier: Modifier) {
+    val model: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
+    val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
+    val context: Context = LocalContext.current
+
+    model.getTransactions(context)
+    val count = transactions?.transactionJournalCount ?: 0
+    val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
+        AppConstants.MAX_TRANSACTION_COUNT
+    } else {
+        count
+    }
+    var index = 0
+    Column(modifier = Modifier.wrapContentHeight()) {
+        Spacer(modifier = Modifier.height(12.dp))
+        while (index < pageCount) {
+            transactions?.transactionJournals?.get(index)?.apply {
+                val transactionName = this.journalTypeName
+                val points = getCurrencyPoints(this.pointsChange)
+                val date = this.activityDate?.let { activityDate ->
+                    formatTransactionDateTime(activityDate)
+                }
+                if (transactionName != null && points != null && date != null) {
+                    ListItemTransaction(transactionName, points, date)
+                }
+            }
+            index++
+        }
+    }
+}
+
+@Composable
+fun TransactionFullScreenListView() {
+    val model: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
+    val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
+    val context: Context = LocalContext.current
+
+    model.getTransactions(context)
+    val transactionJournals = transactions?.transactionJournals
+    val recentTransactions = transactionJournals?.filter {
+        it.activityDate?.let { activityDate ->
+            Common.isTransactionDateWithinCurrentMonth(activityDate)
+        } == true
+    }
+
+    val oldTransactions = transactionJournals?.filter {
+        it.activityDate?.let { activityDate ->
+            Common.isTransactionDateWithinCurrentMonth(activityDate)
+        } == false
+    }
+
+    recentTransactions?.let { transactionsJournals ->
+        if(transactionsJournals.isNotEmpty()) {
+            Column(modifier = Modifier.wrapContentHeight()) {
+                Text(
+                    text = stringResource(id = R.string.label_transactions_recent),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp,
+                )
+                LazyColumn() {
+                    items(transactionsJournals) {
+                        val transactionName = it.journalTypeName
+                        val points = getCurrencyPoints(it.pointsChange)
+                        val date = it.activityDate?.let { activityDate ->
+                            formatTransactionDateTime(activityDate)
+                        }
+                        if (transactionName != null && points != null && date != null) {
+                            ListItemTransaction(transactionName, points, date)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    oldTransactions?.let { transactionsJournals ->
+        if (transactionsJournals.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Column(modifier = Modifier.wrapContentHeight()) {
+                Text(
+                    text = stringResource(id = R.string.label_transactions_one_month_ago),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp,
+                )
+                LazyColumn() {
+                    items(transactionsJournals) {
+                        val transactionName = it.journalTypeName
+                        val points = getCurrencyPoints(it.pointsChange)
+                        val date = it.activityDate?.let { activityDate ->
+                            formatTransactionDateTime(activityDate)
+                        }
+                        if (transactionName != null && points != null && date != null) {
+                            ListItemTransaction(transactionName, points, date)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun getCurrencyPoints(pointsChange: List<PointsChange>): Double? {
+    for (pointChange in pointsChange) {
+        pointChange.loyaltyMemberCurrency?.let {
+            if (it.uppercase() == AppConstants.TRANSACTION_REWARD_CURRENCY_NAME.uppercase()) {
+                return pointChange.changeInPoints
+            }
+        }
+    }
+    return null
+}
+
+@Composable
+fun ListItemTransaction(transactionName: String, points: Double, date: String) {
     Spacer(modifier = Modifier.height(12.dp))
 
     Row(
@@ -56,7 +181,7 @@ fun ListItemTransaction() {
 
         Column(modifier = Modifier.weight(0.15f)) {
             Image(
-                painter = painterResource(id = R.drawable.transaction_icon_1),
+                painter = painterResource(Assets.getTransactionsLogo(transactionName)),
                 contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                 modifier = Modifier
                     .width(32.dp)
@@ -66,15 +191,14 @@ fun ListItemTransaction() {
         }
         Column(modifier = Modifier.weight(0.6f)) {
             Text(
-                text = "Promotion Enrollment",
+                text = transactionName,
                 fontWeight = FontWeight.Bold,
-                fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
                 fontSize = 13.sp,
             )
             Text(
-                text = "05’ June 2022",
+                text = date,
                 fontFamily = font_sf_pro,
                 color = TextDarkGray,
                 textAlign = TextAlign.Center,
@@ -82,10 +206,15 @@ fun ListItemTransaction() {
             )
 
         }
-        Column(modifier = Modifier.weight(0.25f)) {
+        Column(modifier = Modifier.weight(0.3f)) {
+            val pointsString =
+                if (points > 0) {
+                    "+" + points.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+                } else {
+                    points.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+                }
             Text(
-                text = "+1500 Pts",
-                fontFamily = font_sf_pro,
+                text = pointsString,
                 fontWeight = FontWeight.Bold,
                 color = TextGreen,
                 textAlign = TextAlign.Center,

@@ -47,8 +47,18 @@ class AppConstants {
         const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
         const val PROMOTION_DATE_SAMPLE_APP_FORMAT = "dd/MM/yyyy"
 
-
-
+        //Transaction types
+        const val TRANSACTION_PURCHASE = "Purchase"
+        const val TRANSACTION_REDEMPTION = "Redemption"
+        const val TRANSACTION_REFERRAL = "Member Referral"
+        const val TRANSACTION_VOUCHER = "Voucher"
+        const val TRANSACTION_SOCIAL_MEDIA = "Social Media Activity"
+        const val TRANSACTION_ENROLLMENT = "Enrollment"
+        const val MAX_TRANSACTION_COUNT = 3
+        const val TRANSACTION_REWARD_POINTS = "Points"
+        const val TRANSACTION_REWARD_CURRENCY_NAME = "Reward Points"
+        const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        const val TRANSACTION_HISTORY_APP_DATE_FORMAT = "dd LLLL yyyy"
 
     }
 }

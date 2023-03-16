@@ -15,6 +15,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TIER_PLATINUM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TIER_RUBY
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TIER_SILVER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_ENROLLMENT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_PURCHASE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_REDEMPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_REFERRAL
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_SOCIAL_MEDIA
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_VOUCHER
 
 class Assets {
 
@@ -40,6 +46,19 @@ class Assets {
                 TIER_PLATINUM -> TierColourPlatinum
                 TIER_RUBY -> TierColourRuby
                 else -> TierColourWhite
+            }
+        }
+
+        fun getTransactionsLogo(type:String?):Int
+        {
+            return when (type) {
+                TRANSACTION_PURCHASE -> R.drawable.ic_transaction_purchase
+                TRANSACTION_REDEMPTION -> R.drawable.ic_transaction_redemption
+                TRANSACTION_REFERRAL -> R.drawable.ic_transaction_referral
+                TRANSACTION_VOUCHER -> R.drawable.ic_transaction_voucher
+                TRANSACTION_SOCIAL_MEDIA -> R.drawable.ic_transaction_social_media
+                TRANSACTION_ENROLLMENT -> R.drawable.ic_transaction_enrollment
+                else -> R.drawable.ic_transaction_default
             }
         }
 

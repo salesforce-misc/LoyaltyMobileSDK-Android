@@ -64,4 +64,7 @@
     <string name="text_leave">"Leave"</string>
     <string name="text_shop">"Shop"</string>
     <string name="scan_the_qr_code_text">"Scan the QR Code or enter your membership number at participating store and online sites to earn and redeem points"</string>
+
+    <string name="label_transactions_recent">Recent</string>
+    <string name="label_transactions_one_month_ago">One month ago</string>
 </resources>
