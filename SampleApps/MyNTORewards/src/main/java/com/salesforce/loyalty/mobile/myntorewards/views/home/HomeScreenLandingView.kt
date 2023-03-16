@@ -89,6 +89,7 @@ fun PromotionCardRow(navController: NavController) {
                 isInProgress = false
                 val membershipPromo =
                     (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
 
@@ -113,10 +114,10 @@ fun PromotionCardRow(navController: NavController) {
                         .align(Alignment.CenterHorizontally)
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
             }
             is PromotionViewState.PromotionsFetchFailure -> {
                 isInProgress = false
+                PromotionEmptyView()
                 // TODO Show Empty Promotions view
             }
             PromotionViewState.PromotionFetchInProgress -> {
@@ -136,6 +137,7 @@ fun PromotionCardRow(navController: NavController) {
             }
 
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
     }
 

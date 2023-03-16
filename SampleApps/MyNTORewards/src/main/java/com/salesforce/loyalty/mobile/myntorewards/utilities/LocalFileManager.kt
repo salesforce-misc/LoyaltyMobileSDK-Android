@@ -64,9 +64,10 @@ object LocalFileManager {
         }
         val fileName = id + "_" + folderName
         val fileWithinDir: File = File(folderDir, fileName)
-        val input =
-            FileInputStream(fileWithinDir)
+        var input: FileInputStream? = null
         try {
+            input =
+                FileInputStream(fileWithinDir)
             var inputStreamReader = InputStreamReader(input)
             val stringBuilder: StringBuilder = StringBuilder()
             val bufferedReader = BufferedReader(inputStreamReader)
@@ -84,7 +85,7 @@ object LocalFileManager {
         } catch (e: java.lang.Exception) {
             Log.d(TAG, "Exception occured when getting data from file ${e.message}")
         } finally {
-            input.close()
+            input?.close()
         }
 
         return null

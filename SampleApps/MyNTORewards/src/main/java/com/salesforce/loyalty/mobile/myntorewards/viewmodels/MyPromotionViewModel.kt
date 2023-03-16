@@ -68,8 +68,17 @@ class MyPromotionViewModel : ViewModel() {
             val memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
             LoyaltyAPIManager.getEligiblePromotions(membershipKey, memberID).onSuccess {
-                LocalFileManager.saveData(context, it, membershipKey, LocalFileManager.DIRECTORY_PROMOTIONS)
-                viewState.postValue(PromotionViewState.PromotionsFetchSuccess(it))
+                if (it?.outputParameters?.outputParameters?.results != null) {
+                    LocalFileManager.saveData(
+                        context,
+                        it,
+                        membershipKey,
+                        LocalFileManager.DIRECTORY_PROMOTIONS
+                    )
+                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess(it))
+                } else {
+                    viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
+                }
                 Log.d(TAG, "success member promotion response: $it")
             }.onFailure {
                 viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
