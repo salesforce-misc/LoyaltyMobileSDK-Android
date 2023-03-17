@@ -236,7 +236,7 @@ object LoyaltyAPIManager {
         productCategoryId: Array<String>?,
         productName: Array<String>?,
         productCategoryName: Array<String>?
-    ): Result<VoucherResponse> {
+    ): Result<VoucherResult> {
         Log.d(TAG, "getVouchers() $membershipNumber")
         val voucherStatus = getStringOfArrayItems(voucherStatus)
         val productId = getStringOfArrayItems(productId)

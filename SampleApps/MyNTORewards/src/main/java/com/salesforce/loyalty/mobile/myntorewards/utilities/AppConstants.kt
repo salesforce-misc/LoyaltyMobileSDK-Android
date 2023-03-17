@@ -47,7 +47,10 @@ class AppConstants {
         const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
         const val PROMOTION_DATE_SAMPLE_APP_FORMAT = "dd/MM/yyyy"
 
-
+        //tabs vouchers
+        const val VOUCHER_ISSUED = "Issued"
+        const val VOUCHER_REDEEMED = "Redeemed"
+        const val VOUCHER_EXPIRED = "Expired"
 
 
     }

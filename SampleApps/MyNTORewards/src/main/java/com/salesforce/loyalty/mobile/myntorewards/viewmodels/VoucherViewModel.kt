@@ -20,22 +20,27 @@ class VoucherViewModel : ViewModel() {
 
     private val TAG = VoucherViewModel::class.java.simpleName
 
-    val voucherLiveData: LiveData<VoucherResponse>
+    val voucherLiveData: LiveData<List<VoucherResponse>>
         get() = vouchers
 
-    private val vouchers = MutableLiveData<VoucherResponse>()
+    private val vouchers = MutableLiveData<List<VoucherResponse>>()
 
 
     fun getVoucher(context: Context) {
         viewModelScope.launch {
             var memberID = PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""]
-            var membershipKey = PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
-            LoyaltyAPIManager.getVouchers("",null, 0,  null,
-                null, null, null).onSuccess {
-
-                Log.d(TAG, "getVoucher success: $it")
-            }.onFailure {
-                Log.d(TAG, "getVoucher failed: ${it.message}")
+            var membershipKey =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
+            if (membershipKey != null) {
+                LoyaltyAPIManager.getVouchers(
+                    membershipKey, null, 1, null,
+                    null, null, null
+                ).onSuccess {
+                    vouchers.value = it.voucherResponse
+                    Log.d(TAG, "getVoucher success: ${it.voucherResponse}")
+                }.onFailure {
+                    Log.d(TAG, "getVoucher failed: ${it.message}")
+                }
             }
         }
     }

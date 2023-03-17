@@ -184,8 +184,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (endDate.isNotEmpty())
-            {
+            if (endDate.isNotEmpty()) {
                 Text(
                     buildAnnotatedString {
                         withStyle(

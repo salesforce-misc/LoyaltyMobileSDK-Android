@@ -56,3 +56,12 @@ data class VoucherResponse(
     @SerializedName("promotionId")
     val promotionId: String?
 )
+
+data class VoucherResult(
+    @SerializedName("voucherCount")
+    val voucherCount: Int?,
+
+    @SerializedName("vouchers")
+    val voucherResponse: List<VoucherResponse> = mutableListOf()
+
+)
