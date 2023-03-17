@@ -207,11 +207,11 @@ object LoyaltyAPIManager {
      * @param promotionName Name of the promotion enrolled to
      * @return EnrollPromotionsResponse
      */
-    suspend fun unrollPromotion(
+    suspend fun unEnrollPromotion(
         membershipNumber: String,
         promotionName: String
     ): Result<UnenrollPromotionResponse> {
-        Log.d(TAG, "unrollPromotion() $membershipNumber Promotion Name: $promotionName")
+        Log.d(TAG, "unEnrollPromotion() $membershipNumber Promotion Name: $promotionName")
 
         val requestBody: PromotionsRequest =
             PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,

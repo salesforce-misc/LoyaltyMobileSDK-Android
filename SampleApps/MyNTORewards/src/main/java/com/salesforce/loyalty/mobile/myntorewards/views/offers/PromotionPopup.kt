@@ -226,7 +226,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
                         model.resetPromEnrollmentStatusDefault()
                         Toast.makeText(
                             LocalContext.current,
-                            "Promotion Enrolled/Unrolled Success",
+                            "Promotion Enrol/UnEnrol Success",
                             Toast.LENGTH_LONG
                         ).show()
 
@@ -237,7 +237,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
                         isInProgress = false
                         Toast.makeText(
                             LocalContext.current,
-                            "Promotion Enrolled/Unrolled Failed",
+                            "Promotion Enrol/UnEnrol Failed",
                             Toast.LENGTH_LONG
                         ).show()
                         model.resetPromEnrollmentStatusDefault()

@@ -71,7 +71,7 @@ class MyPromotionViewModel : ViewModel() {
             val membershipNumber =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
 
-            LoyaltyAPIManager.unrollPromotion(membershipNumber, promotionName).onSuccess {
+            LoyaltyAPIManager.unEnrollPromotion(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 promotionAPI(context)
