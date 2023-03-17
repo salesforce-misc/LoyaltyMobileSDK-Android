@@ -9,9 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
-import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 import kotlinx.coroutines.launch
 

@@ -23,7 +23,6 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
@@ -32,7 +31,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun VoucherView(voucher: VoucherResponse, membershipPromo: Any?) {
+fun VoucherView(voucher: VoucherResponse) {
 
 
     Column(

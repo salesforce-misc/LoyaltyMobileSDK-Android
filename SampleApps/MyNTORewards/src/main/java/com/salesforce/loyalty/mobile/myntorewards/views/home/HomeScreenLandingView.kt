@@ -3,7 +3,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views.home
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -16,15 +15,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 
@@ -112,7 +110,6 @@ fun PromotionCardRow(navController: NavController) {
 
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun VoucherRow(
     navController: NavController,
@@ -131,15 +128,15 @@ fun VoucherRow(
             openHomeScreen(it)
         }
         val model: VoucherViewModel = viewModel()
-        val membershipPromo by model.voucherLiveData.observeAsState() // collecting livedata as state
+        val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
         model.getVoucher(context)
 
-        membershipPromo?.let {
+        vouchers?.let {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 items(it) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    VoucherView(it, "")
+                    VoucherView(it)
                 }
             }
         }

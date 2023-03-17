@@ -5,11 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -17,7 +14,6 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -30,17 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
-import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
-import com.salesforce.loyalty.mobile.myntorewards.views.BenefitListView
-import com.salesforce.loyalty.mobile.myntorewards.views.ListItemMyBenefit
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.VoucherTabs
 
 @Composable
@@ -108,7 +102,7 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
         }
 
         val model: VoucherViewModel = viewModel()
-        val membershipPromo by model.voucherLiveData.observeAsState() // collecting livedata as state
+        val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
         model.getVoucher(context)
 
@@ -118,7 +112,7 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
             2 -> VOUCHER_EXPIRED
             else -> VOUCHER_ISSUED
         }
-        val updatedMembershipPromo = membershipPromo?.filter {
+        val filteredVouchers = vouchers?.filter {
             it.status == filterType
         }
 
@@ -126,7 +120,7 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
             .background(VeryLightPurple)
             .fillMaxWidth()
             .fillMaxHeight()) {
-            updatedMembershipPromo?.let {
+            filteredVouchers?.let {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier
@@ -136,8 +130,8 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(updatedMembershipPromo.size) {
-                        VoucherView(updatedMembershipPromo[it], "")
+                    items(filteredVouchers.size) {
+                        VoucherView(filteredVouchers[it])
                     }
                 }
             }
