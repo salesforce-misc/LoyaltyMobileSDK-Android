@@ -71,7 +71,7 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
             modifier = Modifier.padding(top = 11.5.dp, bottom = 11.5.dp, start = 16.dp, end = 16.dp)
         )
         var selectedTab by remember { mutableStateOf(0) }
-        var filterType by remember { mutableStateOf("Issues") }
+        var filterType by remember { mutableStateOf("") }
 
 
         Row(modifier = Modifier.background(Color.White)) {
@@ -112,16 +112,11 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
         val context: Context = LocalContext.current
         model.getVoucher(context)
 
-        when (selectedTab) {
-            0 -> {
-                filterType = VOUCHER_ISSUED
-            }
-            1 -> {
-                filterType = VOUCHER_REDEEMED
-            }
-            2 -> {
-                filterType = VOUCHER_EXPIRED
-            }
+        filterType=  when (selectedTab) {
+            0 -> VOUCHER_ISSUED
+            1 -> VOUCHER_REDEEMED
+            2 -> VOUCHER_EXPIRED
+            else -> VOUCHER_ISSUED
         }
         val updatedMembershipPromo = membershipPromo?.filter {
             it.status == filterType
