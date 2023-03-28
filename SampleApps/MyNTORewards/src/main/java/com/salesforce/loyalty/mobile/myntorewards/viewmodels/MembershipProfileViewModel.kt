@@ -2,14 +2,10 @@ package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_FIRSTNAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LASTNAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
@@ -19,8 +15,6 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import kotlinx.coroutines.launch
 
 class MembershipProfileViewModel : ViewModel() {

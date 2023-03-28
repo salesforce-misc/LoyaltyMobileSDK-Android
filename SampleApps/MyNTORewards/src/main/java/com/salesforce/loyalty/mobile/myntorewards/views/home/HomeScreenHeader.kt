@@ -25,7 +25,6 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
-import com.salesforce.loyalty.mobile.myntorewards.views.RewardPointsAndExpiry
 
 
 @Composable

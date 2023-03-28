@@ -11,7 +11,6 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
 import kotlinx.coroutines.launch
 
 class MembershipBenefitViewModel : ViewModel() {
