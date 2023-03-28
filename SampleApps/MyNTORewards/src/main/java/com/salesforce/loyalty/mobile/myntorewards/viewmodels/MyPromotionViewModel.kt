@@ -46,17 +46,17 @@ class MyPromotionViewModel : ViewModel() {
         viewModelScope.launch {
             val membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
-            val cache = LocalFileManager.getData(
+            val promotionCache = LocalFileManager.getData(
                 context,
                 membershipKey,
                 LocalFileManager.DIRECTORY_PROMOTIONS,
                 PromotionsResponse::class.java
             )
-            Log.d(TAG, "cache : $cache")
-            if (cache == null) {
+            Log.d(TAG, "cache : $promotionCache")
+            if (promotionCache == null) {
                 fetchPromotions(context)
             } else {
-                viewState.postValue(PromotionViewState.PromotionsFetchSuccess(cache))
+                viewState.postValue(PromotionViewState.PromotionsFetchSuccess(promotionCache))
             }
         }
     }

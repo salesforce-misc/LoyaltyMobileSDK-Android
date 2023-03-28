@@ -173,7 +173,7 @@ fun PromotionEmptyView() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_empty_view),
-            contentDescription = "Empty"
+            contentDescription = stringResource(id = R.string.label_empty_promotions)
         )
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
