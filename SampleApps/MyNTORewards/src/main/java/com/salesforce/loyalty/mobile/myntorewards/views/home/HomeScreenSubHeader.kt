@@ -61,7 +61,7 @@ fun HomeSubViewHeader(heading: String, navController: NavController) {
 
 @Composable
 fun HomeSubViewHeaderVoucher(
-    heading: String,
+    heading: Int,
     navController: NavController,
     openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
 ) {
@@ -73,7 +73,7 @@ fun HomeSubViewHeaderVoucher(
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
         Text(
-            text = heading,
+            text = stringResource(id = heading),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             textAlign = TextAlign.Center,

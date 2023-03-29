@@ -5,14 +5,9 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
-import androidx.navigation.NavController
-import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
-import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionCardRow
-import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopupUI
 
 //Main Activity Application Entry Point
 class LoyaltyAppBaseActivity : ComponentActivity() {
