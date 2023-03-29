@@ -156,4 +156,39 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?) {
     }
 }
 
+@Composable
+fun PromotionEmptyView() {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_empty_view),
+            contentDescription = stringResource(id = R.string.label_empty_promotions)
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        Text(
+            text = stringResource(id = R.string.label_empty_promotions),
+            fontWeight = FontWeight.Bold,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        Text(
+            text = stringResource(id = R.string.description_empty_promotions),
+            fontWeight = FontWeight.Normal,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
 
