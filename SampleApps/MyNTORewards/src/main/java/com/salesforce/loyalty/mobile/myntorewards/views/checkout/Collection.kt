@@ -613,9 +613,3 @@ fun SelectionSizeTile(size: String, selected:Boolean)
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MainScreenStart()
-    //CheckOutFlowOrderSelectScreen()
-}

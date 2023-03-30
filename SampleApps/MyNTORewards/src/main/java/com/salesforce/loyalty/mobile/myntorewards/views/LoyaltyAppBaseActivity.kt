@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 
 //Main Activity Application Entry Point
 class LoyaltyAppBaseActivity : ComponentActivity() {
@@ -22,7 +23,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         )
 
         setContent {
-            MainScreenStart()
+            OrderDetails()
+            //MainScreenStart()
           //  CheckOutFlowOrderSelectScreen()
         }
     }

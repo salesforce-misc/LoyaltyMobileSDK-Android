@@ -77,4 +77,6 @@
     <string name="tab_details">"Details"</string>
     <string name="tab_reviews">"Reviews"</string>
     <string name="tab_tnc">"TnC"</string>
+    <string name="tab_shipping">"1. Shipping"</string>
+    <string name="tab_payment">"2. Payment"</string>
 </resources>
