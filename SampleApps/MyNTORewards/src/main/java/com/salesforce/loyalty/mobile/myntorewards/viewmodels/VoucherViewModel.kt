@@ -31,7 +31,7 @@ class VoucherViewModel : ViewModel() {
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
             if (membershipKey != null) {
                 LoyaltyAPIManager.getVouchers(
-                    membershipKey, null, 1, null,
+                    "M0001", null, 1, null,
                     null, null, null
                 ).onSuccess {
                     vouchers.value = it.voucherResponse

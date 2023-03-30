@@ -15,4 +15,10 @@ enum class MyProfileScreenState {
 enum class HomeScreenState {
     MAIN_VIEW,
     VOUCHER_VIEW,
+    CHECKOUT_VIEW,
+}
+
+enum class OfferScreenState {
+    MAIN_VIEW,
+    CHECKOUT_VIEW,
 }

@@ -54,6 +54,9 @@ fun HomeScreenLandingView(
         Spacer(modifier = Modifier.height(16.dp))
 
         PromotionCardRow(navController)
+        {
+            openHomeScreen(it)
+        }
         VoucherRow(navController) {
             openHomeScreen(it)
         }
@@ -64,7 +67,7 @@ fun HomeScreenLandingView(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PromotionCardRow(navController: NavController) {
+fun PromotionCardRow(navController: NavController, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -93,6 +96,9 @@ fun PromotionCardRow(navController: NavController) {
         membershipPromo?.let {
             HorizontalPager(count = pageCount, state = pagerState) { page ->
                 PromotionCard(page, membershipPromo)
+                {
+                    openHomeScreen(it)
+                }
             }
         }
 

@@ -73,4 +73,8 @@
 
     <string name="label_transactions_recent">Recent</string>
     <string name="label_transactions_one_month_ago">One month ago</string>
+
+    <string name="tab_details">"Details"</string>
+    <string name="tab_reviews">"Reviews"</string>
+    <string name="tab_tnc">"TnC"</string>
 </resources>

@@ -40,7 +40,9 @@ fun TabNavigation(navController: NavHostController) {
             HomeScreen(navController)
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            MyOfferScreen()
+            MyOfferScreen(){
+
+            }
         }
         composable(route = BottomNavTabs.MyProfile.route) {
             MyProfileScreen()
