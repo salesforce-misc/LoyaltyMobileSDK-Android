@@ -67,7 +67,7 @@ class MyPromotionViewModel : ViewModel() {
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
             val memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
-            LoyaltyAPIManager.getEligiblePromotions("M0001", memberID).onSuccess {
+            LoyaltyAPIManager.getEligiblePromotions(membershipKey, memberID).onSuccess {
                 if (it?.outputParameters?.outputParameters?.results != null) {
                     LocalFileManager.saveData(
                         context,
