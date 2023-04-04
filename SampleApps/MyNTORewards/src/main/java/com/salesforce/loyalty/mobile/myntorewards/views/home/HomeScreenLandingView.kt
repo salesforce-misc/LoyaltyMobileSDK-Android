@@ -24,9 +24,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 
@@ -100,7 +98,8 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScr
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
 
-                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION) {
+                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION)
+                {
                     MAX_PAGE_COUNT_PROMOTION
                 } else {
                     promListListSize

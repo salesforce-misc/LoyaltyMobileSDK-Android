@@ -21,12 +21,14 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -55,10 +57,26 @@ fun HomeScreen(navController: NavController) {
 @Composable
 fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     val model: MyPromotionViewModel = viewModel()
-    val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
+    //val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
-    model.loadPromotions(context)
 
+    //model.loadPromotions(context)
+
+    val promoViewState by model.promotionViewState.observeAsState()
+    LaunchedEffect(true) {
+        model.loadPromotions(context)
+    }
+   // var membershipPromo=
+
+    var membershipPromo: List<Results>? = mutableListOf()
+
+    when (promoViewState) {
+        is PromotionViewState.PromotionsFetchSuccess -> {
+             membershipPromo =
+                (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+        }
+        else -> {}
+    }
     /*MyPromotionScreen(membershipPromo)
     {
         openHomeScreen(it)
