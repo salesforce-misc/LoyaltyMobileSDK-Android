@@ -89,4 +89,14 @@ dependencies {
 
     //Serialize and de-serialize objects to JSON and vice-versa
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Network library
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+
+    //Rx
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
 }
