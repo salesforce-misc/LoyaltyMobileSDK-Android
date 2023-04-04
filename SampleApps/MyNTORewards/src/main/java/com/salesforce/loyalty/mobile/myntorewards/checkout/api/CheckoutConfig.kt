@@ -11,10 +11,14 @@ object CheckoutConfig {
         "3MVG9kBt168mda_.AhACC.RZAxIT77sS1y2_ltn1YMi4tG98ZA1nMiP2w6m51xen0Of_0TWZ8RTvPy05bK5p9"
     const val HEADER_AUTHORIZATION = "Authorization"
 
-    const val MEMBER_BASE_URL = "https://internalmobileteam-dev-ed.develop.my.salesforce.com/services/apexrest/"
-    const val CHECKOUT_ORDER_CREATION = "NTOOrderCheckOut"
-    const val CHECKOUT_SHIPPING_METHODS = "ShippingMethods"
+    const val MEMBER_BASE_URL = "https://internalmobileteam-dev-ed.develop.my.salesforce.com/"
+    const val CHECKOUT_ORDER_CREATION = "services/apexrest/NTOOrderCheckOut"
+    const val CHECKOUT_SHIPPING_METHODS = "services/apexrest/ShippingMethods"
     const val CHECKOUT_ORDER_ID = "orderId"
+
+    const val SOQL_QUERY_PATH = "services/data/v"
+    const val SOQL_QUERY_VERSION = "56.0"
+    const val QUERY = "/query/"
 
     object MimeType {
         const val JSON = "application/json;charset=UTF-8"

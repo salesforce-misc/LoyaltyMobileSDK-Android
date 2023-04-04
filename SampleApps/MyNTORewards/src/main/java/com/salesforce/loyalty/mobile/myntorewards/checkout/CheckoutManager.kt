@@ -1,12 +1,12 @@
 package com.salesforce.loyalty.mobile.myntorewards.checkout
 
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutAuth
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutNetworkClient
-import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationRequest
-import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
-import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethodsResponse
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.*
 import com.salesforce.loyalty.mobile.sources.forceModels.ForceAuthResponse
 
 
@@ -73,11 +73,36 @@ object CheckoutManager {
         )
     }
 
+    suspend fun getShippingBillingAddressSOQL(
+    ): ShippingBillingAddressRecord? {
+        Log.d(TAG, "getShippingBillingAddressSOQL()")
+
+        val result = CheckoutNetworkClient.authApi.getShippingBillingAddressSOQL(
+            getShippingBillingSOQLUrl(), getShippingBillingAddressSOQLQuery()
+        )
+        result.onSuccess { queryResult: QueryResult<ShippingBillingAddressRecord> ->
+            queryResult?.records?.let {
+                if (!it.isNullOrEmpty()) {
+                    return it[0]
+                }
+            }
+        }
+        return null
+    }
+
     private fun getOrderCreationUrl(): String {
         return CheckoutConfig.MEMBER_BASE_URL + CheckoutConfig.CHECKOUT_ORDER_CREATION + "/"
     }
 
     private fun getShippingMethodsUrl(): String {
         return CheckoutConfig.MEMBER_BASE_URL + CheckoutConfig.CHECKOUT_SHIPPING_METHODS + "/"
+    }
+
+    private fun getShippingBillingSOQLUrl(): String {
+        return CheckoutConfig.MEMBER_BASE_URL + CheckoutConfig.SOQL_QUERY_PATH + CheckoutConfig.SOQL_QUERY_VERSION + CheckoutConfig.QUERY
+    }
+
+    private fun getShippingBillingAddressSOQLQuery() : String{
+        return "select shippingAddress, billingAddress from account"
     }
 }

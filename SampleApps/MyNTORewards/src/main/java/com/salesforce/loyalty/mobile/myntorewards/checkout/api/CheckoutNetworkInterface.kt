@@ -1,8 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.checkout.api
 
-import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationRequest
-import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
-import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethodsResponse
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.*
 import com.salesforce.loyalty.mobile.sources.forceModels.ForceAuthResponse
 import retrofit2.http.*
 
@@ -35,4 +33,10 @@ interface CheckoutNetworkInterface {
         @Url url: String,
         @Query("orderId") orderId: String
     ): Result<OrderDetailsResponse>
+
+    @GET()
+    suspend fun getShippingBillingAddressSOQL(
+        @Url url: String,
+        @Query("q") query: String?
+    ): Result<QueryResult<ShippingBillingAddressRecord>>
 }
