@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
@@ -126,7 +126,7 @@ fun RedeemScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TextPurpoleLightBG)
+            .background(TextPurpleLightBG)
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
@@ -146,7 +146,7 @@ fun MoreScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TextPurpoleLightBG)
+            .background(TextPurpleLightBG)
             .wrapContentSize(Alignment.Center)
     ) {
         Text(

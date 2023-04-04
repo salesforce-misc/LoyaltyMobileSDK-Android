@@ -9,14 +9,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
 fun HomeTabScreen() {
     val navController = rememberNavController()
     Scaffold(
-        Modifier.background(TextPurpoleLightBG),
+        Modifier.background(TextPurpleLightBG),
         bottomBar = { BottomNavigationUI(navController) }
 
     )
@@ -24,7 +24,7 @@ fun HomeTabScreen() {
         Column(
             modifier = Modifier
                 .padding(padding)
-                .background(TextPurpoleLightBG)
+                .background(TextPurpleLightBG)
         ) {
             TabNavigation(navController)
         }

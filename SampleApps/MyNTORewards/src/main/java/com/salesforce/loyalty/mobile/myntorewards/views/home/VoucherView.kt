@@ -129,7 +129,7 @@ fun VoucherView(voucher: VoucherResponse) {
                     withStyle(
                         style = SpanStyle()
                     ) {
-                        append("Valid till: ")
+                        append(stringResource(id = R.string.text_valid_till))
                     }
                     withStyle(
                         style = SpanStyle(fontWeight = FontWeight.Bold)

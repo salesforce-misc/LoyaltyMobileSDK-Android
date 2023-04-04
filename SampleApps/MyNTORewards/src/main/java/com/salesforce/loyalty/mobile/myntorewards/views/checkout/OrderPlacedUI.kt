@@ -46,11 +46,11 @@ fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -
                     .background(VibrantPurple40)
             )
 
-            Image(painter = painterResource(id = R.drawable.back_arrow),
+            Image(painter = painterResource(id = R.drawable.back_arrow_white),
                 contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(bottom = 10.dp, start = 16.dp, end = 16.dp)
+                    .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
                     .clickable {
                         openHomeScreen(PromotionScreenState.ADDRESS_PAYMENT_VIEW)
                     })
@@ -82,7 +82,7 @@ fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -
             )
             Spacer(modifier = Modifier.height(11.dp))
             Text(
-                text = "Order Placed !",
+                text = stringResource(id = R.string.text_order_placed),
                 fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -92,7 +92,7 @@ fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -
             )
             Spacer(modifier = Modifier.height(11.dp))
             Text(
-                text = "Your payment is complete, please \n check the deliver details at the \n tracking page",
+                text = stringResource(id = R.string.text_payment_complete_msg),
                 fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Normal,
                 color = Color.Black,
@@ -128,14 +128,14 @@ fun ContinueShoppingButton(openHomeScreen: (promotionScreenState: PromotionScree
 
     ) {
         Text(
-            text = "Continue Shopping",
+            text = stringResource(id = R.string.text_continue_shopping),
             fontFamily = font_sf_pro,
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             color = Color.White,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
     }
     Spacer(modifier = Modifier.height(16.dp))

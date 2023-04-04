@@ -47,11 +47,11 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) ->
                     .background(VibrantPurple40)
             )
             Image(
-                painter = painterResource(id = R.drawable.back_arrow),
+                painter = painterResource(id = R.drawable.back_arrow_white),
                 contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(bottom = 10.dp, start = 16.dp, end = 16.dp)
+                    .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
                     .clickable {
                         if (selectedTab == 0) {
                             openHomeScreen(PromotionScreenState.CHECKOUT_VIEW)
@@ -72,7 +72,7 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) ->
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Order Details",
+            text = stringResource(id = R.string.text_order_details),
             fontFamily = font_archivo,
             fontWeight = FontWeight.Bold,
             color = LighterBlack,

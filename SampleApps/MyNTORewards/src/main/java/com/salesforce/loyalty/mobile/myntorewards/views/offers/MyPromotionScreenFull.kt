@@ -152,7 +152,7 @@ fun MyPromotionScreenHeader() {
 
     ) {
         Text(
-            text = "My Promotions",
+            text = stringResource(id = R.string.text_my_promotions),
             fontWeight = FontWeight.Bold,
             fontFamily = font_sf_pro,
             color = Color.Black,

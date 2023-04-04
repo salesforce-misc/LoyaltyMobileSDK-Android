@@ -26,7 +26,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
@@ -43,7 +43,7 @@ fun ProfileCard() {
         modifier = Modifier
             .height(220.dp)
             .fillMaxWidth()
-            .background(TextPurpoleLightBG)
+            .background(TextPurpleLightBG)
     ) {
         Box(
             Modifier

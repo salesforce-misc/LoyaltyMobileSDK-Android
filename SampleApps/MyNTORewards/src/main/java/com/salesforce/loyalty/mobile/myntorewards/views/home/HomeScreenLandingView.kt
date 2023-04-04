@@ -79,9 +79,8 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScr
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
-        HomeSubViewHeader("Promotions", navController)
+        HomeSubViewHeader(R.string.text_promotions, navController)
         val model: MyPromotionViewModel = viewModel()
-        val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
 
         val promoViewState by model.promotionViewState.observeAsState()

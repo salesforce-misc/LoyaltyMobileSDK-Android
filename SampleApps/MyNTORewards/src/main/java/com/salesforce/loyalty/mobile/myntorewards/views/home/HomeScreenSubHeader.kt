@@ -22,7 +22,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
-fun HomeSubViewHeader(heading: String, navController: NavController) {
+fun HomeSubViewHeader(headingId: Int, navController: NavController) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -31,7 +31,7 @@ fun HomeSubViewHeader(heading: String, navController: NavController) {
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
         Text(
-            text = heading,
+            text = stringResource(id =headingId),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             textAlign = TextAlign.Center,

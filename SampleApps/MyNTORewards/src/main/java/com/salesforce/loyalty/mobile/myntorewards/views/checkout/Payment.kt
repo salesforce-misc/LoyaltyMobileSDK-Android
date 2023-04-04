@@ -1,6 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.checkout
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,12 +12,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 
@@ -27,7 +33,7 @@ fun PaymentsUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -> U
         Spacer(modifier = Modifier.height(23.dp))
         VoucherRow()
         Spacer(modifier = Modifier.height(24.dp))
-        PointsRow()
+        PointsRow("432")
         AmountPaybleRow()
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -45,7 +51,7 @@ fun VoucherRow() {
     Column(modifier = Modifier.background(Color.White, RoundedCornerShape(20.dp))) {
 
         Text(
-            text = "Vouchers",
+            text = stringResource(id = R.string.vouchers),
             fontFamily = font_archivo,
             fontWeight = FontWeight.Medium,
             color = LighterBlack,
@@ -76,7 +82,7 @@ fun AmountPaybleRow() {
     ) {
 
         Text(
-            text = "Amount Payable:",
+            text = stringResource(id = R.string.text_amount_payble),
             fontFamily = font_archivo,
             fontWeight = FontWeight.Medium,
             color = LighterBlack,
@@ -98,7 +104,7 @@ fun AmountPaybleRow() {
 }
 
 @Composable
-fun PointsRow() {
+fun PointsRow(points:String) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -108,7 +114,7 @@ fun PointsRow() {
     ) {
 
         Text(
-            text = "Use my Points",
+            text = stringResource(id = R.string.text_use_my_points),
             fontFamily = font_archivo,
             fontWeight = FontWeight.SemiBold,
             color = LighterBlack,
@@ -117,7 +123,7 @@ fun PointsRow() {
             modifier = Modifier
         )
         Text(
-            text = "Points Available: 430",
+            text = stringResource(id = R.string.text_points_available)+points,
             fontFamily = font_archivo,
             fontWeight = FontWeight.SemiBold,
             color = LighterBlack,
@@ -141,13 +147,12 @@ fun CardNumberRow() {
     {
 
         Text(
-            text = "Card Number",
+            text = stringResource(id = R.string.text_card_number),
             fontFamily = font_archivo,
             fontWeight = FontWeight.Medium,
             color = LighterBlack,
             textAlign = TextAlign.Start,
             fontSize = 13.sp,
-            modifier = Modifier.padding(start = 11.dp)
         )
 
         Row(
@@ -155,7 +160,7 @@ fun CardNumberRow() {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 11.dp, end = 11.dp, bottom = 10.dp, top = 16.dp)
+                .padding(bottom = 10.dp, top = 16.dp)
         ) {
 
             CardInputField("0092")
@@ -169,44 +174,54 @@ fun CardNumberRow() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 11.dp, end = 11.dp, top = 16.dp)
+                .fillMaxWidth(1f)
+                .padding( top = 16.dp)
         ) {
 
-            Text(
-                text = "Expiry Date",
-                fontFamily = font_archivo,
-                fontWeight = FontWeight.Medium,
-                color = LighterBlack,
-                textAlign = TextAlign.Start,
-                fontSize = 13.sp,
-                modifier = Modifier
-            )
-            Text(
-                text = "Security Code",
-                fontFamily = font_archivo,
-                fontWeight = FontWeight.Medium,
-                color = LighterBlack,
-                textAlign = TextAlign.Start,
-                fontSize = 13.sp,
-                modifier = Modifier
-            )
+            Column( modifier = Modifier
+                .weight(0.7f)) {
 
-        }
+               Text(
+                    text = stringResource(id = R.string.text_expiry_date),
+                    fontFamily = font_archivo,
+                    fontWeight = FontWeight.Medium,
+                    color = LighterBlack,
+                    textAlign = TextAlign.Start,
+                    fontSize = 13.sp,
+                    modifier = Modifier
+                )
+                Spacer(modifier = Modifier.height(10.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 11.dp, bottom = 10.dp, top = 10.dp)
-        ) {
+                   Row(
+                      horizontalArrangement = Arrangement.Start,
+                      verticalAlignment = Alignment.CenterVertically,
+                      modifier = Modifier
+                          .fillMaxWidth()
+                  ) {
 
+                      MonthDropDownBox()
+                      YearDropDownBox()
 
-            MonthDropDownBox()
-            YearDropDownBox()
+                  }
+            }
 
-            CVVInputField("298")
+            Column(modifier = Modifier
+                .weight(0.3f)) {
+
+              Text(
+                    text = stringResource(id = R.string.text_security_code),
+                    fontFamily = font_archivo,
+                    fontWeight = FontWeight.Medium,
+                    color = LighterBlack,
+                    textAlign = TextAlign.Start,
+                    fontSize = 13.sp,
+                    modifier = Modifier
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                 CVVInputField("298")
+
+            }
+
 
         }
 
@@ -292,17 +307,34 @@ fun VoucherMenuBox() {
             .background(DropDownMenuBG, RoundedCornerShape(15.dp))
     ) {
 
-        Text(
-            text = selectedOptionText,
-            fontFamily = font_archivo,
-            fontWeight = FontWeight.Medium,
-            color = LighterBlack,
-            textAlign = TextAlign.Start,
-            fontSize = 13.sp,
-            modifier = Modifier
-                .padding(start = 20.dp, top = 13.5.dp, bottom = 13.5.dp, end = 47.dp)
-                .fillMaxWidth()
-        )
+        Row(horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
+            Text(
+                text = selectedOptionText,
+                fontFamily = font_archivo,
+                fontWeight = FontWeight.Medium,
+                color = CardFieldText,
+                textAlign = TextAlign.Start,
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 47.dp)
+            )
+
+            if(expanded){
+              //expand image needs to be here yet to be provided by UX designer
+            }
+            else{
+                Image(painter = painterResource(id = R.drawable.down_arrow),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
+            }
+        }
+
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = {
@@ -336,20 +368,38 @@ fun MonthDropDownBox() {
             expanded = !expanded
         },
         modifier = Modifier
-            .padding(start = 11.dp, end = 11.dp)
             .background(DropDownMenuBG, RoundedCornerShape(15.dp))
     ) {
 
-        Text(
-            text = selectedOptionText,
-            fontFamily = font_archivo,
-            fontWeight = FontWeight.Medium,
-            color = CardFieldText,
-            textAlign = TextAlign.Start,
-            fontSize = 13.sp,
-            modifier = Modifier
-                .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 47.dp)
-        )
+
+        Row(verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.width(83.dp)
+        ) {
+
+            Text(
+                text = selectedOptionText,
+                fontFamily = font_archivo,
+                fontWeight = FontWeight.Medium,
+                color = CardFieldText,
+                textAlign = TextAlign.Start,
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 15.dp)
+            )
+
+            if(expanded){
+                //expand image needs to be here yet to be provided by UX designer
+            }
+            else{
+                Image(painter = painterResource(id = R.drawable.down_arrow),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(top = 20.dp, bottom = 20.dp, end = 15.dp))
+            }
+        }
+
+
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = {
@@ -387,16 +437,34 @@ fun YearDropDownBox() {
             .background(DropDownMenuBG, RoundedCornerShape(15.dp))
     ) {
 
-        Text(
-            text = selectedOptionText,
-            fontFamily = font_archivo,
-            fontWeight = FontWeight.Medium,
-            color = CardFieldText,
-            textAlign = TextAlign.Start,
-            fontSize = 13.sp,
-            modifier = Modifier
-                .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 47.dp)
-        )
+        Row(horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.width(83.dp)
+        ) {
+
+            Text(
+                text = selectedOptionText,
+                fontFamily = font_archivo,
+                fontWeight = FontWeight.Medium,
+                color = CardFieldText,
+                textAlign = TextAlign.Start,
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 15.dp)
+            )
+
+            if(expanded){
+                //expand image needs to be here yet to be provided by UX designer
+            }
+            else{
+                Image(painter = painterResource(id = R.drawable.down_arrow),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(top = 20.dp, bottom = 20.dp, end = 15.dp))
+            }
+        }
+
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = {
@@ -433,14 +501,14 @@ fun ConfirmOrderButton(openHomeScreen: (promotionScreenState: PromotionScreenSta
 
     ) {
         Text(
-            text = "Confirm Order",
+            text = stringResource(id = R.string.text_confirm_order),
             fontFamily = font_archivo,
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             color = Color.White,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
-                .padding(top = 13.dp, bottom = 13.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
     }
     Spacer(modifier = Modifier.height(16.dp))

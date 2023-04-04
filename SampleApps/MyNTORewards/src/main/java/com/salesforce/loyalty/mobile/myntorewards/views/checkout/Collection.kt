@@ -51,11 +51,11 @@ fun CheckOutFlowOrderSelectScreen(openHomeScreen: (promotionScreenState: Promoti
                     .background(VibrantPurple40)
             )
             Image(
-                painter = painterResource(id = R.drawable.back_arrow),
+                painter = painterResource(id = R.drawable.back_arrow_white),
                 contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(bottom = 10.dp, start = 16.dp, end = 16.dp)
+                    .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
                     .clickable {
                         openHomeScreen(PromotionScreenState.MAIN_VIEW)
                     }
@@ -311,7 +311,7 @@ fun OrderSelectSizeRow() {
         modifier = Modifier.fillMaxWidth()
     )
     {
-        SelectionTextOrderScreen("Select Size")
+        SelectionTextOrderScreen(R.string.text_select_size)
 
         Text(
             text = "View Size Chart",
@@ -347,7 +347,7 @@ fun OrderAvailableColoursRow() {
         modifier = Modifier
             .height(33.dp)
     )
-    SelectionTextOrderScreen("Available Colors")
+    SelectionTextOrderScreen(R.string.text_available_colours)
     Spacer(
         modifier = Modifier
             .height(8.dp)
@@ -373,7 +373,7 @@ fun OrderQuantityRow() {
             .height(32.dp)
     )
 
-    SelectionTextOrderScreen("Quantity")
+    SelectionTextOrderScreen(R.string.text_quantity)
 
     Spacer(
         modifier = Modifier
@@ -474,7 +474,7 @@ fun ButtonBuyOrAddCard(openHomeScreen: (promotionScreenState: PromotionScreenSta
 
         ) {
             Text(
-                text = "Buy Now",
+                text = stringResource(id = R.string.text_buy_now),
                 fontFamily = font_sf_pro,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
@@ -501,7 +501,7 @@ fun ButtonBuyOrAddCard(openHomeScreen: (promotionScreenState: PromotionScreenSta
 
         ) {
             Text(
-                text = "Add To Cart",
+                text = stringResource(id = R.string.text_add_to_cart),
                 fontFamily = font_sf_pro,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
@@ -516,10 +516,10 @@ fun ButtonBuyOrAddCard(openHomeScreen: (promotionScreenState: PromotionScreenSta
 }
 
 @Composable
-fun SelectionTextOrderScreen(text: String) {
+fun SelectionTextOrderScreen(text: Int) {
 
     Text(
-        text = text,
+        text = stringResource(text),
         fontFamily = font_archivo,
         fontWeight = FontWeight.SemiBold,
         color = LightBlack,

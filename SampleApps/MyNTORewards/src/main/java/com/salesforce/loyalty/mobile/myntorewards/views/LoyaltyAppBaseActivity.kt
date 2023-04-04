@@ -24,6 +24,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
 
         setContent {
             MainScreenStart()
+
         }
     }
 }

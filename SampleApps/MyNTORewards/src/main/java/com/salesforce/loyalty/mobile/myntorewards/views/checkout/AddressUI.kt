@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo
@@ -60,7 +62,7 @@ fun ShippingAndPaymentRow() {
     ) {
 
         Text(
-            text = "Shipping Address",
+            text = stringResource(R.string.text_shipping_address),
             fontWeight = FontWeight.Bold,
             color = LighterBlack,
             textAlign = TextAlign.Start,
@@ -70,7 +72,7 @@ fun ShippingAndPaymentRow() {
 
             )
         Text(
-            text = "Add New Address",
+            text = stringResource(R.string.text_add_new_address),
             fontWeight = FontWeight.Bold,
             color = VibrantPurple40,
             textAlign = TextAlign.Start,
@@ -145,7 +147,7 @@ fun EditDeleteAddressRow() {
     ) {
 
         Text(
-            text = "Edit  Address",
+            text = stringResource(R.string.text_edit_address),
             fontWeight = FontWeight.SemiBold,
             color = VibrantPurple40,
             textAlign = TextAlign.Start,
@@ -155,7 +157,7 @@ fun EditDeleteAddressRow() {
 
             )
         Text(
-            text = "Delete  Address",
+            text = stringResource(R.string.text_delete_address),
             fontWeight = FontWeight.SemiBold,
             color = VibrantPurple40,
             textAlign = TextAlign.Start,
@@ -183,7 +185,7 @@ fun ButtonDeliver(switchPaymentTab: () -> Unit) {
 
     ) {
         Text(
-            text = "Deliver To This Address",
+            text = stringResource(R.string.text_deliver_to_this_address),
             fontFamily = font_archivo,
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
