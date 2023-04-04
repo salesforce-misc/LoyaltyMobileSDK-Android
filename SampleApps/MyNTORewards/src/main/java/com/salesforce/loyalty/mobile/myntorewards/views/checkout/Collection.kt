@@ -77,7 +77,9 @@ fun CheckOutFlowOrderSelectScreen(openHomeScreen: (homeScreenState: HomeScreenSt
         }
         OrderSelectHeader()
         OrderSelectTab()
-        OrderSelectionDetail()
+        OrderSelectionDetail{
+            openHomeScreen(it)
+        }
     }
 }
 
@@ -179,7 +181,7 @@ fun OrderSelectHeader()
 }
 
 @Composable
-fun OrderSelectionDetail()
+fun OrderSelectionDetail(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
 {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -196,7 +198,9 @@ fun OrderSelectionDetail()
         OrderSelectSizeRow()
         OrderAvailableColoursRow()
         OrderQuantityRow()
-        ButtonBuyOrAddCard()
+        ButtonBuyOrAddCard{
+            openHomeScreen(it)
+        }
 
     }
 
@@ -470,13 +474,14 @@ fun OrderQuantityRow()
 }
 
 @Composable
-fun ButtonBuyOrAddCard()
+fun ButtonBuyOrAddCard(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
 {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(
             modifier = Modifier
                 .fillMaxWidth(), onClick = {
+                openHomeScreen(HomeScreenState.ADDRESS_PAYMENT_VIEW)
                 //  model.enrollInPromotions(context, "PromoName")
             },
             colors = ButtonDefaults.buttonColors(VibrantPurple40),

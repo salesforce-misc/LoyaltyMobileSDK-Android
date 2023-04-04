@@ -23,6 +23,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.OfferScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
+import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
@@ -40,6 +42,12 @@ fun HomeScreen(navController: NavController) {
             currentHomeState = it
         }
         HomeScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
+            currentHomeState = it
+        }
+        HomeScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
+            currentHomeState = it
+        }
+        HomeScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
             currentHomeState = it
         }
     }
@@ -65,6 +73,12 @@ fun MyOfferScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
             currentHomeState = it
         }
         HomeScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
+            currentHomeState = it
+        }
+        HomeScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
+            currentHomeState = it
+        }
+        HomeScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
             currentHomeState = it
         }
         else -> {}

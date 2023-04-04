@@ -16,6 +16,8 @@ enum class HomeScreenState {
     MAIN_VIEW,
     VOUCHER_VIEW,
     CHECKOUT_VIEW,
+    ADDRESS_PAYMENT_VIEW,
+    ORDER_CONFIRMATION_VIEW,
 }
 
 enum class OfferScreenState {

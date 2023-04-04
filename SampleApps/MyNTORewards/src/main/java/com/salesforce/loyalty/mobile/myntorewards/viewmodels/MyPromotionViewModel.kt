@@ -39,7 +39,7 @@ class MyPromotionViewModel : ViewModel() {
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
             val memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
-            LoyaltyAPIManager.getEligiblePromotions(membershipKey, memberID).onSuccess {
+            LoyaltyAPIManager.getEligiblePromotions("M0001", memberID).onSuccess {
                 membershipPromo.value = it.outputParameters?.outputParameters?.results
                 Log.d(TAG, "success member promotion response: $it")
             }.onFailure {
