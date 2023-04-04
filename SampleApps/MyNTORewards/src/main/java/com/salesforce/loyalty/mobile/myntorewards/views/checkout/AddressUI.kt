@@ -17,11 +17,9 @@ import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
 
 @Composable
-fun OrderAddressUI(switchPaymentTab: () -> Unit)
-{
+fun OrderAddressUI(switchPaymentTab: () -> Unit) {
 
     ShippingAndPaymentRow()
 
@@ -32,12 +30,14 @@ fun OrderAddressUI(switchPaymentTab: () -> Unit)
     Column(modifier = Modifier.padding(start = 21.dp, end = 21.dp)) {
 
 
-        Column(modifier = Modifier
-            .background(Color.White, RoundedCornerShape(20.dp))
-            .padding(start = 21.dp, end = 21.dp)) {
+        Column(
+            modifier = Modifier
+                .background(Color.White, RoundedCornerShape(20.dp))
+                .padding(start = 21.dp, end = 21.dp)
+        ) {
             AddressRow()
             EditDeleteAddressRow()
-            ButtonDeliver{
+            ButtonDeliver {
                 switchPaymentTab()
             }
         }
@@ -47,12 +47,11 @@ fun OrderAddressUI(switchPaymentTab: () -> Unit)
 }
 
 @Composable
-fun ShippingAndPaymentRow()
-{
+fun ShippingAndPaymentRow() {
 
 
-
-    Row( horizontalArrangement = Arrangement.SpaceBetween,
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
@@ -80,9 +79,9 @@ fun ShippingAndPaymentRow()
         )
     }
 }
+
 @Composable
-fun AddressRow()
-{
+fun AddressRow() {
     Spacer(
         modifier = Modifier
             .height(16.dp)
@@ -91,7 +90,8 @@ fun AddressRow()
         modifier = Modifier
             .fillMaxWidth()
             .height(126.dp)
-            .background(Color.White).padding(start = 11.dp, end = 11.dp),
+            .background(Color.White)
+            .padding(start = 11.dp, end = 11.dp),
     )
     {
         Text(
@@ -128,15 +128,15 @@ fun AddressRow()
 }
 
 @Composable
-fun EditDeleteAddressRow()
-{
+fun EditDeleteAddressRow() {
     Spacer(
         modifier = Modifier
             .height(16.dp)
     )
 
 
-    Row( horizontalArrangement = Arrangement.SpaceBetween,
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(start = 11.dp, end = 11.dp)
@@ -166,9 +166,9 @@ fun EditDeleteAddressRow()
             )
     }
 }
+
 @Composable
-fun ButtonDeliver(switchPaymentTab: () -> Unit)
-{
+fun ButtonDeliver(switchPaymentTab: () -> Unit) {
 
     Spacer(modifier = Modifier.height(16.dp))
 

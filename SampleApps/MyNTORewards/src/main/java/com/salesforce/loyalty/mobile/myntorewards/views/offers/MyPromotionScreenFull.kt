@@ -28,14 +28,14 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun MyPromotionScreen(membershipPromo: List<Results>?, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun MyPromotionScreen(membershipPromo: List<Results>?, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
 
     Column(
@@ -165,7 +165,7 @@ fun MyPromotionScreenHeader() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionItem(results: Results, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun PromotionItem(results: Results, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""

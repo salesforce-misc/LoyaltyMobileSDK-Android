@@ -40,13 +40,13 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
@@ -69,7 +69,7 @@ fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, openHomeScree
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
+fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit)
 {
 
 
@@ -330,12 +330,12 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScr
 
 
 @Composable
-fun ShopButton(width: Dp, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun ShopButton(width: Dp, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     Button(
         modifier = Modifier
             .width(width), onClick = {
-            openHomeScreen(HomeScreenState.CHECKOUT_VIEW)
+            openHomeScreen(PromotionScreenState.CHECKOUT_VIEW)
             //  model.enrollInPromotions(context, "PromoName")
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),

@@ -27,14 +27,13 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
-import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopupUI
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionCard(page: Int, membershipPromo: List<Results>?,  openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun PromotionCard(page: Int, membershipPromo: List<Results>?,  openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
     var endDate = membershipPromo?.get(page)?.endDate ?: ""

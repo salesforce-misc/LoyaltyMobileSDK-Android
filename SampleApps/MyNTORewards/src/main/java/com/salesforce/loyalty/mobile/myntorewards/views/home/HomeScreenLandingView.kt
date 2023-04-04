@@ -22,14 +22,14 @@ import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 
 @Composable
 fun HomeScreenLandingView(
     navController: NavController,
-    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
 ) {
 
     Column(
@@ -67,7 +67,7 @@ fun HomeScreenLandingView(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PromotionCardRow(navController: NavController, openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -119,7 +119,7 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (homeScreenSt
 @Composable
 fun VoucherRow(
     navController: NavController,
-    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,

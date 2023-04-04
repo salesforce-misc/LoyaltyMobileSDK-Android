@@ -12,15 +12,10 @@ enum class MyProfileScreenState {
     TRANSACTION_VIEW,
 }
 
-enum class HomeScreenState {
+enum class PromotionScreenState {
     MAIN_VIEW,
     VOUCHER_VIEW,
     CHECKOUT_VIEW,
     ADDRESS_PAYMENT_VIEW,
     ORDER_CONFIRMATION_VIEW,
-}
-
-enum class OfferScreenState {
-    MAIN_VIEW,
-    CHECKOUT_VIEW,
 }

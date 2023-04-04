@@ -11,8 +11,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,20 +20,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
-import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
-import com.salesforce.loyalty.mobile.myntorewards.views.MainScreenStart
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.OrderTabs
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 
 @Composable
-fun CheckOutFlowOrderSelectScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun CheckOutFlowOrderSelectScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -64,7 +57,7 @@ fun CheckOutFlowOrderSelectScreen(openHomeScreen: (homeScreenState: HomeScreenSt
                 modifier = Modifier
                     .padding(bottom = 10.dp, start = 16.dp, end = 16.dp)
                     .clickable {
-                        openHomeScreen(HomeScreenState.MAIN_VIEW)
+                        openHomeScreen(PromotionScreenState.MAIN_VIEW)
                     }
             )
             Image(
@@ -77,15 +70,14 @@ fun CheckOutFlowOrderSelectScreen(openHomeScreen: (homeScreenState: HomeScreenSt
         }
         OrderSelectHeader()
         OrderSelectTab()
-        OrderSelectionDetail{
+        OrderSelectionDetail {
             openHomeScreen(it)
         }
     }
 }
 
 @Composable
-fun OrderSelectTab()
-{
+fun OrderSelectTab() {
     var selectedTab by remember { mutableStateOf(0) }
 
     Row(modifier = Modifier.background(Color.White)) {
@@ -115,22 +107,19 @@ fun OrderSelectTab()
                     onClick = { selectedTab = index },
 
                     text = {
-                        if(selectedTab == index)
-                        {
+                        if (selectedTab == index) {
                             androidx.compose.material3.Text(
                                 text = stringResource(it.tabName),
                                 fontFamily = font_archivo,
                                 fontWeight = FontWeight.SemiBold,
                             )
-                        }
-                        else
-                        {
+                        } else {
                             androidx.compose.material3.Text(
                                 text = stringResource(it.tabName),
                                 fontFamily = font_archivo,
-                                )
+                            )
                         }
-                         },
+                    },
                     selectedContentColor = LighterBlack,
                     unselectedContentColor = LighterBlack,
                 )
@@ -143,8 +132,7 @@ fun OrderSelectTab()
 
 
 @Composable
-fun OrderSelectHeader()
-{
+fun OrderSelectHeader() {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -181,8 +169,7 @@ fun OrderSelectHeader()
 }
 
 @Composable
-fun OrderSelectionDetail(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
-{
+fun OrderSelectionDetail(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -198,7 +185,7 @@ fun OrderSelectionDetail(openHomeScreen: (homeScreenState: HomeScreenState) -> U
         OrderSelectSizeRow()
         OrderAvailableColoursRow()
         OrderQuantityRow()
-        ButtonBuyOrAddCard{
+        ButtonBuyOrAddCard {
             openHomeScreen(it)
         }
 
@@ -207,17 +194,17 @@ fun OrderSelectionDetail(openHomeScreen: (homeScreenState: HomeScreenState) -> U
 }
 
 @Composable
-fun RatingRow()
-{
+fun RatingRow() {
     Spacer(modifier = Modifier.height(18.dp))
-    Row(horizontalArrangement = Arrangement.SpaceBetween,
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = CenterVertically,
         modifier = Modifier.fillMaxWidth(),
 
         ) {
         Text(
             text = "STOP",
-            fontFamily= font_archivo,
+            fontFamily = font_archivo,
             fontWeight = FontWeight.Bold,
             color = LighterBlack,
             textAlign = TextAlign.Start,
@@ -226,7 +213,7 @@ fun RatingRow()
                 .padding(start = 16.dp)
         )
 
-        Row(modifier = Modifier.padding(end=17.dp)) {
+        Row(modifier = Modifier.padding(end = 17.dp)) {
             ReviewStarImage(true)
             ReviewStarImage(true)
             ReviewStarImage(true)
@@ -237,13 +224,12 @@ fun RatingRow()
 }
 
 @Composable
-fun OrderDescriptionRow()
-{
+fun OrderDescriptionRow() {
     Spacer(modifier = Modifier.height(18.dp))
     Text(
         text = "Women’s Flight Jacket",
 
-        fontFamily= font_archivo,
+        fontFamily = font_archivo,
         color = Black2TextOrderScreen,
         textAlign = TextAlign.Start,
         fontSize = 12.sp,
@@ -255,28 +241,27 @@ fun OrderDescriptionRow()
 }
 
 @Composable
-fun OrderLargeImageRow()
-{
+fun OrderLargeImageRow() {
     Spacer(modifier = Modifier.height(13.dp))
     Row(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
         Image(
             painter = painterResource(id = R.drawable.jacket),
             contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
-            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(10.dp)),
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(10.dp)),
             contentScale = ContentScale.FillWidth,
         )
     }
 
 
-
 }
 
 @Composable
-fun SelectImageRow()
-{
+fun SelectImageRow() {
 
     Row(
-        horizontalArrangement  = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .navigationBarsPadding()
             .imePadding()
@@ -317,12 +302,12 @@ fun SelectImageRow()
 
 
 @Composable
-fun OrderSelectSizeRow()
-{
+fun OrderSelectSizeRow() {
 
     Spacer(modifier = Modifier.height(24.dp))
 
-    Row(horizontalArrangement = Arrangement.SpaceBetween,
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     )
     {
@@ -341,9 +326,10 @@ fun OrderSelectSizeRow()
     }
     Spacer(modifier = Modifier.height(8.dp))
 
-    Row( horizontalArrangement = Arrangement.Start,
+    Row(
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = CenterVertically,
-        modifier = Modifier.padding(start = 5.dp )
+        modifier = Modifier.padding(start = 5.dp)
 
     ) {
 
@@ -356,8 +342,7 @@ fun OrderSelectSizeRow()
 }
 
 @Composable
-fun OrderAvailableColoursRow()
-{
+fun OrderAvailableColoursRow() {
     Spacer(
         modifier = Modifier
             .height(33.dp)
@@ -367,9 +352,10 @@ fun OrderAvailableColoursRow()
         modifier = Modifier
             .height(8.dp)
     )
-    Row( horizontalArrangement = Arrangement.Start,
+    Row(
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = CenterVertically,
-        modifier = Modifier.padding(start = 5.dp, end= 16.dp )
+        modifier = Modifier.padding(start = 5.dp, end = 16.dp)
 
     ) {
         SelectionImageTile(Color(0xFFEA001E))
@@ -380,8 +366,7 @@ fun OrderAvailableColoursRow()
 }
 
 @Composable
-fun OrderQuantityRow()
-{
+fun OrderQuantityRow() {
 
     Spacer(
         modifier = Modifier
@@ -395,7 +380,8 @@ fun OrderQuantityRow()
             .height(8.dp)
     )
 
-    Row( horizontalArrangement = Arrangement.SpaceBetween,
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = CenterVertically,
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
@@ -403,7 +389,7 @@ fun OrderQuantityRow()
 
     ) {
 
-        Row{
+        Row {
 
             Text(
                 text = "-",
@@ -474,14 +460,13 @@ fun OrderQuantityRow()
 }
 
 @Composable
-fun ButtonBuyOrAddCard(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
-{
+fun ButtonBuyOrAddCard(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(
             modifier = Modifier
                 .fillMaxWidth(), onClick = {
-                openHomeScreen(HomeScreenState.ADDRESS_PAYMENT_VIEW)
+                openHomeScreen(PromotionScreenState.ADDRESS_PAYMENT_VIEW)
                 //  model.enrollInPromotions(context, "PromoName")
             },
             colors = ButtonDefaults.buttonColors(VibrantPurple40),
@@ -508,8 +493,7 @@ fun ButtonBuyOrAddCard(openHomeScreen: (homeScreenState: HomeScreenState) -> Uni
             colors = ButtonDefaults.buttonColors(Color.White),
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, VibrantPurple40, RoundedCornerShape(100.dp))
-            , onClick = {
+                .border(1.dp, VibrantPurple40, RoundedCornerShape(100.dp)), onClick = {
                 //  model.enrollInPromotions(context, "PromoName")
             },
             shape = RoundedCornerShape(100.dp)
@@ -530,9 +514,9 @@ fun ButtonBuyOrAddCard(openHomeScreen: (homeScreenState: HomeScreenState) -> Uni
     }
 
 }
+
 @Composable
-fun SelectionTextOrderScreen(text:String)
-{
+fun SelectionTextOrderScreen(text: String) {
 
     Text(
         text = text,
@@ -548,15 +532,14 @@ fun SelectionTextOrderScreen(text:String)
 }
 
 @Composable
-fun SelectionImageTile(color: Color)
-{
+fun SelectionImageTile(color: Color) {
     Spacer(
         modifier = Modifier
             .width(12.dp)
     )
 
     Text(
-        text="",
+        text = "",
         textAlign = TextAlign.Center,
         fontFamily = font_sf_pro,
         color = Color.White,
@@ -571,8 +554,7 @@ fun SelectionImageTile(color: Color)
 }
 
 @Composable
-fun ReviewStarImage(starred: Boolean)
-{
+fun ReviewStarImage(starred: Boolean) {
     Image(
         painter = painterResource(id = R.drawable.star_1_3x),
         contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
@@ -584,19 +566,17 @@ fun ReviewStarImage(starred: Boolean)
 
 
 @Composable
-fun SelectionSizeTile(size: String, selected:Boolean)
-{
+fun SelectionSizeTile(size: String, selected: Boolean) {
 
-    var color= Black3TextOrderScreen
+    var color = Black3TextOrderScreen
     var modifier = Modifier
         .width(43.dp)
         .border(1.dp, Black3TextOrderScreen, RoundedCornerShape(10.dp))
         .padding(top = 7.dp, bottom = 7.dp)
 
-    if(selected)
-    {
-        color= Color.White
-        modifier= Modifier
+    if (selected) {
+        color = Color.White
+        modifier = Modifier
             .width(43.dp)
             .background(Black3TextOrderScreen, RoundedCornerShape(10.dp))
             .padding(top = 7.dp, bottom = 7.dp)

@@ -1,13 +1,11 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.checkout
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,12 +17,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 
 @Composable
-fun PaymentsUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun PaymentsUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
-    Column(modifier = Modifier.padding(start = 16.dp, end=25.dp)) {
+    Column(modifier = Modifier.padding(start = 16.dp, end = 25.dp)) {
 
         Spacer(modifier = Modifier.height(23.dp))
         VoucherRow()
@@ -35,7 +33,7 @@ fun PaymentsUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
 
         CardNumberRow()
         Spacer(modifier = Modifier.height(24.dp))
-        ConfirmOrderButton{
+        ConfirmOrderButton {
             openHomeScreen(it)
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -43,7 +41,7 @@ fun PaymentsUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
 }
 
 @Composable
-fun VoucherRow(){
+fun VoucherRow() {
     Column(modifier = Modifier.background(Color.White, RoundedCornerShape(20.dp))) {
 
         Text(
@@ -61,20 +59,21 @@ fun VoucherRow(){
         VoucherMenuBox()
         Spacer(modifier = Modifier.height(16.dp))
 
-        
+
     }
 
 }
 
 @Composable
-fun AmountPaybleRow(){
+fun AmountPaybleRow() {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White, RoundedCornerShape(20.dp))
-            .padding(start = 11.dp, end = 11.dp, bottom = 16.dp, top = 22.dp)) {
+            .padding(start = 11.dp, end = 11.dp, bottom = 16.dp, top = 22.dp)
+    ) {
 
         Text(
             text = "Amount Payable:",
@@ -99,13 +98,14 @@ fun AmountPaybleRow(){
 }
 
 @Composable
-fun PointsRow(){
+fun PointsRow() {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 11.dp, end = 11.dp, bottom = 16.dp, top = 22.dp)) {
+            .padding(start = 11.dp, end = 11.dp, bottom = 16.dp, top = 22.dp)
+    ) {
 
         Text(
             text = "Use my Points",
@@ -131,12 +131,13 @@ fun PointsRow(){
 
 
 @Composable
-fun CardNumberRow(){
+fun CardNumberRow() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White, RoundedCornerShape(20.dp))
-            .padding(start = 11.dp, end = 11.dp, bottom = 16.dp, top = 22.dp))
+            .padding(start = 11.dp, end = 11.dp, bottom = 16.dp, top = 22.dp)
+    )
     {
 
         Text(
@@ -154,7 +155,8 @@ fun CardNumberRow(){
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 11.dp, end = 11.dp, bottom = 10.dp, top = 16.dp)) {
+                .padding(start = 11.dp, end = 11.dp, bottom = 10.dp, top = 16.dp)
+        ) {
 
             CardInputField("0092")
             CardInputField("0230")
@@ -168,7 +170,8 @@ fun CardNumberRow(){
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 11.dp, end = 11.dp, top = 16.dp)) {
+                .padding(start = 11.dp, end = 11.dp, top = 16.dp)
+        ) {
 
             Text(
                 text = "Expiry Date",
@@ -196,8 +199,8 @@ fun CardNumberRow(){
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 11.dp, bottom = 10.dp, top = 10.dp)) {
-
+                .padding(end = 11.dp, bottom = 10.dp, top = 10.dp)
+        ) {
 
 
             MonthDropDownBox()
@@ -212,15 +215,15 @@ fun CardNumberRow(){
 }
 
 @Composable
-fun CardInputField(text:String)
-{
+fun CardInputField(text: String) {
     TextField(
         value = text,
         onValueChange = {
 
         },
         modifier = Modifier
-            .width(70.dp).width(44.dp),
+            .width(70.dp)
+            .width(44.dp),
 
         enabled = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -242,15 +245,15 @@ fun CardInputField(text:String)
 }
 
 @Composable
-fun CVVInputField(text:String)
-{
+fun CVVInputField(text: String) {
     TextField(
         value = text,
         onValueChange = {
 
         },
         modifier = Modifier
-            .width(111.dp).width(44.dp),
+            .width(111.dp)
+            .width(44.dp),
 
         enabled = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -312,7 +315,7 @@ fun VoucherMenuBox() {
                         selectedOptionText = selectionOption
                         expanded = false
                     }
-                ){
+                ) {
                     Text(text = selectionOption)
                 }
             }
@@ -323,7 +326,7 @@ fun VoucherMenuBox() {
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MonthDropDownBox() {
-    val options = listOf("01","02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
+    val options = listOf("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
@@ -359,7 +362,7 @@ fun MonthDropDownBox() {
                         selectedOptionText = selectionOption
                         expanded = false
                     }
-                ){
+                ) {
                     Text(text = selectionOption)
                 }
             }
@@ -370,7 +373,7 @@ fun MonthDropDownBox() {
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun YearDropDownBox() {
-    val options = listOf("24","25", "26", "27", "28", "29", "30", "31", "32", "33")
+    val options = listOf("24", "25", "26", "27", "28", "29", "30", "31", "32", "33")
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
@@ -406,7 +409,7 @@ fun YearDropDownBox() {
                         selectedOptionText = selectionOption
                         expanded = false
                     }
-                ){
+                ) {
                     Text(text = selectionOption)
                 }
             }
@@ -415,15 +418,14 @@ fun YearDropDownBox() {
 }
 
 @Composable
-fun ConfirmOrderButton(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
-{
+fun ConfirmOrderButton(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
     Button(
         modifier = Modifier
             .fillMaxWidth(), onClick = {
-            openHomeScreen(HomeScreenState.ORDER_CONFIRMATION_VIEW)
+            openHomeScreen(PromotionScreenState.ORDER_CONFIRMATION_VIEW)
             //  model.enrollInPromotions(context, "PromoName")
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),

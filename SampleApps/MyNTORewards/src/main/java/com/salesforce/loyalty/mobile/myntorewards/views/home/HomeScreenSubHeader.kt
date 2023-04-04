@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
@@ -63,7 +63,7 @@ fun HomeSubViewHeader(heading: String, navController: NavController) {
 fun HomeSubViewHeaderVoucher(
     heading: Int,
     navController: NavController,
-    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -86,7 +86,7 @@ fun HomeSubViewHeaderVoucher(
             textAlign = TextAlign.Center,
             fontSize = 13.sp,
             modifier = Modifier.clickable {
-                openHomeScreen(HomeScreenState.VOUCHER_VIEW)
+                openHomeScreen(PromotionScreenState.VOUCHER_VIEW)
             }
         )
     }

@@ -18,9 +18,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
-import com.salesforce.loyalty.mobile.myntorewards.utilities.OfferScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
@@ -32,29 +31,29 @@ import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 @Composable
 fun HomeScreen(navController: NavController) {
 
-    var currentHomeState by remember { mutableStateOf(HomeScreenState.MAIN_VIEW) }
+    var currentHomeState by remember { mutableStateOf(PromotionScreenState.MAIN_VIEW) }
 
     when (currentHomeState) {
-        HomeScreenState.MAIN_VIEW -> HomeScreenLandingView(navController) {
+        PromotionScreenState.MAIN_VIEW -> HomeScreenLandingView(navController) {
             currentHomeState = it
         }
-        HomeScreenState.VOUCHER_VIEW -> VoucherFullScreen {
+        PromotionScreenState.VOUCHER_VIEW -> VoucherFullScreen {
             currentHomeState = it
         }
-        HomeScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
+        PromotionScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
             currentHomeState = it
         }
-        HomeScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
+        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
             currentHomeState = it
         }
-        HomeScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
+        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
             currentHomeState = it
         }
     }
 }
 
 @Composable
-fun MyOfferScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     val model: MyPromotionViewModel = viewModel()
     val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
@@ -65,20 +64,20 @@ fun MyOfferScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
         openHomeScreen(it)
     }*/
 
-    var currentHomeState by remember { mutableStateOf(HomeScreenState.MAIN_VIEW) }
+    var currentHomeState by remember { mutableStateOf(PromotionScreenState.MAIN_VIEW) }
 
     when (currentHomeState) {
-        HomeScreenState.MAIN_VIEW -> MyPromotionScreen(membershipPromo) {
+        PromotionScreenState.MAIN_VIEW -> MyPromotionScreen(membershipPromo) {
             openHomeScreen(it)
             currentHomeState = it
         }
-        HomeScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
+        PromotionScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
             currentHomeState = it
         }
-        HomeScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
+        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
             currentHomeState = it
         }
-        HomeScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
+        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
             currentHomeState = it
         }
         else -> {}

@@ -7,7 +7,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 
 @Composable
-fun OrderPlacedUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -40,10 +39,12 @@ fun OrderPlacedUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
                 .background(VibrantPurple40),
         ) {
 
-            Spacer(modifier = Modifier
+            Spacer(
+                modifier = Modifier
                     .height(20.dp)
                     .fillMaxWidth()
-                    .background(VibrantPurple40))
+                    .background(VibrantPurple40)
+            )
 
             Image(painter = painterResource(id = R.drawable.back_arrow),
                 contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
@@ -51,10 +52,11 @@ fun OrderPlacedUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
                 modifier = Modifier
                     .padding(bottom = 10.dp, start = 16.dp, end = 16.dp)
                     .clickable {
-                        openHomeScreen(HomeScreenState.ADDRESS_PAYMENT_VIEW)
+                        openHomeScreen(PromotionScreenState.ADDRESS_PAYMENT_VIEW)
                     })
 
-            Image(painter = painterResource(id = R.drawable.membership_card_logo),
+            Image(
+                painter = painterResource(id = R.drawable.membership_card_logo),
                 contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                 modifier = Modifier
                     .padding(start = 16.dp),
@@ -63,9 +65,11 @@ fun OrderPlacedUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
 
         }
 
-        Column( modifier = Modifier
-            .padding(start = 67.dp, end = 67.dp)
-            .align(CenterHorizontally)) {
+        Column(
+            modifier = Modifier
+                .padding(start = 67.dp, end = 67.dp)
+                .align(CenterHorizontally)
+        ) {
             Spacer(modifier = Modifier.height(128.dp))
             Image(
                 painter = painterResource(id = R.drawable.circle_check_box),
@@ -99,7 +103,7 @@ fun OrderPlacedUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
             )
 
             Spacer(modifier = Modifier.height(100.dp))
-            ContinueShoppingButton{
+            ContinueShoppingButton {
                 openHomeScreen(it)
             }
         }
@@ -110,15 +114,14 @@ fun OrderPlacedUI(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
 }
 
 @Composable
-fun ContinueShoppingButton(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit)
-{
+fun ContinueShoppingButton(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
     Button(
         modifier = Modifier
             .fillMaxWidth(), onClick = {
-            openHomeScreen(HomeScreenState.MAIN_VIEW)
+            openHomeScreen(PromotionScreenState.MAIN_VIEW)
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)

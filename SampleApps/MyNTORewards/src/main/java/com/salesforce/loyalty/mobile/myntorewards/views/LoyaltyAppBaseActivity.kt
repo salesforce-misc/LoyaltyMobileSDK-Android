@@ -23,10 +23,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         )
 
         setContent {
-           // HomeTabScreen()
-            //OrderDetails()
             MainScreenStart()
-          //  CheckOutFlowOrderSelectScreen()
         }
     }
 }

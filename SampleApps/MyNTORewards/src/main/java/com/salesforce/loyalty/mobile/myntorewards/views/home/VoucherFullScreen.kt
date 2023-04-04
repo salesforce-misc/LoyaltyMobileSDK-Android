@@ -33,12 +33,12 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.VoucherTabs
 
 @Composable
-fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit) {
+fun VoucherFullScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier.background(Color.White)
@@ -52,7 +52,7 @@ fun VoucherFullScreen(openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)
                 .clickable {
-                    openHomeScreen(HomeScreenState.MAIN_VIEW)
+                    openHomeScreen(PromotionScreenState.MAIN_VIEW)
                 }
         )
         Text(
