@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -23,6 +24,9 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 
@@ -72,26 +76,36 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScr
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .wrapContentSize(Alignment.Center)
+            .height(450.dp)
             .background(PromotionCardBG)
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
-
+        var isInProgress by remember { mutableStateOf(false) }
         HomeSubViewHeader("Promotions", navController)
         val model: MyPromotionViewModel = viewModel()
         val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
 
-        model.promotionAPI(context)
-
-
-        val promListListSize = membershipPromo?.size ?: 0
-        val pagerState = rememberPagerState()
-
-        val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION) {
-            MAX_PAGE_COUNT_PROMOTION
-        } else {
-            promListListSize
+        val promoViewState by model.promotionViewState.observeAsState()
+        LaunchedEffect(true) {
+            model.loadPromotions(context)
         }
+
+        when (promoViewState) {
+            is PromotionViewState.PromotionsFetchSuccess -> {
+                isInProgress = false
+                val membershipPromo =
+                    (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+
+                val promListListSize = membershipPromo?.size ?: 0
+                val pagerState = rememberPagerState()
+
+                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION) {
+                    MAX_PAGE_COUNT_PROMOTION
+                } else {
+                    promListListSize
+                }
+
 
         membershipPromo?.let {
             HorizontalPager(count = pageCount, state = pagerState) { page ->
@@ -102,15 +116,38 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScr
             }
         }
 
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            activeColor = VibrantPurple40,
-            inactiveColor = VibrantPurple90,
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .align(Alignment.CenterHorizontally)
-        )
+                HorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    activeColor = VibrantPurple40,
+                    inactiveColor = VibrantPurple90,
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
 
+            }
+            is PromotionViewState.PromotionsFetchFailure -> {
+                isInProgress = false
+                PromotionEmptyView()
+                // TODO Show Empty Promotions view
+            }
+            PromotionViewState.PromotionFetchInProgress -> {
+                isInProgress = true
+            }
+            else -> {}
+        }
+        if (isInProgress) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                )
+            }
+
+        }
         Spacer(modifier = Modifier.height(16.dp))
     }
 

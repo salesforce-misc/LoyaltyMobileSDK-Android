@@ -25,7 +25,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrd
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
-import com.salesforce.loyalty.mobile.myntorewards.views.home.MyPromotionScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 
 @Composable
@@ -57,7 +57,7 @@ fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -
     val model: MyPromotionViewModel = viewModel()
     val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
-    model.promotionAPI(context)
+    model.loadPromotions(context)
 
     /*MyPromotionScreen(membershipPromo)
     {

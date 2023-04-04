@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views.home
+package com.salesforce.loyalty.mobile.myntorewards.views.offers
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +28,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
@@ -122,6 +123,14 @@ fun MyPromotionScreen(membershipPromo: List<Results>?, openHomeScreen: (promotio
                         }
                     }
 
+                }
+            }
+        }
+
+        if (membershipPromo == null) {
+            when (selectedTab) {
+                0, 1, 2 -> {
+                    PromotionEmptyView()
                 }
             }
         }
