@@ -324,6 +324,12 @@ fun VoucherMenuBox() {
             )
 
             if(expanded){
+                Image(painter = painterResource(id = R.drawable.uparrow),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
+
               //expand image needs to be here yet to be provided by UX designer
             }
             else{
@@ -388,7 +394,11 @@ fun MonthDropDownBox() {
             )
 
             if(expanded){
-                //expand image needs to be here yet to be provided by UX designer
+                Image(painter = painterResource(id = R.drawable.uparrow),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
             }
             else{
                 Image(painter = painterResource(id = R.drawable.down_arrow),
@@ -454,7 +464,11 @@ fun YearDropDownBox() {
             )
 
             if(expanded){
-                //expand image needs to be here yet to be provided by UX designer
+                Image(painter = painterResource(id = R.drawable.uparrow),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
             }
             else{
                 Image(painter = painterResource(id = R.drawable.down_arrow),

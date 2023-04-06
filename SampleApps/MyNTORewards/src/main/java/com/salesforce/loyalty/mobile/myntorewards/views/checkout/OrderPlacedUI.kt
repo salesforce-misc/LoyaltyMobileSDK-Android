@@ -41,19 +41,10 @@ fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -
 
             Spacer(
                 modifier = Modifier
-                    .height(20.dp)
+                    .height(60.dp)
                     .fillMaxWidth()
                     .background(VibrantPurple40)
             )
-
-            Image(painter = painterResource(id = R.drawable.back_arrow_white),
-                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
-                    .clickable {
-                        openHomeScreen(PromotionScreenState.ADDRESS_PAYMENT_VIEW)
-                    })
 
             Image(
                 painter = painterResource(id = R.drawable.membership_card_logo),
