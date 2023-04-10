@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.sources.forceUtils
+package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
 /**
  * ForceConfig class is a utility class for holding constant values.

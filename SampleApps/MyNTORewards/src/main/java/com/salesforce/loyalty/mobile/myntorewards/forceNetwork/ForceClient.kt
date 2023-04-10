@@ -1,5 +1,6 @@
-package com.salesforce.loyalty.mobile.sources.forceUtils
+package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import com.salesforce.loyalty.mobile.sources.forceUtils.ForceResponseCallAdapterFactory
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

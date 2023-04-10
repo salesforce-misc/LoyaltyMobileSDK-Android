@@ -1,16 +1,19 @@
-package com.salesforce.loyalty.mobile.sources.forceUtils
+package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
 import android.util.Log
 import com.salesforce.loyalty.mobile.sources.forceModels.ForceAuthResponse
+import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 
 /**
  * ForceAuthManager class handles authentication of Salesforce credentials
  */
-object ForceAuthManager {
+object ForceAuthManager : ForceAuthenticator {
 
     private const val TAG = "ForceAuthManager"
 
-    suspend fun getAccessToken(): Result<ForceAuthResponse> {
+    override var accessToken: String? = null
+
+    override suspend fun grantAccessToken(): Result<ForceAuthResponse> {
         Log.d(TAG, "getAccessToken()")
         val response = ForceClient.authApi.getAccessToken(
             ForceConfig.MimeType.JSON,
@@ -22,7 +25,7 @@ object ForceAuthManager {
             ForceConfig.CONSUMER_SECRET
         )
         response.onSuccess {
-            ForceAuth.setAuthToken(it.accessToken)
+            accessToken = it.accessToken
         }
         return response
     }

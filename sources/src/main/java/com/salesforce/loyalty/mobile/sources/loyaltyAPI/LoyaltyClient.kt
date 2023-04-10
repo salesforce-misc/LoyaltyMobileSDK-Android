@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.sources.loyaltyAPI
 
+import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceResponseCallAdapterFactory
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
@@ -11,14 +12,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * ForceClient class is responsible for creating retrofit instance to invoke Force APIs.
  */
-object LoyaltyClient {
+class LoyaltyClient constructor(auth: ForceAuthenticator) {
 
     private val mHttpLoggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private val mLoyaltyOkHttpClient = OkHttpClient
         .Builder()
-        .addInterceptor(UnauthorizedInterceptor())
+        .addInterceptor(UnauthorizedInterceptor(auth))
         .addInterceptor(mHttpLoggingInterceptor)
         .build()
 

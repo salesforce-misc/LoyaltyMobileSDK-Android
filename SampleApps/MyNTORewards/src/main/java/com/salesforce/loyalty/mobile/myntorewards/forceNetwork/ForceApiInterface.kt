@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.sources.forceUtils
+package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
 import com.salesforce.loyalty.mobile.sources.forceModels.ForceAuthResponse
 import retrofit2.http.Header

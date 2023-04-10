@@ -6,13 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
-import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.launch
@@ -21,6 +21,8 @@ import kotlinx.coroutines.launch
 //view model
 class OnboardingScreenViewModel : ViewModel() {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
+
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
 
     //live data for login status
     val loginStatusLiveData: LiveData<LoginState>
@@ -50,7 +52,7 @@ class OnboardingScreenViewModel : ViewModel() {
         Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         viewModelScope.launch {
             var accessTokenResponse: String? = null
-            ForceAuthManager.getAccessToken().onSuccess {
+            ForceAuthManager.grantAccessToken().onSuccess {
                 accessTokenResponse = it.accessToken
             }
                 .onFailure {
@@ -83,7 +85,7 @@ class OnboardingScreenViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             var enrollmentResponse: EnrollmentResponse? = null
-            LoyaltyAPIManager.postEnrollment(
+            loyaltyAPIManager.postEnrollment(
                 firstNameText,
                 lastNameText,
                 emailAddressText,
