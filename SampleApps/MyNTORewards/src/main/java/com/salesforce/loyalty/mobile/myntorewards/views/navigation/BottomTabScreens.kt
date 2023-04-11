@@ -34,6 +34,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 fun HomeScreen(navController: NavController) {
 
     var currentHomeState by remember { mutableStateOf(PromotionScreenState.MAIN_VIEW) }
+    var orderPlacedID by remember { mutableStateOf("") }
 
     when (currentHomeState) {
         PromotionScreenState.MAIN_VIEW -> HomeScreenLandingView(navController) {
@@ -45,10 +46,12 @@ fun HomeScreen(navController: NavController) {
         PromotionScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
             currentHomeState = it
         }
-        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
-            currentHomeState = it
+        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails { promotionScreenState: PromotionScreenState, orderID: String ->
+            currentHomeState = promotionScreenState
+            orderPlacedID = orderID
         }
-        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
+
+        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI(orderPlacedID) {
             currentHomeState = it
         }
     }
@@ -83,6 +86,7 @@ fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -
     }*/
 
     var currentHomeState by remember { mutableStateOf(PromotionScreenState.MAIN_VIEW) }
+    var orderPlacedID by remember { mutableStateOf("") }
 
     when (currentHomeState) {
         PromotionScreenState.MAIN_VIEW -> MyPromotionScreen(membershipPromo) {
@@ -92,10 +96,11 @@ fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -
         PromotionScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
             currentHomeState = it
         }
-        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
-            currentHomeState = it
+        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails { promotionScreenState: PromotionScreenState, orderID: String ->
+            currentHomeState = promotionScreenState
+            orderPlacedID = orderID
         }
-        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
+        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI(orderPlacedID) {
             currentHomeState = it
         }
         else -> {}

@@ -55,7 +55,7 @@ object CheckoutManager {
     }
 
     suspend fun getShippingMethods(
-    ): Result<ShippingMethodsResponse> {
+    ): Result<List<ShippingMethod>> {
         Log.d(TAG, "getShippingMethods()")
 
         return CheckoutNetworkClient.authApi.getShippingMethods(

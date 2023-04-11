@@ -2,14 +2,10 @@ package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager.getOrderDetails
-import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager.getShippingBillingAddressSOQL
-import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager.getShippingMethods
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
@@ -18,7 +14,6 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MyPromotionViewModel : ViewModel() {
@@ -59,23 +54,6 @@ class MyPromotionViewModel : ViewModel() {
                 LocalFileManager.DIRECTORY_PROMOTIONS,
                 PromotionsResponse::class.java
             )
-           var data= getShippingBillingAddressSOQL()
-           var data2= getShippingMethods()
-           var data3= getOrderDetails("")
-
-            data3.onSuccess {
-
-            Log.d("***Akash", it.toString())
-        }
-
-            data2.onFailure {
-
-                Log.d("***Akash", it.toString())
-            }
-
-         //   Log.d("***Akash", data2.onSuccess {  }.toString())
-
-
 
             Log.d(TAG, "cache : $promotionCache")
             if (promotionCache == null) {
@@ -86,7 +64,7 @@ class MyPromotionViewModel : ViewModel() {
         }
     }
 
-    fun fetchPromotions(context: Context){
+    fun fetchPromotions(context: Context) {
         viewModelScope.launch {
             val membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""

@@ -24,7 +24,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavigationTabs
 
 @Composable
-fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState, orderID: String) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -54,7 +54,7 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) ->
                     .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
                     .clickable {
                         if (selectedTab == 0) {
-                            openHomeScreen(PromotionScreenState.CHECKOUT_VIEW)
+                            openHomeScreen(PromotionScreenState.CHECKOUT_VIEW, "")
                         } else {
                             selectedTab = 0
                         }
@@ -143,8 +143,8 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) ->
             0 -> OrderAddressUI {
                 selectedTab = 1
             }
-            1 -> PaymentsUI {
-                openHomeScreen(it)
+            1 -> PaymentsUI { promotionScreenState: PromotionScreenState, orderID: String ->
+                openHomeScreen(promotionScreenState, orderID)
             }
         }
 
@@ -153,9 +153,10 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) ->
 }
 
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     //OrderDetails()
     //CheckOutFlowOrderSelectScreen()
-}
+}*/

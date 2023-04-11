@@ -26,7 +26,7 @@ interface CheckoutNetworkInterface {
     @GET()
     suspend fun getShippingMethods(
         @Url url: String,
-    ): Result<ShippingMethodsResponse>
+    ): Result<List<ShippingMethod>>
 
     @GET()
     suspend fun getOrderDetails(
