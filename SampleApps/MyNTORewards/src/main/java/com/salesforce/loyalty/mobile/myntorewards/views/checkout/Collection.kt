@@ -67,6 +67,8 @@ fun CheckOutFlowOrderSelectScreen(openHomeScreen: (promotionScreenState: Promoti
 
 @Composable
 fun OrderSelectTab() {
+
+    //default tab selected as 0 which is OrderTabs.TabDetails
     var selectedTab by remember { mutableStateOf(0) }
 
     Row(modifier = Modifier.background(Color.White)) {
@@ -303,7 +305,7 @@ fun OrderSelectSizeRow() {
         SelectionTextOrderScreen(R.string.text_select_size)
 
         Text(
-            text = "View Size Chart",
+            text = stringResource(id = R.string.text_view_size_chart),
             fontFamily = font_archivo,
             fontWeight = FontWeight.SemiBold,
             color = ColourViewSizeChart,

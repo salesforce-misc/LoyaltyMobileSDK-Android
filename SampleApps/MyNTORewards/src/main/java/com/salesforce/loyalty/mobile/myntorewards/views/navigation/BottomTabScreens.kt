@@ -60,13 +60,11 @@ fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -
     //val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
 
-    //model.loadPromotions(context)
 
     val promoViewState by model.promotionViewState.observeAsState()
     LaunchedEffect(true) {
         model.loadPromotions(context)
     }
-   // var membershipPromo=
 
     var membershipPromo: List<Results>? = mutableListOf()
 
@@ -77,10 +75,6 @@ fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -
         }
         else -> {}
     }
-    /*MyPromotionScreen(membershipPromo)
-    {
-        openHomeScreen(it)
-    }*/
 
     var currentHomeState by remember { mutableStateOf(PromotionScreenState.MAIN_VIEW) }
 

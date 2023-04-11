@@ -106,5 +106,6 @@
     <string name="text_security_code"> "Security Code"</string>
     <string name="text_confirm_order"> "Confirm Order"</string>
     <string name="text_valid_till"> "Valid till: "</string>
+    <string name="text_view_size_chart">"View Size Chart"</string>
     <string name="text_payment_complete_msg"> "Your payment is complete, please \n check the deliver details at the \n tracking page"</string>
 </resources>

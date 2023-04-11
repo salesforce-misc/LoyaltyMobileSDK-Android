@@ -33,6 +33,7 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) ->
             .verticalScroll(rememberScrollState())
     )
     {
+        //default tab selected as 0 which is ShippingNavigationTabs.TabShipping
         var selectedTab by remember { mutableStateOf(0) }
 
         Column(
@@ -143,10 +144,11 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState) ->
     }
 }
 
-
+//This is needed while development the UI as we need to constantly see how our UI will look like.
+/*
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     //OrderDetails()
     //CheckOutFlowOrderSelectScreen()
-}
+}*/
