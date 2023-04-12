@@ -40,12 +40,13 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit) {
+fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
@@ -53,16 +54,23 @@ fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit) {
         properties = PopupProperties(focusable = true),
     ) {
 
-        PromotionEnrollPopupUI(results) {
-            closePopup()
-        }
 
+
+        PromotionEnrollPopupUI(results,
+            closePopup = {
+                closePopup()
+            },
+            openHomeScreen = { openHomeScreen(it)
+            }
+        )
     }
 }
 
+
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
+fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit)
+{
 
 
     var memberEligibilityCategory = results.memberEligibilityCategory
@@ -270,8 +278,9 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
                 } else if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE && promotionEnrollmentRqr == true) {
 
                     Row() {
-                        ShopButton(150.dp)
-
+                        ShopButton(150.dp){
+                            openHomeScreen(it)
+                        }
 
                         Spacer(modifier = Modifier.width(10.dp))
                         Button(
@@ -298,6 +307,9 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
                     }
                 } else {
                     ShopButton(300.dp)
+                    {
+                        openHomeScreen(it)
+                    }
                 }
 
             }
@@ -318,11 +330,12 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit) {
 
 
 @Composable
-fun ShopButton(width: Dp) {
+fun ShopButton(width: Dp, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     Button(
         modifier = Modifier
             .width(width), onClick = {
+            openHomeScreen(PromotionScreenState.CHECKOUT_VIEW)
             //  model.enrollInPromotions(context, "PromoName")
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),

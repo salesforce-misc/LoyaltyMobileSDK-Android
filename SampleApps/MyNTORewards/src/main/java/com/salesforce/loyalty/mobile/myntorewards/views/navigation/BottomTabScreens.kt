@@ -17,37 +17,84 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpoleLightBG
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
+import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @Composable
 fun HomeScreen(navController: NavController) {
 
-    var currentHomeState by remember { mutableStateOf(HomeScreenState.MAIN_VIEW) }
+    var currentHomeState by remember { mutableStateOf(PromotionScreenState.MAIN_VIEW) }
 
     when (currentHomeState) {
-        HomeScreenState.MAIN_VIEW -> HomeScreenLandingView(navController) {
+        PromotionScreenState.MAIN_VIEW -> HomeScreenLandingView(navController) {
             currentHomeState = it
         }
-        HomeScreenState.VOUCHER_VIEW -> VoucherFullScreen {
+        PromotionScreenState.VOUCHER_VIEW -> VoucherFullScreen {
+            currentHomeState = it
+        }
+        PromotionScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
+            currentHomeState = it
+        }
+        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
+            currentHomeState = it
+        }
+        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
             currentHomeState = it
         }
     }
 }
 
 @Composable
-fun MyOfferScreen() {
+fun MyOfferScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     val model: MyPromotionViewModel = viewModel()
-    val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
+    //val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
-    model.loadPromotions(context)
 
-    MyPromotionScreen(membershipPromo)
+
+    val promoViewState by model.promotionViewState.observeAsState()
+    LaunchedEffect(true) {
+        model.loadPromotions(context)
+    }
+
+    var membershipPromo: List<Results>? = mutableListOf()
+
+    when (promoViewState) {
+        is PromotionViewState.PromotionsFetchSuccess -> {
+             membershipPromo =
+                (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+        }
+        else -> {}
+    }
+
+    var currentHomeState by remember { mutableStateOf(PromotionScreenState.MAIN_VIEW) }
+
+    when (currentHomeState) {
+        PromotionScreenState.MAIN_VIEW -> MyPromotionScreen(membershipPromo) {
+            openHomeScreen(it)
+            currentHomeState = it
+        }
+        PromotionScreenState.CHECKOUT_VIEW -> CheckOutFlowOrderSelectScreen {
+            currentHomeState = it
+        }
+        PromotionScreenState.ADDRESS_PAYMENT_VIEW -> OrderDetails {
+            currentHomeState = it
+        }
+        PromotionScreenState.ORDER_CONFIRMATION_VIEW -> OrderPlacedUI {
+            currentHomeState = it
+        }
+        else -> {}
+    }
+
 }
 
 @Composable
@@ -73,7 +120,7 @@ fun RedeemScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TextPurpoleLightBG)
+            .background(TextPurpleLightBG)
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
@@ -93,7 +140,7 @@ fun MoreScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TextPurpoleLightBG)
+            .background(TextPurpleLightBG)
             .wrapContentSize(Alignment.Center)
     ) {
         Text(

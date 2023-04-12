@@ -29,13 +29,14 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun MyPromotionScreen(membershipPromo: List<Results>?) {
+fun MyPromotionScreen(membershipPromo: List<Results>?, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
 
     Column(
@@ -52,6 +53,7 @@ fun MyPromotionScreen(membershipPromo: List<Results>?) {
         )
 
         MyPromotionScreenHeader()
+        //default tab selected as 0 which is PromotionTabs.TabAll
         var selectedTab by remember { mutableStateOf(0) }
 
         Row(modifier = Modifier.background(Color.White)) {
@@ -100,15 +102,24 @@ fun MyPromotionScreen(membershipPromo: List<Results>?) {
                     when (selectedTab) {
                         0 -> {
                             PromotionItem(it)
+                            {
+                                openHomeScreen(it)
+                            }
                         }
                         1 -> {
                             if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE) {
                                 PromotionItem(it)
+                                {
+                                    openHomeScreen(it)
+                                }
                             }
                         }
                         2 -> {
                             if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
                                 PromotionItem(it)
+                                {
+                                    openHomeScreen(it)
+                                }
                             }
                         }
                     }
@@ -142,7 +153,7 @@ fun MyPromotionScreenHeader() {
 
     ) {
         Text(
-            text = "My Promotions",
+            text = stringResource(id = R.string.text_my_promotions),
             fontWeight = FontWeight.Bold,
             fontFamily = font_sf_pro,
             color = Color.Black,
@@ -164,7 +175,7 @@ fun MyPromotionScreenHeader() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionItem(results: Results) {
+fun PromotionItem(results: Results, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
@@ -172,10 +183,14 @@ fun PromotionItem(results: Results) {
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
     if (currentPromotionDetailPopupState) {
-        PromotionEnrollPopup(results)
-        {
-            currentPromotionDetailPopupState = false
-        }
+
+        PromotionEnrollPopup(results,
+            closePopup = {
+                currentPromotionDetailPopupState = false
+            },
+            openHomeScreen = { openHomeScreen(it)
+            }
+        )
     }
 
 

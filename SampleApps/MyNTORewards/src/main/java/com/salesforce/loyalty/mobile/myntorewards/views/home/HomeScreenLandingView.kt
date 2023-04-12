@@ -22,16 +22,16 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.HomeScreenState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 
 @Composable
 fun HomeScreenLandingView(
     navController: NavController,
-    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
 ) {
 
     Column(
@@ -56,6 +56,9 @@ fun HomeScreenLandingView(
         Spacer(modifier = Modifier.height(16.dp))
 
         PromotionCardRow(navController)
+        {
+            openHomeScreen(it)
+        }
         VoucherRow(navController) {
             openHomeScreen(it)
         }
@@ -66,7 +69,7 @@ fun HomeScreenLandingView(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PromotionCardRow(navController: NavController) {
+fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -76,7 +79,7 @@ fun PromotionCardRow(navController: NavController) {
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
-        HomeSubViewHeader("Promotions", navController)
+        HomeSubViewHeader(R.string.text_promotions, navController)
         val model: MyPromotionViewModel = viewModel()
         val context: Context = LocalContext.current
 
@@ -94,17 +97,22 @@ fun PromotionCardRow(navController: NavController) {
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
 
-                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION) {
+                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION)
+                {
                     MAX_PAGE_COUNT_PROMOTION
                 } else {
                     promListListSize
                 }
 
-                membershipPromo?.let {
-                    HorizontalPager(count = pageCount, state = pagerState) { page ->
-                        PromotionCard(page, membershipPromo)
-                    }
+
+        membershipPromo?.let {
+            HorizontalPager(count = pageCount, state = pagerState) { page ->
+                PromotionCard(page, membershipPromo)
+                {
+                    openHomeScreen(it)
                 }
+            }
+        }
 
                 HorizontalPagerIndicator(
                     pagerState = pagerState,
@@ -139,7 +147,6 @@ fun PromotionCardRow(navController: NavController) {
 
         }
         Spacer(modifier = Modifier.height(16.dp))
-
     }
 
 }
@@ -147,7 +154,7 @@ fun PromotionCardRow(navController: NavController) {
 @Composable
 fun VoucherRow(
     navController: NavController,
-    openHomeScreen: (homeScreenState: HomeScreenState) -> Unit
+    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
