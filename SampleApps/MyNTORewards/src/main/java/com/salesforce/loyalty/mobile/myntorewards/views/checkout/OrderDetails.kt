@@ -58,13 +58,6 @@ fun OrderDetails(navCheckOutFlowController: NavController) {
                         }
                     }
             )
-            Image(
-                painter = painterResource(id = R.drawable.membership_card_logo),
-                contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
-                modifier = Modifier
-                    .padding(start = 16.dp),
-                contentScale = ContentScale.FillWidth
-            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
