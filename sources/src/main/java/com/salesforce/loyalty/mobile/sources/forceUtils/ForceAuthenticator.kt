@@ -6,6 +6,6 @@ interface ForceAuthenticator {
 
     var accessToken: String?
 
-    suspend fun grantAccessToken(): Result<ForceAuthResponse>
+    suspend fun grantAccessToken(): String?
 
 }

@@ -171,7 +171,9 @@ fun VoucherRow(
         val model: VoucherViewModel = viewModel()
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
-        model.getVoucher(context)
+        LaunchedEffect(key1 = true) {
+            model.getVoucher(context)
+        }
 
         vouchers?.let {
             LazyRow(modifier = Modifier.fillMaxWidth()) {

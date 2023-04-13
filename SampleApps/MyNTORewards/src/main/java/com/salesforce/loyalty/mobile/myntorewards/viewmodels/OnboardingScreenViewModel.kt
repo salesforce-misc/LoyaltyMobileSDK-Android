@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ConnectedAppConfig
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
@@ -16,6 +17,9 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 
 //view model
@@ -50,18 +54,23 @@ class OnboardingScreenViewModel : ViewModel() {
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
     fun loginUser(emailAddressText: String, passwordText: String) {
         Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
+        loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
             var accessTokenResponse: String? = null
-            ForceAuthManager.grantAccessToken().onSuccess {
-                accessTokenResponse = it.accessToken
-            }
-                .onFailure {
-                    loginStatus.value = LoginState.LOGIN_FAILURE
-                    Log.d(TAG, "Access token request failed: ${it.message}")
-                }
+                accessTokenResponse = ForceAuthManager.authenticate(
+                    ConnectedAppConfig.COMMUNITY_URL,
+                    ConnectedAppConfig.CONSUMER_KEY,
+                    ConnectedAppConfig.CALLBACK_URL,
+                    emailAddressText,
+                    passwordText
+                )
+
             if (accessTokenResponse != null) {
                 loginStatus.value = LoginState.LOGIN_SUCCESS
                 Log.d(TAG, "Access token Success: $accessTokenResponse")
+            } else {
+                loginStatus.value = LoginState.LOGIN_FAILURE
+                Log.d(TAG, "Access token Failure")
             }
         }
     }

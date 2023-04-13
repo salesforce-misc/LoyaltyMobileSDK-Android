@@ -27,11 +27,7 @@ class UnauthorizedInterceptor(auth: ForceAuthenticator) : Interceptor {
         if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             var newAccessToken: String? = null
             runBlocking {
-                authenticator.grantAccessToken().onSuccess {
-                    newAccessToken = it.accessToken
-                }.onFailure {
-                    newAccessToken = null
-                }
+                newAccessToken = authenticator.grantAccessToken()
             }
             newAccessToken?.let {
                 return chain.proceed(newRequestWithAccessToken(it, request))

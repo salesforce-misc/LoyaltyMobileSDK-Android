@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -60,7 +61,9 @@ fun UserNameAndRewardRow() {
     val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
 
     val context: Context = LocalContext.current
-    model.getMemberProfile(context)
+    LaunchedEffect(key1 = true) {
+        model.getMemberProfile(context)
+    }
 
     /* val firstName = PrefHelper.customPrefs(context)[AppConstants.KEY_FIRSTNAME, ""]
        val lastName = PrefHelper.customPrefs(context)[AppConstants.KEY_LASTNAME, ""]*/

@@ -9,6 +9,7 @@ enum class EnrollmentState {
 enum class LoginState {
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
+    LOGIN_IN_PROGRESS,
     LOGIN_DEFAULT_EMPTY,
 }
 
