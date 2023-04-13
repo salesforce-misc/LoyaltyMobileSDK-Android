@@ -52,6 +52,7 @@ fun MyPromotionScreen(membershipPromo: List<Results>?, navCheckOutFlowController
         )
 
         MyPromotionScreenHeader()
+        //default tab selected as 0 which is PromotionTabs.TabAll
         var selectedTab by remember { mutableStateOf(0) }
 
         Row(modifier = Modifier.background(Color.White)) {

@@ -47,29 +47,6 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController) {
             .verticalScroll(rememberScrollState())
     )
     {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(90.dp)
-                .background(VibrantPurple40),
-        ) {
-
-            Spacer(
-                modifier = Modifier
-                    .height(60.dp)
-                    .fillMaxWidth()
-                    .background(VibrantPurple40)
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.membership_card_logo),
-                contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
-                modifier = Modifier
-                    .padding(start = 16.dp),
-                contentScale = ContentScale.FillWidth
-            )
-
-        }
 
         Column(
             modifier = Modifier

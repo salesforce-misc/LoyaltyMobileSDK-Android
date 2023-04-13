@@ -40,33 +40,22 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
     {
 
         Column(
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier
+                .background(color = Color.White)
                 .fillMaxWidth()
-                .height(90.dp)
-                .background(VibrantPurple40),
+                .padding(start = 8.dp, end = 16.dp)
         ) {
-            Spacer(
-                modifier = Modifier
-                    .height(20.dp)
-                    .fillMaxWidth()
-                    .background(VibrantPurple40)
-            )
+            Spacer(modifier = Modifier.height(15.dp))
             Image(
-                painter = painterResource(id = R.drawable.back_arrow_white),
+                painter = painterResource(id = R.drawable.back_arrow),
                 contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
+                    .padding(top = 10.dp, bottom = 10.dp)
                     .clickable {
                         navCheckOutFlowController.popBackStack()
                     }
-            )
-            Image(
-                painter = painterResource(id = R.drawable.membership_card_logo),
-                contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
-                modifier = Modifier
-                    .padding(start = 16.dp),
-                contentScale = ContentScale.FillWidth
             )
         }
         OrderSelectHeader()
@@ -77,6 +66,8 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
 
 @Composable
 fun OrderSelectTab() {
+
+    //default tab selected as 0 which is OrderTabs.TabDetails
     var selectedTab by remember { mutableStateOf(0) }
 
     Row(modifier = Modifier.background(Color.White)) {
@@ -139,7 +130,7 @@ fun OrderSelectHeader() {
             .background(OrderScreenBG)
     )
     {
-        Spacer(modifier = Modifier.height(26.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Outdoor Collection",
             fontWeight = FontWeight.Bold,
@@ -311,7 +302,7 @@ fun OrderSelectSizeRow() {
         SelectionTextOrderScreen(R.string.text_select_size)
 
         Text(
-            text = "View Size Chart",
+            text = stringResource(id = R.string.text_view_size_chart),
             fontFamily = font_archivo,
             fontWeight = FontWeight.SemiBold,
             color = ColourViewSizeChart,

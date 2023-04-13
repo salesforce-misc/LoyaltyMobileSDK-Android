@@ -64,6 +64,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
             fontSize = 18.sp,
             modifier = Modifier.padding(top = 11.5.dp, bottom = 11.5.dp, start = 16.dp, end = 16.dp)
         )
+        //default tab selected as 0 which is VoucherTabs.TabAvailable
         var selectedTab by remember { mutableStateOf(0) }
         var filterType by remember { mutableStateOf("") }
 

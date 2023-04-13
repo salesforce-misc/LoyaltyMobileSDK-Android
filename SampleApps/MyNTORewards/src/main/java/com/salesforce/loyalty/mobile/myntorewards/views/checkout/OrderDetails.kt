@@ -33,25 +33,23 @@ fun OrderDetails(navCheckOutFlowController: NavController) {
             .verticalScroll(rememberScrollState())
     )
     {
+        //default tab selected as 0 which is ShippingNavigationTabs.TabShipping
         var selectedTab by remember { mutableStateOf(0) }
+
         Column(
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier
+                .background(color = Color.White)
                 .fillMaxWidth()
-                .height(90.dp)
-                .background(VibrantPurple40),
+                .padding(start = 8.dp, end = 16.dp)
         ) {
-            Spacer(
-                modifier = Modifier
-                    .height(20.dp)
-                    .fillMaxWidth()
-                    .background(VibrantPurple40)
-            )
+            Spacer(modifier = Modifier.height(15.dp))
             Image(
-                painter = painterResource(id = R.drawable.back_arrow_white),
+                painter = painterResource(id = R.drawable.back_arrow),
                 contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
+                    .padding(top = 10.dp, bottom = 10.dp)
                     .clickable {
                         if (selectedTab == 0) {
                             navCheckOutFlowController.popBackStack()
@@ -149,7 +147,7 @@ fun OrderDetails(navCheckOutFlowController: NavController) {
     }
 }
 
-
+//This is needed while development the UI as we need to constantly see how our UI will look like.
 /*
 @Preview(showBackground = true)
 @Composable
