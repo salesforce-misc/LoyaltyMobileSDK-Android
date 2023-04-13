@@ -33,7 +33,7 @@ class MembershipProfileViewModel : ViewModel() {
         viewModelScope.launch {
             var memberID = PrefHelper.customPrefs(context)[KEY_PROGRAM_MEMBER_ID, ""]
             var membershipKey = PrefHelper.customPrefs(context)[KEY_MEMBERSHIP_NUMBER, ""]
-            loyaltyAPIManager.getMemberProfile(memberID, "M0001", null).onSuccess {
+            loyaltyAPIManager.getMemberProfile(memberID, membershipKey, null).onSuccess {
                 membershipProfile.value = it
                 PrefHelper.customPrefs(context)
                     .set(KEY_FIRSTNAME, (it.associatedContact?.firstName) ?: "")

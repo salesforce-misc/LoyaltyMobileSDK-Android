@@ -66,8 +66,16 @@ class OnboardingScreenViewModel : ViewModel() {
                 )
 
             if (accessTokenResponse != null) {
-                loginStatus.value = LoginState.LOGIN_SUCCESS
                 Log.d(TAG, "Access token Success: $accessTokenResponse")
+                val memberProfileResponse = loyaltyAPIManager.getMemberProfile(null, null, null)
+                memberProfileResponse.onSuccess {
+                    if (it != null) {
+                        loginStatus.value = LoginState.LOGIN_SUCCESS
+                    } else {
+                        loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
+                    }
+                }
+
             } else {
                 loginStatus.value = LoginState.LOGIN_FAILURE
                 Log.d(TAG, "Access token Failure")

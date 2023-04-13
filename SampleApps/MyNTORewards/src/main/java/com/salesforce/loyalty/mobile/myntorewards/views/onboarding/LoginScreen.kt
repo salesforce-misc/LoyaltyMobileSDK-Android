@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -34,6 +35,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldText
@@ -66,7 +68,7 @@ fun LoginUI(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
         )
         {
-            LoginForm(navController) {
+            LoginForm(navController, openPopup) {
                 closeSheet()
             }
             LinkNewMemberJoin {
@@ -77,7 +79,7 @@ fun LoginUI(
 }
 
 @Composable
-fun LoginForm(navController: NavController, closeSheet: () -> Unit) {
+fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet: () -> Unit) {
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
 
@@ -116,11 +118,11 @@ fun LoginForm(navController: NavController, closeSheet: () -> Unit) {
 
             //loginStatus state being change to Success after token fetch
             if (loginStatus == LoginState.LOGIN_SUCCESS) {
-                isInProgress = false
-                Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
-                closeSheet()  // closing popup
-                model.resetLoginStatusDefault()
-                navController.navigate(Screen.HomeScreen.route) //navigate to home screen
+                    isInProgress = false
+                    Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
+                    closeSheet()  // closing popup
+                    model.resetLoginStatusDefault()
+                    navController.navigate(Screen.HomeScreen.route) //navigate to home screen
             }
             //loginStatus state being change to Failed after token fetch
             if (loginStatus == LoginState.LOGIN_FAILURE) {
@@ -131,6 +133,11 @@ fun LoginForm(navController: NavController, closeSheet: () -> Unit) {
 
             if (loginStatus == LoginState.LOGIN_IN_PROGRESS) {
                 isInProgress = true
+            }
+            if (loginStatus == LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED) {
+                isInProgress = false
+                model.resetLoginStatusDefault()
+                openPopup(BottomSheetType.POPUP_JOIN)
             }
             Button(
                 modifier = Modifier
