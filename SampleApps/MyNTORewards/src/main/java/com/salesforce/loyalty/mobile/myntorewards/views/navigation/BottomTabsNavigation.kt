@@ -29,26 +29,29 @@ fun HomeTabScreen() {
                 .padding(padding)
                 .background(TextPurpleLightBG)
         ) {
-            TabNavigation(bottomTabsNavController){
-                bottomBarState.value= it
+            TabNavigation(bottomTabsNavController) {
+                bottomBarState.value = it
             }
         }
     }
 }
 
 @Composable
-fun TabNavigation(bottomTabsNavController: NavHostController, showBottomBar: (bottomBarVisible:Boolean) -> Unit) {
+fun TabNavigation(
+    bottomTabsNavController: NavHostController,
+    showBottomBar: (bottomBarVisible: Boolean) -> Unit
+) {
 
     NavHost(navController = bottomTabsNavController, startDestination = BottomNavTabs.Home.route)
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController){
+            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController) {
                 showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            PromotionScreenAndCheckOutFlowNavigation{
+            PromotionScreenAndCheckOutFlowNavigation {
                 showBottomBar(it)
             }
         }

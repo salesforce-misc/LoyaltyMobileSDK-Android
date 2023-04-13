@@ -63,7 +63,10 @@ fun HomeScreenLandingView(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PromotionCardRow( bottomTabsNavController: NavController, navCheckOutFlowController: NavController) {
+fun PromotionCardRow(
+    bottomTabsNavController: NavController,
+    navCheckOutFlowController: NavController
+) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -91,19 +94,18 @@ fun PromotionCardRow( bottomTabsNavController: NavController, navCheckOutFlowCon
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
 
-                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION)
-                {
+                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION) {
                     MAX_PAGE_COUNT_PROMOTION
                 } else {
                     promListListSize
                 }
 
 
-        membershipPromo?.let {
-            HorizontalPager(count = pageCount, state = pagerState) { page ->
-                PromotionCard(page, membershipPromo, navCheckOutFlowController)
-            }
-        }
+                membershipPromo?.let {
+                    HorizontalPager(count = pageCount, state = pagerState) { page ->
+                        PromotionCard(page, membershipPromo, navCheckOutFlowController)
+                    }
+                }
 
                 HorizontalPagerIndicator(
                     pagerState = pagerState,

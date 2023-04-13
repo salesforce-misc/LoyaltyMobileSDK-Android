@@ -105,7 +105,7 @@ fun TransactionFullScreenListView() {
     }
 
     recentTransactions?.let { transactionsJournals ->
-        if(transactionsJournals.isNotEmpty()) {
+        if (transactionsJournals.isNotEmpty()) {
             Column(modifier = Modifier.wrapContentHeight()) {
                 Text(
                     text = stringResource(id = R.string.label_transactions_recent),

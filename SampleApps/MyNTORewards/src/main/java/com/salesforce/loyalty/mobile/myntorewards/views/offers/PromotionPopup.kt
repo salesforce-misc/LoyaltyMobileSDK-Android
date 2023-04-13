@@ -47,7 +47,11 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, navCheckOutFlowController: NavController) {
+fun PromotionEnrollPopup(
+    results: Results,
+    closePopup: () -> Unit,
+    navCheckOutFlowController: NavController
+) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
@@ -56,8 +60,8 @@ fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, navCheckOutFl
     ) {
 
 
-
-        PromotionEnrollPopupUI(results,
+        PromotionEnrollPopupUI(
+            results,
             closePopup = {
                 closePopup()
             },
@@ -69,8 +73,11 @@ fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, navCheckOutFl
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit,  navCheckOutFlowController: NavController)
-{
+fun PromotionEnrollPopupUI(
+    results: Results,
+    closePopup: () -> Unit,
+    navCheckOutFlowController: NavController
+) {
 
 
     var memberEligibilityCategory = results.memberEligibilityCategory
@@ -304,7 +311,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit,  navCheckOu
 
                     }
                 } else {
-                    ShopButton(300.dp,  navCheckOutFlowController)
+                    ShopButton(300.dp, navCheckOutFlowController)
 
                 }
 

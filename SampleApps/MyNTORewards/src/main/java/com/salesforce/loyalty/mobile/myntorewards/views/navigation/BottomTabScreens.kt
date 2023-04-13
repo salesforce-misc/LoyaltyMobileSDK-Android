@@ -34,10 +34,15 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowS
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @Composable
-fun HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController: NavController, showBottomBar: (bottomBarVisible:Boolean) -> Unit)
-{
+fun HomeScreenAndCheckOutFlowNavigation(
+    bottomTabsNavController: NavController,
+    showBottomBar: (bottomBarVisible: Boolean) -> Unit
+) {
     val navCheckOutFlowController = rememberNavController()
-    NavHost(navController = navCheckOutFlowController, startDestination = CheckOutFlowScreen.StartCheckoutFlowScreen.route)
+    NavHost(
+        navController = navCheckOutFlowController,
+        startDestination = CheckOutFlowScreen.StartCheckoutFlowScreen.route
+    )
     {
 
         composable(route = CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
@@ -65,10 +70,12 @@ fun HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController: NavController, 
 
 
 @Composable
-fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible:Boolean) -> Unit)
-{
+fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
     val navCheckOutFlowController = rememberNavController()
-    NavHost(navController = navCheckOutFlowController, startDestination = CheckOutFlowScreen.StartCheckoutFlowScreen.route)
+    NavHost(
+        navController = navCheckOutFlowController,
+        startDestination = CheckOutFlowScreen.StartCheckoutFlowScreen.route
+    )
     {
 
         composable(route = CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
@@ -82,7 +89,8 @@ fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible:Bo
             var membershipPromo: List<Results>? = mutableListOf()
             when (promoViewState) {
                 is PromotionViewState.PromotionsFetchSuccess -> {
-                    membershipPromo = (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+                    membershipPromo =
+                        (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
                 }
                 else -> {}
             }

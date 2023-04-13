@@ -27,7 +27,10 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
-fun BottomNavigationUI(bottomTabsNavController: NavController, bottomBarState: MutableState<Boolean>) {
+fun BottomNavigationUI(
+    bottomTabsNavController: NavController,
+    bottomBarState: MutableState<Boolean>
+) {
     val items = listOf(
         BottomNavTabs.Home,
         BottomNavTabs.MyOffers,

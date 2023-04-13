@@ -102,7 +102,7 @@ object CheckoutManager {
         return CheckoutConfig.MEMBER_BASE_URL + CheckoutConfig.SOQL_QUERY_PATH + CheckoutConfig.SOQL_QUERY_VERSION + CheckoutConfig.QUERY
     }
 
-    private fun getShippingBillingAddressSOQLQuery() : String{
+    private fun getShippingBillingAddressSOQLQuery(): String {
         return "select shippingAddress, billingAddress from account"
     }
 }

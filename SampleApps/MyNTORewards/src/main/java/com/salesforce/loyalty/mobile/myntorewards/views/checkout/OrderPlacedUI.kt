@@ -23,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
@@ -32,7 +33,7 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController) {
     val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
     val orderDetails by model.orderDetailLiveData.observeAsState() // collecting livedata as state
     val orderID = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
-        "orderID"
+        ORDER_ID
     )
     orderID?.let {
         model.fetchOrderDetails(orderID)
@@ -125,9 +126,10 @@ fun ContinueShoppingButton(navCheckOutFlowController: NavController) {
     Button(
         modifier = Modifier
             .fillMaxWidth(), onClick = {
-            navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route){
+            navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
                 popUpTo(0)
-        }},
+            }
+        },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)
 

@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
@@ -64,7 +65,7 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
                 model.resetOrderPlacedStatusDefault()
                 isInProgress = false
                 navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
-                    set("orderID", orderID)
+                    set(ORDER_ID, orderID)
                 }
                 navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
             } else if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_FAILURE) {

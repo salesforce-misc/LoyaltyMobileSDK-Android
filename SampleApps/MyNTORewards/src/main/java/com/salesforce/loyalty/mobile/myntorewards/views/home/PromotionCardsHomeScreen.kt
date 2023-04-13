@@ -33,7 +33,11 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionCard(page: Int, membershipPromo: List<Results>?,  navCheckOutFlowController: NavController) {
+fun PromotionCard(
+    page: Int,
+    membershipPromo: List<Results>?,
+    navCheckOutFlowController: NavController
+) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
     var endDate = membershipPromo?.get(page)?.endDate ?: ""
@@ -150,7 +154,8 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?,  navCheckOutFlowCo
     if (currentPromotionDetailPopupState) {
         membershipPromo?.get(page)?.let {
 
-            PromotionEnrollPopup(it,
+            PromotionEnrollPopup(
+                it,
                 closePopup = {
                     currentPromotionDetailPopupState = false
                 },

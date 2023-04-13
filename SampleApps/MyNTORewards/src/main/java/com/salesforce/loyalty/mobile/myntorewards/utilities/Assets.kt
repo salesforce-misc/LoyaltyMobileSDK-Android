@@ -49,8 +49,7 @@ class Assets {
             }
         }
 
-        fun getTransactionsLogo(type:String?):Int
-        {
+        fun getTransactionsLogo(type: String?): Int {
             return when (type) {
                 TRANSACTION_PURCHASE -> R.drawable.ic_transaction_purchase
                 TRANSACTION_REDEMPTION -> R.drawable.ic_transaction_redemption

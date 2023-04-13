@@ -106,7 +106,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
         val context: Context = LocalContext.current
         model.getVoucher(context)
 
-        filterType=  when (selectedTab) {
+        filterType = when (selectedTab) {
             0 -> VOUCHER_ISSUED
             1 -> VOUCHER_REDEEMED
             2 -> VOUCHER_EXPIRED
@@ -116,10 +116,12 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
             it.status == filterType
         }
 
-        Column(modifier = Modifier
-            .background(VeryLightPurple)
-            .fillMaxWidth()
-            .fillMaxHeight()) {
+        Column(
+            modifier = Modifier
+                .background(VeryLightPurple)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             filteredVouchers?.let {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),

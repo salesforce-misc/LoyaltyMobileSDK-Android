@@ -31,7 +31,7 @@ fun HomeSubViewHeader(headingId: Int, bottomTabsNavController: NavController) {
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
         Text(
-            text = stringResource(id =headingId),
+            text = stringResource(id = headingId),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             textAlign = TextAlign.Center,

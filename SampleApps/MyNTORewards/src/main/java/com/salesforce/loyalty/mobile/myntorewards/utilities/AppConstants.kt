@@ -59,6 +59,7 @@ class AppConstants {
         const val TRANSACTION_REWARD_CURRENCY_NAME = "Reward Points"
         const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val TRANSACTION_HISTORY_APP_DATE_FORMAT = "dd LLLL yyyy"
+
         //tabs vouchers
         const val VOUCHER_ISSUED = "Issued"
         const val VOUCHER_REDEEMED = "Redeemed"
@@ -70,6 +71,8 @@ class AppConstants {
         const val ROUTE_ORDER_ADDRESS_PAYMENT_SCREEN = "order_address_payment_screen"
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
+
+        const val ORDER_ID = "orderID"
 
     }
 }

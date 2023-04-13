@@ -164,7 +164,7 @@ fun MyPromotionScreenHeader() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionItem(results: Results, navCheckOutFlowController:NavController) {
+fun PromotionItem(results: Results, navCheckOutFlowController: NavController) {
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
@@ -173,7 +173,8 @@ fun PromotionItem(results: Results, navCheckOutFlowController:NavController) {
 
     if (currentPromotionDetailPopupState) {
 
-        PromotionEnrollPopup(results,
+        PromotionEnrollPopup(
+            results,
             closePopup = {
                 currentPromotionDetailPopupState = false
             },
