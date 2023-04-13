@@ -22,13 +22,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.OrderTabs
 
 @Composable
-fun CheckOutFlowOrderSelectScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -57,7 +58,7 @@ fun CheckOutFlowOrderSelectScreen(openHomeScreen: (promotionScreenState: Promoti
                 modifier = Modifier
                     .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
                     .clickable {
-                        openHomeScreen(PromotionScreenState.MAIN_VIEW)
+                        navCheckOutFlowController.popBackStack()
                     }
             )
             Image(
@@ -70,9 +71,7 @@ fun CheckOutFlowOrderSelectScreen(openHomeScreen: (promotionScreenState: Promoti
         }
         OrderSelectHeader()
         OrderSelectTab()
-        OrderSelectionDetail {
-            openHomeScreen(it)
-        }
+        OrderSelectionDetail(navCheckOutFlowController)
     }
 }
 
@@ -169,7 +168,7 @@ fun OrderSelectHeader() {
 }
 
 @Composable
-fun OrderSelectionDetail(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun OrderSelectionDetail(navCheckOutFlowController: NavController) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -185,9 +184,7 @@ fun OrderSelectionDetail(openHomeScreen: (promotionScreenState: PromotionScreenS
         OrderSelectSizeRow()
         OrderAvailableColoursRow()
         OrderQuantityRow()
-        ButtonBuyOrAddCard {
-            openHomeScreen(it)
-        }
+        ButtonBuyOrAddCard(navCheckOutFlowController)
 
     }
 
@@ -460,14 +457,13 @@ fun OrderQuantityRow() {
 }
 
 @Composable
-fun ButtonBuyOrAddCard(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun ButtonBuyOrAddCard(navCheckOutFlowController: NavController) {
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(
             modifier = Modifier
                 .fillMaxWidth(), onClick = {
-                openHomeScreen(PromotionScreenState.ADDRESS_PAYMENT_VIEW)
-                //  model.enrollInPromotions(context, "PromoName")
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderAddressAndPaymentScreen.route)
             },
             colors = ButtonDefaults.buttonColors(VibrantPurple40),
             shape = RoundedCornerShape(100.dp)
@@ -494,7 +490,6 @@ fun ButtonBuyOrAddCard(openHomeScreen: (promotionScreenState: PromotionScreenSta
             modifier = Modifier
                 .fillMaxWidth()
                 .border(1.dp, VibrantPurple40, RoundedCornerShape(100.dp)), onClick = {
-                //  model.enrollInPromotions(context, "PromoName")
             },
             shape = RoundedCornerShape(100.dp)
 

@@ -189,7 +189,6 @@ fun ButtonDeliver(switchPaymentTab: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth(), onClick = {
             switchPaymentTab()
-            //  model.enrollInPromotions(context, "PromoName")
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)

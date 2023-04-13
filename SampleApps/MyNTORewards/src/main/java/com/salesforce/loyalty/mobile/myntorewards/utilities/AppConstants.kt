@@ -64,6 +64,12 @@ class AppConstants {
         const val VOUCHER_REDEEMED = "Redeemed"
         const val VOUCHER_EXPIRED = "Expired"
 
+        //CheckoutScreen Navigation Route
+        const val ROUTE_START_CHECKOUT_FLOW_SCREEN = "start_checkout_flow_screen"
+        const val ROUTE_ORDER_DETAIL_SCREEN = "order_detail_screen"
+        const val ROUTE_ORDER_ADDRESS_PAYMENT_SCREEN = "order_address_payment_screen"
+        const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
+        const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
     }
 }

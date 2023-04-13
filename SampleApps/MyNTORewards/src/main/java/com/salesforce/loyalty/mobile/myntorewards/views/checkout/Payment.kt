@@ -24,14 +24,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+
 
 @Composable
-fun PaymentsUI(openHomeScreen: (promotionScreenState: PromotionScreenState, orderID: String) -> Unit) {
+fun PaymentsUI(navCheckOutFlowController: NavController) {
 
 
     Box() {
@@ -47,10 +49,6 @@ fun PaymentsUI(openHomeScreen: (promotionScreenState: PromotionScreenState, orde
 
             CardNumberRow()
             Spacer(modifier = Modifier.height(24.dp))
-            /* ConfirmOrderButton {
-                 openHomeScreen(it)
-             }*/
-
             Spacer(modifier = Modifier.height(16.dp))
 
             val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
@@ -63,9 +61,12 @@ fun PaymentsUI(openHomeScreen: (promotionScreenState: PromotionScreenState, orde
                     "Order Success:: " + model.orderIDLiveData.value.toString(),
                     Toast.LENGTH_LONG
                 ).show()
-                openHomeScreen(PromotionScreenState.ORDER_CONFIRMATION_VIEW, orderID)
                 model.resetOrderPlacedStatusDefault()
                 isInProgress = false
+                navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
+                    set("orderID", orderID)
+                }
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
             } else if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_FAILURE) {
                 Toast.makeText(LocalContext.current, "orderPlaceStatus Failed", Toast.LENGTH_LONG)
                     .show()
@@ -95,17 +96,6 @@ fun PaymentsUI(openHomeScreen: (promotionScreenState: PromotionScreenState, orde
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-
-            /*  membershipPromo?.get(page)?.let {
-
-                  PromotionEnrollPopup(it,
-                      closePopup = {
-                          currentPromotionDetailPopupState = false
-                      },
-                      openHomeScreen = { openHomeScreen(it)
-                      }
-                  )
-              }*/
             Spacer(modifier = Modifier.height(24.dp))
         }
         if (isInProgress) {

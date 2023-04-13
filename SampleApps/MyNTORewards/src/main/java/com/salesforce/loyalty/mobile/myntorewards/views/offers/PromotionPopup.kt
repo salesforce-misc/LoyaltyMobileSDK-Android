@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -40,13 +41,13 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, navCheckOutFlowController: NavController) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
@@ -60,8 +61,7 @@ fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, openHomeScree
             closePopup = {
                 closePopup()
             },
-            openHomeScreen = { openHomeScreen(it)
-            }
+            navCheckOutFlowController
         )
     }
 }
@@ -69,7 +69,7 @@ fun PromotionEnrollPopup(results: Results, closePopup: () -> Unit, openHomeScree
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit)
+fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit,  navCheckOutFlowController: NavController)
 {
 
 
@@ -278,9 +278,7 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScr
                 } else if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE && promotionEnrollmentRqr == true) {
 
                     Row() {
-                        ShopButton(150.dp){
-                            openHomeScreen(it)
-                        }
+                        ShopButton(150.dp, navCheckOutFlowController)
 
                         Spacer(modifier = Modifier.width(10.dp))
                         Button(
@@ -306,10 +304,8 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScr
 
                     }
                 } else {
-                    ShopButton(300.dp)
-                    {
-                        openHomeScreen(it)
-                    }
+                    ShopButton(300.dp,  navCheckOutFlowController)
+
                 }
 
             }
@@ -330,13 +326,12 @@ fun PromotionEnrollPopupUI(results: Results, closePopup: () -> Unit, openHomeScr
 
 
 @Composable
-fun ShopButton(width: Dp, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun ShopButton(width: Dp, navCheckOutFlowController: NavController) {
 
     Button(
         modifier = Modifier
             .width(width), onClick = {
-            openHomeScreen(PromotionScreenState.CHECKOUT_VIEW)
-            //  model.enrollInPromotions(context, "PromoName")
+            navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderDetailScreen.route)
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)

@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,10 +16,11 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
 fun HomeTabScreen() {
-    val navController = rememberNavController()
+    val bottomTabsNavController = rememberNavController()
+    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
     Scaffold(
         Modifier.background(TextPurpleLightBG),
-        bottomBar = { BottomNavigationUI(navController) }
+        bottomBar = { BottomNavigationUI(bottomTabsNavController, bottomBarState) }
 
     )
     { padding ->
@@ -26,22 +29,27 @@ fun HomeTabScreen() {
                 .padding(padding)
                 .background(TextPurpleLightBG)
         ) {
-            TabNavigation(navController)
+            TabNavigation(bottomTabsNavController){
+                bottomBarState.value= it
+            }
         }
     }
 }
 
 @Composable
-fun TabNavigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = BottomNavTabs.Home.route)
+fun TabNavigation(bottomTabsNavController: NavHostController, showBottomBar: (bottomBarVisible:Boolean) -> Unit) {
+
+    NavHost(navController = bottomTabsNavController, startDestination = BottomNavTabs.Home.route)
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreen(navController)
+            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController){
+                showBottomBar(it)
+            }
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            MyOfferScreen(){
-
+            PromotionScreenAndCheckOutFlowNavigation{
+                showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.MyProfile.route) {

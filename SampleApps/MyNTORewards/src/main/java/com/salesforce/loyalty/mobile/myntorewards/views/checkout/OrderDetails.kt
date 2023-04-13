@@ -18,13 +18,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavigationTabs
 
 @Composable
-fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState, orderID: String) -> Unit) {
+fun OrderDetails(navCheckOutFlowController: NavController) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -54,11 +54,10 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState, or
                     .padding(bottom = 10.dp, start = 4.dp, end = 16.dp)
                     .clickable {
                         if (selectedTab == 0) {
-                            openHomeScreen(PromotionScreenState.CHECKOUT_VIEW, "")
+                            navCheckOutFlowController.popBackStack()
                         } else {
                             selectedTab = 0
                         }
-                        //  openHomeScreen(HomeScreenState.MAIN_VIEW)
                     }
             )
             Image(
@@ -143,9 +142,7 @@ fun OrderDetails(openHomeScreen: (promotionScreenState: PromotionScreenState, or
             0 -> OrderAddressUI {
                 selectedTab = 1
             }
-            1 -> PaymentsUI { promotionScreenState: PromotionScreenState, orderID: String ->
-                openHomeScreen(promotionScreenState, orderID)
-            }
+            1 -> PaymentsUI(navCheckOutFlowController)
         }
 
 
