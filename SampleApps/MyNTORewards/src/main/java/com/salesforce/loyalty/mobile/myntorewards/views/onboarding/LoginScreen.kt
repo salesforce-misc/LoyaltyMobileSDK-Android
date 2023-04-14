@@ -117,28 +117,30 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheet
             val loginStatus by model.loginStatusLiveData.observeAsState(LoginState.LOGIN_DEFAULT_EMPTY) // collecting livedata as state
 
             //loginStatus state being change to Success after token fetch
-            if (loginStatus == LoginState.LOGIN_SUCCESS) {
+            when (loginStatus) {
+                LoginState.LOGIN_SUCCESS -> {
                     isInProgress = false
                     Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
                     closeSheet()  // closing popup
                     model.resetLoginStatusDefault()
                     navController.navigate(Screen.HomeScreen.route) //navigate to home screen
-            }
-            //loginStatus state being change to Failed after token fetch
-            if (loginStatus == LoginState.LOGIN_FAILURE) {
-                isInProgress = false
-                Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
-                model.resetLoginStatusDefault()//reset login status to default
+                }
+                LoginState.LOGIN_FAILURE -> {
+                    isInProgress = false
+                    Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
+                    model.resetLoginStatusDefault()//reset login status to default
+                }
+                LoginState.LOGIN_IN_PROGRESS -> {
+                    isInProgress = true
+                }
+                LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED -> {
+                    isInProgress = false
+                    model.resetLoginStatusDefault()
+                    openPopup(BottomSheetType.POPUP_JOIN)
+                }
+                else -> {}
             }
 
-            if (loginStatus == LoginState.LOGIN_IN_PROGRESS) {
-                isInProgress = true
-            }
-            if (loginStatus == LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED) {
-                isInProgress = false
-                model.resetLoginStatusDefault()
-                openPopup(BottomSheetType.POPUP_JOIN)
-            }
             Button(
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {

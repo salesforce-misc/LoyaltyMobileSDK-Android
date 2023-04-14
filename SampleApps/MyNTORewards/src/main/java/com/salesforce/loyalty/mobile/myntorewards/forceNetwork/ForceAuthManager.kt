@@ -27,7 +27,7 @@ object ForceAuthManager : ForceAuthenticator {
         auth?.let {
             // Refresh access token
             refreshAccessToken(
-                ForceConfig.getRefreshAccessTokenRequestUrl(ForceConfig.ACCESS_TOKEN_BASE_URL),
+                ForceConfig.getRefreshAccessTokenRequestUrl(ConnectedAppConfig.COMMUNITY_URL),
                 ConnectedAppConfig.CONSUMER_KEY,
                 ConnectedAppConfig.CONSUMER_SECRET,
                 it
@@ -36,6 +36,10 @@ object ForceAuthManager : ForceAuthenticator {
         return grantAuth()
     }
 
+    /**
+     * OAuth 2.0 Username-Password Flow - Use username and password behind screen to obtain a valid accessToken
+     * https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_username_password_flow.htm&type=5
+     */
     suspend fun grantAuth(): String? {
         val response = ForceClient.authApi.getAccessToken(
             ForceConfig.MimeType.JSON,
@@ -52,6 +56,12 @@ object ForceAuthManager : ForceAuthenticator {
         }
         return accessToken
     }
+
+    /**
+     * Authenticate Community Login by generating access token
+     * OAuth 2.0 Authorization Code and Credentials Flow
+     * https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authorization_code_credentials_flow.htm&type=5
+     */
     suspend fun authenticate(
         communityUrl: String,
         consumerKey: String,
@@ -90,10 +100,18 @@ object ForceAuthManager : ForceAuthenticator {
         return null
     }
 
+    /**
+     * Get authorization code from the redirect URL.
+     * Replace %3D to '=' in the url query parameter value.
+     */
     private fun getAuthorizationCode(url: HttpUrl): String? {
         val queryItems = url.queryParameter("code")
         return queryItems?.replace("%3D", "=")
     }
+
+    /**
+     * Part 1 - Makes a Headless Request for an Authorization Code
+     */
     private suspend fun requestAuthorizationCode(communityUrl: String, consumerKey: String, callbackURL: String, userName: String, password: String) {
 
         ForceClient.authApi.requestAuthorizationCode(
@@ -109,6 +127,9 @@ object ForceAuthManager : ForceAuthenticator {
 
     }
 
+    /**
+     * Part 2 - Requests an Access Token (and Refresh Token)
+     */
     private suspend fun requestAccessToken(
         communityUrl: String,
         authCode: String,
@@ -133,6 +154,11 @@ object ForceAuthManager : ForceAuthenticator {
         return accessToken
     }
 
+    /**
+     * Refresh access token
+     * OAuth 2.0 Refresh Token Flow - use refresh token to get a new accessToken
+     * https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_refresh_token_flow.htm&type=5
+     */
     private suspend fun refreshAccessToken(
         url: String,
         consumerKey: String,

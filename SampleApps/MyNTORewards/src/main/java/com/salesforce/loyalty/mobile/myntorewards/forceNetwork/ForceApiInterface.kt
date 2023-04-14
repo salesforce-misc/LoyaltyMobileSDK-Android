@@ -49,7 +49,7 @@ interface ForceApiInterface {
         @Url url: String,
         @Query("grant_type") grantType: String,
         @Query("client_id") clientId: String,
-        @Query("fresh_token") refreshToken: String,
+        @Query("refresh_token") refreshToken: String,
         @Query("client_secret") clientSecret: String?
     ): Result<ForceAuth>
 }

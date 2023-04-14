@@ -17,9 +17,6 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
 
 
 //view model
@@ -74,6 +71,8 @@ class OnboardingScreenViewModel : ViewModel() {
                     } else {
                         loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
                     }
+                }.onFailure {
+                    loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
                 }
 
             } else {

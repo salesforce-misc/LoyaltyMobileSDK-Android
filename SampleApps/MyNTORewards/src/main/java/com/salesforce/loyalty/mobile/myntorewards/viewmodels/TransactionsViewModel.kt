@@ -30,7 +30,7 @@ class TransactionsViewModel : ViewModel() {
             var membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
             membershipKey?.let { membershipNumber ->
-                loyaltyAPIManager.getTransactions("M0001", null, null, null, null, null)
+                loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)
                     .onSuccess {
                         transactions.value = it
                         Log.d(TAG, "getTransactions success: $it")
