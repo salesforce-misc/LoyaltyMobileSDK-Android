@@ -79,7 +79,7 @@ object ForceAuthManager : ForceAuthenticator {
                 password
             )
         } catch (ex: HttpException) {
-            Log.d(TAG, "Access token HttpException")
+            Log.d(TAG, "Access token HttpException ${ex.message}")
             val responseCode = ex.response()?.code()
             if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 val redirectUrl = ex.response()?.raw()?.request?.url

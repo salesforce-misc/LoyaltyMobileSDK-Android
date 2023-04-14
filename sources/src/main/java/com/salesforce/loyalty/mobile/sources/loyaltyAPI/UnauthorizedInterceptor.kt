@@ -14,6 +14,9 @@ class UnauthorizedInterceptor(auth: ForceAuthenticator) : Interceptor {
 
     val authenticator = auth
 
+    companion object {
+        const val BEARER_HEADER = "Bearer "
+    }
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         var response: Response
@@ -36,8 +39,10 @@ class UnauthorizedInterceptor(auth: ForceAuthenticator) : Interceptor {
         return response
     }
 
-    private fun newRequestWithAccessToken(accessToken: String?, request: Request): Request =
-        request.newBuilder()
-            .addHeader(LoyaltyConfig.HEADER_AUTHORIZATION, "Bearer $accessToken")
+    private fun newRequestWithAccessToken(accessToken: String?, request: Request): Request {
+        val bearerTokenValue = BEARER_HEADER + accessToken
+        return request.newBuilder()
+            .addHeader(LoyaltyConfig.HEADER_AUTHORIZATION, bearerTokenValue)
             .build()
+    }
 }
