@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,29 +29,42 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewMod
 @Composable
 fun OrderAddressUI(switchPaymentTab: () -> Unit) {
 
-    ShippingAndPaymentRow()
+    Column(
+        modifier = Modifier.fillMaxHeight(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.SpaceBetween)
 
-    Spacer(
-        modifier = Modifier
-            .height(24.dp)
-    )
-    Column(modifier = Modifier.padding(start = 21.dp, end = 21.dp)) {
+    {
 
+    Column {
+        ShippingAndPaymentRow()
 
-        Column(
+        Spacer(
             modifier = Modifier
-                .background(Color.White, RoundedCornerShape(20.dp))
-                .padding(start = 21.dp, end = 21.dp)
-        ) {
-            AddressRow()
-            EditDeleteAddressRow()
-            ButtonDeliver {
-                switchPaymentTab()
+                .height(24.dp)
+        )
+        Column(modifier = Modifier.padding(start = 21.dp, end = 21.dp)) {
+
+
+            Column(
+                modifier = Modifier
+                    .background(Color.White, RoundedCornerShape(20.dp))
+                    .padding(start = 21.dp, end = 21.dp)
+            ) {
+                AddressRow()
+                EditDeleteAddressRow()
+
             }
         }
     }
 
-
+    Column(modifier = Modifier.padding(start = 21.dp, end = 21.dp)) {
+        ButtonDeliver {
+            switchPaymentTab()
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+    }
+    }
 }
 
 @Composable
@@ -183,8 +197,6 @@ fun EditDeleteAddressRow() {
 @Composable
 fun ButtonDeliver(switchPaymentTab: () -> Unit) {
 
-    Spacer(modifier = Modifier.height(16.dp))
-
     Button(
         modifier = Modifier
             .fillMaxWidth(), onClick = {
@@ -205,7 +217,5 @@ fun ButtonDeliver(switchPaymentTab: () -> Unit) {
                 .padding(top = 3.dp, bottom = 3.dp)
         )
     }
-    Spacer(modifier = Modifier.height(16.dp))
-
 }
 

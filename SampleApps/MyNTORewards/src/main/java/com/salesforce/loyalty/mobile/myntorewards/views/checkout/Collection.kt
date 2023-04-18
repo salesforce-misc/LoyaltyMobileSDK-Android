@@ -35,7 +35,7 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .verticalScroll(rememberScrollState())
+
     )
     {
 
@@ -126,7 +126,7 @@ fun OrderSelectHeader() {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(OrderScreenBG)
     )
     {
@@ -163,8 +163,11 @@ fun OrderSelectionDetail(navCheckOutFlowController: NavController) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(VibrantIndigo95)
+            .verticalScroll(
+                rememberScrollState()
+            )
     )
     {
 
