@@ -105,7 +105,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator){
      */
     suspend fun getMemberBenefits(
         memberId: String,
-        membershipNumber: String
+        membershipNumber: String?
     ): Result<MemberBenefitsResponse> {
         Log.d(TAG, "getMemberBenefits() $memberId")
 

@@ -49,7 +49,7 @@ class OnboardingScreenViewModel : ViewModel() {
 
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
-    fun loginUser(emailAddressText: String, passwordText: String) {
+    fun loginUser(emailAddressText: String, passwordText: String, context: Context) {
         Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
@@ -67,6 +67,13 @@ class OnboardingScreenViewModel : ViewModel() {
                 val memberProfileResponse = loyaltyAPIManager.getMemberProfile(null, null, null)
                 memberProfileResponse.onSuccess {
                     if (it != null) {
+                        val memberId = it.loyaltyProgramMemberId
+                        memberId?.let { loyaltyMemberId ->
+                            PrefHelper.customPrefs(context)
+                                .set(KEY_PROGRAM_MEMBER_ID, loyaltyMemberId)
+                            PrefHelper.customPrefs(context)
+                                .set(KEY_MEMBERSHIP_NUMBER, it.membershipNumber)
+                        }
                         loginStatus.value = LoginState.LOGIN_SUCCESS
                     } else {
                         loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED

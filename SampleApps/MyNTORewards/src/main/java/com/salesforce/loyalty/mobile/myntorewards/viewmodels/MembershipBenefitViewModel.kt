@@ -30,7 +30,7 @@ class MembershipBenefitViewModel : ViewModel() {
             var memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
             var membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: null
             loyaltyAPIManager.getMemberBenefits(memberID, membershipKey).onSuccess {
                 membershipBenefit.value = it.memberBenefits
                 Log.d(TAG, "success member benefit response: $it")

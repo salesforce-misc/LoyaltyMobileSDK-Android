@@ -81,6 +81,7 @@ fun LoginUI(
 @Composable
 fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet: () -> Unit) {
     Box() {
+        val context = LocalContext.current
         var isInProgress by remember { mutableStateOf(false) }
 
         Column(
@@ -144,7 +145,7 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheet
             Button(
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
-                    model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
+                    model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text, context)
                 },
                 enabled =
                 isLoginButtonEnabled(

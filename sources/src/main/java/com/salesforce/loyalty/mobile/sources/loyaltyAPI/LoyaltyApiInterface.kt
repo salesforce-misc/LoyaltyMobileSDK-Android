@@ -25,7 +25,7 @@ interface LoyaltyApiInterface {
     @GET()
     suspend fun getMemberBenefits(
         @Url url: String,
-        @Query("membershipNumber") membershipNumber: String,
+        @Query("membershipNumber") membershipNumber: String?,
     ): Result<MemberBenefitsResponse>
 
     @GET()
