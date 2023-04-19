@@ -11,11 +11,3 @@ enum class MyProfileScreenState {
     BENEFIT_VIEW,
     TRANSACTION_VIEW,
 }
-
-enum class PromotionScreenState {
-    MAIN_VIEW,
-    VOUCHER_VIEW,
-    CHECKOUT_VIEW,
-    ADDRESS_PAYMENT_VIEW,
-    ORDER_CONFIRMATION_VIEW,
-}

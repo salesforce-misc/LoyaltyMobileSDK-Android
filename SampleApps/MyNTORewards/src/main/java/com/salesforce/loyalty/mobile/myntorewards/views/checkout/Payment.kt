@@ -1,18 +1,20 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.checkout
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -21,29 +23,92 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+
 
 @Composable
-fun PaymentsUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun PaymentsUI(navCheckOutFlowController: NavController) {
 
-    Column(modifier = Modifier.padding(start = 16.dp, end = 25.dp)) {
 
-        Spacer(modifier = Modifier.height(23.dp))
-        VoucherRow()
-        Spacer(modifier = Modifier.height(24.dp))
-        PointsRow("432")
-        AmountPaybleRow()
-        Spacer(modifier = Modifier.height(24.dp))
+    Box() {
+        var isInProgress by remember { mutableStateOf(false) }
+        Column(modifier = Modifier.padding(start = 16.dp, end = 25.dp)) {
 
-        CardNumberRow()
-        Spacer(modifier = Modifier.height(24.dp))
-        ConfirmOrderButton {
-            openHomeScreen(it)
+            Spacer(modifier = Modifier.height(23.dp))
+            VoucherRow()
+            Spacer(modifier = Modifier.height(24.dp))
+            PointsRow("432")
+            AmountPaybleRow()
+            Spacer(modifier = Modifier.height(24.dp))
+
+            CardNumberRow()
+            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
+            val orderPlaceStatus by model.orderPlacedStatusLiveData.observeAsState(OrderPlacedState.ORDER_PLACED_DEFAULT_EMPTY) // collecting livedata as state
+
+            if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_SUCCESS) {
+                var orderID = model.orderIDLiveData.value.toString()
+                Toast.makeText(
+                    LocalContext.current,
+                    "Order Success:: " + model.orderIDLiveData.value.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
+                model.resetOrderPlacedStatusDefault()
+                isInProgress = false
+                navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
+                    set(ORDER_ID, orderID)
+                }
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
+            } else if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_FAILURE) {
+                Toast.makeText(LocalContext.current, "orderPlaceStatus Failed", Toast.LENGTH_LONG)
+                    .show()
+                model.resetOrderPlacedStatusDefault()
+                isInProgress = false
+            }
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(), onClick = {
+                    isInProgress = true
+                    model.placeOrder()
+                },
+                colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                shape = RoundedCornerShape(100.dp)
+
+            ) {
+                Text(
+                    text = stringResource(id = R.string.text_confirm_order),
+                    fontFamily = font_archivo,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .padding(top = 10.dp, bottom = 10.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
         }
-        Spacer(modifier = Modifier.height(24.dp))
+        if (isInProgress) {
+            androidx.compose.material3.CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f)
+                    .align(Alignment.Center)
+            )
+        }
+
     }
+
 }
 
 @Composable
@@ -104,7 +169,7 @@ fun AmountPaybleRow() {
 }
 
 @Composable
-fun PointsRow(points:String) {
+fun PointsRow(points: String) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -123,7 +188,7 @@ fun PointsRow(points:String) {
             modifier = Modifier
         )
         Text(
-            text = stringResource(id = R.string.text_points_available)+points,
+            text = stringResource(id = R.string.text_points_available) + points,
             fontFamily = font_archivo,
             fontWeight = FontWeight.SemiBold,
             color = LighterBlack,
@@ -175,13 +240,15 @@ fun CardNumberRow() {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .padding( top = 16.dp)
+                .padding(top = 16.dp)
         ) {
 
-            Column( modifier = Modifier
-                .weight(0.7f)) {
+            Column(
+                modifier = Modifier
+                    .weight(0.7f)
+            ) {
 
-               Text(
+                Text(
                     text = stringResource(id = R.string.text_expiry_date),
                     fontFamily = font_archivo,
                     fontWeight = FontWeight.Medium,
@@ -192,23 +259,25 @@ fun CardNumberRow() {
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
-                   Row(
-                      horizontalArrangement = Arrangement.Start,
-                      verticalAlignment = Alignment.CenterVertically,
-                      modifier = Modifier
-                          .fillMaxWidth()
-                  ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
 
-                      MonthDropDownBox()
-                      YearDropDownBox()
+                    MonthDropDownBox()
+                    YearDropDownBox()
 
-                  }
+                }
             }
 
-            Column(modifier = Modifier
-                .weight(0.3f)) {
+            Column(
+                modifier = Modifier
+                    .weight(0.3f)
+            ) {
 
-              Text(
+                Text(
                     text = stringResource(id = R.string.text_security_code),
                     fontFamily = font_archivo,
                     fontWeight = FontWeight.Medium,
@@ -218,7 +287,7 @@ fun CardNumberRow() {
                     modifier = Modifier
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                 CVVInputField("298")
+                CVVInputField("298")
 
             }
 
@@ -307,7 +376,8 @@ fun VoucherMenuBox() {
             .background(DropDownMenuBG, RoundedCornerShape(15.dp))
     ) {
 
-        Row(horizontalArrangement = Arrangement.SpaceBetween,
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -323,21 +393,24 @@ fun VoucherMenuBox() {
                     .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 47.dp)
             )
 
-            if(expanded){
-                Image(painter = painterResource(id = R.drawable.uparrow),
+            if (expanded) {
+                Image(
+                    painter = painterResource(id = R.drawable.uparrow),
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp)
+                )
 
-              //expand image needs to be here yet to be provided by UX designer
-            }
-            else{
-                Image(painter = painterResource(id = R.drawable.down_arrow),
+                //expand image needs to be here yet to be provided by UX designer
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.down_arrow),
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp)
+                )
             }
         }
 
@@ -378,7 +451,8 @@ fun MonthDropDownBox() {
     ) {
 
 
-        Row(verticalAlignment = Alignment.CenterVertically,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.width(83.dp)
         ) {
 
@@ -393,19 +467,22 @@ fun MonthDropDownBox() {
                     .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 15.dp)
             )
 
-            if(expanded){
-                Image(painter = painterResource(id = R.drawable.uparrow),
+            if (expanded) {
+                Image(
+                    painter = painterResource(id = R.drawable.uparrow),
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
-            }
-            else{
-                Image(painter = painterResource(id = R.drawable.down_arrow),
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.down_arrow),
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .padding(top = 20.dp, bottom = 20.dp, end = 15.dp))
+                        .padding(top = 20.dp, bottom = 20.dp, end = 15.dp)
+                )
             }
         }
 
@@ -447,7 +524,8 @@ fun YearDropDownBox() {
             .background(DropDownMenuBG, RoundedCornerShape(15.dp))
     ) {
 
-        Row(horizontalArrangement = Arrangement.SpaceBetween,
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.width(83.dp)
         ) {
@@ -463,19 +541,22 @@ fun YearDropDownBox() {
                     .padding(start = 20.dp, top = 20.dp, bottom = 20.dp, end = 15.dp)
             )
 
-            if(expanded){
-                Image(painter = painterResource(id = R.drawable.uparrow),
+            if (expanded) {
+                Image(
+                    painter = painterResource(id = R.drawable.uparrow),
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp))
-            }
-            else{
-                Image(painter = painterResource(id = R.drawable.down_arrow),
+                        .padding(top = 13.5.dp, bottom = 13.5.dp, end = 15.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.down_arrow),
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .padding(top = 20.dp, bottom = 20.dp, end = 15.dp))
+                        .padding(top = 20.dp, bottom = 20.dp, end = 15.dp)
+                )
             }
         }
 
@@ -497,34 +578,4 @@ fun YearDropDownBox() {
             }
         }
     }
-}
-
-@Composable
-fun ConfirmOrderButton(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(), onClick = {
-            openHomeScreen(PromotionScreenState.ORDER_CONFIRMATION_VIEW)
-            //  model.enrollInPromotions(context, "PromoName")
-        },
-        colors = ButtonDefaults.buttonColors(VibrantPurple40),
-        shape = RoundedCornerShape(100.dp)
-
-    ) {
-        Text(
-            text = stringResource(id = R.string.text_confirm_order),
-            fontFamily = font_archivo,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(top = 10.dp, bottom = 10.dp)
-        )
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-
 }

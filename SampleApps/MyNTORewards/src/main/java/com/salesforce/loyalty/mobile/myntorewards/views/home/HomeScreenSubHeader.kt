@@ -18,11 +18,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 @Composable
-fun HomeSubViewHeader(headingId: Int, navController: NavController) {
+fun HomeSubViewHeader(headingId: Int, bottomTabsNavController: NavController) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -31,7 +31,7 @@ fun HomeSubViewHeader(headingId: Int, navController: NavController) {
             .padding(top = 16.dp, bottom = 16.dp)
     ) {
         Text(
-            text = stringResource(id =headingId),
+            text = stringResource(id = headingId),
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             textAlign = TextAlign.Center,
@@ -44,9 +44,9 @@ fun HomeSubViewHeader(headingId: Int, navController: NavController) {
             textAlign = TextAlign.Center,
             fontSize = 13.sp,
             modifier = Modifier.clickable {
-                navController.navigate(BottomNavTabs.MyOffers.route) {
+                bottomTabsNavController.navigate(BottomNavTabs.MyOffers.route) {
 
-                    navController.graph.startDestinationRoute?.let { screen_route ->
+                    bottomTabsNavController.graph.startDestinationRoute?.let { screen_route ->
                         popUpTo(screen_route) {
                             saveState = true
                         }
@@ -62,8 +62,7 @@ fun HomeSubViewHeader(headingId: Int, navController: NavController) {
 @Composable
 fun HomeSubViewHeaderVoucher(
     heading: Int,
-    navController: NavController,
-    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
+    navCheckOutFlowController: NavController
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -86,7 +85,7 @@ fun HomeSubViewHeaderVoucher(
             textAlign = TextAlign.Center,
             fontSize = 13.sp,
             modifier = Modifier.clickable {
-                openHomeScreen(PromotionScreenState.VOUCHER_VIEW)
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.VoucherFullScreen.route)
             }
         )
     }

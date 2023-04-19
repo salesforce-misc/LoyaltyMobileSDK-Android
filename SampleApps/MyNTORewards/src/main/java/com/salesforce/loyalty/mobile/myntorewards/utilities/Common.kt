@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class Common {
-    companion object  {
+    companion object {
 
         fun formatPromotionDate(apiDate: String): String {
             val apiDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_API_FORMAT)

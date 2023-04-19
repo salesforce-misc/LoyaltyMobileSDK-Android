@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -29,14 +30,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
-import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun MyPromotionScreen(membershipPromo: List<Results>?, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun MyPromotionScreen(membershipPromo: List<Results>?, navCheckOutFlowController: NavController) {
 
 
     Column(
@@ -101,25 +100,16 @@ fun MyPromotionScreen(membershipPromo: List<Results>?, openHomeScreen: (promotio
 
                     when (selectedTab) {
                         0 -> {
-                            PromotionItem(it)
-                            {
-                                openHomeScreen(it)
-                            }
+                            PromotionItem(it, navCheckOutFlowController)
                         }
                         1 -> {
                             if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE) {
-                                PromotionItem(it)
-                                {
-                                    openHomeScreen(it)
-                                }
+                                PromotionItem(it, navCheckOutFlowController)
                             }
                         }
                         2 -> {
                             if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-                                PromotionItem(it)
-                                {
-                                    openHomeScreen(it)
-                                }
+                                PromotionItem(it, navCheckOutFlowController)
                             }
                         }
                     }
@@ -175,7 +165,7 @@ fun MyPromotionScreenHeader() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionItem(results: Results, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun PromotionItem(results: Results, navCheckOutFlowController: NavController) {
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
@@ -184,12 +174,12 @@ fun PromotionItem(results: Results, openHomeScreen: (promotionScreenState: Promo
 
     if (currentPromotionDetailPopupState) {
 
-        PromotionEnrollPopup(results,
+        PromotionEnrollPopup(
+            results,
             closePopup = {
                 currentPromotionDetailPopupState = false
             },
-            openHomeScreen = { openHomeScreen(it)
-            }
+            navCheckOutFlowController
         )
     }
 

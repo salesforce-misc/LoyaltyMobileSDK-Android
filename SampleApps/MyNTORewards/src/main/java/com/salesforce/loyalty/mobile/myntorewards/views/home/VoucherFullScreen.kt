@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
@@ -33,12 +34,11 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.VoucherTabs
 
 @Composable
-fun VoucherFullScreen(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun VoucherFullScreen(navCheckOutFlowController: NavController) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier.background(Color.White)
@@ -52,7 +52,7 @@ fun VoucherFullScreen(openHomeScreen: (promotionScreenState: PromotionScreenStat
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)
                 .clickable {
-                    openHomeScreen(PromotionScreenState.MAIN_VIEW)
+                    navCheckOutFlowController.popBackStack()
                 }
         )
         Text(
@@ -107,7 +107,7 @@ fun VoucherFullScreen(openHomeScreen: (promotionScreenState: PromotionScreenStat
         val context: Context = LocalContext.current
         model.getVoucher(context)
 
-        filterType=  when (selectedTab) {
+        filterType = when (selectedTab) {
             0 -> VOUCHER_ISSUED
             1 -> VOUCHER_REDEEMED
             2 -> VOUCHER_EXPIRED
@@ -117,10 +117,12 @@ fun VoucherFullScreen(openHomeScreen: (promotionScreenState: PromotionScreenStat
             it.status == filterType
         }
 
-        Column(modifier = Modifier
-            .background(VeryLightPurple)
-            .fillMaxWidth()
-            .fillMaxHeight()) {
+        Column(
+            modifier = Modifier
+                .background(VeryLightPurple)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             filteredVouchers?.let {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),

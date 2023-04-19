@@ -7,6 +7,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,12 +19,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 @Composable
-fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun OrderPlacedUI(navCheckOutFlowController: NavController) {
+
+    val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
+    val orderDetails by model.orderDetailLiveData.observeAsState() // collecting livedata as state
+    val orderID = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
+        ORDER_ID
+    )
+    orderID?.let {
+        model.fetchOrderDetails(orderID)
+    }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -50,7 +65,8 @@ fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -
             )
             Spacer(modifier = Modifier.height(11.dp))
             Text(
-                text = stringResource(id = R.string.text_order_placed),
+                text = stringResource(id = R.string.text_order_placed) + " " + (orderDetails?.orderNumber
+                    ?: ""),
                 fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -71,9 +87,7 @@ fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -
             )
 
             Spacer(modifier = Modifier.height(100.dp))
-            ContinueShoppingButton {
-                openHomeScreen(it)
-            }
+            ContinueShoppingButton(navCheckOutFlowController)
         }
 
     }
@@ -82,14 +96,16 @@ fun OrderPlacedUI(openHomeScreen: (promotionScreenState: PromotionScreenState) -
 }
 
 @Composable
-fun ContinueShoppingButton(openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun ContinueShoppingButton(navCheckOutFlowController: NavController) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
     Button(
         modifier = Modifier
             .fillMaxWidth(), onClick = {
-            openHomeScreen(PromotionScreenState.MAIN_VIEW)
+            navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
+                popUpTo(0)
+            }
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)
@@ -103,7 +119,7 @@ fun ContinueShoppingButton(openHomeScreen: (promotionScreenState: PromotionScree
             color = Color.White,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier
-                .padding(top = 10.dp, bottom = 10.dp)
+                .padding(top = 8.dp, bottom = 8.dp)
         )
     }
     Spacer(modifier = Modifier.height(16.dp))

@@ -23,15 +23,14 @@ import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 
 @Composable
 fun HomeScreenLandingView(
-    navController: NavController,
-    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
+    bottomTabsNavController: NavController,
+    navCheckOutFlowController: NavController,
 ) {
 
     Column(
@@ -55,21 +54,19 @@ fun HomeScreenLandingView(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        PromotionCardRow(navController)
-        {
-            openHomeScreen(it)
-        }
-        VoucherRow(navController) {
-            openHomeScreen(it)
-        }
+        PromotionCardRow(bottomTabsNavController, navCheckOutFlowController)
 
+        VoucherRow(navCheckOutFlowController)
 
     }
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun PromotionCardRow(
+    bottomTabsNavController: NavController,
+    navCheckOutFlowController: NavController
+) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -79,7 +76,7 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScr
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
-        HomeSubViewHeader(R.string.text_promotions, navController)
+        HomeSubViewHeader(R.string.text_promotions, bottomTabsNavController)
         val model: MyPromotionViewModel = viewModel()
         val context: Context = LocalContext.current
 
@@ -97,22 +94,18 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScr
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
 
-                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION)
-                {
+                val pageCount = if (promListListSize > MAX_PAGE_COUNT_PROMOTION) {
                     MAX_PAGE_COUNT_PROMOTION
                 } else {
                     promListListSize
                 }
 
 
-        membershipPromo?.let {
-            HorizontalPager(count = pageCount, state = pagerState) { page ->
-                PromotionCard(page, membershipPromo)
-                {
-                    openHomeScreen(it)
+                membershipPromo?.let {
+                    HorizontalPager(count = pageCount, state = pagerState) { page ->
+                        PromotionCard(page, membershipPromo, navCheckOutFlowController)
+                    }
                 }
-            }
-        }
 
                 HorizontalPagerIndicator(
                     pagerState = pagerState,
@@ -153,8 +146,7 @@ fun PromotionCardRow(navController: NavController, openHomeScreen: (promotionScr
 
 @Composable
 fun VoucherRow(
-    navController: NavController,
-    openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit
+    navCheckOutFlowController: NavController,
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -164,10 +156,8 @@ fun VoucherRow(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
 
-        HomeSubViewHeaderVoucher(R.string.text_vouchers, navController)
-        {
-            openHomeScreen(it)
-        }
+        HomeSubViewHeaderVoucher(R.string.text_vouchers, navCheckOutFlowController)
+
         val model: VoucherViewModel = viewModel()
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current

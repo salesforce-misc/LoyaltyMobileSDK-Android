@@ -22,18 +22,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
-import com.salesforce.loyalty.mobile.myntorewards.utilities.PromotionScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionCard(page: Int, membershipPromo: List<Results>?,  openHomeScreen: (promotionScreenState: PromotionScreenState) -> Unit) {
+fun PromotionCard(
+    page: Int,
+    membershipPromo: List<Results>?,
+    navCheckOutFlowController: NavController
+) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
     var endDate = membershipPromo?.get(page)?.endDate ?: ""
@@ -150,12 +154,12 @@ fun PromotionCard(page: Int, membershipPromo: List<Results>?,  openHomeScreen: (
     if (currentPromotionDetailPopupState) {
         membershipPromo?.get(page)?.let {
 
-            PromotionEnrollPopup(it,
+            PromotionEnrollPopup(
+                it,
                 closePopup = {
                     currentPromotionDetailPopupState = false
                 },
-                openHomeScreen = { openHomeScreen(it)
-                }
+                navCheckOutFlowController
             )
         }
     }

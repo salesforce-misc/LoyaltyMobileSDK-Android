@@ -45,6 +45,8 @@ class MyPromotionViewModel : ViewModel() {
     }
 
     fun loadPromotions(context: Context) {
+
+
         viewState.postValue(PromotionViewState.PromotionFetchInProgress)
         viewModelScope.launch {
             val membershipKey =
@@ -55,6 +57,7 @@ class MyPromotionViewModel : ViewModel() {
                 LocalFileManager.DIRECTORY_PROMOTIONS,
                 PromotionsResponse::class.java
             )
+
             Log.d(TAG, "cache : $promotionCache")
             if (promotionCache == null) {
                 fetchPromotions(context)
@@ -64,7 +67,7 @@ class MyPromotionViewModel : ViewModel() {
         }
     }
 
-    fun fetchPromotions(context: Context){
+    fun fetchPromotions(context: Context) {
         viewModelScope.launch {
             val membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
