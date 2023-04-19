@@ -17,6 +17,7 @@ object LoyaltyConfig {
     const val KEY_MEMBER_ID = "MemberId"
     const val KEY_PROMOTION_NAME = "PromotionName"
     const val KEY_PROGRAM_NAME = "programName"
+    const val HEADER_AUTHORIZATION = "Authorization"
     enum class ProgramProcessName(val processName: String) {
         GET_PROMOTIONS("GetMemberPromotions"),
         ENROLL_IN_PROMOTION("EnrollInPromotion"),

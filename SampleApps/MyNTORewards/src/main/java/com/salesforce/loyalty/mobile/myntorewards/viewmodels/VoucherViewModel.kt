@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
@@ -17,6 +18,8 @@ class VoucherViewModel : ViewModel() {
 
 
     private val TAG = VoucherViewModel::class.java.simpleName
+
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
 
     val voucherLiveData: LiveData<List<VoucherResponse>>
         get() = vouchers
@@ -30,7 +33,7 @@ class VoucherViewModel : ViewModel() {
             var membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
             if (membershipKey != null) {
-                LoyaltyAPIManager.getVouchers(
+                loyaltyAPIManager.getVouchers(
                     membershipKey, null, 1, null,
                     null, null, null
                 ).onSuccess {

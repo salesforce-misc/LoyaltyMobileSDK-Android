@@ -6,13 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ConnectedAppConfig
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
-import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.launch
@@ -21,6 +22,8 @@ import kotlinx.coroutines.launch
 //view model
 class OnboardingScreenViewModel : ViewModel() {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
+
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
 
     //live data for login status
     val loginStatusLiveData: LiveData<LoginState>
@@ -46,20 +49,42 @@ class OnboardingScreenViewModel : ViewModel() {
 
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
-    fun loginUser(emailAddressText: String, passwordText: String) {
+    fun loginUser(emailAddressText: String, passwordText: String, context: Context) {
         Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
+        loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
             var accessTokenResponse: String? = null
-            ForceAuthManager.getAccessToken().onSuccess {
-                accessTokenResponse = it.accessToken
-            }
-                .onFailure {
-                    loginStatus.value = LoginState.LOGIN_FAILURE
-                    Log.d(TAG, "Access token request failed: ${it.message}")
-                }
+                accessTokenResponse = ForceAuthManager.authenticate(
+                    ConnectedAppConfig.COMMUNITY_URL,
+                    ConnectedAppConfig.CONSUMER_KEY,
+                    ConnectedAppConfig.CALLBACK_URL,
+                    emailAddressText,
+                    passwordText
+                )
+
             if (accessTokenResponse != null) {
-                loginStatus.value = LoginState.LOGIN_SUCCESS
                 Log.d(TAG, "Access token Success: $accessTokenResponse")
+                val memberProfileResponse = loyaltyAPIManager.getMemberProfile(null, null, null)
+                memberProfileResponse.onSuccess {
+                    if (it != null) {
+                        val memberId = it.loyaltyProgramMemberId
+                        memberId?.let { loyaltyMemberId ->
+                            PrefHelper.customPrefs(context)
+                                .set(KEY_PROGRAM_MEMBER_ID, loyaltyMemberId)
+                            PrefHelper.customPrefs(context)
+                                .set(KEY_MEMBERSHIP_NUMBER, it.membershipNumber)
+                        }
+                        loginStatus.value = LoginState.LOGIN_SUCCESS
+                    } else {
+                        loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
+                    }
+                }.onFailure {
+                    loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
+                }
+
+            } else {
+                loginStatus.value = LoginState.LOGIN_FAILURE
+                Log.d(TAG, "Access token Failure")
             }
         }
     }
@@ -83,7 +108,7 @@ class OnboardingScreenViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             var enrollmentResponse: EnrollmentResponse? = null
-            LoyaltyAPIManager.postEnrollment(
+            loyaltyAPIManager.postEnrollment(
                 firstNameText,
                 lastNameText,
                 emailAddressText,
