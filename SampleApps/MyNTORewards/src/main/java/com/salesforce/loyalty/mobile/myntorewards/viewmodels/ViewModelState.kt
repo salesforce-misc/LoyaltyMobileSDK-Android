@@ -9,7 +9,9 @@ enum class EnrollmentState {
 enum class LoginState {
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
+    LOGIN_IN_PROGRESS,
     LOGIN_DEFAULT_EMPTY,
+    LOGIN_SUCCESS_ENROLLMENT_REQUIRED
 }
 
 enum class OrderPlacedState {

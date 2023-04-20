@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
@@ -19,6 +20,8 @@ import kotlinx.coroutines.launch
 class MyPromotionViewModel : ViewModel() {
 
     private val TAG = MyPromotionViewModel::class.java.simpleName
+
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
 
     val membershipPromotionLiveData: LiveData<List<Results>>
         get() = membershipPromo
@@ -70,7 +73,7 @@ class MyPromotionViewModel : ViewModel() {
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
             val memberID =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
-            LoyaltyAPIManager.getEligiblePromotions(membershipKey, memberID).onSuccess {
+            loyaltyAPIManager.getEligiblePromotions(membershipKey, memberID).onSuccess {
                 if (it?.outputParameters?.outputParameters?.results != null) {
                     LocalFileManager.saveData(
                         context,
@@ -95,7 +98,7 @@ class MyPromotionViewModel : ViewModel() {
             val membershipNumber =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
 
-            LoyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
+            loyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 loadPromotions(context)
@@ -113,7 +116,7 @@ class MyPromotionViewModel : ViewModel() {
             val membershipNumber =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
 
-            LoyaltyAPIManager.unEnrollPromotion(membershipNumber, promotionName).onSuccess {
+            loyaltyAPIManager.unEnrollPromotion(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 loadPromotions(context)

@@ -1,5 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -32,6 +35,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldText
@@ -64,7 +68,7 @@ fun LoginUI(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
         )
         {
-            LoginForm(navController) {
+            LoginForm(navController, openPopup) {
                 closeSheet()
             }
             LinkNewMemberJoin {
@@ -75,74 +79,103 @@ fun LoginUI(
 }
 
 @Composable
-fun LoginForm(navController: NavController, closeSheet: () -> Unit) {
-    var emailAddressPhoneNumberText by remember { mutableStateOf(TextFieldValue("")) }
-    var passwordtext by remember { mutableStateOf(TextFieldValue("")) }
+fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet: () -> Unit) {
+    Box() {
+        val context = LocalContext.current
+        var isInProgress by remember { mutableStateOf(false) }
 
-    OutlineFieldText(
-        emailAddressPhoneNumberText,
-        stringResource(id = R.string.email_address_phone_number_text)
-    ) {
-        emailAddressPhoneNumberText = it
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            var emailAddressPhoneNumberText by remember { mutableStateOf(TextFieldValue("")) }
+            var passwordtext by remember { mutableStateOf(TextFieldValue("")) }
+
+            OutlineFieldText(
+                emailAddressPhoneNumberText,
+                stringResource(id = R.string.email_address_phone_number_text)
+            ) {
+                emailAddressPhoneNumberText = it
+            }
+            PasswordTextField(
+                passwordtext,
+                placeholderText = stringResource(id = R.string.form_password)
+            ) {
+                passwordtext = it
+            }
+
+            //Form Fields
+
+            Text(
+                text = stringResource(id = R.string.forget_your_password_text),
+                fontFamily = font_sf_pro,
+                color = VibrantPurple40,
+                fontSize = 14.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+
+            val model: OnboardingScreenViewModel = viewModel()  //fetching reference of viewmodel
+            val loginStatus by model.loginStatusLiveData.observeAsState(LoginState.LOGIN_DEFAULT_EMPTY) // collecting livedata as state
+
+            //loginStatus state being change to Success after token fetch
+            when (loginStatus) {
+                LoginState.LOGIN_SUCCESS -> {
+                    isInProgress = false
+                    Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
+                    closeSheet()  // closing popup
+                    model.resetLoginStatusDefault()
+                    navController.navigate(Screen.HomeScreen.route) //navigate to home screen
+                }
+                LoginState.LOGIN_FAILURE -> {
+                    isInProgress = false
+                    Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
+                    model.resetLoginStatusDefault()//reset login status to default
+                }
+                LoginState.LOGIN_IN_PROGRESS -> {
+                    isInProgress = true
+                }
+                LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED -> {
+                    isInProgress = false
+                    model.resetLoginStatusDefault()
+                    openPopup(BottomSheetType.POPUP_JOIN)
+                }
+                else -> {}
+            }
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(), onClick = {
+                    model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text, context)
+                },
+                enabled =
+                isLoginButtonEnabled(
+                    emailAddressPhoneNumberText.text,
+                    passwordtext.text,
+                ),
+                colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                shape = RoundedCornerShape(100.dp)
+
+            ) {
+                Text(
+                    text = stringResource(id = R.string.login_text_header),
+                    fontFamily = font_sf_pro,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(top = 3.dp, bottom = 3.dp)
+                )
+            }
+        }
+        if (isInProgress) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f)
+                    .align(Alignment.Center)
+            )
+        }
     }
-    PasswordTextField(passwordtext, placeholderText = stringResource(id = R.string.form_password)) {
-        passwordtext = it
-    }
-
-    //Form Fields
-
-    Text(
-        text = stringResource(id = R.string.forget_your_password_text),
-        fontFamily = font_sf_pro,
-        color = VibrantPurple40,
-        fontSize = 14.sp,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-
-    val model: OnboardingScreenViewModel = viewModel()  //fetching reference of viewmodel
-    val loginStatus by model.loginStatusLiveData.observeAsState(LoginState.LOGIN_DEFAULT_EMPTY) // collecting livedata as state
-
-    //loginStatus state being change to Success after token fetch
-    if (loginStatus == LoginState.LOGIN_SUCCESS) {
-        Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
-        navController.navigate(Screen.HomeScreen.route) //navigate to home screen
-        closeSheet()  // closing popup
-        model.resetLoginStatusDefault()
-    }
-    //loginStatus state being change to Failed after token fetch
-    if (loginStatus == LoginState.LOGIN_SUCCESS) {
-        Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
-        model.resetLoginStatusDefault()//reset login status to default
-    }
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(), onClick = {
-            model.loginUser(emailAddressPhoneNumberText.text, passwordtext.text)
-            navController.navigate(Screen.HomeScreen.route)
-        },
-        enabled =
-        isLoginButtonEnabled(
-            emailAddressPhoneNumberText.text,
-            passwordtext.text,
-        ),
-        colors = ButtonDefaults.buttonColors(VibrantPurple40),
-        shape = RoundedCornerShape(100.dp)
-
-    ) {
-        Text(
-            text = stringResource(id = R.string.login_text_header),
-            fontFamily = font_sf_pro,
-            color = Color.White,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(top = 3.dp, bottom = 3.dp)
-        )
-    }
-
 }
 
 fun isLoginButtonEnabled(

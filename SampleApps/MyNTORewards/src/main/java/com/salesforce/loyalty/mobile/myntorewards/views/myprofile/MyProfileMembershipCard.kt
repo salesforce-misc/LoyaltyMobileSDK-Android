@@ -85,8 +85,9 @@ fun CardContent() {
         val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
 
-        model.getMemberProfile(context)
-
+        LaunchedEffect(key1 = true) {
+            model.getMemberProfile(context)
+        }
         //loginStatus state being change to Success after token fetch
         Spacer(modifier = Modifier.height(16.dp))
         membershipProfile?.memberTiers?.get(0)?.loyaltyMemberTierName?.let { MembershipTierRow(it) }

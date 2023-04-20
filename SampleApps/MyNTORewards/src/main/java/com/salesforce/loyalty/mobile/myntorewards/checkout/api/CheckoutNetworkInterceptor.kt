@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.checkout.api
 
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
-import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
