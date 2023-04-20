@@ -95,7 +95,8 @@ fun PromotionEnrollPopupUI(
                 .verticalScroll(
                     rememberScrollState()
                 ),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         )
 
         {
@@ -103,7 +104,7 @@ fun PromotionEnrollPopupUI(
             val model: MyPromotionViewModel = viewModel()
             val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
             val context: Context = LocalContext.current
-
+            Column{
             Box()
             {
 
@@ -222,83 +223,53 @@ fun PromotionEnrollPopupUI(
 
                 )
             }
+            }
+
+            Column {
+                results.promotionName?.let {
+                    if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
 
 
-
-            Spacer(modifier = Modifier.height(80.dp))
-
-            results.promotionName?.let {
-                if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-
-
-                    val model: MyPromotionViewModel = viewModel()
-                    val membershipPromoEnrollmentState by model.promEnrollmentStatusLiveData.observeAsState(
-                        PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
-                    )
-                    if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS) {
-                        isInProgress = false
-                        model.resetPromEnrollmentStatusDefault()
-                        Toast.makeText(
-                            LocalContext.current,
-                            "Promotion Enrol/UnEnrol Success",
-                            Toast.LENGTH_LONG
-                        ).show()
-
-                        closePopup()
-
-                    } //after enrollment state change to failure
-                    else if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE) {
-                        isInProgress = false
-                        Toast.makeText(
-                            LocalContext.current,
-                            "Promotion Enrol/UnEnrol Failed",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        model.resetPromEnrollmentStatusDefault()
-
-                    }
-
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(0.7f), onClick = {
-                            isInProgress = true
-                            model.enrollInPromotions(context, it)
-
-                        },
-                        colors = ButtonDefaults.buttonColors(VibrantPurple40),
-                        shape = RoundedCornerShape(100.dp)
-
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.join_text),
-                            fontFamily = font_sf_pro,
-                            textAlign = TextAlign.Center,
-                            fontSize = 16.sp,
-                            color = White,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .padding(top = 3.dp, bottom = 3.dp)
+                        val model: MyPromotionViewModel = viewModel()
+                        val membershipPromoEnrollmentState by model.promEnrollmentStatusLiveData.observeAsState(
+                            PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
                         )
-                    }
+                        if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS) {
+                            isInProgress = false
+                            model.resetPromEnrollmentStatusDefault()
+                            Toast.makeText(
+                                LocalContext.current,
+                                "Promotion Enrol/UnEnrol Success",
+                                Toast.LENGTH_LONG
+                            ).show()
 
+                            closePopup()
 
-                } else if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE && promotionEnrollmentRqr == true) {
+                        } //after enrollment state change to failure
+                        else if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE) {
+                            isInProgress = false
+                            Toast.makeText(
+                                LocalContext.current,
+                                "Promotion Enrol/UnEnrol Failed",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            model.resetPromEnrollmentStatusDefault()
 
-                    Row() {
-                        ShopButton(150.dp, navCheckOutFlowController)
+                        }
 
-                        Spacer(modifier = Modifier.width(10.dp))
                         Button(
-                            modifier = Modifier.width(150.dp), onClick = {
+                            modifier = Modifier
+                                .fillMaxWidth(0.7f), onClick = {
                                 isInProgress = true
-                                model.unEnrollInPromotions(context, it)
+                                model.enrollInPromotions(context, it)
+
                             },
                             colors = ButtonDefaults.buttonColors(VibrantPurple40),
                             shape = RoundedCornerShape(100.dp)
 
                         ) {
                             Text(
-                                text = stringResource(id = R.string.text_leave),
+                                text = stringResource(id = R.string.join_text),
                                 fontFamily = font_sf_pro,
                                 textAlign = TextAlign.Center,
                                 fontSize = 16.sp,
@@ -309,13 +280,46 @@ fun PromotionEnrollPopupUI(
                             )
                         }
 
+
+                    } else if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE && promotionEnrollmentRqr == true) {
+
+                        Row() {
+                            ShopButton(150.dp, navCheckOutFlowController)
+
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Button(
+                                modifier = Modifier.width(150.dp), onClick = {
+                                    isInProgress = true
+                                    model.unEnrollInPromotions(context, it)
+                                },
+                                colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                                shape = RoundedCornerShape(100.dp)
+
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.text_leave),
+                                    fontFamily = font_sf_pro,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 16.sp,
+                                    color = White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(top = 3.dp, bottom = 3.dp)
+                                )
+                            }
+
+                        }
+                    } else {
+                        ShopButton(300.dp, navCheckOutFlowController)
+
                     }
-                } else {
-                    ShopButton(300.dp, navCheckOutFlowController)
 
                 }
+                Spacer(modifier = Modifier.height(40.dp))
 
             }
+
+
         }
 
         if (isInProgress) {

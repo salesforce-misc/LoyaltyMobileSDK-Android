@@ -8,6 +8,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -26,11 +27,11 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavig
 @Composable
 fun OrderDetails(navCheckOutFlowController: NavController) {
     Column(
-        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
+            .fillMaxHeight()
             .background(OrderScreenBG)
-            .verticalScroll(rememberScrollState())
     )
     {
         //default tab selected as 0 which is ShippingNavigationTabs.TabShipping

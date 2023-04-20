@@ -40,11 +40,10 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController) {
     }
 
     Column(
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
             .background(OrderScreenBG)
-            .verticalScroll(rememberScrollState())
     )
     {
 
@@ -85,9 +84,13 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController) {
                 modifier = Modifier
                     .align(CenterHorizontally)
             )
-
-            Spacer(modifier = Modifier.height(100.dp))
+        }
+        Column(   modifier = Modifier
+            .padding(start = 67.dp, end = 67.dp)
+            .align(CenterHorizontally)
+        ) {
             ContinueShoppingButton(navCheckOutFlowController)
+            Spacer(modifier = Modifier.height(40.dp))
         }
 
     }
