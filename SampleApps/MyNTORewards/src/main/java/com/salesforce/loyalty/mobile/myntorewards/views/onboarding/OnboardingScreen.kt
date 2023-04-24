@@ -1,6 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -8,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -21,9 +24,11 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.screenTextID
+import com.salesforce.loyalty.mobile.myntorewards.views.adminmenu.SettingsMain
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -40,6 +45,8 @@ fun OnboardingScreenBox(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    var openAdminMenu by remember { mutableStateOf(false) }
 
     val openBottomSheet = {
         coroutineScope.launch {
@@ -77,16 +84,32 @@ fun OnboardingScreenBox(navController: NavController) {
     ) {
         Box(modifier = Modifier.fillMaxSize())
         {
+            var tapCount = 0
+
             //setting up swipe pager and images accordingly
             val pagerState = rememberPagerState()
             HorizontalPager(count = 3, state = pagerState) { page ->
                 Image(
                     painter = painterResource(id = ViewPagerSupport.imageID(page)),
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pointerInput(Unit) {
+                            detectTapGestures(onTap = {
+                                tapCount++
+                                Log.d("Onboarding", "Tap detected $tapCount")
+                                if (tapCount == AppConstants.TAP_COUNT_OPEN_ADMIN_SETTINGS) {
+                                    //navigate to admin settings
+                                    tapCount = 0
+                                    Log.d("Onboarding", "Tap detected navigate to admin settings")
+                                    openAdminMenu = true
+                                }
+                            })
+                        },
                     contentScale = ContentScale.FillWidth,
                 )
             }
+
             Image(
                 painter = painterResource(id = R.drawable.screen_bottom_black_fading),
                 contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
@@ -138,6 +161,11 @@ fun OnboardingScreenBox(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.height(55.dp))
             }
+            if (openAdminMenu) {
+                openAdminMenu = false
+                currentPopupState = BottomSheetType.SETTINGS
+                openBottomSheet()
+            }
         }
     }
 }
@@ -166,6 +194,9 @@ fun OpenBottomSheetContent(
         }
         BottomSheetType.POPUP_CONGRATULATIONS -> {
             EnrollmentCongratulationsView(navController, closeSheet = closeSheet)
+        }
+        BottomSheetType.SETTINGS -> {
+            SettingsMain()
         }
     }
 }
