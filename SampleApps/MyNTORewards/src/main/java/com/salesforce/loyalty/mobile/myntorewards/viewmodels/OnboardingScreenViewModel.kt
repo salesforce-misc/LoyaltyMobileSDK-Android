@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class OnboardingScreenViewModel : ViewModel() {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
 
     //live data for login status
     val loginStatusLiveData: LiveData<LoginState>
@@ -63,7 +63,7 @@ class OnboardingScreenViewModel : ViewModel() {
                 )
             } ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP
             var accessTokenResponse: String? = null
-            accessTokenResponse = ForceAuthManager.authenticate(
+            accessTokenResponse = ForceAuthManager.forceAuthManager.authenticate(
                 communityUrl = connectedApp.communityUrl,
                 consumerKey = connectedApp.consumerKey,
                 callbackUrl = connectedApp.callbackUrl,

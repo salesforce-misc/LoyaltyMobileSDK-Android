@@ -18,7 +18,7 @@ class MembershipBenefitViewModel : ViewModel() {
 
     private val TAG = MembershipBenefitViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
     //live data for login status
     val membershipBenefitLiveData: LiveData<List<MemberBenefit>>
         get() = membershipBenefit

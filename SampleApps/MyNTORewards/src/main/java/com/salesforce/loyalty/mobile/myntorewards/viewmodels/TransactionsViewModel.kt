@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class TransactionsViewModel : ViewModel() {
     private val TAG = TransactionsViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
 
     //live data for transaction data
     val transactionsLiveData: LiveData<TransactionsResponse>

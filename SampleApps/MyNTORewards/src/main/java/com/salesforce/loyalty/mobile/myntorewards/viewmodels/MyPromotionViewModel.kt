@@ -21,7 +21,7 @@ class MyPromotionViewModel : ViewModel() {
 
     private val TAG = MyPromotionViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
 
     val membershipPromotionLiveData: LiveData<List<Results>>
         get() = membershipPromo

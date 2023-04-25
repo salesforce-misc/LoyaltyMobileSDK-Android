@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class MembershipProfileViewModel : ViewModel() {
     private val TAG = MembershipProfileViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
 
     //live data for login status
     val membershipProfileLiveData: LiveData<MemberProfileResponse>

@@ -19,7 +19,7 @@ class VoucherViewModel : ViewModel() {
 
     private val TAG = VoucherViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
 
     val voucherLiveData: LiveData<List<VoucherResponse>>
         get() = vouchers
