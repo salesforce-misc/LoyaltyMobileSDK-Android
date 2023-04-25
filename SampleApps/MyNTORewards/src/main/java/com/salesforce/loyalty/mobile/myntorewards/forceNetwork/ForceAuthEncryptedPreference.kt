@@ -28,7 +28,7 @@ object ForceAuthEncryptedPreference {
         return secureSharedPref
     }
 
-    fun saveAUth(context: Context, forceAuth: ForceAuth) {
+    fun saveAuth(context: Context, forceAuth: ForceAuth) {
         val jsonString = Gson().toJson(forceAuth, ForceAuth::class.java)
         getSecureSharedPref(context)
             .set(forceAuth.identityURL, jsonString)

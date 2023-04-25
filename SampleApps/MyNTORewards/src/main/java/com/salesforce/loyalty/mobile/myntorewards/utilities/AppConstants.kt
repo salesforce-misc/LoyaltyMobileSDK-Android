@@ -16,6 +16,7 @@ class AppConstants {
         const val KEY_LASTNAME = "lastName_key"
         const val KEY_SELECTED_CONNECTED_APP_NAME = "selected_connected_app_name"
         const val KEY_OPEN_CONNECTED_APP_NAME = "open_connected_app_name"
+        const val KEY_USER_IDENTIFIER = "user_identifier"
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"
@@ -74,10 +75,6 @@ class AppConstants {
         const val ROUTE_ORDER_ADDRESS_PAYMENT_SCREEN = "order_address_payment_screen"
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
-
-        const val ROUTE_OPEN_SETTINGS = "open_settings"
-        const val ROUTE_CONNECTED_APP_SETTINGS = "connected_app_settings"
-        const val ROUTE_OPEN_CONNECTED_APP = "open_connected_app"
 
         const val ORDER_ID = "orderID"
 

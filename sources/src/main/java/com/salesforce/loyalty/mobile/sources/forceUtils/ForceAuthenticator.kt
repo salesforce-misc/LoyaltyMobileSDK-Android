@@ -4,7 +4,7 @@ import com.salesforce.loyalty.mobile.sources.forceModels.ForceAuthResponse
 
 interface ForceAuthenticator {
 
-    var accessToken: String?
+    fun getAccessToken(): String?
 
     suspend fun grantAccessToken(): String?
 
