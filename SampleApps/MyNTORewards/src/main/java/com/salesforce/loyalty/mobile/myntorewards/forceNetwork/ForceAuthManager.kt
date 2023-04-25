@@ -2,7 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
@@ -47,13 +46,17 @@ object ForceAuthManager: ForceAuthenticator {
                     it
                 )
             } ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP
-            refreshAccessToken(
+            val refreshAuth = refreshAccessToken(
                 url = ForceConfig.getRefreshAccessTokenRequestUrl(connectedApp.communityUrl),
                 consumerKey = connectedApp.consumerKey,
                 consumerSecret = connectedApp.consumerSecret,
                 it
             )
-        }
+            refreshAuth?.let {
+                return it.accessToken
+            }
+            return null
+        } ?:
         return grantAuth()
     }
 
@@ -175,7 +178,7 @@ object ForceAuthManager: ForceAuthenticator {
             callbackUrl
         )
         response.onSuccess {
-            Log.d(TAG, "Access token success: ${it.accessToken}")
+            Log.d(TAG, "Access token success: ${it}")
             accessToken = it.accessToken
             auth = it
         }.onFailure {
@@ -195,19 +198,31 @@ object ForceAuthManager: ForceAuthenticator {
         consumerSecret: String?,
         auth: ForceAuth
     ): ForceAuth? {
-        val response = ForceClient.authApi.refreshAccessToken(
-            url,
-            ForceConfig.REFRESH_GRANT_TYPE,
-            consumerKey,
-            auth.refreshToken!!,
-            consumerSecret
-        )
-        response.onSuccess {
-            accessToken = it.accessToken
-            saveAuth(it)
-            return it
-        }.onFailure {
-            return null
+        auth.refreshToken?.let {
+            val response =
+                ForceClient.authApi.refreshAccessToken(
+                    url,
+                    ForceConfig.REFRESH_GRANT_TYPE,
+                    consumerKey,
+                    it,
+                    consumerSecret
+                )
+            response.onSuccess {newAuth ->
+                accessToken = newAuth.accessToken
+                val newAuthToSave = ForceAuth(
+                    accessToken = newAuth.accessToken,
+                    instanceURL = newAuth.instanceURL,
+                    identityURL = newAuth.identityURL,
+                    tokenType = newAuth.tokenType,
+                    timestamp = newAuth.timestamp,
+                    signature = newAuth.signature,
+                    refreshToken = auth.refreshToken
+                )
+                saveAuth(newAuthToSave)
+                return newAuthToSave
+            }.onFailure {
+                return null
+            }
         }
         return null
     }
