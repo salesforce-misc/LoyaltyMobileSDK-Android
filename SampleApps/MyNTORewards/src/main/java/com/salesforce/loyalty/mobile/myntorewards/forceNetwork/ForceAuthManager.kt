@@ -118,6 +118,8 @@ object ForceAuthManager: ForceAuthenticator {
                     }
                 }
             }
+        } catch (ex: java.lang.Exception) {
+            Log.d(TAG, "Failed to generate access token ${ex.message}")
         }
         return null
     }
