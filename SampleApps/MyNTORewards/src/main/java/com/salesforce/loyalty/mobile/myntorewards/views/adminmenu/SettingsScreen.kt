@@ -7,7 +7,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +28,8 @@ enum class SettingsScreen(@StringRes val title: Int) {
 @Composable
 fun SettingsMain(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    closeSheet: () -> Unit
 ) {
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -49,15 +49,13 @@ fun SettingsMain(
         ) {
             composable(route = SettingsScreen.OpenSettings.name) {
                 ConnectedAppSetting(
-                    navController
+                    navController, closeSheet
                 )
             }
             composable(route = SettingsScreen.ConnectedAppSettings.name) {
-                val context = LocalContext.current
                 SelectedConnectedApp(navController)
             }
             composable(route = SettingsScreen.OpenConnectedAppDetail.name) {
-                val context = LocalContext.current
                 ConnectedAppDetails(navController, SettingsScreen.OpenConnectedAppDetail,  isNew = false)
             }
             composable(route = SettingsScreen.NewConnectedApp.name) {

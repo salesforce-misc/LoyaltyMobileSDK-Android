@@ -130,17 +130,17 @@ fun ConnectedAppDetails(
     currentScreen: SettingsScreen,
     isNew: Boolean
 ) {
-    val connectedAppName =
-        navController.previousBackStackEntry?.savedStateHandle?.get<String>(AppConstants.KEY_OPEN_CONNECTED_APP_NAME)
+    val connectedAppInstance =
+        navController.previousBackStackEntry?.savedStateHandle?.get<String>(AppConstants.KEY_OPEN_CONNECTED_APP_INSTANCE)
     navController.previousBackStackEntry?.savedStateHandle?.set(
-        AppConstants.KEY_OPEN_CONNECTED_APP_NAME,
+        AppConstants.KEY_OPEN_CONNECTED_APP_INSTANCE,
         null
     )
     val context = LocalContext.current
     val viewModel: ConnectedAppViewModel =
         viewModel(factory = ConnectedAppViewModelFactory(context))
 
-    val connectedApp = connectedAppName?.let { viewModel.getConnectedApp(context, it) }
+    val connectedApp = connectedAppInstance?.let { viewModel.getConnectedApp(context, it) }
     var isEditing by remember { mutableStateOf(false) }
     var name by remember {
         mutableStateOf(

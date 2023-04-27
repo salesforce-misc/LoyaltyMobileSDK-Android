@@ -3,12 +3,14 @@ package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,8 +27,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 
 @Composable
 fun SettingsAppBar(
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
+    closeSheet: () -> Unit
 ) {
 
     Column(
@@ -36,16 +37,21 @@ fun SettingsAppBar(
             .fillMaxWidth()
             .padding(start = 8.dp, end = 16.dp)
     ) {
-        if (canNavigateBack) {
-            Spacer(modifier = Modifier.height(15.dp))
-            IconButton(onClick = navigateUp) {
+        Spacer(modifier = Modifier.height(15.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+
+            ) {
+            Spacer(Modifier.weight(0.9f))
+            IconButton(onClick = { closeSheet() }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.back_arrow),
-                    contentDescription = stringResource(R.string.back_button)
+                    painter = painterResource(id = R.drawable.close_popup_icon),
+                    contentDescription = stringResource(R.string.cd_close_popup),
                 )
             }
         }
-
 
         Spacer(modifier = Modifier.height(16.dp))
         androidx.compose.material.Text(
@@ -64,12 +70,10 @@ fun SettingsAppBar(
 }
 
 @Composable
-fun ConnectedAppSetting(/*connectedApp: ConnectedApp*//*onOpenButtonClicked: () -> Unit*/navController: NavController) {
-    var openConnectedAppList by remember { mutableStateOf(false) }
+fun ConnectedAppSetting(navController: NavController, closeSheet: () -> Unit) {
     Scaffold(topBar = {
         SettingsAppBar(
-            canNavigateBack = navController.previousBackStackEntry != null,
-            navigateUp = { navController.navigateUp() }
+            closeSheet
         )
     }) { innerPadding ->
 
@@ -79,6 +83,7 @@ fun ConnectedAppSetting(/*connectedApp: ConnectedApp*//*onOpenButtonClicked: () 
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
+            val interactionSource = remember { MutableInteractionSource() }
             Row(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -86,7 +91,7 @@ fun ConnectedAppSetting(/*connectedApp: ConnectedApp*//*onOpenButtonClicked: () 
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .background(Color.White, shape = RoundedCornerShape(6.dp))
-                    .padding(8.dp)
+                    .padding(12.dp)
 
             ) {
                 androidx.compose.material.Text(
@@ -108,16 +113,12 @@ fun ConnectedAppSetting(/*connectedApp: ConnectedApp*//*onOpenButtonClicked: () 
                     modifier = Modifier
                         .wrapContentSize(Alignment.CenterEnd)
                         .padding(vertical = 6.dp, horizontal = 4.dp)
-                        .weight(0.2f).clickable {
-                            openConnectedAppList = true
+                        .weight(0.2f)
+                        .clickable(interactionSource = interactionSource, indication = null) {
+                            navController.navigate(SettingsScreen.ConnectedAppSettings.name)
                         }
                 )
             }
-        }
-    }
-    if (openConnectedAppList) {
-        LaunchedEffect(Unit) {
-            navController.navigate(SettingsScreen.ConnectedAppSettings.name)
         }
     }
 }

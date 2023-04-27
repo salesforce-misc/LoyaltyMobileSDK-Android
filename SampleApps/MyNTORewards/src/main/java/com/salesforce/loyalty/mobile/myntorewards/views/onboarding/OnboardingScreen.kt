@@ -196,7 +196,9 @@ fun OpenBottomSheetContent(
             EnrollmentCongratulationsView(navController, closeSheet = closeSheet)
         }
         BottomSheetType.SETTINGS -> {
-            SettingsMain()
+            SettingsMain(
+                closeSheet = closeSheet
+            )
         }
     }
 }

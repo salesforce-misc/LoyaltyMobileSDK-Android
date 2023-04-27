@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
@@ -21,8 +22,10 @@ class MyPromotionViewModel : ViewModel() {
 
     private val TAG = MyPromotionViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
-
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
+        ForceAuthManager.forceAuthManager,
+        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+    )
     val membershipPromotionLiveData: LiveData<List<Results>>
         get() = membershipPromo
 

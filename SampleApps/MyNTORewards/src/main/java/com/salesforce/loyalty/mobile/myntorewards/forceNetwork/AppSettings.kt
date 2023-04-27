@@ -1,5 +1,10 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import android.content.Context
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.get
+
 object AppSettings {
 
     val DEFAULT_FORCE_CONNECTED_APP = ConnectedApp(
@@ -11,4 +16,5 @@ object AppSettings {
         "https://dro000000kef12ao.test1.my.pc-rnd.salesforce.com",
         "https://dro000000kef12ao.test1.my.pc-rnd.site.com"
     )
+
 }

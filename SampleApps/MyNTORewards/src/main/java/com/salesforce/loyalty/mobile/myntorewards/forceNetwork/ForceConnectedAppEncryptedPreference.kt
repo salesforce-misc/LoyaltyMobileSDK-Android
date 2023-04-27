@@ -31,18 +31,18 @@ object ForceConnectedAppEncryptedPreference {
     fun saveConnectedApp(context: Context, connectedApp: ConnectedApp) {
         val jsonString = Gson().toJson(connectedApp, ConnectedApp::class.java)
         getSecureSharedPref(context)
-            .set(connectedApp.name, jsonString)
+            .set(connectedApp.instanceUrl, jsonString)
     }
 
-    fun getConnectedApp(context: Context, name: String): ConnectedApp {
+    fun getConnectedApp(context: Context, instanceUrl: String): ConnectedApp {
         val connectedAppString = getSecureSharedPref(context)
-            .get(name, "")
+            .get(instanceUrl, "")
         return Gson().fromJson(connectedAppString, ConnectedApp::class.java)
     }
 
-    fun deleteConnectedApp(context: Context, name: String) {
+    fun deleteConnectedApp(context: Context, instanceUrl: String) {
         val editor: SharedPreferences.Editor = getSecureSharedPref(context).edit()
-        editor.remove(name)
+        editor.remove(instanceUrl)
         editor.apply()
     }
 

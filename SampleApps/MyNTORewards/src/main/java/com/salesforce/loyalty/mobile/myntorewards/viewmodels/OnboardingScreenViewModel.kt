@@ -8,14 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConnectedAppEncryptedPreference
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
 import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
@@ -26,8 +23,10 @@ import kotlinx.coroutines.launch
 class OnboardingScreenViewModel : ViewModel() {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager.forceAuthManager)
-
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
+        ForceAuthManager.forceAuthManager,
+        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+    )
     //live data for login status
     val loginStatusLiveData: LiveData<LoginState>
         get() = loginStatus
@@ -56,12 +55,7 @@ class OnboardingScreenViewModel : ViewModel() {
         Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
-            val selectedConnectedApp = PrefHelper.customPrefs(context).get<String>(AppConstants.KEY_SELECTED_CONNECTED_APP_NAME, null)
-            val connectedApp = selectedConnectedApp?.let {
-                ForceConnectedAppEncryptedPreference.getConnectedApp(context,
-                    it
-                )
-            } ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP
+            val connectedApp = ForceAuthManager.forceAuthManager.getConnectedApp()
             var accessTokenResponse: String? = null
             accessTokenResponse = ForceAuthManager.forceAuthManager.authenticate(
                 communityUrl = connectedApp.communityUrl,

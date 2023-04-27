@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,8 +33,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ConnectedApp
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_OPEN_CONNECTED_APP_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_OPEN_CONNECTED_APP_INSTANCE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModelFactory
 
@@ -79,9 +81,7 @@ fun ConnectedAppsListAppBar(
 
 @Composable
 fun SelectedConnectedApp(navController: NavController) {
-    var openConnectedApp by remember { mutableStateOf(false) }
-    var newConnectedApp by remember { mutableStateOf(false) }
-    var openedConnectedAppName by remember { mutableStateOf("") }
+    var openedConnectedAppInstance by remember { mutableStateOf("") }
     Scaffold(topBar = {
         ConnectedAppsListAppBar(
             canNavigateBack = navController.previousBackStackEntry != null,
@@ -94,17 +94,18 @@ fun SelectedConnectedApp(navController: NavController) {
             viewModel(factory = ConnectedAppViewModelFactory(context))  //fetching reference of viewmodel
         // collecting livedata as state
         val connectedApps by model.savedAppsLiveData.observeAsState()
-        val selectedAppName by model.selectedAppLiveData.observeAsState()
+        val selectedInstanceUrl by model.selectedInstanceLiveData.observeAsState()
 
         LaunchedEffect(Unit) {
             model.retrieveAll(context)
         }
         Log.d("ConnectedApps", " connectedApps : $connectedApps")
         val selectedApp = connectedApps?.filter {
-            it.name?.let { name ->
-                selectedAppName.equals(name)
+            it.instanceUrl?.let { instance ->
+                selectedInstanceUrl.equals(instance)
             } == true
         }
+//        val selectedApp = ForceAuthManager.forceAuthManager.getConnectedApp()
         Log.d("ConnectedApps", " selected : $selectedApp")
         var myConnectedApps: MutableList<ConnectedApp> = mutableListOf()
         if (connectedApps != null) {
@@ -124,6 +125,7 @@ fun SelectedConnectedApp(navController: NavController) {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Top
             ) {
+                val interactionSource = remember { MutableInteractionSource() }
                 selectedApp?.get(0)?.let {
                     Column(
                         modifier = Modifier
@@ -175,9 +177,18 @@ fun SelectedConnectedApp(navController: NavController) {
                                     .wrapContentSize(Alignment.CenterEnd)
                                     .padding(4.dp)
                                     .weight(0.2f)
-                                    .clickable {
-                                        openConnectedApp = true
-                                        openedConnectedAppName = it.name
+                                    .clickable(
+                                        interactionSource = interactionSource,
+                                        indication = null
+                                    ) {
+                                        openedConnectedAppInstance = it.instanceUrl
+                                        navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                            set(
+                                                KEY_OPEN_CONNECTED_APP_INSTANCE,
+                                                openedConnectedAppInstance
+                                            )
+                                        }
+                                        navController.navigate(SettingsScreen.OpenConnectedAppDetail.name)
                                     }
                             )
                         }
@@ -219,10 +230,13 @@ fun SelectedConnectedApp(navController: NavController) {
                                     modifier = Modifier
                                         .padding(4.dp)
                                         .fillMaxWidth()
-                                        .clickable {
-                                            it.name?.let { name ->
+                                        .clickable(
+                                            interactionSource = interactionSource,
+                                            indication = null
+                                        ) {
+                                            it.instanceUrl?.let { instance ->
                                                 model.setSelectedApp(
-                                                    name
+                                                    instance
                                                 )
                                             }
                                         }
@@ -249,9 +263,18 @@ fun SelectedConnectedApp(navController: NavController) {
                                             .wrapContentSize(Alignment.CenterEnd)
                                             .padding(4.dp)
                                             .weight(0.2f)
-                                            .clickable {
-                                                openConnectedApp = true
-                                                openedConnectedAppName = it.name
+                                            .clickable(
+                                                interactionSource = interactionSource,
+                                                indication = null
+                                            ) {
+                                                openedConnectedAppInstance = it.instanceUrl
+                                                navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                                    set(
+                                                        KEY_OPEN_CONNECTED_APP_INSTANCE,
+                                                        openedConnectedAppInstance
+                                                    )
+                                                }
+                                                navController.navigate(SettingsScreen.OpenConnectedAppDetail.name)
                                             }
                                     )
                                 }
@@ -265,8 +288,8 @@ fun SelectedConnectedApp(navController: NavController) {
                         modifier = Modifier
                             .padding(top = 8.dp, start = 4.dp, end = 4.dp, bottom = 4.dp)
                             .fillMaxWidth()
-                            .clickable {
-                                newConnectedApp = true
+                            .clickable(interactionSource = interactionSource, indication = null) {
+                                navController.navigate(SettingsScreen.NewConnectedApp.name)
                             }
                     ) {
 
@@ -285,19 +308,6 @@ fun SelectedConnectedApp(navController: NavController) {
                     }
                 }
             }
-        }
-    }
-    if (openConnectedApp) {
-        LaunchedEffect(Unit) {
-            navController.currentBackStackEntry?.savedStateHandle?.apply {
-                set(KEY_OPEN_CONNECTED_APP_NAME, openedConnectedAppName)
-            }
-            navController.navigate(SettingsScreen.OpenConnectedAppDetail.name)
-        }
-    }
-    if (newConnectedApp) {
-        LaunchedEffect(Unit) {
-            navController.navigate(SettingsScreen.NewConnectedApp.name)
         }
     }
 }

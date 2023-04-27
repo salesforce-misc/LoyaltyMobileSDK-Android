@@ -19,16 +19,16 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
     private val TAG = ConnectedAppViewModel::class.java.simpleName
     var mContext: Context
     //live data for Saved connected apps
-    val selectedAppLiveData: LiveData<String>
-        get() = selectedConnectedAppName
+    val selectedInstanceLiveData: LiveData<String>
+        get() = selectedInstanceUrl
 
-    private val selectedConnectedAppName = MutableLiveData<String>()
+    private val selectedInstanceUrl = MutableLiveData<String>()
 
     init {
         mContext = context
-        selectedConnectedAppName.value =
-            PrefHelper.customPrefs(mContext).get(AppConstants.KEY_SELECTED_CONNECTED_APP_NAME)
-                ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.name!!
+        selectedInstanceUrl.value =
+            PrefHelper.customPrefs(mContext).get(AppConstants.KEY_SELECTED_INSTANCE_URL)
+                ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     }
 
     //live data for Saved connected apps
@@ -43,10 +43,10 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
         }
     }
 
-    fun getConnectedApp(context: Context, name: String): ConnectedApp {
-        Log.d(TAG, "getConnectedApp() name : $name")
+    fun getConnectedApp(context: Context, instanceUrl: String): ConnectedApp {
+        Log.d(TAG, "getConnectedApp() instanceUrl : $instanceUrl")
 
-        return ForceConnectedAppEncryptedPreference.getConnectedApp(context, name)
+        return ForceConnectedAppEncryptedPreference.getConnectedApp(context, instanceUrl)
     }
 
     fun getAllConnectedApps(context: Context): List<ConnectedApp>? {
@@ -80,11 +80,11 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
         savedApps.value = ForceConnectedAppEncryptedPreference.retrieveAll(context)
     }
 
-    fun setSelectedApp(name: String) {
-        selectedConnectedAppName.value = name
+    fun setSelectedApp(instanceUrl: String) {
+        selectedInstanceUrl.value = instanceUrl
         viewModelScope.launch {
             PrefHelper.customPrefs(mContext)
-                .set(AppConstants.KEY_SELECTED_CONNECTED_APP_NAME, name)
+                .set(AppConstants.KEY_SELECTED_INSTANCE_URL, instanceUrl)
         }
     }
 }

@@ -14,8 +14,8 @@ class AppConstants {
         const val KEY_EMAIL_ID = "emailID_key"
         const val KEY_FIRSTNAME = "firstName_key"
         const val KEY_LASTNAME = "lastName_key"
-        const val KEY_SELECTED_CONNECTED_APP_NAME = "selected_connected_app_name"
-        const val KEY_OPEN_CONNECTED_APP_NAME = "open_connected_app_name"
+        const val KEY_SELECTED_INSTANCE_URL = "selected_instance_url"
+        const val KEY_OPEN_CONNECTED_APP_INSTANCE = "open_connected_app_instance"
         const val KEY_USER_IDENTIFIER = "user_identifier"
 
         //Bottom Nav Tabs Route

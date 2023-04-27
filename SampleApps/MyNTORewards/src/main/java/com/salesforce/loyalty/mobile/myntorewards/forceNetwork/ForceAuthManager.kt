@@ -43,14 +43,7 @@ object ForceAuthManager: ForceAuthenticator {
 
     override suspend fun grantAccessToken(): String? {
         Log.d(TAG, "grantAccessToken()")
-        val selectedConnectedApp = PrefHelper.customPrefs(mContext)
-            .get<String>(AppConstants.KEY_SELECTED_CONNECTED_APP_NAME, null)
-        val connectedApp = selectedConnectedApp?.let { selectedConnectedApp ->
-            ForceConnectedAppEncryptedPreference.getConnectedApp(
-                mContext,
-                selectedConnectedApp
-            )
-        } ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP
+        val connectedApp = getConnectedApp()
         if (auth != null) {
             auth?.refreshToken?.let {
                 // Refresh access token
@@ -278,5 +271,22 @@ object ForceAuthManager: ForceAuthenticator {
 
         Log.d(TAG, "No auth found. Please login.")
         return null
+    }
+
+    fun getInstanceUrl(): String? {
+        return PrefHelper.customPrefs(mContext)
+            .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
+    }
+
+    fun getConnectedApp(): ConnectedApp {
+        val selectedConnectedApp = PrefHelper.customPrefs(mContext)
+            .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, null)
+        val connectedApp = selectedConnectedApp?.let { selectedConnectedApp ->
+            ForceConnectedAppEncryptedPreference.getConnectedApp(
+                mContext,
+                selectedConnectedApp
+            )
+        } ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP
+        return connectedApp
     }
 }
