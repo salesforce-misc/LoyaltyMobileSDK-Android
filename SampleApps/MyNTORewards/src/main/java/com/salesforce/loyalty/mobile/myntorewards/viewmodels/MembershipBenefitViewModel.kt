@@ -51,7 +51,6 @@ class MembershipBenefitViewModel : ViewModel() {
                 if (benefitsCache == null) {
                     memberBenefitAPI(context)
                 } else {
-                    Log.d(TAG, "Akash111: $benefitsCache")
                     membershipBenefit.value = benefitsCache.memberBenefits
                 }
             }
