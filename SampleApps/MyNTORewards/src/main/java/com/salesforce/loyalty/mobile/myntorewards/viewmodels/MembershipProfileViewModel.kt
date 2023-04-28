@@ -30,12 +30,12 @@ class MembershipProfileViewModel : ViewModel() {
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     )
     //live data for login status
-    val membershipProfileLiveData: MutableLiveData<MemberProfileResponse?>
+    val membershipProfileLiveData: LiveData<MemberProfileResponse?>
         get() = membershipProfile
 
     private val membershipProfile = MutableLiveData<MemberProfileResponse?>()
 
-    val voucherViewState: LiveData<MyProfileViewStates>
+    val profileViewState: LiveData<MyProfileViewStates>
         get() = viewState
 
     private val viewState = MutableLiveData<MyProfileViewStates>()
