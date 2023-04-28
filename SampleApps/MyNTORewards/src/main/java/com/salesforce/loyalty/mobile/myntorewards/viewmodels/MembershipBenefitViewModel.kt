@@ -10,6 +10,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
@@ -33,7 +34,13 @@ class MembershipBenefitViewModel : ViewModel() {
 
     private val membershipBenefit = MutableLiveData<List<MemberBenefit>>()
 
+    val benefitViewState: LiveData<BenefitViewStates>
+        get() = viewState
+
+    private val viewState = MutableLiveData<BenefitViewStates>()
+
     fun loadBenefits(context: Context) {
+        viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
 
         viewModelScope.launch {
 
@@ -51,8 +58,9 @@ class MembershipBenefitViewModel : ViewModel() {
                 if (benefitsCache == null) {
                     memberBenefitAPI(context)
                 } else {
-                    Log.d(TAG, "Akash111: $benefitsCache")
+                    viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
                     membershipBenefit.value = benefitsCache.memberBenefits
+
                 }
             }
         }
@@ -65,6 +73,7 @@ class MembershipBenefitViewModel : ViewModel() {
             var membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: null
             loyaltyAPIManager.getMemberBenefits(memberID, membershipKey).onSuccess {
+                viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
                 membershipBenefit.value = it.memberBenefits
 
 
@@ -81,6 +90,8 @@ class MembershipBenefitViewModel : ViewModel() {
 
             }.onFailure {
                 Log.d(TAG, "failed: member benefit ${it.message}")
+                viewState.postValue(BenefitViewStates.BenefitFetchFailure)
+
             }
         }
     }
