@@ -89,7 +89,7 @@ fun BenefitListView(modifier: Modifier) {
     val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
     //calling member benefit
-    model.memberBenefitAPI(context)
+    model.loadBenefits(context)
 
     membershipBenefit?.let {
         LazyColumn(modifier = modifier) {

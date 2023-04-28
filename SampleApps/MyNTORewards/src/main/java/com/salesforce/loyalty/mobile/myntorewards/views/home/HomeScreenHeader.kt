@@ -62,7 +62,7 @@ fun UserNameAndRewardRow() {
 
     val context: Context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        model.getMemberProfile(context)
+        model.loadProfile(context)
     }
 
     /* val firstName = PrefHelper.customPrefs(context)[AppConstants.KEY_FIRSTNAME, ""]
