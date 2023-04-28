@@ -179,11 +179,6 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
                     }
                 }
             }
-
-
-        Log.d("Akash", "inside voucher full")
-
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -200,24 +195,15 @@ fun VoucherEmptyView() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_empty_view),
-            contentDescription = stringResource(id = R.string.label_empty_promotions)
+            contentDescription = stringResource(id = R.string.label_empty_vouchers)
         )
         Spacer(modifier = Modifier.padding(10.dp))
         androidx.compose.material3.Text(
-            text = stringResource(id = R.string.label_empty_promotions),
+            text = stringResource(id = R.string.label_empty_vouchers),
             fontWeight = FontWeight.Bold,
             fontFamily = font_sf_pro,
             color = Color.Black,
             fontSize = 16.sp,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.padding(4.dp))
-        androidx.compose.material3.Text(
-            text = stringResource(id = R.string.description_empty_vouchers),
-            fontWeight = FontWeight.Normal,
-            fontFamily = font_sf_pro,
-            color = Color.Black,
-            fontSize = 12.sp,
             textAlign = TextAlign.Center
         )
     }
