@@ -57,6 +57,7 @@ fun PromotionCard(
             modifier = Modifier
                 .background(Color.White, RoundedCornerShape(8.dp))
                 .padding(16.dp)
+                .height(320.dp)
         ) {
 
             Box(modifier = Modifier.background(Color.White, RoundedCornerShape(8.dp))) {

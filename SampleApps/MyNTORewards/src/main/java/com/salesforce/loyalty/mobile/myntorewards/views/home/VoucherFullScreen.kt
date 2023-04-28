@@ -1,6 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,12 +10,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -27,14 +31,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.VoucherTabs
 
 @Composable
@@ -44,6 +49,8 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
         modifier = Modifier.background(Color.White)
     )
     {
+        var isInProgress by remember { mutableStateOf(true) }
+
         Spacer(modifier = Modifier.height(50.dp))
         Image(
             painter = painterResource(id = R.drawable.back_arrow),
@@ -104,8 +111,10 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
 
         val model: VoucherViewModel = viewModel()
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
+        val vouchersFetchStatus by model.voucherViewState.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
         model.getVoucher(context)
+
 
         filterType = when (selectedTab) {
             0 -> VOUCHER_ISSUED
@@ -116,29 +125,86 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
         val filteredVouchers = vouchers?.filter {
             it.status == filterType
         }
+        if (isInProgress) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                )
+            }
 
-        Column(
-            modifier = Modifier
-                .background(VeryLightPurple)
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            filteredVouchers?.let {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
+        }
+
+        when (vouchersFetchStatus) {
+            VoucherViewState.VoucherFetchSuccess -> {
+                isInProgress = false
+
+            }
+            VoucherViewState.VoucherFetchFailure -> {
+                isInProgress = false
+            }
+
+            else -> {}
+        }
+
+
+            if(filteredVouchers?.isEmpty() == true)
+            {
+                VoucherEmptyView()
+            }
+        else{
+                Column(
                     modifier = Modifier
                         .background(VeryLightPurple)
-                        .padding(16.dp)
-                        .width(346.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight()
                 ) {
-                    items(filteredVouchers.size) {
-                        VoucherView(filteredVouchers[it])
+                    filteredVouchers?.let {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            modifier = Modifier
+                                .background(VeryLightPurple)
+                                .padding(16.dp)
+                                .width(346.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(filteredVouchers.size) {
+                                VoucherView(filteredVouchers[it])
+                            }
+                        }
                     }
                 }
             }
-        }
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun VoucherEmptyView() {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_empty_view),
+            contentDescription = stringResource(id = R.string.label_empty_vouchers)
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        androidx.compose.material3.Text(
+            text = stringResource(id = R.string.label_empty_vouchers),
+            fontWeight = FontWeight.Bold,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }

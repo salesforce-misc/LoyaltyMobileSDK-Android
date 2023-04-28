@@ -77,6 +77,7 @@
     <string name="label_transactions_one_month_ago">One month ago</string>
 
     <string name="label_empty_promotions">No Promotions, yet.</string>
+    <string name="label_empty_vouchers">You have no Vouchers Available.</string>
     <string name="description_empty_promotions">You do not have any eligible promotions to enroll. Please come back later.</string>
     <string name="label_empty_transactions">You have no Transactions.</string>
 

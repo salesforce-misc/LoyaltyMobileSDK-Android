@@ -162,7 +162,7 @@ fun VoucherRow(
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
         LaunchedEffect(key1 = true) {
-            model.getVoucher(context)
+            model.loadVoucher(context)
         }
 
         vouchers?.let {
