@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * ForceClient class is responsible for creating retrofit instance to invoke Force APIs.
  */
-class LoyaltyClient constructor(auth: ForceAuthenticator) {
+class LoyaltyClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
 
     private val mHttpLoggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -25,7 +25,7 @@ class LoyaltyClient constructor(auth: ForceAuthenticator) {
 
 
     private val loyaltyRetrofit: Retrofit = retrofit2.Retrofit.Builder()
-        .baseUrl(LoyaltyConfig.MEMBER_BASE_URL)
+        .baseUrl(instanceUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
         .addCallAdapterFactory(ForceResponseCallAdapterFactory())

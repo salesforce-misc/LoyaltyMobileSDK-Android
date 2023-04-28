@@ -1,39 +1,82 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import android.content.Context
 import android.util.Log
-import com.salesforce.loyalty.mobile.sources.forceModels.ForceAuthResponse
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.get
+import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import okhttp3.HttpUrl
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 import java.net.HttpURLConnection
 
 /**
  * ForceAuthManager class handles authentication of Salesforce credentials
  */
-object ForceAuthManager : ForceAuthenticator {
+object ForceAuthManager: ForceAuthenticator {
+
+    lateinit var forceAuthManager: ForceAuthManager
+
+    lateinit var mContext: Context
+
+    fun getInstance(context: Context): ForceAuthManager {
+        if (!::forceAuthManager.isInitialized) {
+            mContext = context
+            forceAuthManager = ForceAuthManager
+        }
+        return forceAuthManager
+    }
 
     private const val TAG = "ForceAuthManager"
     private const val AUTH_SCOPE = "api refresh_token"
     private const val RESPONSE_TYPE_VALUE = "code_credentials"
 
-    override var accessToken: String? = null
     var auth: ForceAuth? = null
+    override fun getAccessToken(): String? {
+        val forceAuth = getForceAuth()
+        forceAuth?.let {
+            return it.accessToken
+        }
+        return null
+    }
 
     override suspend fun grantAccessToken(): String? {
         Log.d(TAG, "grantAccessToken()")
-        auth?.let {
-            // Refresh access token
-            refreshAccessToken(
-                ForceConfig.getRefreshAccessTokenRequestUrl(ConnectedAppConfig.COMMUNITY_URL),
-                ConnectedAppConfig.CONSUMER_KEY,
-                ConnectedAppConfig.CONSUMER_SECRET,
-                it
-            )
+        val connectedApp = getConnectedApp()
+        if (auth != null) {
+            auth?.refreshToken?.let {
+                // Refresh access token
+
+                val refreshAuth = refreshAccessToken(
+                    url = ForceConfig.getRefreshAccessTokenRequestUrl(connectedApp.communityUrl),
+                    consumerKey = connectedApp.consumerKey,
+                    consumerSecret = connectedApp.consumerSecret,
+                    it
+                )
+                if (refreshAuth != null) {
+                    return refreshAuth.accessToken
+                }
+                return null
+            }
+        } else {
+            val savedAuth = retrieveAuth()
+            auth = savedAuth
+            val savedRefreshToken = savedAuth?.refreshToken
+            savedRefreshToken?.let {
+                val refreshAuth = refreshAccessToken(
+                    url = ForceConfig.getRefreshAccessTokenRequestUrl(connectedApp.communityUrl),
+                    consumerKey = connectedApp.consumerKey,
+                    consumerSecret = connectedApp.consumerSecret,
+                    it
+                )
+                if (refreshAuth != null) {
+                    return refreshAuth.accessToken
+                }
+                return null
+            }
         }
-        return grantAuth()
+        return null
     }
 
     /**
@@ -51,10 +94,10 @@ object ForceAuthManager : ForceAuthenticator {
             ForceConfig.CONSUMER_SECRET
         )
         response.onSuccess {
-            auth = it
-            accessToken = it.accessToken
+            saveAuth(it)
+            return it.accessToken
         }
-        return accessToken
+        return null
     }
 
     /**
@@ -72,11 +115,11 @@ object ForceAuthManager : ForceAuthenticator {
 
         try {
             requestAuthorizationCode(
-                communityUrl,
-                consumerKey,
-                callbackUrl,
-                userName,
-                password
+                communityUrl = communityUrl,
+                consumerKey = consumerKey,
+                callbackUrl = callbackUrl,
+                userName = userName,
+                password = password
             )
         } catch (ex: HttpException) {
             Log.d(TAG, "Access token HttpException ${ex.message}")
@@ -88,14 +131,16 @@ object ForceAuthManager : ForceAuthenticator {
                     Log.d(TAG, "Auth code : $code")
                     code?.let { authCode ->
                         return requestAccessToken(
-                            ConnectedAppConfig.COMMUNITY_URL,
+                            communityUrl = communityUrl,
                             authCode,
-                            ConnectedAppConfig.CONSUMER_KEY,
-                            ConnectedAppConfig.CALLBACK_URL,
+                            consumerKey = consumerKey,
+                            callbackUrl = callbackUrl
                         )
                     }
                 }
             }
+        } catch (ex: java.lang.Exception) {
+            Log.d(TAG, "Failed to generate access token ${ex.message}")
         }
         return null
     }
@@ -112,15 +157,21 @@ object ForceAuthManager : ForceAuthenticator {
     /**
      * Part 1 - Makes a Headless Request for an Authorization Code
      */
-    private suspend fun requestAuthorizationCode(communityUrl: String, consumerKey: String, callbackURL: String, userName: String, password: String) {
+    private suspend fun requestAuthorizationCode(
+        communityUrl: String,
+        consumerKey: String,
+        callbackUrl: String,
+        userName: String,
+        password: String
+    ) {
 
         ForceClient.authApi.requestAuthorizationCode(
             ForceConfig.getAuthorizationCodeRequestUrl(communityUrl),
             ForceConfig.HEADER_AUTH_REQUEST_TYPE_VALUE,
             AUTH_SCOPE,
             RESPONSE_TYPE_VALUE,
-            ConnectedAppConfig.CONSUMER_KEY,
-            ConnectedAppConfig.CALLBACK_URL,
+            consumerKey,
+            callbackUrl,
             userName,
             password
         )
@@ -145,13 +196,13 @@ object ForceAuthManager : ForceAuthenticator {
             callbackUrl
         )
         response.onSuccess {
-            Log.d(TAG, "Access token success: ${it.accessToken}")
-            accessToken = it.accessToken
-            auth = it
+            Log.d(TAG, "Access token success: ${it}")
+            saveAuth(it)
+            return it.accessToken
         }.onFailure {
             Log.d(TAG, "Access token failure : ${it.message}")
         }
-        return accessToken
+        return null
     }
 
     /**
@@ -163,26 +214,79 @@ object ForceAuthManager : ForceAuthenticator {
         url: String,
         consumerKey: String,
         consumerSecret: String?,
-        auth: ForceAuth
+        refreshToken: String
     ): ForceAuth? {
-        val response = ForceClient.authApi.refreshAccessToken(
-            url,
-            ForceConfig.REFRESH_GRANT_TYPE,
-            consumerKey,
-            auth.refreshToken!!,
-            consumerSecret
-        )
-        response.onSuccess {
-            accessToken = it.accessToken
-            saveAuth(it)
-            return it
-        }.onFailure {
-            return null
+        refreshToken?.let {
+            val response =
+                ForceClient.authApi.refreshAccessToken(
+                    url,
+                    ForceConfig.REFRESH_GRANT_TYPE,
+                    consumerKey,
+                    it,
+                    consumerSecret
+                )
+            response.onSuccess {newAuth ->
+                val newAuthToSave = ForceAuth(
+                    accessToken = newAuth.accessToken,
+                    instanceURL = newAuth.instanceURL,
+                    identityURL = newAuth.identityURL,
+                    tokenType = newAuth.tokenType,
+                    timestamp = newAuth.timestamp,
+                    signature = newAuth.signature,
+                    refreshToken = refreshToken
+                )
+                saveAuth(newAuthToSave)
+                return newAuthToSave
+            }.onFailure {
+                return null
+            }
         }
         return null
     }
 
-    private fun saveAuth(auth: ForceAuth){
+    private fun saveAuth(auth: ForceAuth) {
         this.auth = auth
+        ForceAuthEncryptedPreference.saveAuth(mContext, auth)
+        PrefHelper.customPrefs(mContext).set(AppConstants.KEY_USER_IDENTIFIER, auth.identityURL)
+    }
+
+    fun retrieveAuth(): ForceAuth? {
+        val userIdentifier =
+            PrefHelper.customPrefs(mContext).get<String>(AppConstants.KEY_USER_IDENTIFIER, null)
+        userIdentifier?.let {
+            return ForceAuthEncryptedPreference.getAuth(mContext, it)
+        }
+        return null
+    }
+
+    fun getForceAuth(): ForceAuth? {
+        auth?.let {
+            return it
+        }
+        val savedAuth = retrieveAuth()
+        savedAuth?.let {
+            auth = it
+            return it
+        }
+
+        Log.d(TAG, "No auth found. Please login.")
+        return null
+    }
+
+    fun getInstanceUrl(): String? {
+        return PrefHelper.customPrefs(mContext)
+            .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
+    }
+
+    fun getConnectedApp(): ConnectedApp {
+        val selectedConnectedApp = PrefHelper.customPrefs(mContext)
+            .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, null)
+        val connectedApp = selectedConnectedApp?.let { selectedConnectedApp ->
+            ForceConnectedAppEncryptedPreference.getConnectedApp(
+                mContext,
+                selectedConnectedApp
+            )
+        } ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP
+        return connectedApp
     }
 }

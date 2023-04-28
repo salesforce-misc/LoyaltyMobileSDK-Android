@@ -9,7 +9,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 /**
  * LoyaltyAPIManager class holds APIs related to Loyalty Mobile SDK.
  */
-class LoyaltyAPIManager constructor(auth: ForceAuthenticator){
+class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: String){
 
     companion object {
         private const val TAG = "LoyaltyAPIManager"
@@ -19,9 +19,12 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator){
 
     private val loyaltyClient: LoyaltyClient
 
+    private val mInstanceUrl: String
+
     init {
         authenticator = auth
-        loyaltyClient = LoyaltyClient(auth)
+        mInstanceUrl = instanceUrl
+        loyaltyClient = LoyaltyClient(auth, instanceUrl)
     }
     /**
      * API to create new individual enrollment

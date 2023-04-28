@@ -6,13 +6,17 @@ class AppConstants {
 
         //preferences
         const val PREF_NAME = "com.salesforce.loyalty.mobile.sources.SHARED_PREF"
+        const val CONNECTED_APP_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.CONNECTED_APP_PREF"
+        const val AUTH_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.AUTH_PREF"
         const val KEY_PROGRAM_MEMBER_ID = "loyaltyProgramMemberId_key"
         const val KEY_MEMBERSHIP_NUMBER = "membershipNumber_key"
         const val KEY_PROGRAM_NAME = "programName_key"
         const val KEY_EMAIL_ID = "emailID_key"
         const val KEY_FIRSTNAME = "firstName_key"
         const val KEY_LASTNAME = "lastName_key"
-
+        const val KEY_SELECTED_INSTANCE_URL = "selected_instance_url"
+        const val KEY_OPEN_CONNECTED_APP_INSTANCE = "open_connected_app_instance"
+        const val KEY_USER_IDENTIFIER = "user_identifier"
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"
@@ -74,5 +78,6 @@ class AppConstants {
 
         const val ORDER_ID = "orderID"
 
+        const val TAP_COUNT_OPEN_ADMIN_SETTINGS = 6
     }
 }

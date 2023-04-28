@@ -21,7 +21,7 @@ class UnauthorizedInterceptor(auth: ForceAuthenticator) : Interceptor {
         val request = chain.request()
         var response: Response
 
-        val accessToken = authenticator.accessToken
+        val accessToken = authenticator.getAccessToken()
         if (accessToken != null) {
             response = chain.proceed(newRequestWithAccessToken(accessToken, request))
         } else {

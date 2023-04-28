@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ConnectedAppConfig
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
@@ -23,8 +23,10 @@ import kotlinx.coroutines.launch
 class OnboardingScreenViewModel : ViewModel() {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
-
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
+        ForceAuthManager.forceAuthManager,
+        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+    )
     //live data for login status
     val loginStatusLiveData: LiveData<LoginState>
         get() = loginStatus
@@ -53,14 +55,15 @@ class OnboardingScreenViewModel : ViewModel() {
         Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
+            val connectedApp = ForceAuthManager.forceAuthManager.getConnectedApp()
             var accessTokenResponse: String? = null
-                accessTokenResponse = ForceAuthManager.authenticate(
-                    ConnectedAppConfig.COMMUNITY_URL,
-                    ConnectedAppConfig.CONSUMER_KEY,
-                    ConnectedAppConfig.CALLBACK_URL,
-                    emailAddressText,
-                    passwordText
-                )
+            accessTokenResponse = ForceAuthManager.forceAuthManager.authenticate(
+                communityUrl = connectedApp.communityUrl,
+                consumerKey = connectedApp.consumerKey,
+                callbackUrl = connectedApp.callbackUrl,
+                userName = emailAddressText,
+                password = passwordText
+            )
 
             if (accessTokenResponse != null) {
                 Log.d(TAG, "Access token Success: $accessTokenResponse")

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
@@ -17,8 +18,10 @@ import kotlinx.coroutines.launch
 class TransactionsViewModel : ViewModel() {
     private val TAG = TransactionsViewModel::class.java.simpleName
 
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(ForceAuthManager)
-
+    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
+        ForceAuthManager.forceAuthManager,
+        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+    )
     //live data for transaction data
     val transactionsLiveData: LiveData<TransactionsResponse>
         get() = transactions
