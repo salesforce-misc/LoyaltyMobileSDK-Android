@@ -53,8 +53,9 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
         return ForceConnectedAppEncryptedPreference.retrieveAll(context)
     }
 
-    fun deleteConnectedApp(context: Context, name: String) {
-        ForceConnectedAppEncryptedPreference.deleteConnectedApp(context, name)
+    fun deleteConnectedApp(context: Context, instanceUrl: String) {
+        ForceConnectedAppEncryptedPreference.deleteConnectedApp(context, instanceUrl)
+        updateSavedApps(context)
     }
 
     fun retrieveAll(context: Context): List<ConnectedApp>? {

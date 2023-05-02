@@ -2,6 +2,9 @@ package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,14 +13,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -79,6 +82,7 @@ fun ConnectedAppsListAppBar(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SelectedConnectedApp(navController: NavController) {
     var openedConnectedAppInstance by remember { mutableStateOf("") }
@@ -224,61 +228,109 @@ fun SelectedConnectedApp(navController: NavController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
-                            items(myConnectedApps) {
-                                Row(
-                                    horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier
-                                        .padding(4.dp)
-                                        .fillMaxWidth()
-                                        .clickable(
-                                            interactionSource = interactionSource,
-                                            indication = null
+                            items(
+                                items = myConnectedApps,
+                                key = { capp -> capp.instanceUrl }) { app ->
+
+                                val currentItem by rememberUpdatedState(newValue = app)
+                                val dismissState = rememberDismissState(
+                                    confirmStateChange = {
+                                        when (it) {
+                                            DismissValue.DismissedToStart -> {
+                                                model.deleteConnectedApp(
+                                                    context,
+                                                    currentItem.instanceUrl
+                                                )
+                                                true
+                                            }
+                                            else -> {
+                                                false
+                                            }
+                                        }
+                                    }
+                                )
+                                SwipeToDismiss(
+                                    state = dismissState,
+                                    background = {
+                                        SwipeBackground(dismissState)
+                                    },
+                                    directions = setOf(DismissDirection.EndToStart),
+                                    dismissThresholds =
+                                    { FractionalThreshold(0.7f) },
+                                    dismissContent =
+                                    {
+                                        Card(
+                                            elevation = animateDpAsState(
+                                                if (dismissState.dismissDirection != null) 4.dp else 0.dp
+                                            ).value,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(50.dp),
+                                            backgroundColor = Color.White
+
                                         ) {
-                                            it.instanceUrl?.let { instance ->
-                                                model.setSelectedApp(
-                                                    instance
+                                            Row(
+                                                horizontalArrangement = Arrangement.Start,
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .fillMaxHeight()
+                                                    .padding(4.dp)
+                                                    .clickable(
+                                                        interactionSource = interactionSource,
+                                                        indication = null
+                                                    ) {
+                                                        app.instanceUrl?.let { instance ->
+                                                            model.setSelectedApp(
+                                                                instance
+                                                            )
+                                                        }
+                                                    }
+                                                    .background(Color.White)
+                                            ) {
+
+                                                androidx.compose.material3.Text(
+                                                    text = app.name,
+                                                    modifier = Modifier
+                                                        .padding(start = 12.dp)
+                                                        .weight(0.8f)
+                                                        .align(Alignment.CenterVertically),
+                                                    fontFamily = font_sf_pro,
+                                                    fontWeight = FontWeight.Normal,
+                                                    color = Color.Black,
+                                                    textAlign = TextAlign.Start,
+                                                    fontSize = 16.sp
+                                                )
+
+                                                Image(
+                                                    painter = painterResource(id = R.drawable.baseline_info_24),
+                                                    contentDescription = stringResource(R.string.label_selected_connected_app),
+                                                    colorFilter = ColorFilter.tint(VibrantPurple40),
+                                                    modifier = Modifier
+                                                        .wrapContentSize(Alignment.CenterEnd)
+                                                        .padding(4.dp)
+                                                        .weight(0.2f)
+                                                        .clickable(
+                                                            interactionSource = interactionSource,
+                                                            indication = null
+                                                        ) {
+                                                            openedConnectedAppInstance =
+                                                                app.instanceUrl
+                                                            navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                                                set(
+                                                                    KEY_OPEN_CONNECTED_APP_INSTANCE,
+                                                                    openedConnectedAppInstance
+                                                                )
+                                                            }
+                                                            navController.navigate(SettingsScreen.OpenConnectedAppDetail.name)
+                                                        }
                                                 )
                                             }
                                         }
-                                ) {
-
-                                    androidx.compose.material3.Text(
-                                        text = it.name,
-                                        modifier = Modifier
-                                            .padding(start = 12.dp)
-                                            .weight(0.8f)
-                                            .align(Alignment.CenterVertically),
-                                        fontFamily = font_sf_pro,
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.Black,
-                                        textAlign = TextAlign.Start,
-                                        fontSize = 16.sp
-                                    )
-
-                                    Image(
-                                        painter = painterResource(id = R.drawable.baseline_info_24),
-                                        contentDescription = stringResource(R.string.label_selected_connected_app),
-                                        colorFilter = ColorFilter.tint(VibrantPurple40),
-                                        modifier = Modifier
-                                            .wrapContentSize(Alignment.CenterEnd)
-                                            .padding(4.dp)
-                                            .weight(0.2f)
-                                            .clickable(
-                                                interactionSource = interactionSource,
-                                                indication = null
-                                            ) {
-                                                openedConnectedAppInstance = it.instanceUrl
-                                                navController.currentBackStackEntry?.savedStateHandle?.apply {
-                                                    set(
-                                                        KEY_OPEN_CONNECTED_APP_INSTANCE,
-                                                        openedConnectedAppInstance
-                                                    )
-                                                }
-                                                navController.navigate(SettingsScreen.OpenConnectedAppDetail.name)
-                                            }
-                                    )
-                                }
-                                Divider(color = Color.LightGray, thickness = 1.dp)
+                                        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier
+                                            .height(1.dp)
+                                            .fillMaxWidth()
+                                            .fillMaxHeight())
+                                    })
                             }
                         }
                     }
@@ -309,5 +361,41 @@ fun SelectedConnectedApp(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SwipeBackground(dismissState: DismissState) {
+    dismissState.dismissDirection ?: return
+    val color by animateColorAsState(
+        if (dismissState.dismissDirection == DismissDirection.EndToStart) {
+            when (dismissState.targetValue) {
+                DismissValue.Default -> Color.LightGray
+                else -> Color.Red
+            }
+        } else {
+            Color.White
+        }
+    )
+    val alignment = Alignment.CenterEnd
+    val icon = Icons.Default.Delete
+
+    val scale by animateFloatAsState(
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+    )
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(color)
+            .padding(horizontal = 20.dp),
+        contentAlignment = alignment
+    ) {
+        Icon(
+            icon,
+            contentDescription = stringResource(id = R.string.delete_icon_description),
+            modifier = Modifier.scale(scale)
+        )
     }
 }
