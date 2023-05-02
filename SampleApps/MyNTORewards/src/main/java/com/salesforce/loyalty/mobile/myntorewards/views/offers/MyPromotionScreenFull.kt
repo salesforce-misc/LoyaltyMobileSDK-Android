@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.offers
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,17 +11,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -29,14 +33,49 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 
 @Composable
-fun MyPromotionScreen(membershipPromo: List<Results>?, navCheckOutFlowController: NavController) {
+fun MyPromotionScreen(navCheckOutFlowController: NavController) {
+    val model: MyPromotionViewModel = viewModel()
+    val context: Context = LocalContext.current
+    val promoViewState by model.promotionViewState.observeAsState()
+    LaunchedEffect(true) {
+        model.loadPromotions(context)
+    }
+    var isInProgress by remember { mutableStateOf(false) }
 
+    var membershipPromo: List<Results>? = mutableListOf()
+    when (promoViewState) {
+        is PromotionViewState.PromotionsFetchSuccess -> {
+            membershipPromo =
+                (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+        }
+        is PromotionViewState.PromotionsFetchFailure -> {
+            isInProgress = false
+        }
+        PromotionViewState.PromotionFetchInProgress -> {
+            isInProgress = true
+        }
+        else -> {}
+    }
+    if (isInProgress) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f)
+            )
+        }
+
+    }
 
     Column(
         modifier = Modifier
