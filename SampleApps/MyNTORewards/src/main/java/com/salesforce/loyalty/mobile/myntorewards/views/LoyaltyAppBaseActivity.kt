@@ -29,8 +29,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         ForceAuthManager.getInstance(applicationContext)
 
         setContent {
-            //MainScreenStart()
-            HomeTabScreen()
+            MainScreenStart()
         }
     }
 }
