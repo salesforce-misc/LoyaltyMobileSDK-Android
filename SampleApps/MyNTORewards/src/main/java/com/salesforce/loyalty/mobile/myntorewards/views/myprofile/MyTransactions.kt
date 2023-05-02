@@ -58,7 +58,7 @@ fun TransactionListView(modifier: Modifier) {
     val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
 
-    model.getTransactions(context)
+    model.loadTransactions(context)
     val count = transactions?.transactionJournalCount ?: 0
     val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
         AppConstants.MAX_TRANSACTION_COUNT
@@ -90,7 +90,7 @@ fun TransactionFullScreenListView() {
     val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
 
-    model.getTransactions(context)
+    model.loadTransactions(context)
     val transactionJournals = transactions?.transactionJournals
     val recentTransactions = transactionJournals?.filter {
         it.activityDate?.let { activityDate ->

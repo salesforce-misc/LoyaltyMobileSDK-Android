@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -28,6 +30,33 @@ class TransactionsViewModel : ViewModel() {
 
     private val transactions = MutableLiveData<TransactionsResponse>()
 
+    val tranactionViewState: LiveData<TransactionViewState>
+        get() = viewState
+
+    private val viewState = MutableLiveData<TransactionViewState>()
+
+    fun loadTransactions(context: Context) {
+        viewState.postValue(TransactionViewState.TransactionFetchInProgress)
+        viewModelScope.launch {
+            val membershipKey =
+                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            val transactionCache = LocalFileManager.getData(
+                context,
+                membershipKey,
+                LocalFileManager.DIRECTORY_TRANSACTIONS,
+                TransactionsResponse::class.java
+            )
+
+            Log.d(TAG, "cache : $transactionCache")
+            if (transactionCache == null) {
+                getTransactions(context)
+            } else {
+                transactions.value = transactionCache!!
+                viewState.postValue(TransactionViewState.TransactionFetchSuccess)
+            }
+        }
+    }
+
     fun getTransactions(context: Context) {
         viewModelScope.launch {
             var membershipKey =
@@ -35,6 +64,14 @@ class TransactionsViewModel : ViewModel() {
             membershipKey?.let { membershipNumber ->
                 loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)
                     .onSuccess {
+
+                        LocalFileManager.saveData(
+                            context,
+                            it,
+                            membershipKey,
+                            LocalFileManager.DIRECTORY_TRANSACTIONS
+                        )
+
                         transactions.value = it
                         Log.d(TAG, "getTransactions success: $it")
                     }.onFailure {
