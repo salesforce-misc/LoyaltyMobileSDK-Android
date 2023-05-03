@@ -71,11 +71,11 @@ class MembershipProfileViewModel : ViewModel() {
             var membershipKey = PrefHelper.customPrefs(context)[KEY_MEMBERSHIP_NUMBER, ""]
             loyaltyAPIManager.getMemberProfile(memberID, membershipKey, null).onSuccess {
 
-                if (membershipKey != null) {
+                if (it.membershipNumber!= null) {
                     LocalFileManager.saveData(
                         context,
                         it,
-                        membershipKey,
+                        it.membershipNumber!!,
                         LocalFileManager.DIRECTORY_PROFILE
                     )
                 }
