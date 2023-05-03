@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -240,6 +241,11 @@ fun SelectedConnectedApp(navController: NavController) {
                                                     context,
                                                     currentItem.instanceUrl
                                                 )
+                                                Toast.makeText(
+                                                    context,
+                                                    "Connected App Setting is deleted!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                                 true
                                             }
                                             else -> {
@@ -291,9 +297,9 @@ fun SelectedConnectedApp(navController: NavController) {
                                                     androidx.compose.material3.Text(
                                                         text = app.name,
                                                         modifier = Modifier
-                                                            .padding(start = 12.dp)
                                                             .weight(0.8f)
-                                                            .align(Alignment.CenterVertically),
+                                                            .align(Alignment.CenterVertically)
+                                                            .padding(start = 12.dp),
                                                         fontFamily = font_sf_pro,
                                                         fontWeight = FontWeight.Normal,
                                                         color = Color.Black,
