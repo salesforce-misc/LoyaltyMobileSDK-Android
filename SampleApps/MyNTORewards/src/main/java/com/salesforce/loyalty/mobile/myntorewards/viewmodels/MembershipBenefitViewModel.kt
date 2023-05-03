@@ -58,8 +58,8 @@ class MembershipBenefitViewModel : ViewModel() {
                 if (benefitsCache == null) {
                     memberBenefitAPI(context)
                 } else {
-                    viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
                     membershipBenefit.value = benefitsCache.memberBenefits
+                    viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
                 }
             }
         }
@@ -72,7 +72,7 @@ class MembershipBenefitViewModel : ViewModel() {
             var membershipKey =
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: null
             loyaltyAPIManager.getMemberBenefits(memberID, membershipKey).onSuccess {
-                viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
+
                 membershipBenefit.value = it.memberBenefits
 
 
@@ -84,7 +84,7 @@ class MembershipBenefitViewModel : ViewModel() {
                         LocalFileManager.DIRECTORY_BENEFITS
                     )
                 }
-
+                viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
                 Log.d(TAG, "success member benefit response: $it")
 
             }.onFailure {
