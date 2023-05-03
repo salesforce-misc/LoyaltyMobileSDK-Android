@@ -86,7 +86,7 @@ fun CardContent() {
         val context: Context = LocalContext.current
 
         LaunchedEffect(key1 = true) {
-            model.getMemberProfile(context)
+            model.loadProfile(context)
         }
         //loginStatus state being change to Success after token fetch
         Spacer(modifier = Modifier.height(16.dp))

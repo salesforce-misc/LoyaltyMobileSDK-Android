@@ -9,10 +9,14 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 import kotlinx.coroutines.launch
 
 class MembershipBenefitViewModel : ViewModel() {
@@ -29,6 +33,30 @@ class MembershipBenefitViewModel : ViewModel() {
 
     private val membershipBenefit = MutableLiveData<List<MemberBenefit>>()
 
+    fun loadBenefits(context: Context) {
+
+        viewModelScope.launch {
+
+            viewModelScope.launch {
+                val membershipKey =
+                    PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+                val benefitsCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_BENEFITS,
+                    MemberBenefitsResponse::class.java
+                )
+
+                Log.d(TAG, "cache : $benefitsCache")
+                if (benefitsCache == null) {
+                    memberBenefitAPI(context)
+                } else {
+                    membershipBenefit.value = benefitsCache.memberBenefits
+                }
+            }
+        }
+    }
+
     fun memberBenefitAPI(context: Context) {
         viewModelScope.launch {
             var memberID =
@@ -37,7 +65,19 @@ class MembershipBenefitViewModel : ViewModel() {
                 PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: null
             loyaltyAPIManager.getMemberBenefits(memberID, membershipKey).onSuccess {
                 membershipBenefit.value = it.memberBenefits
+
+
+                if (membershipKey != null) {
+                    LocalFileManager.saveData(
+                        context,
+                        it,
+                        membershipKey,
+                        LocalFileManager.DIRECTORY_BENEFITS
+                    )
+                }
+
                 Log.d(TAG, "success member benefit response: $it")
+
             }.onFailure {
                 Log.d(TAG, "failed: member benefit ${it.message}")
             }
