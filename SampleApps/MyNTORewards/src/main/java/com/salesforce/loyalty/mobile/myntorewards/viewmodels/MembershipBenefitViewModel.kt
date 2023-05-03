@@ -60,7 +60,6 @@ class MembershipBenefitViewModel : ViewModel() {
                 } else {
                     viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
                     membershipBenefit.value = benefitsCache.memberBenefits
-
                 }
             }
         }

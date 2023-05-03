@@ -79,22 +79,12 @@ fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible: B
     {
 
         composable(route = CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
+
+
             showBottomBar(true)
-            val model: MyPromotionViewModel = viewModel()
-            val context: Context = LocalContext.current
-            val promoViewState by model.promotionViewState.observeAsState()
-            LaunchedEffect(true) {
-                model.loadPromotions(context)
-            }
-            var membershipPromo: List<Results>? = mutableListOf()
-            when (promoViewState) {
-                is PromotionViewState.PromotionsFetchSuccess -> {
-                    membershipPromo =
-                        (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
-                }
-                else -> {}
-            }
-            MyPromotionScreen(membershipPromo, navCheckOutFlowController)
+            MyPromotionScreen(navCheckOutFlowController)
+
+
         }
         composable(route = CheckOutFlowScreen.OrderDetailScreen.route) {
             showBottomBar(false)
