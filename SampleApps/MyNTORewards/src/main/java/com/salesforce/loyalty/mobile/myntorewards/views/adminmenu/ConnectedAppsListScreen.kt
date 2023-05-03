@@ -109,7 +109,6 @@ fun SelectedConnectedApp(navController: NavController) {
                 selectedInstanceUrl.equals(instance)
             } == true
         }
-//        val selectedApp = ForceAuthManager.forceAuthManager.getConnectedApp()
         Log.d("ConnectedApps", " selected : $selectedApp")
         var myConnectedApps: MutableList<ConnectedApp> = mutableListOf()
         if (connectedApps != null) {
@@ -269,67 +268,78 @@ fun SelectedConnectedApp(navController: NavController) {
                                             backgroundColor = Color.White
 
                                         ) {
-                                            Row(
-                                                horizontalArrangement = Arrangement.Start,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .fillMaxHeight()
-                                                    .padding(4.dp)
-                                                    .clickable(
-                                                        interactionSource = interactionSource,
-                                                        indication = null
-                                                    ) {
-                                                        app.instanceUrl?.let { instance ->
-                                                            model.setSelectedApp(
-                                                                instance
-                                                            )
-                                                        }
-                                                    }
-                                                    .background(Color.White)
-                                            ) {
-
-                                                androidx.compose.material3.Text(
-                                                    text = app.name,
+                                            Column {
+                                                Row(
+                                                    horizontalArrangement = Arrangement.Start,
                                                     modifier = Modifier
-                                                        .padding(start = 12.dp)
-                                                        .weight(0.8f)
-                                                        .align(Alignment.CenterVertically),
-                                                    fontFamily = font_sf_pro,
-                                                    fontWeight = FontWeight.Normal,
-                                                    color = Color.Black,
-                                                    textAlign = TextAlign.Start,
-                                                    fontSize = 16.sp
-                                                )
-
-                                                Image(
-                                                    painter = painterResource(id = R.drawable.baseline_info_24),
-                                                    contentDescription = stringResource(R.string.label_selected_connected_app),
-                                                    colorFilter = ColorFilter.tint(VibrantPurple40),
-                                                    modifier = Modifier
-                                                        .wrapContentSize(Alignment.CenterEnd)
+                                                        .fillMaxWidth()
+                                                        .height(49.dp)
                                                         .padding(4.dp)
-                                                        .weight(0.2f)
                                                         .clickable(
                                                             interactionSource = interactionSource,
                                                             indication = null
                                                         ) {
-                                                            openedConnectedAppInstance =
-                                                                app.instanceUrl
-                                                            navController.currentBackStackEntry?.savedStateHandle?.apply {
-                                                                set(
-                                                                    KEY_OPEN_CONNECTED_APP_INSTANCE,
-                                                                    openedConnectedAppInstance
+                                                            app.instanceUrl?.let { instance ->
+                                                                model.setSelectedApp(
+                                                                    instance
                                                                 )
                                                             }
-                                                            navController.navigate(SettingsScreen.OpenConnectedAppDetail.name)
                                                         }
+                                                        .background(Color.White)
+                                                ) {
+
+                                                    androidx.compose.material3.Text(
+                                                        text = app.name,
+                                                        modifier = Modifier
+                                                            .padding(start = 12.dp)
+                                                            .weight(0.8f)
+                                                            .align(Alignment.CenterVertically),
+                                                        fontFamily = font_sf_pro,
+                                                        fontWeight = FontWeight.Normal,
+                                                        color = Color.Black,
+                                                        textAlign = TextAlign.Start,
+                                                        fontSize = 16.sp
+                                                    )
+
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.baseline_info_24),
+                                                        contentDescription = stringResource(R.string.label_selected_connected_app),
+                                                        colorFilter = ColorFilter.tint(
+                                                            VibrantPurple40
+                                                        ),
+                                                        modifier = Modifier
+                                                            .wrapContentSize(Alignment.CenterEnd)
+                                                            .padding(4.dp)
+                                                            .weight(0.2f)
+                                                            .align(Alignment.CenterVertically)
+                                                            .clickable(
+                                                                interactionSource = interactionSource,
+                                                                indication = null
+                                                            ) {
+                                                                openedConnectedAppInstance =
+                                                                    app.instanceUrl
+                                                                navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                                                    set(
+                                                                        KEY_OPEN_CONNECTED_APP_INSTANCE,
+                                                                        openedConnectedAppInstance
+                                                                    )
+                                                                }
+                                                                navController.navigate(
+                                                                    SettingsScreen.OpenConnectedAppDetail.name
+                                                                )
+                                                            }
+                                                    )
+                                                }
+                                                Divider(
+                                                    color = Color.LightGray,
+                                                    thickness = 1.dp,
+                                                    modifier = Modifier
+                                                        .height(1.dp)
+                                                        .fillMaxWidth()
+                                                        .fillMaxHeight()
                                                 )
                                             }
                                         }
-                                        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier
-                                            .height(1.dp)
-                                            .fillMaxWidth()
-                                            .fillMaxHeight())
                                     })
                             }
                         }
