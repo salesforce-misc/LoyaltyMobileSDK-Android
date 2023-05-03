@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
@@ -88,7 +89,9 @@ class OnboardingScreenViewModel : ViewModel() {
                                 LocalFileManager.DIRECTORY_PROFILE
                             )
                         }
-
+                        // Set Login status to success
+                        PrefHelper.customPrefs(context)
+                            .set(KEY_LOGIN_SUCCESSFUL, true)
                         loginStatus.value = LoginState.LOGIN_SUCCESS
                     } else {
                         loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED

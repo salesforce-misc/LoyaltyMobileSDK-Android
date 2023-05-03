@@ -17,6 +17,7 @@ class AppConstants {
         const val KEY_SELECTED_INSTANCE_URL = "selected_instance_url"
         const val KEY_OPEN_CONNECTED_APP_INSTANCE = "open_connected_app_instance"
         const val KEY_USER_IDENTIFIER = "user_identifier"
+        const val KEY_LOGIN_SUCCESSFUL = "login_success"
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"

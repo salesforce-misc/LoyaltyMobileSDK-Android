@@ -11,8 +11,11 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
 //Main Activity Application Entry Point
 class LoyaltyAppBaseActivity : ComponentActivity() {
@@ -28,8 +31,14 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
 
         ForceAuthManager.getInstance(applicationContext)
 
+        val loginSuccess = PrefHelper.customPrefs(applicationContext)
+            .get(AppConstants.KEY_LOGIN_SUCCESSFUL, false)
         setContent {
-            MainScreenStart()
+            if (loginSuccess == true) {
+                HomeTabScreen()
+            } else {
+                MainScreenStart()
+            }
         }
     }
 }
