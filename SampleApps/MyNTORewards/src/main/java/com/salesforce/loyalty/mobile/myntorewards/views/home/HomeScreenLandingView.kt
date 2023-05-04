@@ -108,8 +108,10 @@ fun PromotionCardRow(
                     promListListSize
                 }
 
-
-                membershipPromo?.let {
+                if(membershipPromo?.isEmpty()==true){
+                    PromotionEmptyView()
+                }
+               membershipPromo?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
                         PromotionCard(page, membershipPromo, navCheckOutFlowController)
                     }
@@ -164,9 +166,6 @@ fun VoucherRow(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
 
-        var isEnabled by remember { mutableStateOf(false) }
-        var textColour by remember { mutableStateOf(TierColourSilver) }
-
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -184,10 +183,10 @@ fun VoucherRow(
             Text(
                 text = stringResource(id = R.string.view_all),
                 fontWeight = FontWeight.Bold,
-                color = textColour,
+                color = VibrantPurple40,
                 textAlign = TextAlign.Center,
                 fontSize = 13.sp,
-                modifier = Modifier.clickable(enabled= isEnabled) {
+                modifier = Modifier.clickable {
                     navCheckOutFlowController.navigate(CheckOutFlowScreen.VoucherFullScreen.route)
                 }
             )
@@ -200,10 +199,9 @@ fun VoucherRow(
             model.loadVoucher(context)
         }
 
-        if(vouchers?.isNotEmpty() == true)
+        if(vouchers?.isEmpty() == true)
         {
-            isEnabled= true
-            textColour= VibrantPurple40
+            VoucherEmptyView()
         }
         vouchers?.let {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
@@ -213,7 +211,6 @@ fun VoucherRow(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 
