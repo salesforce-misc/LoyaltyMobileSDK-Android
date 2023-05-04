@@ -9,9 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -71,12 +73,25 @@ class OnboardingScreenViewModel : ViewModel() {
                 memberProfileResponse.onSuccess {
                     if (it != null) {
                         val memberId = it.loyaltyProgramMemberId
+                        val memberShipNumber = it.membershipNumber
                         memberId?.let { loyaltyMemberId ->
                             PrefHelper.customPrefs(context)
                                 .set(KEY_PROGRAM_MEMBER_ID, loyaltyMemberId)
                             PrefHelper.customPrefs(context)
-                                .set(KEY_MEMBERSHIP_NUMBER, it.membershipNumber)
+                                .set(KEY_MEMBERSHIP_NUMBER, memberShipNumber)
                         }
+
+                        if (memberShipNumber != null) {
+                            LocalFileManager.saveData(
+                                context,
+                                it,
+                                memberShipNumber,
+                                LocalFileManager.DIRECTORY_PROFILE
+                            )
+                        }
+                        // Set Login status to success
+                        PrefHelper.customPrefs(context)
+                            .set(KEY_LOGIN_SUCCESSFUL, true)
                         loginStatus.value = LoginState.LOGIN_SUCCESS
                     } else {
                         loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED

@@ -10,8 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +30,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets.LoyaltyAppAsset.getBenefitsLogo
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 
 @Composable
@@ -85,11 +87,42 @@ fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScr
 @Composable
 fun BenefitListView(modifier: Modifier) {
 
+    var isInProgress by remember { mutableStateOf(false) }
     val model: MembershipBenefitViewModel = viewModel()
     val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
+    val membershipBenefitFetchStatus by model.benefitViewState.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
     //calling member benefit
-    model.loadBenefits(context)
+    LaunchedEffect(key1 = true) {
+        model.loadBenefits(context)
+        isInProgress = true
+    }
+
+
+    if (isInProgress) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f)
+            )
+        }
+
+    }
+
+        when (membershipBenefitFetchStatus) {
+            BenefitViewStates.BenefitFetchSuccess -> {
+                isInProgress = false
+
+            }
+            BenefitViewStates.BenefitFetchFailure -> {
+                isInProgress = false
+            }
+
+            else -> {}
+        }
 
     membershipBenefit?.let {
         LazyColumn(modifier = modifier) {
