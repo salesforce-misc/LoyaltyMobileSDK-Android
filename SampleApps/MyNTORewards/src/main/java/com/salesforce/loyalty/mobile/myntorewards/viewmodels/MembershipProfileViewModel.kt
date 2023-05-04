@@ -15,6 +15,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
@@ -58,7 +59,8 @@ class MembershipProfileViewModel : ViewModel() {
                 if (myProfileCache == null) {
                     getMemberProfile(context)
                 } else {
-                    membershipProfile.value = myProfileCache
+                   membershipProfile.value = myProfileCache
+                    viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
                 }
             }
         }
@@ -86,10 +88,11 @@ class MembershipProfileViewModel : ViewModel() {
                 PrefHelper.customPrefs(context)
                     .set(KEY_LASTNAME, (it.associatedContact?.lastName) ?: "")
 
-
+                viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
                 Log.d(TAG, "member success: $it")
             }.onFailure {
                 Log.d(TAG, "member failed: ${it.message}")
+                viewState.postValue(MyProfileViewStates.MyProfileFetchFailure)
             }
         }
     }

@@ -31,6 +31,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
@@ -72,6 +74,8 @@ fun CardBackground() {
 
 @Composable
 fun CardContent() {
+    Box() {
+        var isInProgress by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .height(220.dp)
@@ -83,11 +87,25 @@ fun CardContent() {
 
         val model: MembershipProfileViewModel = viewModel()  //fetching reference of viewmodel
         val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
+        val membershipProfileFetchStatus by model.profileViewState.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
-
         LaunchedEffect(key1 = true) {
             model.loadProfile(context)
+            isInProgress = true
         }
+
+        when (membershipProfileFetchStatus) {
+            MyProfileViewStates.MyProfileFetchSuccess -> {
+                isInProgress = false
+
+            }
+            MyProfileViewStates.MyProfileFetchFailure -> {
+                isInProgress = false
+            }
+
+            else -> {}
+        }
+
         //loginStatus state being change to Success after token fetch
         Spacer(modifier = Modifier.height(16.dp))
         membershipProfile?.memberTiers?.get(0)?.loyaltyMemberTierName?.let { MembershipTierRow(it) }
@@ -99,6 +117,15 @@ fun CardContent() {
 
         QRCodeRow(membershipProfile)
 
+    }
+        if (isInProgress) {
+            androidx.compose.material3.CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f)
+                    .align(Alignment.Center),
+                color = Color.White
+            )
+        }
     }
 }
 
