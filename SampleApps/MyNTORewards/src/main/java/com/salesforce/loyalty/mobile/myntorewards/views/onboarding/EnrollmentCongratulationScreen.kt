@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,14 +23,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
 
 @Composable
@@ -72,10 +72,14 @@ fun EnrollmentCongratulationsView(navController: NavController, closeSheet: () -
 
             ) {
 
-            var programName = PrefHelper.customPrefs(LocalContext.current)
-                .get(KEY_PROGRAM_NAME, "")
-            var emailID = PrefHelper.customPrefs(LocalContext.current)
-                .get(KEY_EMAIL_ID, "")
+            val memberJson =
+                PrefHelper.customPrefs(LocalContext.current)
+                    .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+            var programName = member?.loyaltyProgramName ?: ""
+            var emailID = member?.email ?: ""
 
             Spacer(modifier = Modifier.height(16.dp))
             Text(

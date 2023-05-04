@@ -29,6 +29,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.screenTextID
 import com.salesforce.loyalty.mobile.myntorewards.views.adminmenu.SettingsMain
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentCongratulationsView
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
