@@ -58,35 +58,3 @@ fun HomeSubViewHeader(headingId: Int, bottomTabsNavController: NavController) {
         )
     }
 }
-
-@Composable
-fun HomeSubViewHeaderVoucher(
-    heading: Int,
-    navCheckOutFlowController: NavController
-) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp, bottom = 16.dp)
-    ) {
-        Text(
-            text = stringResource(id = heading),
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-        )
-        Text(
-            text = stringResource(id = R.string.view_all),
-            fontWeight = FontWeight.Bold,
-            color = VibrantPurple40,
-            textAlign = TextAlign.Center,
-            fontSize = 13.sp,
-            modifier = Modifier.clickable {
-                navCheckOutFlowController.navigate(CheckOutFlowScreen.VoucherFullScreen.route)
-            }
-        )
-    }
-}

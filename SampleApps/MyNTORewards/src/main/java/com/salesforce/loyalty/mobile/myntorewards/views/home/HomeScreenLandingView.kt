@@ -2,18 +2,25 @@ package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -26,6 +33,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 @Composable
 fun HomeScreenLandingView(
@@ -100,8 +108,10 @@ fun PromotionCardRow(
                     promListListSize
                 }
 
-
-                membershipPromo?.let {
+                if(membershipPromo?.isEmpty()==true){
+                    PromotionEmptyView()
+                }
+               membershipPromo?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
                         PromotionCard(page, membershipPromo, navCheckOutFlowController)
                     }
@@ -156,7 +166,31 @@ fun VoucherRow(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
 
-        HomeSubViewHeaderVoucher(R.string.text_vouchers, navCheckOutFlowController)
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp, bottom = 16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.text_vouchers),
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+            )
+            Text(
+                text = stringResource(id = R.string.view_all),
+                fontWeight = FontWeight.Bold,
+                color = VibrantPurple40,
+                textAlign = TextAlign.Center,
+                fontSize = 13.sp,
+                modifier = Modifier.clickable {
+                    navCheckOutFlowController.navigate(CheckOutFlowScreen.VoucherFullScreen.route)
+                }
+            )
+        }
 
         val model: VoucherViewModel = viewModel()
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
@@ -165,6 +199,10 @@ fun VoucherRow(
             model.loadVoucher(context)
         }
 
+        if(vouchers?.isEmpty() == true)
+        {
+            VoucherEmptyView()
+        }
         vouchers?.let {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 items(it) {
@@ -173,7 +211,6 @@ fun VoucherRow(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 

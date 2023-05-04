@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatTransactionDateTime
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PointsChange
 
 @Composable
@@ -88,9 +89,38 @@ fun TransactionListView(modifier: Modifier) {
 fun TransactionFullScreenListView() {
     val model: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
     val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
+    val transactionViewState by model.transactionViewState.observeAsState()
     val context: Context = LocalContext.current
 
-    model.loadTransactions(context)
+    LaunchedEffect(true) {
+        model.loadTransactions(context)
+    }
+    var isInProgress by remember { mutableStateOf(false) }
+
+    when (transactionViewState) {
+        is TransactionViewState.TransactionFetchSuccess -> {
+            isInProgress = false
+       }
+        is TransactionViewState.TransactionFetchFailure -> {
+            isInProgress = false
+        }
+        TransactionViewState.TransactionFetchInProgress -> {
+            isInProgress = true
+        }
+        else -> {}
+    }
+    if (isInProgress) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f)
+            )
+        }
+
+    }
     val transactionJournals = transactions?.transactionJournals
     val recentTransactions = transactionJournals?.filter {
         it.activityDate?.let { activityDate ->

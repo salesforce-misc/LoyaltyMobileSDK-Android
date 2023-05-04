@@ -30,7 +30,7 @@ class TransactionsViewModel : ViewModel() {
 
     private val transactions = MutableLiveData<TransactionsResponse>()
 
-    val tranactionViewState: LiveData<TransactionViewState>
+    val transactionViewState: LiveData<TransactionViewState>
         get() = viewState
 
     private val viewState = MutableLiveData<TransactionViewState>()
@@ -71,11 +71,13 @@ class TransactionsViewModel : ViewModel() {
                             membershipKey,
                             LocalFileManager.DIRECTORY_TRANSACTIONS
                         )
-
+                        viewState.postValue(TransactionViewState.TransactionFetchSuccess)
                         transactions.value = it
                         Log.d(TAG, "getTransactions success: $it")
+
                     }.onFailure {
                         Log.d(TAG, "getTransactions failed: ${it.message}")
+                        viewState.postValue(TransactionViewState.TransactionFetchFailure)
                     }
             }
         }
