@@ -6,18 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
 import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 import kotlinx.coroutines.launch
 
 class MembershipBenefitViewModel : ViewModel() {
@@ -43,35 +42,36 @@ class MembershipBenefitViewModel : ViewModel() {
         viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
 
         viewModelScope.launch {
+            val memberJson =
+                PrefHelper.customPrefs(context)
+                    .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member benefit Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            val memberId = member.loyaltyProgramMemberId ?: ""
+            val membershipKey = member.membershipNumber ?: ""
+            val benefitsCache = LocalFileManager.getData(
+                context,
+                membershipKey,
+                LocalFileManager.DIRECTORY_BENEFITS,
+                MemberBenefitsResponse::class.java
+            )
 
-            viewModelScope.launch {
-                val membershipKey =
-                    PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
-                val benefitsCache = LocalFileManager.getData(
-                    context,
-                    membershipKey,
-                    LocalFileManager.DIRECTORY_BENEFITS,
-                    MemberBenefitsResponse::class.java
-                )
-
-                Log.d(TAG, "cache : $benefitsCache")
-                if (benefitsCache == null) {
-                    memberBenefitAPI(context)
-                } else {
-                    membershipBenefit.value = benefitsCache.memberBenefits
-                    viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
-                }
+            Log.d(TAG, "cache : $benefitsCache")
+            if (benefitsCache == null) {
+                memberBenefitAPI(context, memberId, membershipKey)
+            } else {
+                membershipBenefit.value = benefitsCache.memberBenefits
+                viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
             }
         }
     }
 
-    fun memberBenefitAPI(context: Context) {
+    private fun memberBenefitAPI(context: Context, memberId: String, membershipKey: String?) {
         viewModelScope.launch {
-            var memberID =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
-            var membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: null
-            loyaltyAPIManager.getMemberBenefits(memberID, membershipKey).onSuccess {
+            loyaltyAPIManager.getMemberBenefits(memberId, membershipKey).onSuccess {
 
                 membershipBenefit.value = it.memberBenefits
 

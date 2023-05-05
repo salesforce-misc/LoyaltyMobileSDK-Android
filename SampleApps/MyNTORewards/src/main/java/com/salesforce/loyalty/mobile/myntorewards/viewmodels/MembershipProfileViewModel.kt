@@ -6,18 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_FIRSTNAME
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LASTNAME
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
@@ -44,36 +40,39 @@ class MembershipProfileViewModel : ViewModel() {
     fun loadProfile(context: Context) {
         viewState.postValue(MyProfileViewStates.MyProfileFetchInProgress)
         viewModelScope.launch {
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member profile Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
-            viewModelScope.launch {
-                val membershipKey =
-                    PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
-                val myProfileCache = LocalFileManager.getData(
-                    context,
-                    membershipKey,
-                    LocalFileManager.DIRECTORY_PROFILE,
-                    MemberProfileResponse::class.java
-                )
+            val memberId =
+                member.loyaltyProgramMemberId
+            var membershipKey = member.membershipNumber ?: ""
 
-                Log.d(TAG, "cache : $myProfileCache")
-                if (myProfileCache == null) {
-                    getMemberProfile(context)
-                } else {
-                   membershipProfile.value = myProfileCache
-                    viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
-                }
+            val myProfileCache = LocalFileManager.getData(
+                context,
+                membershipKey,
+                LocalFileManager.DIRECTORY_PROFILE,
+                MemberProfileResponse::class.java
+            )
+
+            Log.d(TAG, "cache : $myProfileCache")
+            if (myProfileCache == null) {
+                getMemberProfile(context, memberId, membershipKey)
+            } else {
+                membershipProfile.value = myProfileCache
+                viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
             }
         }
     }
-
-
-    fun getMemberProfile(context: Context) {
+    private fun getMemberProfile(context: Context, memberId: String?, membershipNumber: String?) {
         viewModelScope.launch {
-            var memberID = PrefHelper.customPrefs(context)[KEY_PROGRAM_MEMBER_ID, ""]
-            var membershipKey = PrefHelper.customPrefs(context)[KEY_MEMBERSHIP_NUMBER, ""]
-            loyaltyAPIManager.getMemberProfile(memberID, membershipKey, null).onSuccess {
+            loyaltyAPIManager.getMemberProfile(memberId, membershipNumber, null).onSuccess {
 
-                if (it.membershipNumber!= null) {
+                if (it.membershipNumber != null) {
                     LocalFileManager.saveData(
                         context,
                         it,
@@ -83,10 +82,19 @@ class MembershipProfileViewModel : ViewModel() {
                 }
 
                 membershipProfile.value = it
-                PrefHelper.customPrefs(context)
-                    .set(KEY_FIRSTNAME, (it.associatedContact?.firstName) ?: "")
-                PrefHelper.customPrefs(context)
-                    .set(KEY_LASTNAME, (it.associatedContact?.lastName) ?: "")
+                val communityMemberModel = CommunityMemberModel(
+                    firstName = it.associatedContact?.firstName,
+                    lastName = it.associatedContact?.lastName,
+                    email = it.associatedContact?.email,
+                    loyaltyProgramMemberId = it.loyaltyProgramMemberId,
+                    loyaltyProgramName = it.loyaltyProgramName,
+                    membershipNumber = it.membershipNumber
+                )
+                memberId?.let { loyaltyMemberId ->
+                    val member =
+                        Gson().toJson(communityMemberModel, CommunityMemberModel::class.java)
+                    PrefHelper.customPrefs(context).set(AppConstants.KEY_COMMUNITY_MEMBER, member)
+                }
 
                 viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
                 Log.d(TAG, "member success: $it")

@@ -113,7 +113,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
         val vouchersFetchStatus by model.voucherViewState.observeAsState() // collecting livedata as state
         val context: Context = LocalContext.current
-        model.getVoucher(context)
+        model.loadVoucher(context)
 
 
         filterType = when (selectedTab) {

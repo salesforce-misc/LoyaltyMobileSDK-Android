@@ -32,7 +32,7 @@ object ForceConfig {
         return communityUrl + ACCESS_TOKEN_REQ_PATH
     }
 
-    fun getRefreshAccessTokenRequestUrl(communityUrl: String): String {
-        return communityUrl + ACCESS_TOKEN_REQ_PATH
+    fun getRefreshAccessTokenRequestUrl(baseUrl: String): String {
+        return baseUrl + ACCESS_TOKEN_REQ_PATH
     }
 }

@@ -6,13 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
@@ -48,12 +49,20 @@ class MyPromotionViewModel : ViewModel() {
     }
 
     fun loadPromotions(context: Context) {
-
-
         viewState.postValue(PromotionViewState.PromotionFetchInProgress)
         viewModelScope.launch {
-            val membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member promotion Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+            val memberId =
+                member.loyaltyProgramMemberId
+            var membershipKey = member.membershipNumber ?: ""
+
             val promotionCache = LocalFileManager.getData(
                 context,
                 membershipKey,
@@ -63,25 +72,22 @@ class MyPromotionViewModel : ViewModel() {
 
             Log.d(TAG, "cache : $promotionCache")
             if (promotionCache == null) {
-                fetchPromotions(context)
+                fetchPromotions(context, memberId, membershipKey)
             } else {
                 viewState.postValue(PromotionViewState.PromotionsFetchSuccess(promotionCache))
             }
         }
     }
 
-    fun fetchPromotions(context: Context) {
+    private fun fetchPromotions(context: Context, memberId: String?, membershipNumber: String) {
         viewModelScope.launch {
-            val membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
-            val memberID =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
-            loyaltyAPIManager.getEligiblePromotions(membershipKey, memberID).onSuccess {
+
+            loyaltyAPIManager.getEligiblePromotions(membershipNumber, memberId).onSuccess {
                 if (it?.outputParameters?.outputParameters?.results != null) {
                     LocalFileManager.saveData(
                         context,
                         it,
-                        membershipKey,
+                        membershipNumber,
                         LocalFileManager.DIRECTORY_PROMOTIONS
                     )
                     viewState.postValue(PromotionViewState.PromotionsFetchSuccess(it))
@@ -98,8 +104,14 @@ class MyPromotionViewModel : ViewModel() {
 
     fun enrollInPromotions(context: Context, promotionName: String) {
         viewModelScope.launch {
-            val membershipNumber =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member promotion Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            var membershipNumber = member.membershipNumber ?: ""
 
             loyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
@@ -116,9 +128,14 @@ class MyPromotionViewModel : ViewModel() {
 
     fun unEnrollInPromotions(context: Context, promotionName: String) {
         viewModelScope.launch {
-            val membershipNumber =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
-
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member promotion Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            var membershipNumber = member.membershipNumber ?: ""
             loyaltyAPIManager.unEnrollPromotion(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS

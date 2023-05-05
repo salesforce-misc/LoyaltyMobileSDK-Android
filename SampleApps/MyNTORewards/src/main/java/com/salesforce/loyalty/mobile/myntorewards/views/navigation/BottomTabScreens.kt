@@ -1,20 +1,18 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
-import android.content.Context
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,16 +20,14 @@ import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
-import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
+import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(

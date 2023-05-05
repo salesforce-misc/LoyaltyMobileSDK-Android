@@ -6,13 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_EMAIL_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_MEMBERSHIP_NUMBER
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_MEMBER_ID
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROGRAM_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
@@ -74,11 +73,17 @@ class OnboardingScreenViewModel : ViewModel() {
                     if (it != null) {
                         val memberId = it.loyaltyProgramMemberId
                         val memberShipNumber = it.membershipNumber
+                        val communityMemberModel = CommunityMemberModel(
+                            firstName = it.associatedContact?.firstName,
+                            lastName = it.associatedContact?.lastName,
+                            email = it.associatedContact?.email,
+                            loyaltyProgramMemberId = it.loyaltyProgramMemberId,
+                            loyaltyProgramName = it.loyaltyProgramName,
+                            membershipNumber = it.membershipNumber
+                        )
                         memberId?.let { loyaltyMemberId ->
-                            PrefHelper.customPrefs(context)
-                                .set(KEY_PROGRAM_MEMBER_ID, loyaltyMemberId)
-                            PrefHelper.customPrefs(context)
-                                .set(KEY_MEMBERSHIP_NUMBER, memberShipNumber)
+                            val member = Gson().toJson(communityMemberModel, CommunityMemberModel::class.java)
+                            PrefHelper.customPrefs(context).set(KEY_COMMUNITY_MEMBER, member)
                         }
 
                         if (memberShipNumber != null) {
@@ -141,14 +146,16 @@ class OnboardingScreenViewModel : ViewModel() {
                 true,
             ).onSuccess {
                 enrollmentResponse = it
-                PrefHelper.customPrefs(context)
-                    .set(KEY_MEMBERSHIP_NUMBER, enrollmentResponse!!.membershipNumber)
-                PrefHelper.customPrefs(context)
-                    .set(KEY_PROGRAM_MEMBER_ID, enrollmentResponse!!.loyaltyProgramMemberId)
-                PrefHelper.customPrefs(context)
-                    .set(KEY_PROGRAM_NAME, enrollmentResponse!!.loyaltyProgramName)
-                PrefHelper.customPrefs(context)
-                    .set(KEY_EMAIL_ID, emailAddressText)
+                val communityMemberModel = CommunityMemberModel(
+                    firstName = firstNameText,
+                    lastName = lastNameText,
+                    email = emailAddressText,
+                    loyaltyProgramMemberId = it.loyaltyProgramMemberId,
+                    loyaltyProgramName = it.loyaltyProgramName,
+                    membershipNumber = it.membershipNumber
+                )
+                val member = Gson().toJson(communityMemberModel, CommunityMemberModel::class.java)
+                PrefHelper.customPrefs(context).set(KEY_COMMUNITY_MEMBER, member)
             }
                 .onFailure {
                     enrollmentStatus.value =
