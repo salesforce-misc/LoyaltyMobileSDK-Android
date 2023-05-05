@@ -81,6 +81,9 @@
     <string name="description_empty_promotions">You do not have any eligible promotions to enroll. Please come back later.</string>
     <string name="label_empty_transactions">You have no Transactions.</string>
 
+    <string name="label_empty_transaction">You have no Transactions Available.</string>
+    <string name="label_empty_benefits">You have no Benefits Available.</string>
+
     <string name="tab_details">"Details"</string>
     <string name="tab_reviews">"Reviews"</string>
     <string name="tab_tnc">"TnC"</string>
