@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.myprofile
 
 import android.graphics.Bitmap
 import android.util.Log

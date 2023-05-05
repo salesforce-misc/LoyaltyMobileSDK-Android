@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.myprofile
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -28,13 +28,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
-import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 
@@ -187,8 +183,9 @@ fun RewardPointsAndExpiry(memberCurrency: MemberCurrency) {
 
 @Composable
 fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
+
     val membershipID =
-        PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""] ?: ""
+        membershipProfile?.loyaltyProgramMemberId ?: ""
     val loyaltyMemberCurrencyName =
         membershipProfile?.memberCurrencies?.get(0)?.loyaltyMemberCurrencyName ?: ""
 

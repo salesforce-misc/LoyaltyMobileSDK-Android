@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.myprofile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +11,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
+import com.salesforce.loyalty.mobile.myntorewards.views.MyBenefitMiniScreenView
+import com.salesforce.loyalty.mobile.myntorewards.views.ScreenTabHeader
+import com.salesforce.loyalty.mobile.myntorewards.views.TransactionCard
+import com.salesforce.loyalty.mobile.myntorewards.views.UserInfoRow
 
 @Composable
 fun MyProfileLandingView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {

@@ -6,13 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResult
@@ -41,8 +42,14 @@ class VoucherViewModel : ViewModel() {
     fun loadVoucher(context: Context) {
         viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         viewModelScope.launch {
-            val membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member getVoucher Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            var membershipKey = member.membershipNumber ?: ""
             val voucherCache = LocalFileManager.getData(
                 context,
                 membershipKey,
@@ -52,19 +59,16 @@ class VoucherViewModel : ViewModel() {
 
             Log.d(TAG, "cache : $voucherCache")
             if (voucherCache == null) {
-                getVoucher(context)
+                getVoucher(context, membershipKey)
             } else {
                 vouchers.value = voucherCache.voucherResponse
                 viewState.postValue(VoucherViewState.VoucherFetchSuccess)
             }
         }
     }
-    fun getVoucher(context: Context) {
+    private fun getVoucher(context: Context, membershipKey: String?) {
         viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         viewModelScope.launch {
-            var memberID = PrefHelper.customPrefs(context)[AppConstants.KEY_PROGRAM_MEMBER_ID, ""]
-            var membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
             if (membershipKey != null) {
                 loyaltyAPIManager.getVouchers(
                     membershipKey, null, 1, null,

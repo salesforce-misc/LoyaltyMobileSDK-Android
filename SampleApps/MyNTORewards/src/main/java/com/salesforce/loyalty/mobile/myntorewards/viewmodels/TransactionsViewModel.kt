@@ -6,13 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionsResponse
 import kotlinx.coroutines.launch
@@ -38,8 +39,15 @@ class TransactionsViewModel : ViewModel() {
     fun loadTransactions(context: Context) {
         viewState.postValue(TransactionViewState.TransactionFetchInProgress)
         viewModelScope.launch {
-            val membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member getTransactions Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+            var membershipKey = member.membershipNumber ?: ""
             val transactionCache = LocalFileManager.getData(
                 context,
                 membershipKey,
@@ -49,7 +57,7 @@ class TransactionsViewModel : ViewModel() {
 
             Log.d(TAG, "cache : $transactionCache")
             if (transactionCache == null) {
-                getTransactions(context)
+                getTransactions(context, membershipKey)
             } else {
                 transactions.value = transactionCache!!
                 viewState.postValue(TransactionViewState.TransactionFetchSuccess)
@@ -57,18 +65,16 @@ class TransactionsViewModel : ViewModel() {
         }
     }
 
-    fun getTransactions(context: Context) {
+    private fun getTransactions(context: Context, membershipNumber: String?) {
         viewModelScope.launch {
-            var membershipKey =
-                PrefHelper.customPrefs(context)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""]
-            membershipKey?.let { membershipNumber ->
+            membershipNumber?.let { membershipNumber ->
                 loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)
                     .onSuccess {
 
                         LocalFileManager.saveData(
                             context,
                             it,
-                            membershipKey,
+                            membershipNumber,
                             LocalFileManager.DIRECTORY_TRANSACTIONS
                         )
                         viewState.postValue(TransactionViewState.TransactionFetchSuccess)

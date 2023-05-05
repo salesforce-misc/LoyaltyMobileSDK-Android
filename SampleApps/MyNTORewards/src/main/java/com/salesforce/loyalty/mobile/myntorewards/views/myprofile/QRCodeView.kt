@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.myprofile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,18 +21,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 
 
 @Composable
 fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Unit) {
 
-    val membershipNumber =
-        PrefHelper.customPrefs(LocalContext.current)[AppConstants.KEY_MEMBERSHIP_NUMBER, ""] ?: ""
+    val membershipNumber = membershipProfile?.membershipNumber ?: ""
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
     val userName = "$firstName $lastName"
