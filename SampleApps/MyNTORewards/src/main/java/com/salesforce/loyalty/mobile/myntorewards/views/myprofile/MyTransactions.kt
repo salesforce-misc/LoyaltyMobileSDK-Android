@@ -57,33 +57,70 @@ fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState
 fun TransactionListView(modifier: Modifier) {
     val model: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
     val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
+    val transactionViewState by model.transactionViewState.observeAsState()
     val context: Context = LocalContext.current
 
     model.loadTransactions(context)
-    val count = transactions?.transactionJournalCount ?: 0
-    val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
-        AppConstants.MAX_TRANSACTION_COUNT
-    } else {
-        count
+
+    var isInProgress by remember { mutableStateOf(false) }
+
+    when (transactionViewState) {
+        is TransactionViewState.TransactionFetchSuccess -> {
+            isInProgress = false
+        }
+        is TransactionViewState.TransactionFetchFailure -> {
+            isInProgress = false
+        }
+        TransactionViewState.TransactionFetchInProgress -> {
+            isInProgress = true
+        }
+        else -> {}
     }
-    var index = 0
-    Column(modifier = Modifier.wrapContentHeight()) {
-        Spacer(modifier = Modifier.height(12.dp))
-        while (index < pageCount) {
-            transactions?.transactionJournals?.get(index)?.apply {
-                val transactionName = this.journalTypeName
-                val points = getCurrencyPoints(this.pointsChange)
-                val date = this.activityDate?.let { activityDate ->
-                    formatTransactionDateTime(activityDate)
+
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        if (transactions?.transactionJournals?.isEmpty() == true) {
+            TransactionEmptyView()
+        }
+
+        val count = transactions?.transactionJournalCount ?: 0
+        val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
+            AppConstants.MAX_TRANSACTION_COUNT
+        } else {
+            count
+        }
+        var index = 0
+        Column(modifier = Modifier.wrapContentHeight()) {
+            Spacer(modifier = Modifier.height(12.dp))
+            while (index < pageCount) {
+                transactions?.transactionJournals?.get(index)?.apply {
+                    val transactionName = this.journalTypeName
+                    val points = getCurrencyPoints(this.pointsChange)
+                    val date = this.activityDate?.let { activityDate ->
+                        formatTransactionDateTime(activityDate)
+                    }
+                    if (transactionName != null && points != null && date != null) {
+                        ListItemTransaction(transactionName, points, date)
+                    }
                 }
-                if (transactionName != null && points != null && date != null) {
-                    ListItemTransaction(transactionName, points, date)
-                }
+                index++
             }
-            index++
+        }
+
+        if (isInProgress) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f)
+            )
         }
     }
+
 }
+
 
 @Composable
 fun TransactionFullScreenListView() {
@@ -100,7 +137,7 @@ fun TransactionFullScreenListView() {
     when (transactionViewState) {
         is TransactionViewState.TransactionFetchSuccess -> {
             isInProgress = false
-       }
+        }
         is TransactionViewState.TransactionFetchFailure -> {
             isInProgress = false
         }
@@ -122,6 +159,11 @@ fun TransactionFullScreenListView() {
 
     }
     val transactionJournals = transactions?.transactionJournals
+
+    if (transactionJournals?.isEmpty() == true) {
+        TransactionEmptyView()
+    }
+
     val recentTransactions = transactionJournals?.filter {
         it.activityDate?.let { activityDate ->
             Common.isTransactionDateWithinCurrentMonth(activityDate)
@@ -252,5 +294,31 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
                 modifier = Modifier
             )
         }
+    }
+}
+
+@Composable
+fun TransactionEmptyView() {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_empty_view),
+            contentDescription = stringResource(id = R.string.label_empty_transaction)
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        androidx.compose.material3.Text(
+            text = stringResource(id = R.string.label_empty_transaction),
+            fontWeight = FontWeight.Bold,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }

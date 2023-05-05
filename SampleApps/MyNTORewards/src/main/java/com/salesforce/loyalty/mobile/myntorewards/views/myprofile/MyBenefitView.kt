@@ -98,40 +98,42 @@ fun BenefitListView(modifier: Modifier) {
         isInProgress = true
     }
 
+    when (membershipBenefitFetchStatus) {
+        BenefitViewStates.BenefitFetchSuccess -> {
+            isInProgress = false
 
-    if (isInProgress) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
+        }
+        BenefitViewStates.BenefitFetchFailure -> {
+            isInProgress = false
+        }
+
+        else -> {}
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (isInProgress) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .fillMaxSize(0.1f)
             )
         }
 
-    }
-
-        when (membershipBenefitFetchStatus) {
-            BenefitViewStates.BenefitFetchSuccess -> {
-                isInProgress = false
-
-            }
-            BenefitViewStates.BenefitFetchFailure -> {
-                isInProgress = false
-            }
-
-            else -> {}
+        if (membershipBenefit?.isEmpty() == true) {
+            BenefitsEmptyView()
         }
 
-    membershipBenefit?.let {
-        LazyColumn(modifier = modifier) {
-            items(it) {
-                ListItemMyBenefit(it)
+        membershipBenefit?.let {
+            LazyColumn(modifier = modifier) {
+                items(it) {
+                    ListItemMyBenefit(it)
+                }
             }
         }
-    }
 
+    }
 }
 
 @Composable
@@ -188,4 +190,30 @@ fun ListItemMyBenefit(benefit: MemberBenefit) {
         Divider(color = VibrantPurple90, thickness = 1.dp)
     }
 
+}
+
+@Composable
+fun BenefitsEmptyView() {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_empty_view),
+            contentDescription = stringResource(id = R.string.label_empty_benefits)
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        androidx.compose.material3.Text(
+            text = stringResource(id = R.string.label_empty_benefits),
+            fontWeight = FontWeight.Bold,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
+        )
+    }
 }
