@@ -38,6 +38,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
@@ -284,7 +285,8 @@ fun PromotionEnrollPopupUI(
                     } else if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE && promotionEnrollmentRqr == true) {
 
                         Row() {
-                            ShopButton(150.dp, navCheckOutFlowController)
+                            val promoName= results.promotionName?:""
+                            ShopButton(150.dp, navCheckOutFlowController, promoName)
 
                             Spacer(modifier = Modifier.width(10.dp))
                             Button(
@@ -310,7 +312,8 @@ fun PromotionEnrollPopupUI(
 
                         }
                     } else {
-                        ShopButton(300.dp, navCheckOutFlowController)
+                        val promoName= results.promotionName?:""
+                        ShopButton(300.dp, navCheckOutFlowController,promoName)
 
                     }
 
@@ -337,11 +340,14 @@ fun PromotionEnrollPopupUI(
 
 
 @Composable
-fun ShopButton(width: Dp, navCheckOutFlowController: NavController) {
+fun ShopButton(width: Dp, navCheckOutFlowController: NavController, promotionName: String) {
 
     Button(
         modifier = Modifier
             .width(width), onClick = {
+            navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
+                set(AppConstants.PROMOTION_NAME,promotionName )
+            }
             navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderDetailScreen.route)
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),

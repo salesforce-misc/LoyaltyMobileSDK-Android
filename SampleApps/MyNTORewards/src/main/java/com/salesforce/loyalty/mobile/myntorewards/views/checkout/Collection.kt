@@ -25,11 +25,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.OrderTabs
 
 @Composable
 fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
+    val promoName = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(AppConstants.PROMOTION_NAME)?:""
+
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -58,7 +61,7 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
                     }
             )
         }
-        OrderSelectHeader()
+        OrderSelectHeader(promoName)
         OrderSelectTab()
         OrderSelectionDetail(navCheckOutFlowController)
     }
@@ -122,7 +125,7 @@ fun OrderSelectTab() {
 
 
 @Composable
-fun OrderSelectHeader() {
+fun OrderSelectHeader(promoName:String) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -132,7 +135,7 @@ fun OrderSelectHeader() {
     {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Outdoor Collection",
+            text = promoName,
             fontWeight = FontWeight.Bold,
             color = Black1TextOrderScreen,
             textAlign = TextAlign.Start,

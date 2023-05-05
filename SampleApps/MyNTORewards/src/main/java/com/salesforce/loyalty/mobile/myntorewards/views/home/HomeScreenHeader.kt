@@ -74,8 +74,6 @@ fun UserNameAndRewardRow() {
         stringResource(id = R.string.home_screen_welcome_start_text) + " $firstName $lastName " + stringResource(
             id = R.string.home_screen_welcome_end_text
         )
-    val points = membershipProfile?.memberCurrencies?.get(0)?.pointsBalance.toString()
-
 
     Row(
         modifier = Modifier
