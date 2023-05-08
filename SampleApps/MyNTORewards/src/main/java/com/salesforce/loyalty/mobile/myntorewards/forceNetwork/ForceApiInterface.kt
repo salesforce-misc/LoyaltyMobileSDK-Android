@@ -52,4 +52,10 @@ interface ForceApiInterface {
         @Query("refresh_token") refreshToken: String,
         @Query("client_secret") clientSecret: String?
     ): Result<ForceAuth>
+
+    @POST()
+    suspend fun revokeAccessToken(
+        @Url url: String,
+        @Query("token") accessToken: String
+    ): Result<Any?>
 }

@@ -40,4 +40,11 @@ object ForceAuthEncryptedPreference {
         return Gson().fromJson(forceAuthString, ForceAuth::class.java)
     }
 
+    fun clearAll(context: Context) {
+        val editor: SharedPreferences.Editor = getSecureSharedPref(
+            context
+        ).edit()
+        editor.clear()
+        editor.apply()
+    }
 }

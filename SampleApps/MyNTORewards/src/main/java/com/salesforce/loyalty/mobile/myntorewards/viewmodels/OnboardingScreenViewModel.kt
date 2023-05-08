@@ -7,8 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
@@ -39,6 +38,12 @@ class OnboardingScreenViewModel : ViewModel() {
         get() = enrollmentStatus
 
     private val enrollmentStatus = MutableLiveData<EnrollmentState>()
+
+    //live data for logout state
+    val logoutStateLiveData: LiveData<LogoutState>
+        get() = logoutState
+
+    private val logoutState = MutableLiveData<LogoutState>()
 
     //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
     fun resetEnrollmentStatusDefault() {
@@ -167,6 +172,21 @@ class OnboardingScreenViewModel : ViewModel() {
                     EnrollmentState.ENROLLMENT_SUCCESS   // enrollment state is being observed in Enrollment UI Composable
                 Log.d(TAG, "Enrollment request Success: $enrollmentResponse")
             }
+        }
+    }
+
+    fun logoutAndClearAllSettings(context: Context) {
+        logoutState.value = LogoutState.LOGOUT_IN_PROGRESS
+        viewModelScope.launch {
+            ForceAuthManager.forceAuthManager.revokeAccessToken()
+            // clear Shared Preferences
+            ForceAuthEncryptedPreference.clearAll(context)
+            ForceConnectedAppEncryptedPreference.clearAll(context)
+            PrefHelper.clearAll(context)
+
+            //clear cache
+            LocalFileManager.clearAllFolders(context)
+            logoutState.postValue(LogoutState.LOGOUT_SUCCESS)
         }
     }
 }

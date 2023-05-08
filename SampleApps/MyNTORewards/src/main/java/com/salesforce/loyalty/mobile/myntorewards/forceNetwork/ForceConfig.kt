@@ -18,6 +18,7 @@ object ForceConfig {
     const val REFRESH_GRANT_TYPE = "refresh_token"
     const val AUTHORIZATION_REQ_PATH = "/services/oauth2/authorize"
     const val ACCESS_TOKEN_REQ_PATH = "/services/oauth2/token"
+    const val REVOKE_TOKEN_REQ_PATH = "/services/oauth2/revoke"
 
     object MimeType {
         const val JSON = "application/json;charset=UTF-8"
@@ -34,5 +35,9 @@ object ForceConfig {
 
     fun getRefreshAccessTokenRequestUrl(baseUrl: String): String {
         return baseUrl + ACCESS_TOKEN_REQ_PATH
+    }
+
+    fun getRevokeAccessTokenRequestUrl(communityUrl: String): String {
+        return communityUrl + REVOKE_TOKEN_REQ_PATH
     }
 }
