@@ -73,6 +73,7 @@ class AppConstants {
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
         const val ORDER_ID = "orderID"
+        const val PROMOTION_NAME = "promotionName"
 
         const val TAP_COUNT_OPEN_ADMIN_SETTINGS = 6
     }

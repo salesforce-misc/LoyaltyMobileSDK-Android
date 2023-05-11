@@ -61,16 +61,29 @@ class MembershipProfileViewModel : ViewModel() {
 
             Log.d(TAG, "cache : $myProfileCache")
             if (myProfileCache == null) {
-                getMemberProfile(context, memberId, membershipKey)
+                getMemberProfile(context)
             } else {
                 membershipProfile.value = myProfileCache
                 viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
             }
         }
     }
-    private fun getMemberProfile(context: Context, memberId: String?, membershipNumber: String?) {
+     fun getMemberProfile(context: Context) {
+
+        val memberJson =
+            PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+        if (memberJson == null) {
+            Log.d(TAG, "failed: member profile Member details not present")
+            return
+        }
+        val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+        val memberId = member.loyaltyProgramMemberId
+
+        var membershipKey = member.membershipNumber ?: ""
+
         viewModelScope.launch {
-            loyaltyAPIManager.getMemberProfile(memberId, membershipNumber, null).onSuccess {
+            loyaltyAPIManager.getMemberProfile(memberId, membershipKey, null).onSuccess {
 
                 if (it.membershipNumber != null) {
                     LocalFileManager.saveData(

@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.checkout
 
+import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -7,12 +8,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +28,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 @Composable
@@ -35,6 +39,14 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController) {
     val orderID = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
         ORDER_ID
     )
+
+    //refreshing profile information and reward points. fresh rewards points will be pulled and cache will be
+    //updated
+    val profileViewModel: MembershipProfileViewModel = viewModel()
+    val context: Context = LocalContext.current
+    LaunchedEffect(key1 = true) {
+        profileViewModel.getMemberProfile(context)
+    }
     orderID?.let {
         model.fetchOrderDetails(orderID)
     }

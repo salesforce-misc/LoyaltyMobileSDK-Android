@@ -32,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
+import com.salesforce.loyalty.mobile.myntorewards.views.myCheckBoxColors
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 
@@ -180,18 +181,34 @@ fun PointsRow(points: String) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 11.dp, end = 11.dp, bottom = 16.dp, top = 22.dp)
+            .padding( end = 11.dp, bottom = 16.dp, top = 22.dp)
     ) {
 
-        Text(
-            text = stringResource(id = R.string.text_use_my_points),
-            fontFamily = font_archivo,
-            fontWeight = FontWeight.SemiBold,
-            color = LighterBlack,
-            textAlign = TextAlign.Start,
-            fontSize = 13.sp,
-            modifier = Modifier
-        )
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                val checkedUseRewardPoint = remember { mutableStateOf(false) }
+                Checkbox(
+                    checked = checkedUseRewardPoint.value,
+                    onCheckedChange = {
+                        checkedUseRewardPoint.value = it
+                    },
+                    colors = myCheckBoxColors()
+                )
+                Text(
+                    text = stringResource(id = R.string.text_use_my_points),
+                    fontFamily = font_archivo,
+                    fontWeight = FontWeight.SemiBold,
+                    color = LighterBlack,
+                    textAlign = TextAlign.Start,
+                    fontSize = 13.sp,
+                    modifier = Modifier
+                )
+        }
+
         Text(
             text = stringResource(id = R.string.text_points_available) + points,
             fontFamily = font_archivo,
