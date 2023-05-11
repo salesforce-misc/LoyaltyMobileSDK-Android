@@ -27,7 +27,10 @@ import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingVi
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreOptionsScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(
@@ -137,20 +140,21 @@ fun RedeemScreen() {
 
 
 @Composable
-fun MoreScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(TextPurpleLightBG)
-            .wrapContentSize(Alignment.Center)
-    ) {
-        Text(
-            text = stringResource(id = R.string.screen_title_more),
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
-        )
+fun MoreScreen(showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
+
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = MoreOptionsScreen.MoreOptions.route
+    )
+    {
+
+        composable(route = MoreOptionsScreen.MoreOptions.route) {
+            MoreOptions(navController)
+        }
+        composable(route = MoreOptionsScreen.PostLogout.route) {
+            showBottomBar(false)
+            MainScreenStart()
+        }
     }
 }

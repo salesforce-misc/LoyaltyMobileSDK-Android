@@ -71,9 +71,7 @@ fun BottomNavigationUI(
                             bottomTabsNavController.navigate(item.route) {
 
                                 bottomTabsNavController.graph.startDestinationRoute?.let { screen_route ->
-                                    popUpTo(screen_route) {
-                                        saveState = true
-                                    }
+                                    popUpTo(0)
                                 }
                                 launchSingleTop = true
                                 restoreState = true

@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.navigation
 
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_LANDING_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_MORE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_ONBOARDING_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_ORDER_ADDRESS_PAYMENT_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_ORDER_CONFIRMATION_SCREEN
@@ -19,4 +20,9 @@ sealed class CheckOutFlowScreen(val route: String) {
     object OrderAddressAndPaymentScreen : CheckOutFlowScreen(ROUTE_ORDER_ADDRESS_PAYMENT_SCREEN)
     object OrderConfirmationScreen : CheckOutFlowScreen(ROUTE_ORDER_CONFIRMATION_SCREEN)
     object VoucherFullScreen : CheckOutFlowScreen(ROUTE_VOUCHER_FULL_SCREEN)
+}
+
+sealed class MoreOptionsScreen(val route: String) {
+    object MoreOptions : MoreOptionsScreen(ROUTE_MORE_SCREEN)
+    object PostLogout : MoreOptionsScreen(ROUTE_LANDING_SCREEN)
 }

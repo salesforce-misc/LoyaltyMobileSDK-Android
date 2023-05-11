@@ -46,4 +46,12 @@ object PrefHelper {
             else -> throw UnsupportedOperationException("Not yet implemented")
         }
     }
+
+    fun clearAll(context: Context) {
+        val editor: SharedPreferences.Editor = customPrefs(
+            context
+        ).edit()
+        editor.clear()
+        editor.apply()
+    }
 }

@@ -289,4 +289,19 @@ object ForceAuthManager: ForceAuthenticator {
         } ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP
         return connectedApp
     }
+
+    suspend fun revokeAccessToken() {
+        val accessToken = getForceAuth()?.accessToken
+        accessToken?.let {
+            val connectedApp = getConnectedApp()
+            val url = ForceConfig.getRevokeAccessTokenRequestUrl(connectedApp.communityUrl)
+            val result = ForceClient.authApi.revokeAccessToken(url, accessToken = it)
+
+            result.onSuccess {
+                Log.d(TAG, "Revoked Access token successfully!")
+            }.onFailure {
+                Log.d(TAG, "Could not revoke Access token! ${it.message}")
+            }
+        }
+    }
 }

@@ -63,7 +63,9 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreen()
+            MoreScreen {
+                showBottomBar(it)
+            }
         }
     }
 }

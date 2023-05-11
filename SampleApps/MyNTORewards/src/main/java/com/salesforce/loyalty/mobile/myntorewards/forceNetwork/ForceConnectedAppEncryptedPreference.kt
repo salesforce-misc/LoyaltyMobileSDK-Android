@@ -58,4 +58,11 @@ object ForceConnectedAppEncryptedPreference {
         }
         return connectedApps.toList()
     }
+    fun clearAll(context: Context) {
+        val editor: SharedPreferences.Editor = getSecureSharedPref(
+            context
+        ).edit()
+        editor.clear()
+        editor.apply()
+    }
 }
