@@ -83,7 +83,7 @@ class MyPromotionViewModel : ViewModel() {
         viewModelScope.launch {
 
             loyaltyAPIManager.getEligiblePromotions(membershipNumber, memberId).onSuccess {
-                if (it?.outputParameters?.outputParameters?.results != null) {
+                if (it.outputParameters?.outputParameters?.results != null) {
                     LocalFileManager.saveData(
                         context,
                         it,

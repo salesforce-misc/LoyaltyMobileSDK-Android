@@ -157,7 +157,7 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
             }
         }
 
-        if (membershipPromo == null) {
+        if (membershipPromo?.isEmpty()==true) {
             when (selectedTab) {
                 0, 1, 2 -> {
                     PromotionEmptyView()
