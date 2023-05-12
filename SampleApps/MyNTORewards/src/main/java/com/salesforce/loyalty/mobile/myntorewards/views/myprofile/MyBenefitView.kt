@@ -61,7 +61,16 @@ fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyPro
             fontSize = 18.sp,
             modifier = Modifier.padding(top = 11.5.dp, bottom = 11.5.dp, start = 16.dp, end = 16.dp)
         )
-        BenefitListView(Modifier.fillMaxHeight())
+        Column(
+            modifier = Modifier
+                .background(MyProfileScreenBG)
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(16.dp)
+
+        ) {
+            BenefitListView(Modifier.fillMaxHeight())
+        }
     }
 }
 
