@@ -15,11 +15,7 @@ object LoyaltyConfig {
     const val API_VERSION_55 = "v55.0"
     const val API_VERSION_56 = "v56.0"
     const val API_VERSION_58 = "v58.0"
-    const val MEMBER_BASE_URL_OLD =
-        "https://internalmobileteam-dev-ed.develop.my.salesforce.com/services/data/"
-    const val MEMBER_BASE_URL_APEXREST =
-        "https://internalmobileteam-dev-ed.develop.my.salesforce.com/services/apexrest/"
-    const val MEMBER_BASE_URL = "https://dro000000kef12ao.test1.my.pc-rnd.salesforce.com/services/data/"
+    const val MEMBER_API_SERVICES_PATH = "/services/data/"
     const val KEY_MEMBERSHIP_NUMBER = "MembershipNumber"
     const val KEY_MEMBER_ID = "MemberId"
     const val KEY_PROMOTION_NAME = "PromotionName"
@@ -39,26 +35,26 @@ object LoyaltyConfig {
         class Vouchers(val programName: String, val membershipNumber: String): Resource()
     }
 
-    fun getRequestUrl(resource: Resource): String {
+    fun getRequestUrl(instanceUrl: String, resource: Resource): String {
         return when (resource) {
             is Resource.IndividualEnrollment -> {
-                MEMBER_BASE_URL + API_VERSION_58 + "/loyalty-programs/" + resource.programName + "/individual-member-enrollments"
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/loyalty-programs/" + resource.programName + "/individual-member-enrollments"
             }
             is Resource.MemberProfile -> {
-                MEMBER_BASE_URL + API_VERSION_58 + "/loyalty-programs/" + resource.programName + "/members"
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/loyalty-programs/" + resource.programName + "/members"
             }
             is Resource.MemberBenefits -> {
-                MEMBER_BASE_URL + API_VERSION_58 + "/connect/loyalty/member/" + resource.memberId + "/memberbenefits"
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/connect/loyalty/member/" + resource.memberId + "/memberbenefits"
             }
             is Resource.LoyaltyProgramProcess -> {
-                MEMBER_BASE_URL + API_VERSION_58 + "/connect/loyalty/programs/" +
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/connect/loyalty/programs/" +
                         resource.programName + "/program-processes/" + resource.programProcessName.processName
             }
             is Resource.TransactionsHistory -> {
-                MEMBER_BASE_URL + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/transaction-ledger-summary"
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/transaction-ledger-summary"
             }
             is Resource.Vouchers -> {
-                MEMBER_BASE_URL + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/vouchers"
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/vouchers"
             }
         }
     }

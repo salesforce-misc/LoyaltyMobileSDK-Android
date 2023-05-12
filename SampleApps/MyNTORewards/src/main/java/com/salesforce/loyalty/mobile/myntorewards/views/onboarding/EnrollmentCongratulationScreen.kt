@@ -131,7 +131,9 @@ fun EnrollmentCongratulationsView(navController: NavController, closeSheet: () -
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
                     closeSheet()
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigate(Screen.HomeScreen.route){
+                        popUpTo(0)
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)

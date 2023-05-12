@@ -9,12 +9,12 @@ object AppSettings {
 
     val DEFAULT_FORCE_CONNECTED_APP = ConnectedApp(
         "Default",
-        "3MVG9sA57VMGPDff5IP2PZ3gePzAE087y65OQNiwULLemkJnFilih4d4Ttixw0abfb8XH__8miW3Xn9yStqlg",
-        "4C64F15ECE02FFF0002BA74DFDE835A94FE05C7DC1DA3096604E634701E844AA",
-        "https://dro000000kef12ao.test1.my.pc-rnd.site.com/oauth2/callback",
-        "https://na45.test1.pc-rnd.salesforce.com",
-        "https://dro000000kef12ao.test1.my.pc-rnd.salesforce.com",
-        "https://dro000000kef12ao.test1.my.pc-rnd.site.com"
+        "3MVG9SemV5D80oBcyrqrDrrcbLgQBxn3kO2L9XD1sPRm315AGmtHcq1dFUMHh6vSotuV1uuZPfw==",
+        "0ADA86BBC47966C01405CA64A6F409AB15BF9F80E9F83A1B098AB6136AEAC434",
+        "https://hutl.my.site.com/oauth2/callback",
+        "https://login.salesforce.com",
+        "https://hutl.my.salesforce.com",
+        "https://hutl.my.site.com"
     )
 
 }
