@@ -94,9 +94,10 @@ fun TransactionListView(modifier: Modifier) {
             count
         }
         var index = 0
+        var previewTransactionCount = 0
         Column(modifier = Modifier.wrapContentHeight()) {
             Spacer(modifier = Modifier.height(12.dp))
-            while (index < pageCount) {
+            while (previewTransactionCount < pageCount) {
                 transactions?.transactionJournals?.get(index)?.apply {
                     val transactionName = this.journalTypeName
                     val points = getCurrencyPoints(this.pointsChange)
@@ -105,6 +106,7 @@ fun TransactionListView(modifier: Modifier) {
                     }
                     if (transactionName != null && points != null && date != null) {
                         ListItemTransaction(transactionName, points, date)
+                        previewTransactionCount ++
                     }
                 }
                 index++
