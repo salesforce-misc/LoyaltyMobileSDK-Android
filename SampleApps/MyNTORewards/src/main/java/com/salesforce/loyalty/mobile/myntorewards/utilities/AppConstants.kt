@@ -76,5 +76,7 @@ class AppConstants {
         const val PROMOTION_NAME = "promotionName"
 
         const val TAP_COUNT_OPEN_ADMIN_SETTINGS = 6
+
+        const val MAX_SIZE_BENEFIT_LIST = 3
     }
 }
