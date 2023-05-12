@@ -124,7 +124,9 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheet
                     Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
                     closeSheet()  // closing popup
                     model.resetLoginStatusDefault()
-                    navController.navigate(Screen.HomeScreen.route) //navigate to home screen
+                    navController.navigate(Screen.HomeScreen.route){
+                        popUpTo(0)
+                    } //navigate to home screen
                 }
                 LoginState.LOGIN_FAILURE -> {
                     isInProgress = false

@@ -80,7 +80,10 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             AdditionalMemberFieldValues()
         )
         return loyaltyClient.loyaltyApi.postEnrollment(
-            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.IndividualEnrollment(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
+            LoyaltyConfig.getRequestUrl(
+                mInstanceUrl,
+                LoyaltyConfig.Resource.IndividualEnrollment(LoyaltyConfig.LOYALTY_PROGRAM_NAME)
+            ),
             body
         )
     }
@@ -99,7 +102,10 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         Log.d(TAG, "getMemberProfile() $memberId $memberShipNumber")
 
         return loyaltyClient.loyaltyApi.getMemberProfile(
-            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.MemberProfile(LoyaltyConfig.LOYALTY_PROGRAM_NAME)),
+            LoyaltyConfig.getRequestUrl(
+                mInstanceUrl,
+                LoyaltyConfig.Resource.MemberProfile(LoyaltyConfig.LOYALTY_PROGRAM_NAME)
+            ),
             memberId = memberId,
             membershipNumber = memberShipNumber,
             programCurrencyName = programCurrencyName
@@ -120,7 +126,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         Log.d(TAG, "getMemberBenefits() $memberId")
 
         return loyaltyClient.loyaltyApi.getMemberBenefits(
-            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.MemberBenefits(memberId)),
+            LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.MemberBenefits(memberId)),
             membershipNumber
         )
     }
@@ -147,7 +153,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         Log.d(TAG, "getTransactions() $membershipNumber")
         val transPageNumber = pageNumber ?: 1
         return loyaltyClient.loyaltyApi.getTransactions(
-            LoyaltyConfig.getRequestUrl(
+            LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.TransactionsHistory(
                     LoyaltyConfig.LOYALTY_PROGRAM_NAME, membershipNumber
                 )
@@ -184,7 +190,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         val requestBody: PromotionsRequest =
             PromotionsRequest(listOf(processParameterMap))
         return loyaltyClient.loyaltyApi.getEligiblePromotions(
-            LoyaltyConfig.getRequestUrl(
+            LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
                     LoyaltyConfig.LOYALTY_PROGRAM_NAME,
                     LoyaltyConfig.ProgramProcessName.GET_PROMOTIONS
@@ -211,7 +217,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
             LoyaltyConfig.KEY_PROMOTION_NAME to promotionName)))
         return loyaltyClient.loyaltyApi.enrollInPromotion(
-            LoyaltyConfig.getRequestUrl(
+            LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
                     LoyaltyConfig.LOYALTY_PROGRAM_NAME,
                     LoyaltyConfig.ProgramProcessName.ENROLL_IN_PROMOTION
@@ -239,7 +245,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
                 LoyaltyConfig.KEY_PROMOTION_NAME to promotionName)))
 
         return loyaltyClient.loyaltyApi.unenrollPromotion(
-            LoyaltyConfig.getRequestUrl(
+            LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
                     LoyaltyConfig.LOYALTY_PROGRAM_NAME,
                     LoyaltyConfig.ProgramProcessName.UNENROLL_PROMOTION
@@ -266,7 +272,13 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         val productCategoryName = getStringOfArrayItems(productCategoryName)
 
         return loyaltyClient.loyaltyApi.getVouchers(
-            LoyaltyConfig.getRequestUrl(LoyaltyConfig.Resource.Vouchers(LoyaltyConfig.LOYALTY_PROGRAM_NAME, membershipNumber)),
+            LoyaltyConfig.getRequestUrl(
+                mInstanceUrl,
+                LoyaltyConfig.Resource.Vouchers(
+                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    membershipNumber
+                )
+            ),
             voucherStatus, pageNumber, productId, productCategoryId, productName, productCategoryName
         )
     }
