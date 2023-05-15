@@ -59,8 +59,6 @@ class MyPromotionViewModel : ViewModel() {
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
-            val memberId =
-                member.loyaltyProgramMemberId
             var membershipKey = member.membershipNumber ?: ""
 
             val promotionCache = LocalFileManager.getData(
@@ -72,22 +70,34 @@ class MyPromotionViewModel : ViewModel() {
 
             Log.d(TAG, "cache : $promotionCache")
             if (promotionCache == null) {
-                fetchPromotions(context, memberId, membershipKey)
+                fetchPromotions(context)
             } else {
                 viewState.postValue(PromotionViewState.PromotionsFetchSuccess(promotionCache))
             }
         }
     }
 
-    private fun fetchPromotions(context: Context, memberId: String?, membershipNumber: String) {
+    private fun fetchPromotions(context: Context) {
         viewModelScope.launch {
 
-            loyaltyAPIManager.getEligiblePromotions(membershipNumber, memberId).onSuccess {
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Log.d(TAG, "failed: member promotion Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+            val memberId =
+                member.loyaltyProgramMemberId
+            var membershipKey = member.membershipNumber ?: ""
+
+            loyaltyAPIManager.getEligiblePromotions(membershipKey, memberId).onSuccess {
                 if (it.outputParameters?.outputParameters?.results != null) {
                     LocalFileManager.saveData(
                         context,
                         it,
-                        membershipNumber,
+                        membershipKey,
                         LocalFileManager.DIRECTORY_PROMOTIONS
                     )
                     viewState.postValue(PromotionViewState.PromotionsFetchSuccess(it))
@@ -116,7 +126,7 @@ class MyPromotionViewModel : ViewModel() {
             loyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
-                loadPromotions(context)
+                fetchPromotions(context)
                 Log.d(TAG, "promotion enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =
@@ -139,7 +149,7 @@ class MyPromotionViewModel : ViewModel() {
             loyaltyAPIManager.unEnrollPromotion(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
-                loadPromotions(context)
+                fetchPromotions(context)
                 Log.d(TAG, "promotion un enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =
