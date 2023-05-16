@@ -90,7 +90,7 @@ fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScr
         {
             openProfileScreen(MyProfileScreenState.BENEFIT_VIEW)
         }
-        BenefitListView(Modifier.height(200.dp))
+        BenefitListView(Modifier.height(300.dp))
     }
 }
 
