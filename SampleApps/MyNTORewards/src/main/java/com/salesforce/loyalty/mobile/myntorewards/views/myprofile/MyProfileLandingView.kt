@@ -9,15 +9,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
-import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.MyBenefitMiniScreenView
 import com.salesforce.loyalty.mobile.myntorewards.views.ScreenTabHeader
 import com.salesforce.loyalty.mobile.myntorewards.views.TransactionCard
 import com.salesforce.loyalty.mobile.myntorewards.views.UserInfoRow
+import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherRow
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 
 @Composable
-fun MyProfileLandingView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+fun MyProfileLandingView(navProfileViewController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -55,18 +58,22 @@ fun MyProfileLandingView(openProfileScreen: (profileScreenState: MyProfileScreen
                     .fillMaxWidth()
                     .background(MyProfileScreenBG)
             )
-            TransactionCard {
-                openProfileScreen(it)
-            }
+            TransactionCard(navProfileViewController)
             Spacer(
                 modifier = Modifier
                     .height(24.dp)
                     .fillMaxWidth()
                     .background(MyProfileScreenBG)
             )
-            MyBenefitMiniScreenView {
-                openProfileScreen(it)
-            }
+            VoucherRow(navProfileViewController)
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp)
+                    .fillMaxWidth()
+                    .background(MyProfileScreenBG)
+            )
+
+            MyBenefitMiniScreenView(navProfileViewController)
             Spacer(
                 modifier = Modifier
                     .height(24.dp)

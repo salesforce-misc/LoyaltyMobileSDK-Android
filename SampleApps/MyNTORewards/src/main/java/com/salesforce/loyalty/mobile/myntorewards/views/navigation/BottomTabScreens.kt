@@ -19,7 +19,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
-import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
@@ -28,7 +27,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreOptionsScreen
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 
@@ -103,19 +102,28 @@ fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible: B
 
 @Composable
 fun MyProfileScreen() {
-    var currentMyProfileState by remember { mutableStateOf(MyProfileScreenState.MAIN_VIEW) }
+    val navProfileViewController = rememberNavController()
+    NavHost(
+        navController = navProfileViewController,
+        startDestination = ProfileViewScreen.LandingProfileViewScreen.route
+    )
+    {
 
-    when (currentMyProfileState) {
-        MyProfileScreenState.MAIN_VIEW -> MyProfileLandingView {
-            currentMyProfileState = it
+        composable(route = ProfileViewScreen.LandingProfileViewScreen.route) {
+            MyProfileLandingView(navProfileViewController)
         }
-        MyProfileScreenState.BENEFIT_VIEW -> MyProfileBenefitFullScreenView {
-            currentMyProfileState = it
+        composable(route = ProfileViewScreen.BenefitFullScreen.route) {
+            MyProfileBenefitFullScreenView(navProfileViewController)
         }
-        MyProfileScreenState.TRANSACTION_VIEW -> MyProfileTransactionFullScreenView {
-            currentMyProfileState = it
+        composable(route = ProfileViewScreen.TransactionFullScreen.route) {
+            MyProfileTransactionFullScreenView(navProfileViewController)
+        }
+        composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
+            VoucherFullScreen(navProfileViewController)
         }
     }
+
+
 }
 
 

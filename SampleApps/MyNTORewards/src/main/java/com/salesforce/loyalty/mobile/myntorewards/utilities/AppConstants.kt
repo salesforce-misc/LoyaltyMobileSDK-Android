@@ -25,6 +25,11 @@ class AppConstants {
         const val ROUTE_ONBOARDING_SCREEN = "onboarding_screen"
         const val ROUTE_LANDING_SCREEN = "landing_screen"
 
+        //Profile screen tab route
+        const val ROUTE_PROFILE_LANDING_SCREEN = "route_profile_screen"
+        const val ROUTE_BENEFIT_FULL_SCREEN = "route_benefit_screen"
+        const val ROUTE_TRANSACTION_FULL_SCREEN = "route_transaction_screen"
+
         //benefit icon based on strings
         const val BENEFIT_TYPE_FREE_SHIPPING = "Free Shipping"
         const val BENEFIT_TYPE_EXTENDED_RETURN = "Extended Return"

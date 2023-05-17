@@ -23,19 +23,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatTransactionDateTime
-import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PointsChange
 
 @Composable
-fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+fun TransactionCard(navProfileController: NavHostController) {
     Column(
         modifier = Modifier
             .background(MyProfileScreenBG)
@@ -45,7 +46,7 @@ fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState
     ) {
         ProfileSubViewHeader(stringResource(id = R.string.my_transactions))
         {
-            openProfileScreen(MyProfileScreenState.TRANSACTION_VIEW)
+            navProfileController.navigate(ProfileViewScreen.TransactionFullScreen.route)
         }
 
         TransactionListView(modifier = Modifier.height(200.dp))
