@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets.LoyaltyAppAsset.getBenefitsLogo
 import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitViewModel
@@ -89,7 +90,7 @@ fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScr
         {
             openProfileScreen(MyProfileScreenState.BENEFIT_VIEW)
         }
-        BenefitListView(Modifier.height(200.dp))
+        BenefitListView(Modifier.height(300.dp))
     }
 }
 
@@ -136,8 +137,16 @@ fun BenefitListView(modifier: Modifier) {
 
         membershipBenefit?.let {
             LazyColumn(modifier = modifier) {
-                items(it) {
-                    ListItemMyBenefit(it)
+                if(it.size>= AppConstants.MAX_SIZE_BENEFIT_LIST)
+                {
+                    items(it.subList(0, AppConstants.MAX_SIZE_BENEFIT_LIST)) {
+                        ListItemMyBenefit(it)
+                    }
+                }
+                else{
+                    items(it) {
+                        ListItemMyBenefit(it)
+                    }
                 }
             }
         }
