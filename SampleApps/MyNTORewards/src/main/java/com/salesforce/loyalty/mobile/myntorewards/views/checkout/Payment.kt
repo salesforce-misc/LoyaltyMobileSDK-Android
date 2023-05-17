@@ -32,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.myCheckBoxColors
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
@@ -42,9 +43,11 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
-        Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp).verticalScroll(
-            rememberScrollState()
-        )
+        Column(modifier = Modifier
+            .padding(start = 20.dp, end = 20.dp)
+            .verticalScroll(
+                rememberScrollState()
+            )
         ) {
 
             Spacer(modifier = Modifier.height(23.dp))
@@ -181,7 +184,7 @@ fun PointsRow(points: String) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding( end = 11.dp, bottom = 16.dp, top = 22.dp)
+            .padding(end = 11.dp, bottom = 16.dp, top = 22.dp)
     ) {
 
 
@@ -384,9 +387,26 @@ fun CVVInputField(text: String) {
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun VoucherMenuBox() {
-    val options = listOf("Trendy Wear at $25", "Trendy Wear 2 at $25", "Trendy Wear 3 at $25")
+    val model: VoucherViewModel = viewModel()
+    model.loadVoucher(LocalContext.current)
+    val options = mutableListOf<String>()
+    val vouchers by model.voucherLiveData.observeAsState()
+    vouchers?.let { it ->
+        for (voucher in it) {
+            voucher.voucherDefinition?.let { name ->
+                options.add(name)
+            }
+        }
+    }
+
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
+    var selectedOptionText by remember {
+        if (options.isNotEmpty()) {
+            mutableStateOf(options[0])
+        } else {
+            mutableStateOf("")
+        }
+    }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
