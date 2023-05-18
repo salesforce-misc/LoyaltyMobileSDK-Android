@@ -6,9 +6,3 @@ enum class BottomSheetType {
     POPUP_CONGRATULATIONS,
     SETTINGS
 }
-
-enum class MyProfileScreenState {
-    MAIN_VIEW,
-    BENEFIT_VIEW,
-    TRANSACTION_VIEW,
-}

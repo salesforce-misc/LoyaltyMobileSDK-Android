@@ -25,18 +25,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets.LoyaltyAppAsset.getBenefitsLogo
-import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 
 @Composable
-fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+fun MyProfileBenefitFullScreenView(navProfileController: NavHostController) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier.background(Color.White)
@@ -50,7 +50,7 @@ fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyPro
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)
                 .clickable {
-                    openProfileScreen(MyProfileScreenState.MAIN_VIEW)
+                    navProfileController.popBackStack()
                 }
         )
         Text(
@@ -76,7 +76,7 @@ fun MyProfileBenefitFullScreenView(openProfileScreen: (profileScreenState: MyPro
 }
 
 @Composable
-fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+fun MyBenefitMiniScreenView(navProfileController: NavHostController) {
 
     Column(
         modifier = Modifier
@@ -88,7 +88,7 @@ fun MyBenefitMiniScreenView(openProfileScreen: (profileScreenState: MyProfileScr
     ) {
         ProfileSubViewHeader(stringResource(R.string.my_benefits))
         {
-            openProfileScreen(MyProfileScreenState.BENEFIT_VIEW)
+            navProfileController.navigate(ProfileViewScreen.BenefitFullScreen.route)
         }
         BenefitListView(Modifier.height(300.dp))
     }

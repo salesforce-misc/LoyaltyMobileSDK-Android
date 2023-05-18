@@ -15,13 +15,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
-import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 
 @Composable
-fun MyProfileTransactionFullScreenView(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
+fun MyProfileTransactionFullScreenView(navProfileController: NavHostController) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -43,7 +43,7 @@ fun MyProfileTransactionFullScreenView(openProfileScreen: (profileScreenState: M
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp)
                     .clickable {
-                        openProfileScreen(MyProfileScreenState.MAIN_VIEW)
+                        navProfileController.popBackStack()
                     }
             )
             Text(
