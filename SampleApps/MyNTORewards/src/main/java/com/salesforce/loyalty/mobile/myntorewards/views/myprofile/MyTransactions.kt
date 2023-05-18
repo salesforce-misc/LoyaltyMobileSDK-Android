@@ -33,6 +33,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.MyProfileScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PointsChange
+import kotlin.math.round
 
 @Composable
 fun TransactionCard(openProfileScreen: (profileScreenState: MyProfileScreenState) -> Unit) {
@@ -281,16 +282,22 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
 
         }
         Column(modifier = Modifier.weight(0.3f)) {
-            val pointsString =
-                if (points > 0) {
-                    "+" + points.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
-                } else {
-                    points.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
-                }
+            var color: Color = TextGreen
+            var pointsString: String
+            val pointsRoundOff = round(points * 100)/100
+
+            if (points > 0) {
+                pointsString =
+                    "+" + pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+            } else {
+                pointsString = pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+                color = TextRed
+            }
+
             Text(
                 text = pointsString,
                 fontWeight = FontWeight.Bold,
-                color = TextGreen,
+                color = color,
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp,
                 modifier = Modifier
