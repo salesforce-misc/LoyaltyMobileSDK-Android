@@ -86,30 +86,34 @@ fun TransactionListView(modifier: Modifier) {
         if (transactions?.transactionJournals?.isEmpty() == true) {
             TransactionEmptyView()
         }
-
-        val count = transactions?.transactionJournalCount ?: 0
-        val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
-            AppConstants.MAX_TRANSACTION_COUNT
-        } else {
-            count
-        }
-        var index = 0
-        var previewTransactionCount = 0
-        Column(modifier = Modifier.wrapContentHeight()) {
-            Spacer(modifier = Modifier.height(12.dp))
-            while (previewTransactionCount < pageCount) {
-                transactions?.transactionJournals?.get(index)?.apply {
-                    val transactionName = this.journalTypeName
-                    val points = getCurrencyPoints(this.pointsChange)
-                    val date = this.activityDate?.let { activityDate ->
-                        formatTransactionDateTime(activityDate)
+        if (transactions?.transactionJournals?.isNotEmpty() == true) {
+            val count = transactions?.transactionJournalCount ?: 0
+            val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
+                AppConstants.MAX_TRANSACTION_COUNT
+            } else {
+                count
+            }
+            var index = 0
+            var previewTransactionCount = 0
+            Column(modifier = Modifier.wrapContentHeight()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                while (previewTransactionCount < pageCount && index < count) {
+                    transactions?.transactionJournals?.get(index)?.apply {
+                        val transactionName = this.journalTypeName
+                        val points = getCurrencyPoints(this.pointsChange)
+                        val date = this.activityDate?.let { activityDate ->
+                            formatTransactionDateTime(activityDate)
+                        }
+                        if (transactionName != null && points != null && date != null) {
+                            ListItemTransaction(transactionName, points, date)
+                            previewTransactionCount++
+                        }
                     }
-                    if (transactionName != null && points != null && date != null) {
-                        ListItemTransaction(transactionName, points, date)
-                        previewTransactionCount ++
-                    }
+                    index++
                 }
-                index++
+            }
+            if (previewTransactionCount == 0) {
+                TransactionEmptyView()
             }
         }
 
