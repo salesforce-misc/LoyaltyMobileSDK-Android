@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
@@ -276,7 +277,9 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController) {
                     .clip(RoundedCornerShape(10.dp)),
 
                 contentScale = ContentScale.Crop
-            )
+            ) {
+                it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+            }
         }
 
 
