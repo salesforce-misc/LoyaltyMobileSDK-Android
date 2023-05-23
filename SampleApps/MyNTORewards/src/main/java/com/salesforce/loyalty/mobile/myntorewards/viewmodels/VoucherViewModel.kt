@@ -17,6 +17,7 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResult
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class VoucherViewModel : ViewModel() {
@@ -59,35 +60,46 @@ class VoucherViewModel : ViewModel() {
 
             Log.d(TAG, "cache : $voucherCache")
             if (voucherCache == null) {
-                getVoucher(context, membershipKey)
+                getVoucher(context)
             } else {
+                delay(3000)
                 vouchers.value = voucherCache.voucherResponse
                 viewState.postValue(VoucherViewState.VoucherFetchSuccess)
             }
         }
     }
-    private fun getVoucher(context: Context, membershipKey: String?) {
+    internal fun getVoucher(context: Context) {
+
+        val memberJson =
+            PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+        if (memberJson == null) {
+            Log.d(TAG, "failed: member profile Member details not present")
+            return
+        }
+        val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+
+        var membershipKey = member.membershipNumber ?: ""
+
         viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         viewModelScope.launch {
-            if (membershipKey != null) {
-                loyaltyAPIManager.getVouchers(
-                    membershipKey, null, 1, null,
-                    null, null, null
-                ).onSuccess {
-                    LocalFileManager.saveData(
-                        context,
-                        it,
-                        membershipKey,
-                        LocalFileManager.DIRECTORY_VOUCHERS
-                    )
+            loyaltyAPIManager.getVouchers(
+                membershipKey, null, 1, null,
+                null, null, null
+            ).onSuccess {
+                LocalFileManager.saveData(
+                    context,
+                    it,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_VOUCHERS
+                )
 
-                    vouchers.value = it.voucherResponse
-                    viewState.postValue(VoucherViewState.VoucherFetchSuccess)
-                    Log.d(TAG, "getVoucher success: ${it.voucherResponse}")
-                }.onFailure {
-                    viewState.postValue(VoucherViewState.VoucherFetchFailure)
-                    Log.d(TAG, "getVoucher failed: ${it.message}")
-                }
+                vouchers.value = it.voucherResponse
+                viewState.postValue(VoucherViewState.VoucherFetchSuccess)
+                Log.d(TAG, "getVoucher success: ${it.voucherResponse}")
+            }.onFailure {
+                viewState.postValue(VoucherViewState.VoucherFetchFailure)
+                Log.d(TAG, "getVoucher failed: ${it.message}")
             }
         }
     }

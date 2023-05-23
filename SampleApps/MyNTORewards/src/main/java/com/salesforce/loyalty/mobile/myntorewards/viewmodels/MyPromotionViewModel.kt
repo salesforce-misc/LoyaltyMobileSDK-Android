@@ -17,6 +17,7 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MyPromotionViewModel : ViewModel() {
@@ -77,7 +78,8 @@ class MyPromotionViewModel : ViewModel() {
         }
     }
 
-    private fun fetchPromotions(context: Context) {
+    fun fetchPromotions(context: Context) {
+        viewState.postValue(PromotionViewState.PromotionFetchInProgress)
         viewModelScope.launch {
 
             val memberJson =

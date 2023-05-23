@@ -57,7 +57,7 @@ class TransactionsViewModel : ViewModel() {
 
             Log.d(TAG, "cache : $transactionCache")
             if (transactionCache == null) {
-                getTransactions(context, membershipKey)
+                getTransactions(context)
             } else {
                 transactions.value = transactionCache!!
                 viewState.postValue(TransactionViewState.TransactionFetchSuccess)
@@ -65,7 +65,17 @@ class TransactionsViewModel : ViewModel() {
         }
     }
 
-    private fun getTransactions(context: Context, membershipNumber: String?) {
+    internal fun getTransactions(context: Context) {
+        val memberJson =
+            PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+        if (memberJson == null) {
+            Log.d(TAG, "failed: member getTransactions Member details not present")
+            return
+        }
+        val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+        var membershipNumber = member.membershipNumber ?: ""
+
         viewModelScope.launch {
             membershipNumber?.let { membershipNumber ->
                 loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)
