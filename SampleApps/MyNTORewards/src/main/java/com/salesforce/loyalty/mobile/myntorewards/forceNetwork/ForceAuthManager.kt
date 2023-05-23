@@ -2,6 +2,8 @@ package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
@@ -19,6 +21,14 @@ object ForceAuthManager: ForceAuthenticator {
     lateinit var forceAuthManager: ForceAuthManager
 
     lateinit var mContext: Context
+
+    enum class AuthenticationStatus {
+        AUTHENTICATED,
+        UNAUTHENTICATED
+    }
+
+    private val authenticationStatus = MutableLiveData<AuthenticationStatus>()
+    val authenticationStatusLiveData: LiveData<AuthenticationStatus> = authenticationStatus
 
     fun getInstance(context: Context): ForceAuthManager {
         if (!::forceAuthManager.isInitialized) {
@@ -238,6 +248,8 @@ object ForceAuthManager: ForceAuthenticator {
                 saveAuth(newAuthToSave)
                 return newAuthToSave
             }.onFailure {
+                Log.d(TAG,"refresh token returned failure: ${it.message}  Localized message: ${it.localizedMessage}")
+                authenticationStatus.postValue(AuthenticationStatus.UNAUTHENTICATED)
                 return null
             }
         }
@@ -302,6 +314,7 @@ object ForceAuthManager: ForceAuthenticator {
             }.onFailure {
                 Log.d(TAG, "Could not revoke Access token! ${it.message}")
             }
+            auth = null
         }
     }
 }
