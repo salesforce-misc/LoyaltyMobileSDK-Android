@@ -8,10 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import kotlinx.coroutines.launch
 
 class CheckOutFlowViewModel : ViewModel() {
     private val TAG = CheckOutFlowViewModel::class.java.simpleName
+
+    private val checkoutManager: CheckoutManager = CheckoutManager(
+        ForceAuthManager.forceAuthManager,
+        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+    )
 
     val orderPlacedStatusLiveData: LiveData<OrderPlacedState>
         get() = orderPlacedStatus
@@ -41,7 +48,7 @@ class CheckOutFlowViewModel : ViewModel() {
         Log.d(TAG, "Order Placed request")
         viewModelScope.launch {
 
-            CheckoutManager.createOrder().onSuccess {
+            checkoutManager.createOrder().onSuccess {
                 orderID.value = it
                 Log.d(TAG, "Order Placed request Success")
                 orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_SUCCESS
@@ -59,7 +66,7 @@ class CheckOutFlowViewModel : ViewModel() {
         Log.d(TAG, "Order details fetch request")
         viewModelScope.launch {
 
-            CheckoutManager.getOrderDetails(orderID).onSuccess {
+            checkoutManager.getOrderDetails(orderID).onSuccess {
                 orderDetails.value = it
                 Log.d(TAG, "Order Details Success: " + orderDetails.value.toString())
             }
@@ -74,7 +81,7 @@ class CheckOutFlowViewModel : ViewModel() {
         Log.d(TAG, "fetch shipping details request")
         viewModelScope.launch {
 
-            CheckoutManager.getShippingMethods().onSuccess {
+            checkoutManager.getShippingMethods().onSuccess {
                 shippingDetails.value = it
                 Log.d(TAG, "shipping Details Success: " + shippingDetails.value.toString())
             }

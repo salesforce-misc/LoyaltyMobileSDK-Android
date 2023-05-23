@@ -1,34 +1,28 @@
 package com.salesforce.loyalty.mobile.myntorewards.checkout
 
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutAuth
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutNetworkClient
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.*
-import com.salesforce.loyalty.mobile.sources.forceModels.ForceAuthResponse
+import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 
 
-object CheckoutManager {
+class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String){
 
-    private const val TAG = "CheckoutManager"
+    companion object {
+        private const val TAG = "CheckoutManager"
+    }
 
-    suspend fun getAccessToken(): Result<ForceAuthResponse> {
-        Log.d(TAG, "getAccessToken()")
-        val response = CheckoutNetworkClient.authApi.getAccessToken(
-            CheckoutConfig.MimeType.JSON,
-            CheckoutConfig.MimeType.FORM_ENCODED,
-            CheckoutConfig.ADMIN_USERNAME,
-            CheckoutConfig.ADMIN_PASSWORD,
-            CheckoutConfig.GRANT_TYPE_PASSWORD,
-            CheckoutConfig.CONSUMER_KEY,
-            CheckoutConfig.CONSUMER_SECRET
-        )
-        response.onSuccess {
-            CheckoutAuth.setAuthToken(it.accessToken)
-        }
-        return response
+    private val authenticator: ForceAuthenticator
+
+    private val checkoutClient: CheckoutNetworkClient
+
+    private val mInstanceUrl: String
+
+    init {
+        authenticator = auth
+        mInstanceUrl = instanceUrl
+        checkoutClient = CheckoutNetworkClient(auth, instanceUrl)
     }
 
     suspend fun createOrder(
@@ -48,7 +42,7 @@ object CheckoutManager {
             membershipNumber = "24345671"
         )
 
-        return CheckoutNetworkClient.authApi.createOrder(
+        return checkoutClient.authApi.createOrder(
             getOrderCreationUrl(),
             body
         )
@@ -58,7 +52,7 @@ object CheckoutManager {
     ): Result<List<ShippingMethod>> {
         Log.d(TAG, "getShippingMethods()")
 
-        return CheckoutNetworkClient.authApi.getShippingMethods(
+        return checkoutClient.authApi.getShippingMethods(
             getShippingMethodsUrl()
         )
     }
@@ -68,7 +62,7 @@ object CheckoutManager {
     ): Result<OrderDetailsResponse> {
         Log.d(TAG, "getOrderDetails()")
 
-        return CheckoutNetworkClient.authApi.getOrderDetails(
+        return checkoutClient.authApi.getOrderDetails(
             getOrderCreationUrl(), orderId = orderId
         )
     }
@@ -77,7 +71,7 @@ object CheckoutManager {
     ): ShippingBillingAddressRecord? {
         Log.d(TAG, "getShippingBillingAddressSOQL()")
 
-        val result = CheckoutNetworkClient.authApi.getShippingBillingAddressSOQL(
+        val result = checkoutClient.authApi.getShippingBillingAddressSOQL(
             getShippingBillingSOQLUrl(), getShippingBillingAddressSOQLQuery()
         )
         result.onSuccess { queryResult: QueryResult<ShippingBillingAddressRecord> ->
@@ -91,15 +85,15 @@ object CheckoutManager {
     }
 
     private fun getOrderCreationUrl(): String {
-        return CheckoutConfig.MEMBER_BASE_URL + CheckoutConfig.CHECKOUT_ORDER_CREATION + "/"
+        return mInstanceUrl + CheckoutConfig.CHECKOUT_ORDER_CREATION + "/"
     }
 
     private fun getShippingMethodsUrl(): String {
-        return CheckoutConfig.MEMBER_BASE_URL + CheckoutConfig.CHECKOUT_SHIPPING_METHODS + "/"
+        return mInstanceUrl + CheckoutConfig.CHECKOUT_SHIPPING_METHODS + "/"
     }
 
     private fun getShippingBillingSOQLUrl(): String {
-        return CheckoutConfig.MEMBER_BASE_URL + CheckoutConfig.SOQL_QUERY_PATH + CheckoutConfig.SOQL_QUERY_VERSION + CheckoutConfig.QUERY
+        return mInstanceUrl + CheckoutConfig.SOQL_QUERY_PATH + CheckoutConfig.SOQL_QUERY_VERSION + CheckoutConfig.QUERY
     }
 
     private fun getShippingBillingAddressSOQLQuery(): String {

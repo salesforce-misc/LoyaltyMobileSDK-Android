@@ -55,7 +55,7 @@
     <string name="close_text">"Close"</string>
     <string name="tab_all">"All"</string>
     <string name="tab_active">"Active"</string>
-    <string name="tab_unenrolled">"UnEnrolled"</string>
+    <string name="tab_unenrolled">"Unenrolled"</string>
 
     <string name="voucher_text_available">"Available"</string>
     <string name="voucher_text_redeemed">"Redeemed"</string>
@@ -79,6 +79,7 @@
     <string name="label_empty_promotions">No Promotions, yet.</string>
     <string name="label_empty_vouchers">You have no Vouchers Available.</string>
     <string name="description_empty_promotions">You do not have any eligible promotions to enroll. Please come back later.</string>
+    <string name="description_empty_active_promotions">You do not have any active promotion. Please come back later.</string>
     <string name="label_empty_transaction">You have no Transactions.</string>
     <string name="label_empty_benefits">You have no Benefits.</string>
 

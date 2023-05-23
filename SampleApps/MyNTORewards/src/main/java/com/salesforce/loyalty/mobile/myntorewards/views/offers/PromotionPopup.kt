@@ -36,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -129,7 +130,9 @@ fun PromotionEnrollPopupUI(
                             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
 
                         contentScale = ContentScale.Crop
-                    )
+                    ) {
+                        it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    }
                 }
 
                 Row(

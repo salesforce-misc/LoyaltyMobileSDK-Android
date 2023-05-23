@@ -149,7 +149,7 @@ fun PromotionCardRow(
                 }
 
                 if(membershipPromo?.isEmpty()==true){
-                    PromotionEmptyView()
+                    PromotionEmptyView(R.string.description_empty_promotions)
                 }
                membershipPromo?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
@@ -169,7 +169,7 @@ fun PromotionCardRow(
             }
             is PromotionViewState.PromotionsFetchFailure -> {
                 isInProgress = false
-                PromotionEmptyView()
+                PromotionEmptyView(R.string.description_empty_promotions)
                 // TODO Show Empty Promotions view
             }
             PromotionViewState.PromotionFetchInProgress -> {

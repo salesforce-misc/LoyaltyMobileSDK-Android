@@ -34,6 +34,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewMod
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PointsChange
+import kotlin.math.round
 
 @Composable
 fun TransactionCard(navProfileController: NavHostController) {
@@ -87,28 +88,34 @@ fun TransactionListView(modifier: Modifier) {
         if (transactions?.transactionJournals?.isEmpty() == true) {
             TransactionEmptyView()
         }
-
-        val count = transactions?.transactionJournalCount ?: 0
-        val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
-            AppConstants.MAX_TRANSACTION_COUNT
-        } else {
-            count
-        }
-        var index = 0
-        Column(modifier = Modifier.wrapContentHeight()) {
-            Spacer(modifier = Modifier.height(12.dp))
-            while (index < pageCount) {
-                transactions?.transactionJournals?.get(index)?.apply {
-                    val transactionName = this.journalTypeName
-                    val points = getCurrencyPoints(this.pointsChange)
-                    val date = this.activityDate?.let { activityDate ->
-                        formatTransactionDateTime(activityDate)
+        if (transactions?.transactionJournals?.isNotEmpty() == true) {
+            val count = transactions?.transactionJournalCount ?: 0
+            val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
+                AppConstants.MAX_TRANSACTION_COUNT
+            } else {
+                count
+            }
+            var index = 0
+            var previewTransactionCount = 0
+            Column(modifier = Modifier.wrapContentHeight()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                while (previewTransactionCount < pageCount && index < count) {
+                    transactions?.transactionJournals?.get(index)?.apply {
+                        val transactionName = this.journalTypeName
+                        val points = getCurrencyPoints(this.pointsChange)
+                        val date = this.activityDate?.let { activityDate ->
+                            formatTransactionDateTime(activityDate)
+                        }
+                        if (transactionName != null && points != null && date != null) {
+                            ListItemTransaction(transactionName, points, date)
+                            previewTransactionCount++
+                        }
                     }
-                    if (transactionName != null && points != null && date != null) {
-                        ListItemTransaction(transactionName, points, date)
-                    }
+                    index++
                 }
-                index++
+            }
+            if (previewTransactionCount == 0) {
+                TransactionEmptyView()
             }
         }
 
@@ -280,16 +287,22 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
 
         }
         Column(modifier = Modifier.weight(0.3f)) {
-            val pointsString =
-                if (points > 0) {
-                    "+" + points.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
-                } else {
-                    points.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
-                }
+            var color: Color = TextGreen
+            var pointsString: String
+            val pointsRoundOff = round(points * 100)/100
+
+            if (points > 0) {
+                pointsString =
+                    "+" + pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+            } else {
+                pointsString = pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+                color = TextRed
+            }
+
             Text(
                 text = pointsString,
                 fontWeight = FontWeight.Bold,
-                color = TextGreen,
+                color = color,
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp,
                 modifier = Modifier

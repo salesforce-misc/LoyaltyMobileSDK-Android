@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
@@ -77,7 +78,9 @@ fun PromotionCard(
                             .size(289.dp, 154.dp)
                             .clip(RoundedCornerShape(10.dp)),
                         contentScale = ContentScale.Crop,
-                    )
+                    ){
+                        it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    }
                 }
             }
 
@@ -167,7 +170,7 @@ fun PromotionCard(
 }
 
 @Composable
-fun PromotionEmptyView() {
+fun PromotionEmptyView(descriptionResourceId: Int) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
