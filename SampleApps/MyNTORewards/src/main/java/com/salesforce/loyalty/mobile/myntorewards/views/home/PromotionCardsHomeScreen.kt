@@ -170,7 +170,7 @@ fun PromotionCard(
 }
 
 @Composable
-fun PromotionEmptyView() {
+fun PromotionEmptyView(descriptionResourceId: Int) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
