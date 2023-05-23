@@ -70,7 +70,7 @@ class MembershipBenefitViewModel : ViewModel() {
     }
 
     internal fun memberBenefitAPI(context: Context) {
-
+        viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
         val memberJson =
             PrefHelper.customPrefs(context)
                 .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
@@ -87,15 +87,12 @@ class MembershipBenefitViewModel : ViewModel() {
 
                 membershipBenefit.value = it.memberBenefits
 
-
-                if (membershipKey != null) {
-                    LocalFileManager.saveData(
-                        context,
-                        it,
-                        membershipKey,
-                        LocalFileManager.DIRECTORY_BENEFITS
-                    )
-                }
+                LocalFileManager.saveData(
+                    context,
+                    it,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_BENEFITS
+                )
                 viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
                 Log.d(TAG, "success member benefit response: $it")
 

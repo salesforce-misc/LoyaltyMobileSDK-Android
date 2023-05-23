@@ -66,6 +66,7 @@ class TransactionsViewModel : ViewModel() {
     }
 
     internal fun getTransactions(context: Context) {
+        viewState.postValue(TransactionViewState.TransactionFetchInProgress)
         val memberJson =
             PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
         if (memberJson == null) {

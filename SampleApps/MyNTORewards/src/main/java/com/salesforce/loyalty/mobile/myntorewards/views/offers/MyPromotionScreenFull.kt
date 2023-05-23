@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -39,10 +43,14 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.Promotio
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
+import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MyPromotionScreen(navCheckOutFlowController: NavController) {
+
+
     val model: MyPromotionViewModel = viewModel()
     val context: Context = LocalContext.current
     val promoViewState by model.promotionViewState.observeAsState()
@@ -51,9 +59,21 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
     }
     var isInProgress by remember { mutableStateOf(false) }
 
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
+
+    fun refresh() = refreshScope.launch {
+        model.fetchPromotions(context)
+
+    }
+
+    val state = rememberPullRefreshState(refreshing, ::refresh)
+
+
     var membershipPromo: List<Results>? = mutableListOf()
     when (promoViewState) {
         is PromotionViewState.PromotionsFetchSuccess -> {
+            isInProgress = false
             membershipPromo =
                 (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
         }
@@ -76,119 +96,129 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
             )
         }
 
-    }
+    } else {
+        Box(contentAlignment = Alignment.TopCenter) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(LightPurple)
-            .padding(bottom = 16.dp)
-    ) {
-        Spacer(
-            modifier = Modifier
-                .height(50.dp)
-                .fillMaxWidth()
-                .background(Color.White)
-        )
-
-        MyPromotionScreenHeader()
-        //default tab selected as 0 which is PromotionTabs.TabAll
-        var selectedTab by remember { mutableStateOf(0) }
-
-        Row(modifier = Modifier.background(Color.White)) {
-
-            val tabItems =
-                listOf(PromotionTabs.TabAll, PromotionTabs.TabActive, PromotionTabs.TabUnEnrolled)
-
-            TabRow(selectedTabIndex = selectedTab,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),
-                containerColor = Color.White,
-                divider = {},
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        Modifier
-                            .tabIndicatorOffset(tabPositions[selectedTab])
-                            .background(Color.White),
-                        height = 2.dp,
-                        color = VibrantPurple40
-                    )
-                })
-            {
-                tabItems.forEachIndexed { index, it ->
-                    Tab(
-                        selected = selectedTab == index,
-                        onClick = { selectedTab = index },
-                        text = { Text(text = stringResource(it.tabName)) },
-                        selectedContentColor = VibrantPurple40,
-                        unselectedContentColor = TextGray,
-                    )
-                }
-            }
-
-        }
-
-        membershipPromo?.let {
-            val unenrolledPromotions =
-                membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED }
-            val enrolledPromotions =
-                membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .fillMaxHeight()
+                    .background(LightPurple)
+                    .padding(bottom = 16.dp)
+                    .pullRefresh(state)
             ) {
-                items(it) {
+                Spacer(
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth()
+                        .background(Color.White)
+                )
+
+                MyPromotionScreenHeader()
+                //default tab selected as 0 which is PromotionTabs.TabAll
+                var selectedTab by remember { mutableStateOf(0) }
+
+                Row(modifier = Modifier.background(Color.White)) {
+
+                    val tabItems =
+                        listOf(
+                            PromotionTabs.TabAll,
+                            PromotionTabs.TabActive,
+                            PromotionTabs.TabUnEnrolled
+                        )
+
+                    TabRow(selectedTabIndex = selectedTab,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White),
+                        containerColor = Color.White,
+                        divider = {},
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                Modifier
+                                    .tabIndicatorOffset(tabPositions[selectedTab])
+                                    .background(Color.White),
+                                height = 2.dp,
+                                color = VibrantPurple40
+                            )
+                        })
+                    {
+                        tabItems.forEachIndexed { index, it ->
+                            Tab(
+                                selected = selectedTab == index,
+                                onClick = { selectedTab = index },
+                                text = { Text(text = stringResource(it.tabName)) },
+                                selectedContentColor = VibrantPurple40,
+                                unselectedContentColor = TextGray,
+                            )
+                        }
+                    }
+
+                }
+
+                membershipPromo?.let {
+                    val unenrolledPromotions =
+                        membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED }
+                    val enrolledPromotions =
+                        membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    ) {
+                        items(it) {
 
 
+                            when (selectedTab) {
+                                0 -> {
+                                    PromotionItem(it, navCheckOutFlowController)
+                                }
+                                1 -> {
+                                    if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE) {
+                                        PromotionItem(it, navCheckOutFlowController)
+                                    }
+                                }
+                                2 -> {
+                                    if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
+                                        PromotionItem(it, navCheckOutFlowController)
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    if (unenrolledPromotions?.isEmpty() == true) {
+                        when (selectedTab) {
+                            2 -> {
+                                PromotionEmptyView(R.string.description_empty_promotions)
+                            }
+                        }
+                    }
+                    if (enrolledPromotions?.isEmpty() == true) {
+                        when (selectedTab) {
+                            1 -> {
+                                PromotionEmptyView(R.string.description_empty_active_promotions)
+                            }
+                        }
+                    }
+                }
+
+                if (membershipPromo == null || membershipPromo?.isEmpty() == true) {
                     when (selectedTab) {
-                        0 -> {
-                            PromotionItem(it, navCheckOutFlowController)
+                        0, 2 -> {
+                            PromotionEmptyView(R.string.description_empty_promotions)
                         }
                         1 -> {
-                            if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE) {
-                                PromotionItem(it, navCheckOutFlowController)
-                            }
-                        }
-                        2 -> {
-                            if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-                                PromotionItem(it, navCheckOutFlowController)
-                            }
+                            PromotionEmptyView(R.string.description_empty_active_promotions)
                         }
                     }
+                }
 
-                }
             }
-            if (unenrolledPromotions?.isEmpty() == true) {
-                when (selectedTab) {
-                    2 -> {
-                        PromotionEmptyView(R.string.description_empty_promotions)
-                    }
-                }
-            }
-            if (enrolledPromotions?.isEmpty() == true) {
-                when (selectedTab) {
-                    1 -> {
-                        PromotionEmptyView(R.string.description_empty_active_promotions)
-                    }
-                }
-            }
+            PullRefreshIndicator(refreshing, state)
         }
-
-        if (membershipPromo == null || membershipPromo?.isEmpty() == true) {
-            when (selectedTab) {
-                0, 2 -> {
-                    PromotionEmptyView(R.string.description_empty_promotions)
-                }
-                1 -> {
-                    PromotionEmptyView(R.string.description_empty_active_promotions)
-                }
-            }
-        }
-
     }
+
 
 }
 

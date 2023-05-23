@@ -38,8 +38,8 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileVi
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -56,7 +56,7 @@ fun HomeScreenLandingView(
     val voucherModel: VoucherViewModel = viewModel()
 
 
-        fun refresh() = refreshScope.launch {
+    fun refresh() = refreshScope.launch {
         model.fetchPromotions(context)
         profileModel.getMemberProfile(context)
         voucherModel.getVoucher(context)
@@ -81,28 +81,20 @@ fun HomeScreenLandingView(
                 .background(VibrantPurple40)
         )
 
-        Box(  contentAlignment = Alignment.TopCenter) {
+        Box(contentAlignment = Alignment.TopCenter) {
 
             Column {
 
-                if(!refreshing)
-                {
-                    AppLogoAndSearchRow()
-                    UserNameAndRewardRow()
+                AppLogoAndSearchRow()
+                UserNameAndRewardRow()
 
-                    PromotionCardRow(bottomTabsNavController, navCheckOutFlowController)
-
-
-                    VoucherRow(navCheckOutFlowController)
-                }
-
+                PromotionCardRow(bottomTabsNavController, navCheckOutFlowController)
+                VoucherRow(navCheckOutFlowController)
             }
 
-             PullRefreshIndicator(refreshing, state)
+            PullRefreshIndicator(refreshing, state)
 
         }
-
-
 
 
     }
@@ -148,10 +140,10 @@ fun PromotionCardRow(
                     promListListSize
                 }
 
-                if(membershipPromo?.isEmpty()==true){
+                if (membershipPromo?.isEmpty() == true) {
                     PromotionEmptyView(R.string.description_empty_promotions)
                 }
-               membershipPromo?.let {
+                membershipPromo?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
                         PromotionCard(page, membershipPromo, navCheckOutFlowController)
                     }
@@ -232,25 +224,56 @@ fun VoucherRow(
             )
         }
 
+        var isInProgress by remember { mutableStateOf(false) }
+
         val model: VoucherViewModel = viewModel()
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
+        val vouchersFetchStatus by model.voucherViewState.observeAsState() // collecting livedata as state
+
         val context: Context = LocalContext.current
         LaunchedEffect(key1 = true) {
             model.loadVoucher(context)
+            isInProgress = true
         }
 
-        if(vouchers?.isEmpty() == true)
-        {
-            VoucherEmptyView()
+        when (vouchersFetchStatus) {
+            VoucherViewState.VoucherFetchSuccess -> {
+                isInProgress = false
+
+            }
+            VoucherViewState.VoucherFetchFailure -> {
+                isInProgress = false
+            }
+
+            VoucherViewState.VoucherFetchInProgress -> {
+                isInProgress = true
+            }
+            else -> {}
         }
-        vouchers?.let {
-            LazyRow(modifier = Modifier.fillMaxWidth()) {
-                items(it) {
-                    Spacer(modifier = Modifier.width(12.dp))
-                    VoucherView(it)
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (isInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                )
+            } else {
+                if (vouchers?.isEmpty() == true) {
+                    VoucherEmptyView()
+                }
+                vouchers?.let {
+                    LazyRow(modifier = Modifier.fillMaxWidth()) {
+                        items(it) {
+                            Spacer(modifier = Modifier.width(12.dp))
+                            VoucherView(it)
+                        }
+                    }
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 

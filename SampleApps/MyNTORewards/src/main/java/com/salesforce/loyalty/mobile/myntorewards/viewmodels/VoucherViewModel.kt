@@ -17,7 +17,6 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResult
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class VoucherViewModel : ViewModel() {
@@ -62,7 +61,6 @@ class VoucherViewModel : ViewModel() {
             if (voucherCache == null) {
                 getVoucher(context)
             } else {
-                delay(3000)
                 vouchers.value = voucherCache.voucherResponse
                 viewState.postValue(VoucherViewState.VoucherFetchSuccess)
             }
@@ -70,6 +68,7 @@ class VoucherViewModel : ViewModel() {
     }
     internal fun getVoucher(context: Context) {
 
+        viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         val memberJson =
             PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
         if (memberJson == null) {

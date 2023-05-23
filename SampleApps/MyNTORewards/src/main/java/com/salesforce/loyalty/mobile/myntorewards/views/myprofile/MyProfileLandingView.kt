@@ -32,95 +32,96 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MyProfileLandingView(navProfileViewController: NavHostController) {
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
 
+    val profileModel: MembershipProfileViewModel = viewModel()
+    val context: Context = LocalContext.current
+    val voucherModel: VoucherViewModel = viewModel()
+    val tranModel: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
+    val benModel: MembershipBenefitViewModel = viewModel()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .background(Color.White),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    )
+    fun refresh() = refreshScope.launch {
+        profileModel.getMemberProfile(context)
+        tranModel.getTransactions(context)
+        voucherModel.getVoucher(context)
+        benModel.memberBenefitAPI(context)
+    }
 
-    {
+    val state = rememberPullRefreshState(refreshing, ::refresh)
+    Box(contentAlignment = Alignment.TopCenter) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .background(Color.White)
+                .pullRefresh(state)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
 
-        Spacer(modifier = Modifier.height(50.dp))
-        ScreenTabHeader()
+        {
 
-        var refreshing by remember { mutableStateOf(false) }
-        val refreshScope = rememberCoroutineScope()
+            Spacer(modifier = Modifier.height(50.dp))
+            ScreenTabHeader()
 
-        val profileModel: MembershipProfileViewModel = viewModel()
-        val context: Context = LocalContext.current
-        val voucherModel: VoucherViewModel = viewModel()
-        val tranModel: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
-        val benModel: MembershipBenefitViewModel = viewModel()
+            Box(contentAlignment = Alignment.TopCenter) {
 
-        fun refresh() = refreshScope.launch {
-            profileModel.getMemberProfile(context)
-            tranModel.getTransactions(context)
-            voucherModel.getVoucher(context)
-            benModel.memberBenefitAPI(context)
-        }
+                Column(
+                ) {
 
-        val state = rememberPullRefreshState(refreshing, ::refresh)
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(Color.White)
+                    )
+                    UserInfoRow()
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(Color.White)
+                    )
+                    ProfileCard()
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(MyProfileScreenBG)
+                    )
+                    TransactionCard(navProfileViewController)
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(MyProfileScreenBG)
+                    )
+                    VoucherRow(navProfileViewController)
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(MyProfileScreenBG)
+                    )
 
-        Box(contentAlignment = Alignment.TopCenter) {
+                    MyBenefitMiniScreenView(navProfileViewController)
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(MyProfileScreenBG)
+                    )
 
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
-                    .pullRefresh(state),
-            ) {
-                if (!refreshing) {
 
                 }
-                Spacer(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth()
-                        .background(Color.White)
-                )
-                UserInfoRow()
-                Spacer(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth()
-                        .background(Color.White)
-                )
-                ProfileCard()
-                Spacer(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth()
-                        .background(MyProfileScreenBG)
-                )
-                TransactionCard(navProfileViewController)
-                Spacer(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth()
-                        .background(MyProfileScreenBG)
-                )
-                VoucherRow(navProfileViewController)
-                Spacer(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth()
-                        .background(MyProfileScreenBG)
-                )
-
-                MyBenefitMiniScreenView(navProfileViewController)
-                Spacer(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth()
-                        .background(MyProfileScreenBG)
-                )
 
             }
-            PullRefreshIndicator(refreshing, state)
+
+
         }
-
-
+        PullRefreshIndicator(refreshing, state)
     }
+
+
 }

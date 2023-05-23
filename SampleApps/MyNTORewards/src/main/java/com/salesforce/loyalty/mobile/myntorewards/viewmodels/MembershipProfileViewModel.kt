@@ -68,8 +68,9 @@ class MembershipProfileViewModel : ViewModel() {
             }
         }
     }
-     fun getMemberProfile(context: Context) {
 
+    fun getMemberProfile(context: Context) {
+        viewState.postValue(MyProfileViewStates.MyProfileFetchInProgress)
         val memberJson =
             PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
         if (memberJson == null) {
