@@ -37,7 +37,7 @@ class MembershipProfileViewModel : ViewModel() {
 
     private val viewState = MutableLiveData<MyProfileViewStates>()
 
-    fun loadProfile(context: Context) {
+    fun loadProfile(context: Context, refreshRequired:Boolean=false) {
         viewState.postValue(MyProfileViewStates.MyProfileFetchInProgress)
         viewModelScope.launch {
             val memberJson =
@@ -48,40 +48,35 @@ class MembershipProfileViewModel : ViewModel() {
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
-            val memberId =
-                member.loyaltyProgramMemberId
+            val memberId =  member.loyaltyProgramMemberId?: ""
             var membershipKey = member.membershipNumber ?: ""
 
-            val myProfileCache = LocalFileManager.getData(
-                context,
-                membershipKey,
-                LocalFileManager.DIRECTORY_PROFILE,
-                MemberProfileResponse::class.java
-            )
-
-            Log.d(TAG, "cache : $myProfileCache")
-            if (myProfileCache == null) {
-                getMemberProfile(context)
-            } else {
-                membershipProfile.value = myProfileCache
-                viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
+            if(refreshRequired)
+            {
+                getMemberProfile(context, memberId, membershipKey)
             }
+            else{
+                val myProfileCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_PROFILE,
+                    MemberProfileResponse::class.java
+                )
+
+                Log.d(TAG, "cache : $myProfileCache")
+                if (myProfileCache == null) {
+                    getMemberProfile(context, memberId, membershipKey)
+                } else {
+                    membershipProfile.value = myProfileCache
+                    viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
+                }
+            }
+
         }
     }
 
-    fun getMemberProfile(context: Context) {
+    private fun getMemberProfile(context: Context, memberId: String, membershipKey: String) {
         viewState.postValue(MyProfileViewStates.MyProfileFetchInProgress)
-        val memberJson =
-            PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
-        if (memberJson == null) {
-            Log.d(TAG, "failed: member profile Member details not present")
-            return
-        }
-        val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-
-        val memberId = member.loyaltyProgramMemberId
-
-        var membershipKey = member.membershipNumber ?: ""
 
         viewModelScope.launch {
             loyaltyAPIManager.getMemberProfile(memberId, membershipKey, null).onSuccess {

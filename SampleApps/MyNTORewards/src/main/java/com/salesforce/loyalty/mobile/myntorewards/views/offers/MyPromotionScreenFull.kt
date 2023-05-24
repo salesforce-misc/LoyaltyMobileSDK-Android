@@ -63,7 +63,7 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
     val refreshScope = rememberCoroutineScope()
 
     fun refresh() = refreshScope.launch {
-        model.fetchPromotions(context)
+        model.loadPromotions(context, true)
 
     }
 

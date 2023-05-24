@@ -51,7 +51,7 @@ fun MyProfileBenefitFullScreenView(navProfileController: NavHostController) {
     val benModel: MembershipBenefitViewModel = viewModel()
 
     fun refresh() = refreshScope.launch {
-        benModel.memberBenefitAPI(context)
+        benModel.loadBenefits(context, true)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)

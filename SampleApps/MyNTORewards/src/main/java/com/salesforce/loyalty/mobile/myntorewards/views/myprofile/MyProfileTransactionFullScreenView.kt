@@ -39,7 +39,7 @@ fun MyProfileTransactionFullScreenView(navProfileController: NavHostController) 
     val context: Context = LocalContext.current
     val tranModel: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
     fun refresh() = refreshScope.launch {
-        tranModel.getTransactions(context)
+        tranModel.loadTransactions(context, true)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)

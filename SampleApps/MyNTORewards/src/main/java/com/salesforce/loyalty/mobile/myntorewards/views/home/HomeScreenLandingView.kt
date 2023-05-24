@@ -57,9 +57,9 @@ fun HomeScreenLandingView(
 
 
     fun refresh() = refreshScope.launch {
-        model.fetchPromotions(context)
-        profileModel.getMemberProfile(context)
-        voucherModel.getVoucher(context)
+        model.loadPromotions(context, true)
+        profileModel.loadProfile(context, true)
+        voucherModel.loadVoucher(context, true)
     }
     val state = rememberPullRefreshState(refreshing, ::refresh)
 

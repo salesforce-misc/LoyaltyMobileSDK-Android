@@ -39,7 +39,7 @@ class VoucherViewModel : ViewModel() {
 
     private val viewState = MutableLiveData<VoucherViewState>()
 
-    fun loadVoucher(context: Context) {
+    fun loadVoucher(context: Context, refreshRequired:Boolean=false) {
         viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         viewModelScope.launch {
             val memberJson =
@@ -49,38 +49,33 @@ class VoucherViewModel : ViewModel() {
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-            var membershipKey = member.membershipNumber ?: ""
-            val voucherCache = LocalFileManager.getData(
-                context,
-                membershipKey,
-                LocalFileManager.DIRECTORY_VOUCHERS,
-                VoucherResult::class.java
-            )
+            val membershipKey = member.membershipNumber ?: ""
 
-            Log.d(TAG, "cache : $voucherCache")
-            if (voucherCache == null) {
-                getVoucher(context)
-            } else {
-                vouchers.value = voucherCache.voucherResponse
-                viewState.postValue(VoucherViewState.VoucherFetchSuccess)
+            if(refreshRequired)
+            {
+                getVoucher(context, membershipKey)
             }
+            else{
+                val voucherCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_VOUCHERS,
+                    VoucherResult::class.java
+                )
+
+                Log.d(TAG, "cache : $voucherCache")
+                if (voucherCache == null) {
+                    getVoucher(context, membershipKey)
+                } else {
+                    vouchers.value = voucherCache.voucherResponse
+                    viewState.postValue(VoucherViewState.VoucherFetchSuccess)
+                }
+            }
+
         }
     }
-    internal fun getVoucher(context: Context) {
+    private fun getVoucher(context: Context, membershipKey: String) {
 
-        viewState.postValue(VoucherViewState.VoucherFetchInProgress)
-        val memberJson =
-            PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
-        if (memberJson == null) {
-            Log.d(TAG, "failed: member profile Member details not present")
-            return
-        }
-        val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-
-
-        var membershipKey = member.membershipNumber ?: ""
-
-        viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         viewModelScope.launch {
             loyaltyAPIManager.getVouchers(
                 membershipKey, null, 1, null,

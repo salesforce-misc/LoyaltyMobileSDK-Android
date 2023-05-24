@@ -36,7 +36,7 @@ class TransactionsViewModel : ViewModel() {
 
     private val viewState = MutableLiveData<TransactionViewState>()
 
-    fun loadTransactions(context: Context) {
+    fun loadTransactions(context: Context, refreshRequired:Boolean=false) {
         viewState.postValue(TransactionViewState.TransactionFetchInProgress)
         viewModelScope.launch {
             val memberJson =
@@ -47,35 +47,35 @@ class TransactionsViewModel : ViewModel() {
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
-            var membershipKey = member.membershipNumber ?: ""
-            val transactionCache = LocalFileManager.getData(
-                context,
-                membershipKey,
-                LocalFileManager.DIRECTORY_TRANSACTIONS,
-                TransactionsResponse::class.java
-            )
+            val membershipKey = member.membershipNumber ?: ""
 
-            Log.d(TAG, "cache : $transactionCache")
-            if (transactionCache == null) {
-                getTransactions(context)
-            } else {
-                transactions.value = transactionCache!!
-                viewState.postValue(TransactionViewState.TransactionFetchSuccess)
+            if(refreshRequired)
+            {
+                getTransactions(context, membershipKey)
             }
+            else
+            {
+                val transactionCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_TRANSACTIONS,
+                    TransactionsResponse::class.java
+                )
+
+                Log.d(TAG, "cache : $transactionCache")
+                if (transactionCache == null) {
+                    getTransactions(context, membershipKey)
+                } else {
+                    transactions.value = transactionCache!!
+                    viewState.postValue(TransactionViewState.TransactionFetchSuccess)
+                }
+            }
+
         }
     }
 
-    internal fun getTransactions(context: Context) {
+    private fun getTransactions(context: Context, membershipNumber: String) {
         viewState.postValue(TransactionViewState.TransactionFetchInProgress)
-        val memberJson =
-            PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
-        if (memberJson == null) {
-            Log.d(TAG, "failed: member getTransactions Member details not present")
-            return
-        }
-        val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-
-        var membershipNumber = member.membershipNumber ?: ""
 
         viewModelScope.launch {
             membershipNumber?.let { membershipNumber ->

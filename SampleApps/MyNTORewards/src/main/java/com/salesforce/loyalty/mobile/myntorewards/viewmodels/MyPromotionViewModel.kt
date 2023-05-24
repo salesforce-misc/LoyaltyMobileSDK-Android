@@ -48,7 +48,7 @@ class MyPromotionViewModel : ViewModel() {
             PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
     }
 
-    fun loadPromotions(context: Context) {
+    fun loadPromotions(context: Context, refreshRequired:Boolean=false) {
         viewState.postValue(PromotionViewState.PromotionFetchInProgress)
         viewModelScope.launch {
             val memberJson =
@@ -58,41 +58,34 @@ class MyPromotionViewModel : ViewModel() {
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-
-            var membershipKey = member.membershipNumber ?: ""
-
-            val promotionCache = LocalFileManager.getData(
-                context,
-                membershipKey,
-                LocalFileManager.DIRECTORY_PROMOTIONS,
-                PromotionsResponse::class.java
-            )
-
-            Log.d(TAG, "cache : $promotionCache")
-            if (promotionCache == null) {
-                fetchPromotions(context)
-            } else {
-                viewState.postValue(PromotionViewState.PromotionsFetchSuccess(promotionCache))
+            val memberId = member.loyaltyProgramMemberId ?: ""
+            val membershipKey = member.membershipNumber ?: ""
+            if(refreshRequired)
+            {
+                fetchPromotions(context, memberId, membershipKey)
             }
+            else{
+                val promotionCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_PROMOTIONS,
+                    PromotionsResponse::class.java
+                )
+
+                Log.d(TAG, "cache : $promotionCache")
+                if (promotionCache == null) {
+                    fetchPromotions(context, memberId, membershipKey)
+                } else {
+                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess(promotionCache))
+                }
+            }
+
+
         }
     }
 
-    fun fetchPromotions(context: Context) {
-        viewState.postValue(PromotionViewState.PromotionFetchInProgress)
+    private fun fetchPromotions(context: Context, memberId: String, membershipKey: String) {
         viewModelScope.launch {
-
-            val memberJson =
-                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
-            if (memberJson == null) {
-                Log.d(TAG, "failed: member promotion Member details not present")
-                return@launch
-            }
-            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-
-            val memberId =
-                member.loyaltyProgramMemberId
-            var membershipKey = member.membershipNumber ?: ""
-
             loyaltyAPIManager.getEligiblePromotions(membershipKey, memberId).onSuccess {
                 if (it.outputParameters?.outputParameters?.results != null) {
                     LocalFileManager.saveData(
@@ -127,7 +120,7 @@ class MyPromotionViewModel : ViewModel() {
             loyaltyAPIManager.enrollInPromotions(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
-                fetchPromotions(context)
+                loadPromotions(context, true)
                 Log.d(TAG, "promotion enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =
@@ -150,7 +143,7 @@ class MyPromotionViewModel : ViewModel() {
             loyaltyAPIManager.unEnrollPromotion(membershipNumber, promotionName).onSuccess {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
-                fetchPromotions(context)
+                loadPromotions(context, true)
                 Log.d(TAG, "promotion un enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =

@@ -59,7 +59,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
 
     fun refresh() = refreshScope.launch {
 
-        voucherModel.getVoucher(context)
+        voucherModel.loadVoucher(context,true )
 
     }
 

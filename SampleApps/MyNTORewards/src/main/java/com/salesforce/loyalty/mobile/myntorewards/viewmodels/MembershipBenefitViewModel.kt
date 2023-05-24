@@ -38,7 +38,7 @@ class MembershipBenefitViewModel : ViewModel() {
 
     private val viewState = MutableLiveData<BenefitViewStates>()
 
-    fun loadBenefits(context: Context) {
+    fun loadBenefits(context: Context, refreshRequired:Boolean=false) {
         viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
 
         viewModelScope.launch {
@@ -52,36 +52,32 @@ class MembershipBenefitViewModel : ViewModel() {
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
             val memberId = member.loyaltyProgramMemberId ?: ""
             val membershipKey = member.membershipNumber ?: ""
-            val benefitsCache = LocalFileManager.getData(
-                context,
-                membershipKey,
-                LocalFileManager.DIRECTORY_BENEFITS,
-                MemberBenefitsResponse::class.java
-            )
 
-            Log.d(TAG, "cache : $benefitsCache")
-            if (benefitsCache == null) {
-                memberBenefitAPI(context)
-            } else {
-                membershipBenefit.value = benefitsCache.memberBenefits
-                viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
+            if(refreshRequired)
+            {
+                memberBenefitAPI(context, memberId,membershipKey )
             }
+            else{
+                val benefitsCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_BENEFITS,
+                    MemberBenefitsResponse::class.java
+                )
+
+                Log.d(TAG, "cache : $benefitsCache")
+                if (benefitsCache == null || refreshRequired) {
+                    memberBenefitAPI(context, memberId, membershipKey)
+                } else {
+                    membershipBenefit.value = benefitsCache.memberBenefits
+                    viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
+                }
+            }
+
         }
     }
 
-    internal fun memberBenefitAPI(context: Context) {
-        viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
-        val memberJson =
-            PrefHelper.customPrefs(context)
-                .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
-        if (memberJson == null) {
-            Log.d(TAG, "failed: member benefit Member details not present")
-            return
-        }
-        val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-        val memberId = member.loyaltyProgramMemberId ?: ""
-        val membershipKey = member.membershipNumber ?: ""
-
+    private fun memberBenefitAPI(context: Context, memberId: String, membershipKey: String) {
         viewModelScope.launch {
             loyaltyAPIManager.getMemberBenefits(memberId, membershipKey).onSuccess {
 

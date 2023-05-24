@@ -10,7 +10,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,8 +24,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.ScreenTabHeader
 import com.salesforce.loyalty.mobile.myntorewards.views.TransactionCard
 import com.salesforce.loyalty.mobile.myntorewards.views.UserInfoRow
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherRow
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -42,10 +39,10 @@ fun MyProfileLandingView(navProfileViewController: NavHostController) {
     val benModel: MembershipBenefitViewModel = viewModel()
 
     fun refresh() = refreshScope.launch {
-        profileModel.getMemberProfile(context)
-        tranModel.getTransactions(context)
-        voucherModel.getVoucher(context)
-        benModel.memberBenefitAPI(context)
+        profileModel.loadProfile(context, true)
+        tranModel.loadTransactions(context, true)
+        voucherModel.loadVoucher(context,true )
+        benModel.loadBenefits(context, true)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
