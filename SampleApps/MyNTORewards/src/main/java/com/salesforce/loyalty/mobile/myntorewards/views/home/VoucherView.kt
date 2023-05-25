@@ -2,16 +2,20 @@ package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -34,16 +38,21 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 @Composable
 fun VoucherView(voucher: VoucherResponse) {
 
+    var voucherPopupState by remember { mutableStateOf(false) }
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    var clippedText by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .width(165.dp)
             .background(Color.White, RoundedCornerShape(16.dp))
             .padding(bottom = 16.dp)
+            .clickable {
+                voucherPopupState = true
+            }
     )
 
     {
-
 
         Box() {
             Image(
@@ -62,7 +71,7 @@ fun VoucherView(voucher: VoucherResponse) {
                     .size(165.dp, 92.dp)
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                 contentScale = ContentScale.Crop
-            ){
+            ) {
                 it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             }
 
@@ -176,7 +185,8 @@ fun VoucherView(voucher: VoucherResponse) {
                         .fillMaxWidth()
                 )
             } else if (voucher.status == VOUCHER_ISSUED) {
-                Box()
+
+                Box(modifier = Modifier.width(250.dp))
                 {
                     Image(
                         painter = painterResource(id = R.drawable.voucher_frame),
@@ -191,6 +201,11 @@ fun VoucherView(voucher: VoucherResponse) {
                         modifier = Modifier
                             .height(32.dp)
                             .height(145.dp)
+                            .clickable {
+                                voucher.voucherCode?.let {
+                                    clipboardManager.setText(AnnotatedString((it)))
+                                }
+                            }
                     ) {
 
                         voucher.voucherCode?.let {
@@ -212,5 +227,13 @@ fun VoucherView(voucher: VoucherResponse) {
             }
 
         }
+    }
+    if (voucherPopupState) {
+        VoucherPopup(
+            voucher,
+            closePopup = {
+                voucherPopupState = false
+            }
+        )
     }
 }

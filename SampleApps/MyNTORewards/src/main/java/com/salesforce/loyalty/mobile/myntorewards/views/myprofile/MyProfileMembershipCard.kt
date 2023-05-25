@@ -26,6 +26,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourPurpleQR
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
@@ -217,7 +218,7 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
         Column(modifier = Modifier.clickable {
             popupControlQRCOde = true
         }) {
-            QRCode(value = membershipID, width = 46, height = 46)
+            QRCode(value = membershipID, width = 46, height = 46, ColourPurpleQR)
         }
 
         if (popupControlQRCOde) {

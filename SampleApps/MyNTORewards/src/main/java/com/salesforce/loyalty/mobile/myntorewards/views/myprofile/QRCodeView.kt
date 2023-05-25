@@ -21,10 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 
 
@@ -146,7 +143,7 @@ fun QRCodeBox(membershipNumber: String, userName: String) {
                         fontWeight = FontWeight.Normal,
                     )
                     Spacer(modifier = Modifier.height(42.dp))
-                    QRCode(membershipNumber, 120, 120)
+                    QRCode(membershipNumber, 120, 120, ColourPurpleQR)
 
 
                     Spacer(modifier = Modifier.height(24.dp))

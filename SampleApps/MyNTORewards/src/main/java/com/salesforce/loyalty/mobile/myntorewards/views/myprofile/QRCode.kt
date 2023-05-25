@@ -20,14 +20,14 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourPurpleQR
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourBlackQR
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourWhiteQR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun QRCode(value: String, width: Int, height: Int) {
+fun QRCode(value: String, width: Int, height: Int, colour:Long= ColourBlackQR ) {
 
     val qrCodeBitmap = remember { mutableStateOf<ImageBitmap?>(null) }
     val scope = rememberCoroutineScope()
@@ -49,7 +49,7 @@ fun QRCode(value: String, width: Int, height: Int) {
                             width,
                             height,
                             hints
-                        )
+                        ), colour
                     )?.asImageBitmap()
                 } catch (e: Exception) {
                     Log.e("ComposeBarcodes", "Invalid Barcode Format", e)
@@ -73,7 +73,7 @@ fun QRCode(value: String, width: Int, height: Int) {
 
 }
 
-fun createBitmap(matrix: BitMatrix): Bitmap? {
+fun createBitmap(matrix: BitMatrix, colour:Long): Bitmap? {
 
     val width = matrix.width
     val height = matrix.height
@@ -81,7 +81,7 @@ fun createBitmap(matrix: BitMatrix): Bitmap? {
     for (y in 0 until height) {
         val offset = y * width
         for (x in 0 until width) {
-            pixels[offset + x] = (if (matrix[x, y]) ColourPurpleQR else ColourWhiteQR).toInt()
+            pixels[offset + x] = (if (matrix[x, y]) colour else ColourWhiteQR).toInt()
         }
     }
     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
