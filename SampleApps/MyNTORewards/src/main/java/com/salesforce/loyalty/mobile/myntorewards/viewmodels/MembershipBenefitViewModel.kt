@@ -65,7 +65,7 @@ class MembershipBenefitViewModel : ViewModel() {
                     MemberBenefitsResponse::class.java
                 )
 
-                Log.d(TAG, "cache : $benefitsCache")
+                Logger.d(TAG, "cache : $benefitsCache")
                 if (benefitsCache == null || refreshRequired) {
                     memberBenefitAPI(context, memberId, membershipKey)
                 } else {
@@ -90,10 +90,10 @@ class MembershipBenefitViewModel : ViewModel() {
                     LocalFileManager.DIRECTORY_BENEFITS
                 )
                 viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
-                Log.d(TAG, "success member benefit response: $it")
+                Logger.d(TAG, "success member benefit response: $it")
 
             }.onFailure {
-                Log.d(TAG, "failed: member benefit ${it.message}")
+                Logger.d(TAG, "failed: member benefit ${it.message}")
                 viewState.postValue(BenefitViewStates.BenefitFetchFailure)
 
             }
