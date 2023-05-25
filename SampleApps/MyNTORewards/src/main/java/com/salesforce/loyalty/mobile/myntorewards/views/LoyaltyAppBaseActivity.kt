@@ -2,7 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -16,6 +15,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 //Main Activity Application Entry Point
 class LoyaltyAppBaseActivity : ComponentActivity() {
@@ -48,7 +48,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
     private fun observeSessionExpiry() {
         ForceAuthManager.forceAuthManager.authenticationStatusLiveData.observe(this) { status ->
             if (ForceAuthManager.AuthenticationStatus.UNAUTHENTICATED == status) {
-                Log.d(TAG, "observeSessionExpiry() status: $status")
+                Logger.d(TAG, "observeSessionExpiry() status: $status")
                 model.logoutAndClearAllSettings(applicationContext)
             }
         }
@@ -58,7 +58,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         model.logoutStateLiveData.observe(this) { logoutState ->
             run {
                 if (LogoutState.LOGOUT_SUCCESS == logoutState) {
-                    Log.d(TAG, "observeLoginStatus() logout success")
+                    Logger.d(TAG, "observeLoginStatus() logout success")
                     setContent {
                         rememberNavController().clearBackStack(0)
                         MainScreenStart()

@@ -7,9 +7,9 @@
 
 package com.salesforce.loyalty.mobile.sources.loyaltyAPI
 
-import android.util.Log
 import com.salesforce.loyalty.mobile.sources.forceUtils.DateUtils
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 
@@ -57,7 +57,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         canReceivePromotions: Boolean,
         canReceivePartnerPromotions: Boolean
     ): Result<EnrollmentResponse> {
-        Log.d(TAG, "postEnrollment() $firstName $lastName $email $emailNotification")
+        Logger.d(TAG, "postEnrollment() $firstName $lastName $email $emailNotification")
         val associatedContactDetails = AssociatedContactDetails(
             firstName = firstName,
             lastName = lastName,
@@ -99,7 +99,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         memberShipNumber: String?,
         programCurrencyName: String?
     ): Result<MemberProfileResponse> {
-        Log.d(TAG, "getMemberProfile() $memberId $memberShipNumber")
+        Logger.d(TAG, "getMemberProfile() $memberId $memberShipNumber")
 
         return loyaltyClient.loyaltyApi.getMemberProfile(
             LoyaltyConfig.getRequestUrl(
@@ -123,7 +123,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         memberId: String,
         membershipNumber: String?
     ): Result<MemberBenefitsResponse> {
-        Log.d(TAG, "getMemberBenefits() $memberId")
+        Logger.d(TAG, "getMemberBenefits() $memberId")
 
         return loyaltyClient.loyaltyApi.getMemberBenefits(
             LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.MemberBenefits(memberId)),
@@ -150,7 +150,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         periodStartDate: String?,
         periodEndDate: String?
     ): Result<TransactionsResponse> {
-        Log.d(TAG, "getTransactions() $membershipNumber")
+        Logger.d(TAG, "getTransactions() $membershipNumber")
         val transPageNumber = pageNumber ?: 1
         return loyaltyClient.loyaltyApi.getTransactions(
             LoyaltyConfig.getRequestUrl(mInstanceUrl,
@@ -178,7 +178,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         membershipNumber: String?,
         memberId: String?
     ): Result<PromotionsResponse> {
-        Log.d(TAG, "getEligiblePromotions() $membershipNumber")
+        Logger.d(TAG, "getEligiblePromotions() $membershipNumber")
 
         var processParameterMap: MutableMap<String, Any?> = mutableMapOf()
         if (membershipNumber?.isNotEmpty() == true) {
@@ -211,7 +211,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         membershipNumber: String,
         promotionName: String
     ): Result<EnrollPromotionsResponse> {
-        Log.d(TAG, "enrollInPromotions() $membershipNumber Promotion Name: $promotionName")
+        Logger.d(TAG, "enrollInPromotions() $membershipNumber Promotion Name: $promotionName")
 
         val requestBody: PromotionsRequest =
             PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
@@ -238,7 +238,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         membershipNumber: String,
         promotionName: String
     ): Result<UnenrollPromotionResponse> {
-        Log.d(TAG, "unEnrollPromotion() $membershipNumber Promotion Name: $promotionName")
+        Logger.d(TAG, "unEnrollPromotion() $membershipNumber Promotion Name: $promotionName")
 
         val requestBody: PromotionsRequest =
             PromotionsRequest(listOf(mapOf(LoyaltyConfig.KEY_MEMBERSHIP_NUMBER to membershipNumber,
@@ -264,7 +264,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         productName: Array<String>?,
         productCategoryName: Array<String>?
     ): Result<VoucherResult> {
-        Log.d(TAG, "getVouchers() $membershipNumber")
+        Logger.d(TAG, "getVouchers() $membershipNumber")
         val voucherStatus = getStringOfArrayItems(voucherStatus)
         val productId = getStringOfArrayItems(productId)
         val productCategoryId = getStringOfArrayItems(productCategoryId)

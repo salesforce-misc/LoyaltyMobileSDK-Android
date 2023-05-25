@@ -1,10 +1,10 @@
 package com.salesforce.loyalty.mobile.myntorewards.checkout
 
-import android.util.Log
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutNetworkClient
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.*
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 
 class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String){
@@ -27,7 +27,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
 
     suspend fun createOrder(
     ): Result<String> {
-        Log.d(TAG, "createOrder()")
+        Logger.d(TAG, "createOrder()")
 
         val body = OrderCreationRequest(
             productName = "Men's Rainier L4 Windproof Soft Shell Hoodie",
@@ -50,7 +50,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
 
     suspend fun getShippingMethods(
     ): Result<List<ShippingMethod>> {
-        Log.d(TAG, "getShippingMethods()")
+        Logger.d(TAG, "getShippingMethods()")
 
         return checkoutClient.authApi.getShippingMethods(
             getShippingMethodsUrl()
@@ -60,7 +60,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
     suspend fun getOrderDetails(
         orderId: String
     ): Result<OrderDetailsResponse> {
-        Log.d(TAG, "getOrderDetails()")
+        Logger.d(TAG, "getOrderDetails()")
 
         return checkoutClient.authApi.getOrderDetails(
             getOrderCreationUrl(), orderId = orderId
@@ -69,7 +69,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
 
     suspend fun getShippingBillingAddressSOQL(
     ): ShippingBillingAddressRecord? {
-        Log.d(TAG, "getShippingBillingAddressSOQL()")
+        Logger.d(TAG, "getShippingBillingAddressSOQL()")
 
         val result = checkoutClient.authApi.getShippingBillingAddressSOQL(
             getShippingBillingSOQLUrl(), getShippingBillingAddressSOQLQuery()

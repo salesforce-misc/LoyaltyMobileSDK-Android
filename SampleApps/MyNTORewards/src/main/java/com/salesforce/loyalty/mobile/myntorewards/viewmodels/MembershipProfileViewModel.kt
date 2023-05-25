@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 import kotlinx.coroutines.launch
@@ -43,7 +43,7 @@ class MembershipProfileViewModel : ViewModel() {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
-                Log.d(TAG, "failed: member profile Member details not present")
+                Logger.d(TAG, "failed: member profile Member details not present")
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
@@ -63,7 +63,7 @@ class MembershipProfileViewModel : ViewModel() {
                     MemberProfileResponse::class.java
                 )
 
-                Log.d(TAG, "cache : $myProfileCache")
+                Logger.d(TAG, "cache : $myProfileCache")
                 if (myProfileCache == null) {
                     getMemberProfile(context, memberId, membershipKey)
                 } else {
@@ -106,9 +106,9 @@ class MembershipProfileViewModel : ViewModel() {
                 }
 
                 viewState.postValue(MyProfileViewStates.MyProfileFetchSuccess)
-                Log.d(TAG, "member success: $it")
+                Logger.d(TAG, "member success: $it")
             }.onFailure {
-                Log.d(TAG, "member failed: ${it.message}")
+                Logger.d(TAG, "member failed: ${it.message}")
                 viewState.postValue(MyProfileViewStates.MyProfileFetchFailure)
             }
         }

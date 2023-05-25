@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +13,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionsResponse
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class TransactionsViewModel : ViewModel() {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
-                Log.d(TAG, "failed: member getTransactions Member details not present")
+                Logger.d(TAG, "failed: member getTransactions Member details not present")
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
@@ -62,7 +62,7 @@ class TransactionsViewModel : ViewModel() {
                     TransactionsResponse::class.java
                 )
 
-                Log.d(TAG, "cache : $transactionCache")
+                Logger.d(TAG, "cache : $transactionCache")
                 if (transactionCache == null) {
                     getTransactions(context, membershipKey)
                 } else {
@@ -90,10 +90,10 @@ class TransactionsViewModel : ViewModel() {
                         )
                         viewState.postValue(TransactionViewState.TransactionFetchSuccess)
                         transactions.value = it
-                        Log.d(TAG, "getTransactions success: $it")
+                        Logger.d(TAG, "getTransactions success: $it")
 
                     }.onFailure {
-                        Log.d(TAG, "getTransactions failed: ${it.message}")
+                        Logger.d(TAG, "getTransactions failed: ${it.message}")
                         viewState.postValue(TransactionViewState.TransactionFetchFailure)
                     }
             }

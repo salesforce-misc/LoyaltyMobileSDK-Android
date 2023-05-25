@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +9,7 @@ import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsRe
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
 class CheckOutFlowViewModel : ViewModel() {
@@ -45,48 +45,48 @@ class CheckOutFlowViewModel : ViewModel() {
     private val shippingDetails = MutableLiveData<List<ShippingMethod>>()
 
     fun placeOrder() {
-        Log.d(TAG, "Order Placed request")
+        Logger.d(TAG, "Order Placed request")
         viewModelScope.launch {
 
             checkoutManager.createOrder().onSuccess {
                 orderID.value = it
-                Log.d(TAG, "Order Placed request Success")
+                Logger.d(TAG, "Order Placed request Success")
                 orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_SUCCESS
-                Log.d(TAG, "orderPlacedStatus Success: ${orderID.value.toString()}")
+                Logger.d(TAG, "orderPlacedStatus Success: ${orderID.value.toString()}")
             }
                 .onFailure {
                     orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_FAILURE
-                    Log.d(TAG, "orderPlaced request failed: ${it.message}")
+                    Logger.d(TAG, "orderPlaced request failed: ${it.message}")
                 }
 
         }
     }
 
     fun fetchOrderDetails(orderID: String) {
-        Log.d(TAG, "Order details fetch request")
+        Logger.d(TAG, "Order details fetch request")
         viewModelScope.launch {
 
             checkoutManager.getOrderDetails(orderID).onSuccess {
                 orderDetails.value = it
-                Log.d(TAG, "Order Details Success: " + orderDetails.value.toString())
+                Logger.d(TAG, "Order Details Success: " + orderDetails.value.toString())
             }
                 .onFailure {
-                    Log.d(TAG, "orderDetails request failed: ${it.message}")
+                    Logger.d(TAG, "orderDetails request failed: ${it.message}")
                 }
 
         }
     }
 
     fun fetchShippingDetails() {
-        Log.d(TAG, "fetch shipping details request")
+        Logger.d(TAG, "fetch shipping details request")
         viewModelScope.launch {
 
             checkoutManager.getShippingMethods().onSuccess {
                 shippingDetails.value = it
-                Log.d(TAG, "shipping Details Success: " + shippingDetails.value.toString())
+                Logger.d(TAG, "shipping Details Success: " + shippingDetails.value.toString())
             }
                 .onFailure {
-                    Log.d(TAG, "shipping Detailsrequest failed: ${it.message}")
+                    Logger.d(TAG, "shipping Detailsrequest failed: ${it.message}")
                 }
 
         }

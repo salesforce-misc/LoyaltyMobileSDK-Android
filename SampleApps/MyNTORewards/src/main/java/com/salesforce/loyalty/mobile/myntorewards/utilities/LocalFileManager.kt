@@ -1,8 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import java.io.*
 
 object LocalFileManager {
@@ -37,9 +37,9 @@ object LocalFileManager {
         try {
             val content = Gson().toJson(data)
             outputStreamWriter.write(content.toString())
-            Log.d(TAG, "saveData $content")
+            Logger.d(TAG, "saveData $content")
         } catch (e: java.lang.Exception) {
-            Log.d(TAG, "Exception occured when saving data to file ${e.message}")
+            Logger.d(TAG, "Exception occured when saving data to file ${e.message}")
         } finally {
             outputStreamWriter.close()
             out.close()
@@ -79,11 +79,11 @@ object LocalFileManager {
             val stringContent = stringBuilder.toString()
             if (stringContent.isNotEmpty()) {
                 val content = Gson().fromJson(stringContent, type)
-                Log.d(TAG, "getData  $content")
+                Logger.d(TAG, "getData  $content")
                 return content
             }
         } catch (e: java.lang.Exception) {
-            Log.d(TAG, "Exception occured when getting data from file ${e.message}")
+            Logger.d(TAG, "Exception occured when getting data from file ${e.message}")
         } finally {
             input?.close()
         }
@@ -111,10 +111,10 @@ object LocalFileManager {
         if (folderDir.exists() && folderDir.isDirectory) {
             for (child in folderDir.listFiles()) {
                 val isDeleted = child.delete()
-                Log.d(TAG, "isDeleted: $isDeleted")
+                Logger.d(TAG, "isDeleted: $isDeleted")
             }
             val folderDeleted = folderDir.delete()
-            Log.d(TAG, "folderDeleted: $folderDeleted")
+            Logger.d(TAG, "folderDeleted: $folderDeleted")
         }
     }
 }
