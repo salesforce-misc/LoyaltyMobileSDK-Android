@@ -45,7 +45,7 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController) {
     val profileViewModel: MembershipProfileViewModel = viewModel()
     val context: Context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        profileViewModel.getMemberProfile(context)
+        profileViewModel.loadProfile(context, true)
     }
     orderID?.let {
         model.fetchOrderDetails(orderID)

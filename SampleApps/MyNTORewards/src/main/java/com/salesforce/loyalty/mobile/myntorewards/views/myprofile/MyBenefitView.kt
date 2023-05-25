@@ -9,7 +9,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -34,45 +38,71 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitVi
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MyProfileBenefitFullScreenView(navProfileController: NavHostController) {
-    Column(
-        verticalArrangement = Arrangement.Top,
-        modifier = Modifier.background(Color.White)
-    )
-    {
-        Spacer(modifier = Modifier.height(50.dp))
-        Image(
-            painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)
-                .clickable {
-                    navProfileController.popBackStack()
-                }
-        )
-        Text(
-            text = stringResource(R.string.my_benefits),
-            fontFamily = font_archivo_bold,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(top = 11.5.dp, bottom = 11.5.dp, start = 16.dp, end = 16.dp)
-        )
-        Column(
-            modifier = Modifier
-                .background(MyProfileScreenBG)
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(16.dp)
 
-        ) {
-            BenefitListView(Modifier.fillMaxHeight())
-        }
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
+
+    val context: Context = LocalContext.current
+    val benModel: MembershipBenefitViewModel = viewModel()
+
+    fun refresh() = refreshScope.launch {
+        benModel.loadBenefits(context, true)
     }
+
+    val state = rememberPullRefreshState(refreshing, ::refresh)
+
+    Box(contentAlignment = Alignment.TopCenter) {
+        Column(
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier
+                .background(Color.White)
+                .pullRefresh(state)
+        )
+        {
+            Spacer(modifier = Modifier.height(50.dp))
+            Image(
+                painter = painterResource(id = R.drawable.back_arrow),
+                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)
+                    .clickable {
+                        navProfileController.popBackStack()
+                    }
+            )
+            Text(
+                text = stringResource(R.string.my_benefits),
+                fontFamily = font_archivo_bold,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(
+                    top = 11.5.dp,
+                    bottom = 11.5.dp,
+                    start = 16.dp,
+                    end = 16.dp
+                )
+            )
+            Column(
+                modifier = Modifier
+                    .background(MyProfileScreenBG)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(16.dp)
+
+            ) {
+                BenefitListView(Modifier.fillMaxHeight())
+            }
+        }
+        PullRefreshIndicator(refreshing, state)
+    }
+
 }
 
 @Composable
@@ -113,6 +143,10 @@ fun BenefitListView(modifier: Modifier) {
             isInProgress = false
 
         }
+        BenefitViewStates.BenefitFetchInProgress -> {
+            isInProgress = true
+
+        }
         BenefitViewStates.BenefitFetchFailure -> {
             isInProgress = false
         }
@@ -129,28 +163,25 @@ fun BenefitListView(modifier: Modifier) {
                 modifier = Modifier
                     .fillMaxSize(0.1f)
             )
-        }
+        } else {
+            if (membershipBenefit?.isEmpty() == true) {
+                BenefitsEmptyView()
+            }
 
-        if (membershipBenefit?.isEmpty() == true) {
-            BenefitsEmptyView()
-        }
-
-        membershipBenefit?.let {
-            LazyColumn(modifier = modifier) {
-                if(it.size>= AppConstants.MAX_SIZE_BENEFIT_LIST)
-                {
-                    items(it.subList(0, AppConstants.MAX_SIZE_BENEFIT_LIST)) {
-                        ListItemMyBenefit(it)
-                    }
-                }
-                else{
-                    items(it) {
-                        ListItemMyBenefit(it)
+            membershipBenefit?.let {
+                LazyColumn(modifier = modifier) {
+                    if (it.size >= AppConstants.MAX_SIZE_BENEFIT_LIST) {
+                        items(it.subList(0, AppConstants.MAX_SIZE_BENEFIT_LIST)) {
+                            ListItemMyBenefit(it)
+                        }
+                    } else {
+                        items(it) {
+                            ListItemMyBenefit(it)
+                        }
                     }
                 }
             }
         }
-
     }
 }
 

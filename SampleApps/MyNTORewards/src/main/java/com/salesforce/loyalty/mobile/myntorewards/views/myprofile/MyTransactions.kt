@@ -62,22 +62,12 @@ fun TransactionListView(modifier: Modifier) {
     val transactionViewState by model.transactionViewState.observeAsState()
     val context: Context = LocalContext.current
 
-    model.loadTransactions(context)
+    LaunchedEffect(true) {
+        model.loadTransactions(context)
+    }
 
     var isInProgress by remember { mutableStateOf(false) }
 
-    when (transactionViewState) {
-        is TransactionViewState.TransactionFetchSuccess -> {
-            isInProgress = false
-        }
-        is TransactionViewState.TransactionFetchFailure -> {
-            isInProgress = false
-        }
-        TransactionViewState.TransactionFetchInProgress -> {
-            isInProgress = true
-        }
-        else -> {}
-    }
 
 
     Box(
@@ -85,38 +75,50 @@ fun TransactionListView(modifier: Modifier) {
         modifier = Modifier.fillMaxSize()
     ) {
 
-        if (transactions?.transactionJournals?.isEmpty() == true) {
-            TransactionEmptyView()
-        }
-        if (transactions?.transactionJournals?.isNotEmpty() == true) {
-            val count = transactions?.transactionJournalCount ?: 0
-            val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
-                AppConstants.MAX_TRANSACTION_COUNT
-            } else {
-                count
-            }
-            var index = 0
-            var previewTransactionCount = 0
-            Column(modifier = Modifier.wrapContentHeight()) {
-                Spacer(modifier = Modifier.height(12.dp))
-                while (previewTransactionCount < pageCount && index < count) {
-                    transactions?.transactionJournals?.get(index)?.apply {
-                        val transactionName = this.journalTypeName
-                        val points = getCurrencyPoints(this.pointsChange)
-                        val date = this.activityDate?.let { activityDate ->
-                            formatTransactionDateTime(activityDate)
-                        }
-                        if (transactionName != null && points != null && date != null) {
-                            ListItemTransaction(transactionName, points, date)
-                            previewTransactionCount++
+        when (transactionViewState) {
+            is TransactionViewState.TransactionFetchSuccess -> {
+                if (transactions?.transactionJournals?.isNotEmpty() == true) {
+                    val count = transactions?.transactionJournalCount ?: 0
+                    val pageCount = if (count > 0 && count > AppConstants.MAX_TRANSACTION_COUNT) {
+                        AppConstants.MAX_TRANSACTION_COUNT
+                    } else {
+                        count
+                    }
+                    var index = 0
+                    var previewTransactionCount = 0
+                    Column(modifier = Modifier.wrapContentHeight()) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        while (previewTransactionCount < pageCount && index < count) {
+                            transactions?.transactionJournals?.get(index)?.apply {
+                                val transactionName = this.journalTypeName
+                                val points = getCurrencyPoints(this.pointsChange)
+                                val date = this.activityDate?.let { activityDate ->
+                                    formatTransactionDateTime(activityDate)
+                                }
+                                if (transactionName != null && points != null && date != null) {
+                                    ListItemTransaction(transactionName, points, date)
+                                    previewTransactionCount++
+                                }
+                            }
+                            index++
                         }
                     }
-                    index++
+                    if (previewTransactionCount == 0) {
+                        TransactionEmptyView()
+                    }
                 }
+                isInProgress = false
             }
-            if (previewTransactionCount == 0) {
-                TransactionEmptyView()
+            is TransactionViewState.TransactionFetchFailure -> {
+                isInProgress = false
             }
+            TransactionViewState.TransactionFetchInProgress -> {
+                isInProgress = true
+            }
+            else -> {}
+        }
+        if (transactions?.transactionJournals?.isEmpty() == true) {
+            TransactionEmptyView()
         }
 
         if (isInProgress) {
@@ -165,68 +167,69 @@ fun TransactionFullScreenListView() {
             )
         }
 
-    }
-    val transactionJournals = transactions?.transactionJournals
+    } else {
+        val transactionJournals = transactions?.transactionJournals
 
-    if (transactionJournals?.isEmpty() == true) {
-        TransactionEmptyView()
-    }
+        if (transactionJournals?.isEmpty() == true) {
+            TransactionEmptyView()
+        }
 
-    val recentTransactions = transactionJournals?.filter {
-        it.activityDate?.let { activityDate ->
-            Common.isTransactionDateWithinCurrentMonth(activityDate)
-        } == true
-    }
+        val recentTransactions = transactionJournals?.filter {
+            it.activityDate?.let { activityDate ->
+                Common.isTransactionDateWithinCurrentMonth(activityDate)
+            } == true
+        }
 
-    val oldTransactions = transactionJournals?.filter {
-        it.activityDate?.let { activityDate ->
-            Common.isTransactionDateWithinCurrentMonth(activityDate)
-        } == false
-    }
+        val oldTransactions = transactionJournals?.filter {
+            it.activityDate?.let { activityDate ->
+                Common.isTransactionDateWithinCurrentMonth(activityDate)
+            } == false
+        }
 
-    recentTransactions?.let { transactionsJournals ->
-        if (transactionsJournals.isNotEmpty()) {
-            Column(modifier = Modifier.wrapContentHeight()) {
-                Text(
-                    text = stringResource(id = R.string.label_transactions_recent),
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
-                )
-                LazyColumn() {
-                    items(transactionsJournals) {
-                        val transactionName = it.journalTypeName
-                        val points = getCurrencyPoints(it.pointsChange)
-                        val date = it.activityDate?.let { activityDate ->
-                            formatTransactionDateTime(activityDate)
-                        }
-                        if (transactionName != null && points != null && date != null) {
-                            ListItemTransaction(transactionName, points, date)
+        recentTransactions?.let { transactionsJournals ->
+            if (transactionsJournals.isNotEmpty()) {
+                Column(modifier = Modifier.wrapContentHeight()) {
+                    Text(
+                        text = stringResource(id = R.string.label_transactions_recent),
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp,
+                    )
+                    LazyColumn() {
+                        items(transactionsJournals) {
+                            val transactionName = it.journalTypeName
+                            val points = getCurrencyPoints(it.pointsChange)
+                            val date = it.activityDate?.let { activityDate ->
+                                formatTransactionDateTime(activityDate)
+                            }
+                            if (transactionName != null && points != null && date != null) {
+                                ListItemTransaction(transactionName, points, date)
+                            }
                         }
                     }
                 }
             }
         }
-    }
-    oldTransactions?.let { transactionsJournals ->
-        if (transactionsJournals.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Column(modifier = Modifier.wrapContentHeight()) {
-                Text(
-                    text = stringResource(id = R.string.label_transactions_one_month_ago),
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
-                )
-                LazyColumn() {
-                    items(transactionsJournals) {
-                        val transactionName = it.journalTypeName
-                        val points = getCurrencyPoints(it.pointsChange)
-                        val date = it.activityDate?.let { activityDate ->
-                            formatTransactionDateTime(activityDate)
-                        }
-                        if (transactionName != null && points != null && date != null) {
-                            ListItemTransaction(transactionName, points, date)
+        oldTransactions?.let { transactionsJournals ->
+            if (transactionsJournals.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Column(modifier = Modifier.wrapContentHeight()) {
+                    Text(
+                        text = stringResource(id = R.string.label_transactions_one_month_ago),
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp,
+                    )
+                    LazyColumn() {
+                        items(transactionsJournals) {
+                            val transactionName = it.journalTypeName
+                            val points = getCurrencyPoints(it.pointsChange)
+                            val date = it.activityDate?.let { activityDate ->
+                                formatTransactionDateTime(activityDate)
+                            }
+                            if (transactionName != null && points != null && date != null) {
+                                ListItemTransaction(transactionName, points, date)
+                            }
                         }
                     }
                 }
@@ -289,13 +292,14 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
         Column(modifier = Modifier.weight(0.3f)) {
             var color: Color = TextGreen
             var pointsString: String
-            val pointsRoundOff = round(points * 100)/100
+            val pointsRoundOff = round(points * 100) / 100
 
             if (points > 0) {
                 pointsString =
                     "+" + pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
             } else {
-                pointsString = pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+                pointsString =
+                    pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
                 color = TextRed
             }
 

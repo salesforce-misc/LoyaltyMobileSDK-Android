@@ -72,48 +72,58 @@ fun CardBackground() {
 fun CardContent() {
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
-    Column(
-        modifier = Modifier
-            .height(220.dp)
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 30.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
-    ) {
+        Column(
+            modifier = Modifier
+                .height(220.dp)
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 30.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start,
+        ) {
 
-        val model: MembershipProfileViewModel = viewModel()  //fetching reference of viewmodel
-        val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
-        val membershipProfileFetchStatus by model.profileViewState.observeAsState() // collecting livedata as state
-        val context: Context = LocalContext.current
-        LaunchedEffect(key1 = true) {
-            model.loadProfile(context)
-            isInProgress = true
-        }
-
-        when (membershipProfileFetchStatus) {
-            MyProfileViewStates.MyProfileFetchSuccess -> {
-                isInProgress = false
-
-            }
-            MyProfileViewStates.MyProfileFetchFailure -> {
-                isInProgress = false
+            val model: MembershipProfileViewModel = viewModel()  //fetching reference of viewmodel
+            val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
+            val membershipProfileFetchStatus by model.profileViewState.observeAsState() // collecting livedata as state
+            val context: Context = LocalContext.current
+            LaunchedEffect(key1 = true) {
+                model.loadProfile(context)
+                isInProgress = true
             }
 
-            else -> {}
+            when (membershipProfileFetchStatus) {
+                MyProfileViewStates.MyProfileFetchSuccess -> {
+                    isInProgress = false
+
+                }
+                MyProfileViewStates.MyProfileFetchInProgress -> {
+                    isInProgress = true
+
+                }
+                MyProfileViewStates.MyProfileFetchFailure -> {
+                    isInProgress = false
+                }
+
+                else -> {}
+            }
+
+            //loginStatus state being change to Success after token fetch
+            if (!isInProgress) {
+                Spacer(modifier = Modifier.height(16.dp))
+                membershipProfile?.memberTiers?.get(0)?.loyaltyMemberTierName?.let {
+                    MembershipTierRow(
+                        it
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                membershipProfile?.memberCurrencies?.get(0)?.let { RewardPointsAndExpiry(it) }
+                Spacer(modifier = Modifier.height(10.dp))
+
+                QRCodeRow(membershipProfile)
+            }
+
         }
-
-        //loginStatus state being change to Success after token fetch
-        Spacer(modifier = Modifier.height(16.dp))
-        membershipProfile?.memberTiers?.get(0)?.loyaltyMemberTierName?.let { MembershipTierRow(it) }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        membershipProfile?.memberCurrencies?.get(0)?.let { RewardPointsAndExpiry(it) }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        QRCodeRow(membershipProfile)
-
-    }
         if (isInProgress) {
             androidx.compose.material3.CircularProgressIndicator(
                 modifier = Modifier

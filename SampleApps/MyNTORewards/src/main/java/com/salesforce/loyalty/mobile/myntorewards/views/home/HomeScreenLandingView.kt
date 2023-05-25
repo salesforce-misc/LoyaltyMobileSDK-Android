@@ -8,7 +8,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -30,25 +34,46 @@ import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreenLandingView(
     bottomTabsNavController: NavController,
     navCheckOutFlowController: NavController,
 ) {
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
+    val model: MyPromotionViewModel = viewModel()
+    val profileModel: MembershipProfileViewModel = viewModel()
+    val context: Context = LocalContext.current
+    val voucherModel: VoucherViewModel = viewModel()
+
+
+    fun refresh() = refreshScope.launch {
+        model.loadPromotions(context, true)
+        profileModel.loadProfile(context, true)
+        voucherModel.loadVoucher(context, true)
+    }
+    val state = rememberPullRefreshState(refreshing, ::refresh)
+
 
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
             .background(MyProfileScreenBG)
+            .pullRefresh(state)
             .verticalScroll(rememberScrollState())
     )
     {
+
         Spacer(
             modifier = Modifier
                 .height(50.dp)
@@ -56,25 +81,32 @@ fun HomeScreenLandingView(
                 .background(VibrantPurple40)
         )
 
-        AppLogoAndSearchRow()
+        Box(contentAlignment = Alignment.TopCenter) {
 
-        UserNameAndRewardRow()
+            Column {
 
-        Spacer(modifier = Modifier.height(16.dp))
+                AppLogoAndSearchRow()
+                UserNameAndRewardRow()
 
-        PromotionCardRow(bottomTabsNavController, navCheckOutFlowController)
+                PromotionCardRow(bottomTabsNavController, navCheckOutFlowController)
+                VoucherRow(navCheckOutFlowController)
+            }
 
-        VoucherRow(navCheckOutFlowController)
+            PullRefreshIndicator(refreshing, state)
+
+        }
+
 
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun PromotionCardRow(
     bottomTabsNavController: NavController,
     navCheckOutFlowController: NavController
 ) {
+
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -108,10 +140,10 @@ fun PromotionCardRow(
                     promListListSize
                 }
 
-                if(membershipPromo?.isEmpty()==true){
+                if (membershipPromo?.isEmpty() == true) {
                     PromotionEmptyView(R.string.description_empty_promotions)
                 }
-               membershipPromo?.let {
+                membershipPromo?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
                         PromotionCard(page, membershipPromo, navCheckOutFlowController)
                     }
@@ -192,25 +224,56 @@ fun VoucherRow(
             )
         }
 
+        var isInProgress by remember { mutableStateOf(false) }
+
         val model: VoucherViewModel = viewModel()
         val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
+        val vouchersFetchStatus by model.voucherViewState.observeAsState() // collecting livedata as state
+
         val context: Context = LocalContext.current
         LaunchedEffect(key1 = true) {
             model.loadVoucher(context)
+            isInProgress = true
         }
 
-        if(vouchers?.isEmpty() == true)
-        {
-            VoucherEmptyView()
+        when (vouchersFetchStatus) {
+            VoucherViewState.VoucherFetchSuccess -> {
+                isInProgress = false
+
+            }
+            VoucherViewState.VoucherFetchFailure -> {
+                isInProgress = false
+            }
+
+            VoucherViewState.VoucherFetchInProgress -> {
+                isInProgress = true
+            }
+            else -> {}
         }
-        vouchers?.let {
-            LazyRow(modifier = Modifier.fillMaxWidth()) {
-                items(it) {
-                    Spacer(modifier = Modifier.width(12.dp))
-                    VoucherView(it)
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (isInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                )
+            } else {
+                if (vouchers?.isEmpty() == true) {
+                    VoucherEmptyView()
+                }
+                vouchers?.let {
+                    LazyRow(modifier = Modifier.fillMaxWidth()) {
+                        items(it) {
+                            Spacer(modifier = Modifier.width(12.dp))
+                            VoucherView(it)
+                        }
+                    }
                 }
             }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 

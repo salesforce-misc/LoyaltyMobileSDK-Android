@@ -39,7 +39,7 @@ class VoucherViewModel : ViewModel() {
 
     private val viewState = MutableLiveData<VoucherViewState>()
 
-    fun loadVoucher(context: Context) {
+    fun loadVoucher(context: Context, refreshRequired:Boolean=false) {
         viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         viewModelScope.launch {
             val memberJson =
@@ -49,45 +49,51 @@ class VoucherViewModel : ViewModel() {
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-            var membershipKey = member.membershipNumber ?: ""
-            val voucherCache = LocalFileManager.getData(
-                context,
-                membershipKey,
-                LocalFileManager.DIRECTORY_VOUCHERS,
-                VoucherResult::class.java
-            )
+            val membershipKey = member.membershipNumber ?: ""
 
-            Log.d(TAG, "cache : $voucherCache")
-            if (voucherCache == null) {
+            if(refreshRequired)
+            {
                 getVoucher(context, membershipKey)
-            } else {
-                vouchers.value = voucherCache.voucherResponse
-                viewState.postValue(VoucherViewState.VoucherFetchSuccess)
             }
+            else{
+                val voucherCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_VOUCHERS,
+                    VoucherResult::class.java
+                )
+
+                Log.d(TAG, "cache : $voucherCache")
+                if (voucherCache == null) {
+                    getVoucher(context, membershipKey)
+                } else {
+                    vouchers.value = voucherCache.voucherResponse
+                    viewState.postValue(VoucherViewState.VoucherFetchSuccess)
+                }
+            }
+
         }
     }
-    private fun getVoucher(context: Context, membershipKey: String?) {
-        viewState.postValue(VoucherViewState.VoucherFetchInProgress)
-        viewModelScope.launch {
-            if (membershipKey != null) {
-                loyaltyAPIManager.getVouchers(
-                    membershipKey, null, 1, null,
-                    null, null, null
-                ).onSuccess {
-                    LocalFileManager.saveData(
-                        context,
-                        it,
-                        membershipKey,
-                        LocalFileManager.DIRECTORY_VOUCHERS
-                    )
+    private fun getVoucher(context: Context, membershipKey: String) {
 
-                    vouchers.value = it.voucherResponse
-                    viewState.postValue(VoucherViewState.VoucherFetchSuccess)
-                    Log.d(TAG, "getVoucher success: ${it.voucherResponse}")
-                }.onFailure {
-                    viewState.postValue(VoucherViewState.VoucherFetchFailure)
-                    Log.d(TAG, "getVoucher failed: ${it.message}")
-                }
+        viewModelScope.launch {
+            loyaltyAPIManager.getVouchers(
+                membershipKey, null, 1, null,
+                null, null, null
+            ).onSuccess {
+                LocalFileManager.saveData(
+                    context,
+                    it,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_VOUCHERS
+                )
+
+                vouchers.value = it.voucherResponse
+                viewState.postValue(VoucherViewState.VoucherFetchSuccess)
+                Log.d(TAG, "getVoucher success: ${it.voucherResponse}")
+            }.onFailure {
+                viewState.postValue(VoucherViewState.VoucherFetchFailure)
+                Log.d(TAG, "getVoucher failed: ${it.message}")
             }
         }
     }
