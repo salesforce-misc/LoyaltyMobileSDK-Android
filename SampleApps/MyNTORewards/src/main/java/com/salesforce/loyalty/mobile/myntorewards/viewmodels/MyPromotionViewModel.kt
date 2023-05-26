@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +13,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
@@ -54,7 +54,7 @@ class MyPromotionViewModel : ViewModel() {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
-                Log.d(TAG, "failed: member promotion Member details not present")
+                Logger.d(TAG, "failed: member promotion Member details not present")
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
@@ -72,7 +72,7 @@ class MyPromotionViewModel : ViewModel() {
                     PromotionsResponse::class.java
                 )
 
-                Log.d(TAG, "cache : $promotionCache")
+                Logger.d(TAG, "cache : $promotionCache")
                 if (promotionCache == null) {
                     fetchPromotions(context, memberId, membershipKey)
                 } else {
@@ -98,10 +98,10 @@ class MyPromotionViewModel : ViewModel() {
                 } else {
                     viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
                 }
-                Log.d(TAG, "success member promotion response: $it")
+                Logger.d(TAG, "success member promotion response: $it")
             }.onFailure {
                 viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
-                Log.d(TAG, "failed: member promotion ${it.message}")
+                Logger.d(TAG, "failed: member promotion ${it.message}")
             }
         }
     }
@@ -111,7 +111,7 @@ class MyPromotionViewModel : ViewModel() {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
-                Log.d(TAG, "failed: member promotion Member details not present")
+                Logger.d(TAG, "failed: member promotion Member details not present")
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
@@ -121,11 +121,11 @@ class MyPromotionViewModel : ViewModel() {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 loadPromotions(context, true)
-                Log.d(TAG, "promotion enrolled success: $it")
+                Logger.d(TAG, "promotion enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
-                Log.d(TAG, "promotion enrolled failed ${it.message}")
+                Logger.d(TAG, "promotion enrolled failed ${it.message}")
             }
         }
     }
@@ -135,7 +135,7 @@ class MyPromotionViewModel : ViewModel() {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
-                Log.d(TAG, "failed: member promotion Member details not present")
+                Logger.d(TAG, "failed: member promotion Member details not present")
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
@@ -144,11 +144,11 @@ class MyPromotionViewModel : ViewModel() {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS
                 loadPromotions(context, true)
-                Log.d(TAG, "promotion un enrolled success: $it")
+                Logger.d(TAG, "promotion un enrolled success: $it")
             }.onFailure {
                 promEnrollmentStatus.value =
                     PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE
-                Log.d(TAG, "promotion un enrolled failed ${it.message}")
+                Logger.d(TAG, "promotion un enrolled failed ${it.message}")
             }
         }
     }
