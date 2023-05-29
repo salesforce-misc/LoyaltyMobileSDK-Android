@@ -34,6 +34,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
@@ -263,11 +264,17 @@ fun VoucherRow(
                 if (vouchers?.isEmpty() == true) {
                     VoucherEmptyView()
                 }
+
                 vouchers?.let {
                     LazyRow(modifier = Modifier.fillMaxWidth()) {
-                        items(it) {
-                            Spacer(modifier = Modifier.width(12.dp))
-                            VoucherView(it)
+                        var items= it.filter { it.status !=  VOUCHER_EXPIRED}
+                        if(items.size> 2)
+                        {
+                            items= items.subList(0,2)
+                        }
+                        items(items) {
+                                Spacer(modifier = Modifier.width(12.dp))
+                                VoucherView(it)
                         }
                     }
                 }

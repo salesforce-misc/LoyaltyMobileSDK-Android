@@ -24,6 +24,7 @@ val LightBlack = Color(0xFF444444)
 val MyProfileBG = Color(0xFFECE1F9)
 
 val ColourPurpleQR = 0xFF7526E3;
+val ColourBlackQR = 0xFF000000;
 val ColourWhiteQR = 0xFFFFFFFF;
 
 
