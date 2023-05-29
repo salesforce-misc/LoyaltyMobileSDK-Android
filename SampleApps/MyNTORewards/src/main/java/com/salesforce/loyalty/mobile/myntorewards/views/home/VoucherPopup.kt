@@ -13,8 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +64,9 @@ fun VoucherPopupUI(
     voucher: VoucherResponse,
     closePopup: () -> Unit,
 ) {
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    var clippedText by remember { mutableStateOf("") }
+
         Column(
             modifier = Modifier
                 .fillMaxHeight(0.95f)
@@ -207,9 +213,15 @@ fun VoucherPopupUI(
                 )
 
                 Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .height(32.dp)
-                        .width(145.dp)
+                        .width(200.dp)
+                        .clickable {
+                            voucher.voucherCode?.let {
+                                clipboardManager.setText(AnnotatedString((it)))
+                            }
+                        }
                 ) {
 
                     voucher.voucherCode?.let {
@@ -219,9 +231,18 @@ fun VoucherPopupUI(
                             color = VoucherColourCode,
                             fontFamily = font_sf_pro,
                             textAlign = TextAlign.Center,
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .align(Alignment.CenterVertically).padding(start=5.dp)
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.copy_icon),
+                            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+                            modifier = Modifier
+                                .height(11.dp)
+                                .height(11.dp).align(Alignment.CenterVertically).padding(end = 5.dp),
+                            contentScale = ContentScale.Fit
                         )
                     }
 

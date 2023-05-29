@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -193,14 +195,15 @@ fun VoucherView(voucher: VoucherResponse) {
                         contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                         modifier = Modifier
                             .height(32.dp)
-                            .height(145.dp),
+                            .width(200.dp),
                         contentScale = ContentScale.FillWidth
                     )
 
                     Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .height(32.dp)
-                            .height(145.dp)
+                            .width(200.dp)
                             .clickable {
                                 voucher.voucherCode?.let {
                                     clipboardManager.setText(AnnotatedString((it)))
@@ -215,11 +218,17 @@ fun VoucherView(voucher: VoucherResponse) {
                                 color = VoucherColourCode,
                                 fontFamily = font_sf_pro,
                                 textAlign = TextAlign.Center,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                                fontSize = 14.sp,
+                                modifier = Modifier.align(CenterVertically).padding(start = 5.dp)
                             )
                         }
+                        Image(
+                            painter = painterResource(id = R.drawable.copy_icon),
+                            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+                            modifier = Modifier
+                                .height(11.dp).align(CenterVertically).padding(end = 5.dp),
+                            contentScale = ContentScale.Fit
+                        )
 
                     }
 
