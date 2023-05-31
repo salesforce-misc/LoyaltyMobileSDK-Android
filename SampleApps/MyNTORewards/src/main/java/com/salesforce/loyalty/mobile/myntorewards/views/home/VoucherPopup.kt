@@ -160,7 +160,7 @@ fun VoucherPopupUI(
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(voucher.discountPercent+"%")
+                            append(voucher.discountPercent.toString()+"%")
                         }
                     },
                     fontFamily = font_sf_pro,

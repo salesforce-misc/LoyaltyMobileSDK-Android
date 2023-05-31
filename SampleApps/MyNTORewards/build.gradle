@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
+apply from: "$project.rootDir/jacoco.gradle"
 
 def connectedappPropertiesFile = rootProject.file("SampleApps/MyNTORewards/connectedapp.properties")
 def connectedappProperties = new Properties()
@@ -33,6 +34,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            enableUnitTestCoverage true
+        }
+        debug {
+            minifyEnabled false
+            testCoverageEnabled true
+            enableUnitTestCoverage true
         }
     }
     compileOptions {

@@ -17,11 +17,14 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+abstract class NetworkClient(auth: ForceAuthenticator, instanceUrl: String) {
+    abstract fun getNetworkClient(): LoyaltyApiInterface
+}
 
 /**
  * ForceClient class is responsible for creating retrofit instance to invoke Force APIs.
  */
-class LoyaltyClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
+class LoyaltyClient constructor(auth: ForceAuthenticator, instanceUrl: String): NetworkClient(auth, instanceUrl) {
 
     private val unauthorizedInterceptor: UnauthorizedInterceptor = UnauthorizedInterceptor(auth)
     private fun getOkHttpClientBuilder(): OkHttpClient.Builder {
@@ -43,7 +46,14 @@ class LoyaltyClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
         .client(getOkHttpClientBuilder().build())
         .build()
 
-    val loyaltyApi: LoyaltyApiInterface by lazy {
+    /*val loyaltyApi: LoyaltyApiInterface by lazy {
         loyaltyRetrofit.create(LoyaltyApiInterface::class.java)
+    }*/
+
+    override fun getNetworkClient(): LoyaltyApiInterface {
+        val loyaltyApi: LoyaltyApiInterface by lazy {
+            loyaltyRetrofit.create(LoyaltyApiInterface::class.java)
+        }
+        return loyaltyApi
     }
 }
