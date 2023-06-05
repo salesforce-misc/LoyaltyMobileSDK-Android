@@ -27,6 +27,7 @@ android {
         buildConfigField("String", "BASE_URL", connectedappProperties['BASE_URL'])
         buildConfigField("String", "INSTANCE_URL", connectedappProperties['INSTANCE_URL'])
         buildConfigField("String", "COMMUNITY_URL", connectedappProperties['COMMUNITY_URL'])
+        buildConfigField("String", "SELF_REGISTER_URL", connectedappProperties['SELF_REGISTER_URL'])
     }
 
     buildTypes {

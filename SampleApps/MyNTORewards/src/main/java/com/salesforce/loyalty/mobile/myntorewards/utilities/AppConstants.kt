@@ -83,5 +83,7 @@ class AppConstants {
         const val TAP_COUNT_OPEN_ADMIN_SETTINGS = 6
 
         const val MAX_SIZE_BENEFIT_LIST = 3
+
+        const val SELF_REGISTER_REDIRECT_URL_PATH = "/apex/CommunitiesLanding"
     }
 }

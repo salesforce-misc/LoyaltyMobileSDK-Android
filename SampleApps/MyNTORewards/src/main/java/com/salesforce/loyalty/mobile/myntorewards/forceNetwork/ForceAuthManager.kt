@@ -289,7 +289,6 @@ object ForceAuthManager: ForceAuthenticator {
         return PrefHelper.customPrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
     }
-
     fun getConnectedApp(): ConnectedApp {
         val selectedConnectedApp = PrefHelper.customPrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, null)
