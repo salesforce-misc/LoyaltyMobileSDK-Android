@@ -1,7 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
-import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -28,15 +27,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldText
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextField
@@ -47,7 +44,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextF
 fun LoginUI(
     navController: NavController,
     openPopup: (popupStatus: BottomSheetType) -> Unit,
-    closeSheet: () -> Unit
+    closeSheet: () -> Unit,
+    model: OnBoardingViewModelAbstractInterface
 ) {
     Column(
         modifier = Modifier
@@ -55,6 +53,7 @@ fun LoginUI(
             .imePadding()
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
+            .testTag("LoginUI")
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     )
@@ -68,7 +67,8 @@ fun LoginUI(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
         )
         {
-            LoginForm(navController, openPopup) {
+            //val model: OnboardingScreenViewModel = viewModel()
+            LoginForm(navController, openPopup, model) {
                 closeSheet()
             }
             LinkNewMemberJoin {
@@ -79,7 +79,12 @@ fun LoginUI(
 }
 
 @Composable
-fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet: () -> Unit) {
+fun LoginForm(
+    navController: NavController,
+    openPopup: (popupStatus: BottomSheetType) -> Unit,
+    model: OnBoardingViewModelAbstractInterface,
+    closeSheet: () -> Unit
+) {
     Box() {
         val context = LocalContext.current
         var isInProgress by remember { mutableStateOf(false) }
@@ -114,11 +119,11 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheet
             )
 
 
-            val model: OnboardingScreenViewModel = viewModel()  //fetching reference of viewmodel
+          //fetching reference of viewmodel
             val loginStatus by model.loginStatusLiveData.observeAsState(LoginState.LOGIN_DEFAULT_EMPTY) // collecting livedata as state
 
             //loginStatus state being change to Success after token fetch
-            when (loginStatus) {
+           when (loginStatus) {
                 LoginState.LOGIN_SUCCESS -> {
                     isInProgress = false
                     Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()

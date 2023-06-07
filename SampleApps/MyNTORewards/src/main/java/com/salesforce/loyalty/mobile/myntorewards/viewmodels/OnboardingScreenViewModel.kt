@@ -12,15 +12,15 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.launch
 
 
 //view model
-class OnboardingScreenViewModel : ViewModel() {
+open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractInterface {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
     private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
@@ -28,36 +28,36 @@ class OnboardingScreenViewModel : ViewModel() {
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     )
     //live data for login status
-    val loginStatusLiveData: LiveData<LoginState>
+    override val loginStatusLiveData: LiveData<LoginState>
         get() = loginStatus
 
     private val loginStatus = MutableLiveData<LoginState>()
 
     //live data for join status
-    val enrollmentStatusLiveData: LiveData<EnrollmentState>
+    override val enrollmentStatusLiveData: LiveData<EnrollmentState>
         get() = enrollmentStatus
 
     private val enrollmentStatus = MutableLiveData<EnrollmentState>()
 
     //live data for logout state
-    val logoutStateLiveData: LiveData<LogoutState>
+    override val logoutStateLiveData: LiveData<LogoutState>
         get() = logoutState
 
     private val logoutState = MutableLiveData<LogoutState>()
 
     //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
-    fun resetEnrollmentStatusDefault() {
+    override fun resetEnrollmentStatusDefault() {
         enrollmentStatus.value = EnrollmentState.ENROLLMENT_DEFAULT_EMPTY
     }
     //Setting up login status as default after enrollment result. this is to avoid duplicate observation when compose recreate
 
-    fun resetLoginStatusDefault() {
+    override fun resetLoginStatusDefault() {
         loginStatus.value = LoginState.LOGIN_DEFAULT_EMPTY
     }
 
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
-    fun loginUser(emailAddressText: String, passwordText: String, context: Context) {
+    override fun loginUser(emailAddressText: String, passwordText: String, context: Context) {
         Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
@@ -123,7 +123,7 @@ class OnboardingScreenViewModel : ViewModel() {
     * Status is being updated in the form of Live data which is being observed inside EnrollementUI
     * Based om status change State change will trigger and corresponding flow will be executed
     * */
-    fun enrollUser(
+    override fun enrollUser(
         firstNameText: String,
         lastNameText: String,
         mobileNumberText: String,
@@ -134,7 +134,9 @@ class OnboardingScreenViewModel : ViewModel() {
         tncCheckedState: Boolean,
         context: Context
     ) {
-        viewModelScope.launch {
+        enrollmentStatus.value =
+            EnrollmentState.ENROLLMENT_SUCCESS
+        /*viewModelScope.launch {
             var enrollmentResponse: EnrollmentResponse? = null
             loyaltyAPIManager.postEnrollment(
                 firstNameText,
@@ -172,10 +174,10 @@ class OnboardingScreenViewModel : ViewModel() {
                     EnrollmentState.ENROLLMENT_SUCCESS   // enrollment state is being observed in Enrollment UI Composable
                 Log.d(TAG, "Enrollment request Success: $enrollmentResponse")
             }
-        }
+        }*/
     }
 
-    fun logoutAndClearAllSettings(context: Context) {
+    override fun logoutAndClearAllSettings(context: Context) {
         logoutState.value = LogoutState.LOGOUT_IN_PROGRESS
         viewModelScope.launch {
             ForceAuthManager.forceAuthManager.revokeAccessToken()

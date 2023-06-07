@@ -10,8 +10,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,7 +58,7 @@ fun OutlineFieldText(
 
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)),
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("EmailID_PhoneNumber"),
 
         enabled = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -77,11 +80,12 @@ fun OutlineFieldText(
 }
 
 @Composable
-fun OutlineFieldTextWithError(
+fun FirstNameOutlineFieldTextWithError(
     textfieldValue: TextFieldValue,
     textFieldType: CustomTextField.SignUpTextFieldType,
     placeholderText: String,
-    hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit
+    hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit,
+
 ) {
     var text by remember {
         mutableStateOf("")
@@ -116,7 +120,7 @@ fun OutlineFieldTextWithError(
 
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)),
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("firstName"),
 
         enabled = true,
         keyboardOptions = KeyboardOptions(
@@ -128,6 +132,252 @@ fun OutlineFieldTextWithError(
             onDone = {
                 // validate here
                 isInputInValid = CustomTextField.validate(text, textFieldType)
+            }
+        ),
+
+        textStyle = TextStyle(
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 14.sp
+        ),
+
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = VeryLightPurple,
+            focusedIndicatorColor = Color.Transparent, //hide the indicator
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+
+        shape = RoundedCornerShape(16.dp)
+    )
+    if (isInputInValid) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = stringResource(id = CustomTextField.getErrorMessage(textFieldType)),
+            color = MaterialTheme.colors.error
+        )
+    }
+}
+@Composable
+fun LastOutlineFieldTextWithError(
+    textfieldValue: TextFieldValue,
+    textFieldType: CustomTextField.SignUpTextFieldType,
+    placeholderText: String,
+    hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit,
+
+    ) {
+    var text by remember {
+        mutableStateOf("")
+    }
+    var isInputInValid by remember {
+        mutableStateOf(false)
+    }
+    var passwordVisibility by remember { mutableStateOf(false) }
+
+    val icon = if (passwordVisibility)
+        painterResource(id = R.drawable.ic_visibility_on)
+    else
+        painterResource(id = R.drawable.ic_visibility_off)
+
+    OutlinedTextField(
+        value = textfieldValue,
+        onValueChange = {
+            text = it.text
+            hideLoginOpenJoin(it)
+            isInputInValid = CustomTextField.validate(text, textFieldType)
+        },
+        isError = isInputInValid,
+        placeholder = {
+            Text(
+                text = placeholderText,
+                fontFamily = font_sf_pro,
+                color = TextGray,
+                fontSize = 14.sp,
+                modifier = Modifier.background(VeryLightPurple, RoundedCornerShape(16.dp))
+            )
+        },
+
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("lastName"),
+
+        enabled = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = CustomTextField.getKeyboardType(
+                textFieldType
+            )
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                // validate here
+                isInputInValid = CustomTextField.validate(text, textFieldType)
+            }
+        ),
+
+        textStyle = TextStyle(
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 14.sp
+        ),
+
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = VeryLightPurple,
+            focusedIndicatorColor = Color.Transparent, //hide the indicator
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+
+        shape = RoundedCornerShape(16.dp)
+    )
+    if (isInputInValid) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = stringResource(id = CustomTextField.getErrorMessage(textFieldType)),
+            color = MaterialTheme.colors.error
+        )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun MobileOutlineFieldTextWithError(
+    textfieldValue: TextFieldValue,
+    textFieldType: CustomTextField.SignUpTextFieldType,
+    placeholderText: String,
+    hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit,
+
+    ) {
+    var text by remember {
+        mutableStateOf("")
+    }
+    var isInputInValid by remember {
+        mutableStateOf(false)
+    }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    var passwordVisibility by remember { mutableStateOf(false) }
+
+    val icon = if (passwordVisibility)
+        painterResource(id = R.drawable.ic_visibility_on)
+    else
+        painterResource(id = R.drawable.ic_visibility_off)
+
+    OutlinedTextField(
+        value = textfieldValue,
+        onValueChange = {
+            text = it.text
+            hideLoginOpenJoin(it)
+            isInputInValid = CustomTextField.validate(text, textFieldType)
+        },
+        isError = isInputInValid,
+        placeholder = {
+            Text(
+                text = placeholderText,
+                fontFamily = font_sf_pro,
+                color = TextGray,
+                fontSize = 14.sp,
+                modifier = Modifier.background(VeryLightPurple, RoundedCornerShape(16.dp))
+            )
+        },
+
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag(        "mobileNumber"),
+
+        enabled = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = CustomTextField.getKeyboardType(
+                textFieldType
+            )
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                // validate here
+                isInputInValid = CustomTextField.validate(text, textFieldType)
+                keyboardController?.hide()
+            }
+        ),
+
+        textStyle = TextStyle(
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 14.sp
+        ),
+
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = VeryLightPurple,
+            focusedIndicatorColor = Color.Transparent, //hide the indicator
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+
+        shape = RoundedCornerShape(16.dp)
+    )
+    if (isInputInValid) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = stringResource(id = CustomTextField.getErrorMessage(textFieldType)),
+            color = MaterialTheme.colors.error
+        )
+    }
+}
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun EmailIDOutlineFieldTextWithError(
+    textfieldValue: TextFieldValue,
+    textFieldType: CustomTextField.SignUpTextFieldType,
+    placeholderText: String,
+    hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit,
+
+    ) {
+    var text by remember {
+        mutableStateOf("")
+    }
+    var isInputInValid by remember {
+        mutableStateOf(false)
+    }
+    var passwordVisibility by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    keyboardController?.hide()
+
+    val icon = if (passwordVisibility)
+        painterResource(id = R.drawable.ic_visibility_on)
+    else
+        painterResource(id = R.drawable.ic_visibility_off)
+
+    OutlinedTextField(
+        value = textfieldValue,
+        onValueChange = {
+            text = it.text
+            hideLoginOpenJoin(it)
+            isInputInValid = CustomTextField.validate(text, textFieldType)
+            keyboardController?.hide()
+        },
+        isError = isInputInValid,
+        placeholder = {
+            Text(
+                text = placeholderText,
+                fontFamily = font_sf_pro,
+                color = TextGray,
+                fontSize = 14.sp,
+                modifier = Modifier.background(VeryLightPurple, RoundedCornerShape(16.dp))
+            )
+        },
+
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("email"),
+
+        enabled = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = CustomTextField.getKeyboardType(
+                textFieldType
+            )
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                // validate here
+                isInputInValid = CustomTextField.validate(text, textFieldType)
+
+//To hide keyboard
+                keyboardController?.hide()
             }
         ),
 
@@ -240,7 +490,7 @@ fun PasswordTextField(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)),
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("Password"),
 
         enabled = true,
 
@@ -276,6 +526,7 @@ fun PasswordTextField(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PasswordTextFieldWithError(
     textFieldValue: TextFieldValue,
@@ -283,8 +534,11 @@ fun PasswordTextFieldWithError(
     password: String? = null,
     placeholderText: String,
     hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit
+
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    keyboardController?.hide()
 
     val icon = if (passwordVisibility)
         painterResource(id = R.drawable.ic_visibility_on)
@@ -292,7 +546,7 @@ fun PasswordTextFieldWithError(
         painterResource(id = R.drawable.ic_visibility_off)
 
     var text by remember {
-        mutableStateOf("")
+        mutableStateOf("Text123")
     }
     var isInputInValid by remember {
         mutableStateOf(false)
@@ -300,10 +554,14 @@ fun PasswordTextFieldWithError(
 
     OutlinedTextField(
         value = textFieldValue,
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("passwordOnBoarding"),
         onValueChange = {
             text = it.text
             hideLoginOpenJoin(it)
             isInputInValid = CustomTextField.validate(text, textFieldType, password)
+            keyboardController?.hide()
         },
         isError = isInputInValid,
         placeholder = {
@@ -316,9 +574,106 @@ fun PasswordTextFieldWithError(
             )
         },
 
+
+
+        enabled = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = CustomTextField.getKeyboardType(
+                textFieldType
+            )
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                // validate here
+                isInputInValid = CustomTextField.validate(text, textFieldType)
+            }
+        ),
+
+        textStyle = TextStyle(
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 14.sp
+        ),
+
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = VeryLightPurple,
+            focusedIndicatorColor = Color.Transparent, //hide the indicator
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+
+        shape = RoundedCornerShape(16.dp),
+
+        trailingIcon = {
+            IconButton(onClick = {
+                passwordVisibility = !passwordVisibility
+            }) {
+                Icon(
+                    painter = icon,
+                    contentDescription = "Visibility Icon"
+                )
+            }
+        },
+        visualTransformation =
+        if (passwordVisibility) VisualTransformation.None
+        else PasswordVisualTransformation()
+    )
+    if (isInputInValid) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = stringResource(id = CustomTextField.getErrorMessage(textFieldType)),
+            color = MaterialTheme.colors.error
+        )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ConfirmPasswordTextFieldWithError(
+    textFieldValue: TextFieldValue,
+    textFieldType: CustomTextField.SignUpTextFieldType,
+    password: String? = null,
+    placeholderText: String,
+    hideLoginOpenJoin: (updatedValue: TextFieldValue) -> Unit
+
+) {
+    var passwordVisibility by remember { mutableStateOf(false) }
+
+    val icon = if (passwordVisibility)
+        painterResource(id = R.drawable.ic_visibility_on)
+    else
+        painterResource(id = R.drawable.ic_visibility_off)
+
+    var text by remember {
+        mutableStateOf("Text123")
+    }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var isInputInValid by remember {
+        mutableStateOf(false)
+    }
+
+    OutlinedTextField(
+        value = textFieldValue,
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)),
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("confirmPasswordOnBoarding"),
+        onValueChange = {
+            text = it.text
+            hideLoginOpenJoin(it)
+            isInputInValid = CustomTextField.validate(text, textFieldType, password)
+            keyboardController?.hide()
+        },
+        isError = isInputInValid,
+        placeholder = {
+            Text(
+                text = placeholderText,
+                fontFamily = font_sf_pro,
+                color = TextGray,
+                fontSize = 14.sp,
+                modifier = Modifier.background(VeryLightPurple, RoundedCornerShape(16.dp))
+            )
+        },
+
+
 
         enabled = true,
         keyboardOptions = KeyboardOptions(

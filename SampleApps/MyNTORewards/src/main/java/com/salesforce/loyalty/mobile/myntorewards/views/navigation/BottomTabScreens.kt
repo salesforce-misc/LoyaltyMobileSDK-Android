@@ -19,6 +19,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
@@ -34,6 +40,9 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(
     bottomTabsNavController: NavController,
+    profileModel: MembershipProfileViewModelInterface,
+    promotionModel: MyPromotionViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -45,7 +54,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
 
         composable(route = CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
             showBottomBar(true)
-            HomeScreenLandingView(bottomTabsNavController, navCheckOutFlowController)
+            HomeScreenLandingView(bottomTabsNavController, navCheckOutFlowController, profileModel,promotionModel,voucherModel)
         }
         composable(route = CheckOutFlowScreen.OrderDetailScreen.route) {
             showBottomBar(false)

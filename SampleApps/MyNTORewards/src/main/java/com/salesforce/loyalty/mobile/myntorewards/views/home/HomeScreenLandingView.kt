@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,9 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileVi
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import kotlinx.coroutines.launch
@@ -48,17 +52,15 @@ import kotlinx.coroutines.launch
 fun HomeScreenLandingView(
     bottomTabsNavController: NavController,
     navCheckOutFlowController: NavController,
+    profileModel: MembershipProfileViewModelInterface,
+    promotionModel: MyPromotionViewModelInterface,
+    voucherModel: VoucherViewModelInterface
 ) {
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
-    val model: MyPromotionViewModel = viewModel()
-    val profileModel: MembershipProfileViewModel = viewModel()
     val context: Context = LocalContext.current
-    val voucherModel: VoucherViewModel = viewModel()
-
-
     fun refresh() = refreshScope.launch {
-        model.loadPromotions(context, true)
+        promotionModel.loadPromotions(context, true)
         profileModel.loadProfile(context, true)
         voucherModel.loadVoucher(context, true)
     }
@@ -71,6 +73,7 @@ fun HomeScreenLandingView(
             .fillMaxSize()
             .background(MyProfileScreenBG)
             .pullRefresh(state)
+            .testTag("HomeScreenElementContainer")
             .verticalScroll(rememberScrollState())
     )
     {
@@ -87,10 +90,10 @@ fun HomeScreenLandingView(
             Column {
 
                 AppLogoAndSearchRow()
-                UserNameAndRewardRow()
+                UserNameAndRewardRow(profileModel)
 
-                PromotionCardRow(bottomTabsNavController, navCheckOutFlowController)
-                VoucherRow(navCheckOutFlowController)
+                PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)
+                VoucherRow(navCheckOutFlowController, voucherModel)
             }
 
             PullRefreshIndicator(refreshing, state)
@@ -105,7 +108,8 @@ fun HomeScreenLandingView(
 @Composable
 fun PromotionCardRow(
     bottomTabsNavController: NavController,
-    navCheckOutFlowController: NavController
+    navCheckOutFlowController: NavController,
+    promotionModel: MyPromotionViewModelInterface
 ) {
 
     Column(
@@ -114,16 +118,15 @@ fun PromotionCardRow(
             .wrapContentSize(Alignment.Center)
             .height(450.dp)
             .background(PromotionCardBG)
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp).testTag("PromotionCard"),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
         HomeSubViewHeader(R.string.text_promotions, bottomTabsNavController)
-        val model: MyPromotionViewModel = viewModel()
         val context: Context = LocalContext.current
 
-        val promoViewState by model.promotionViewState.observeAsState()
+        val promoViewState by promotionModel.promotionViewState.observeAsState()
         LaunchedEffect(true) {
-            model.loadPromotions(context)
+            promotionModel.loadPromotions(context)
         }
 
         when (promoViewState) {
@@ -190,12 +193,13 @@ fun PromotionCardRow(
 @Composable
 fun VoucherRow(
     navCheckOutFlowController: NavController,
+    voucherModel: VoucherViewModelInterface,
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .wrapContentSize(Alignment.Center)
-            .background(PromotionCardBG)
+            .background(PromotionCardBG).testTag("VoucherRowView")
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
 
@@ -227,13 +231,12 @@ fun VoucherRow(
 
         var isInProgress by remember { mutableStateOf(false) }
 
-        val model: VoucherViewModel = viewModel()
-        val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
-        val vouchersFetchStatus by model.voucherViewState.observeAsState() // collecting livedata as state
+        val vouchers by voucherModel.voucherLiveData.observeAsState() // collecting livedata as state
+        val vouchersFetchStatus by voucherModel.voucherViewState.observeAsState() // collecting livedata as state
 
         val context: Context = LocalContext.current
         LaunchedEffect(key1 = true) {
-            model.loadVoucher(context)
+            voucherModel.loadVoucher(context)
             isInProgress = true
         }
 

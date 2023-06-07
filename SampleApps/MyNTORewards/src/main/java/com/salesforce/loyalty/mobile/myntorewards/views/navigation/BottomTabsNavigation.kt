@@ -7,15 +7,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
-fun HomeTabScreen() {
+fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
+                  promotionModel: MyPromotionViewModelInterface,
+                  voucherModel: VoucherViewModelInterface
+) {
     val bottomTabsNavController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
     Scaffold(
@@ -27,9 +37,9 @@ fun HomeTabScreen() {
         Column(
             modifier = Modifier
                 .padding(padding)
-                .background(TextPurpleLightBG)
+                .background(TextPurpleLightBG).testTag("HomeScreen")
         ) {
-            TabNavigation(bottomTabsNavController) {
+            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel) {
                 bottomBarState.value = it
             }
         }
@@ -39,6 +49,9 @@ fun HomeTabScreen() {
 @Composable
 fun TabNavigation(
     bottomTabsNavController: NavHostController,
+    profileModel: MembershipProfileViewModelInterface,
+    promotionModel: MyPromotionViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
 
@@ -46,7 +59,7 @@ fun TabNavigation(
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController) {
+            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel) {
                 showBottomBar(it)
             }
         }

@@ -9,11 +9,11 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
@@ -36,7 +36,10 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             .get(AppConstants.KEY_LOGIN_SUCCESSFUL, false)
         setContent {
             if (loginSuccess == true) {
-                HomeTabScreen()
+                val profileModel: MembershipProfileViewModel = viewModel()
+                val promotionModel: MyPromotionViewModel = viewModel()
+                val voucherModel: VoucherViewModel = viewModel()
+                HomeTabScreen(profileModel, promotionModel, voucherModel)
             } else {
                 MainScreenStart()
             }

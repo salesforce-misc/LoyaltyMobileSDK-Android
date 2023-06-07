@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -40,7 +41,7 @@ fun EnrollmentCongratulationsView(navController: NavController, closeSheet: () -
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.92f)
-            .background(Color.White, shape = RoundedCornerShape(16.dp)),
+            .background(Color.White, shape = RoundedCornerShape(16.dp)).testTag("EnrollmentCongratsScreenTag"),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(

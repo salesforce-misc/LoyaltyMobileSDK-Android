@@ -12,6 +12,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -19,7 +20,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResult
 import kotlinx.coroutines.launch
 
-class VoucherViewModel : ViewModel() {
+class VoucherViewModel : ViewModel(), VoucherViewModelInterface {
 
 
     private val TAG = VoucherViewModel::class.java.simpleName
@@ -28,18 +29,18 @@ class VoucherViewModel : ViewModel() {
         ForceAuthManager.forceAuthManager,
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     )
-    val voucherLiveData: LiveData<List<VoucherResponse>>
+    override val voucherLiveData: LiveData<List<VoucherResponse>>
         get() = vouchers
 
     private val vouchers = MutableLiveData<List<VoucherResponse>>()
 
 
-    val voucherViewState: LiveData<VoucherViewState>
+    override val voucherViewState: LiveData<VoucherViewState>
         get() = viewState
 
     private val viewState = MutableLiveData<VoucherViewState>()
 
-    fun loadVoucher(context: Context, refreshRequired:Boolean=false) {
+    override fun loadVoucher(context: Context, refreshRequired:Boolean) {
         viewState.postValue(VoucherViewState.VoucherFetchInProgress)
         viewModelScope.launch {
             val memberJson =

@@ -26,6 +26,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 
 
 @Composable
@@ -56,13 +57,12 @@ fun AppLogoAndSearchRow() {
 }
 
 @Composable
-fun UserNameAndRewardRow() {
-    val model: MembershipProfileViewModel = viewModel()
-    val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
+fun UserNameAndRewardRow(profileModel: MembershipProfileViewModelInterface) {
+    val membershipProfile by profileModel.membershipProfileLiveData.observeAsState() // collecting livedata as state
 
     val context: Context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        model.loadProfile(context)
+        profileModel.loadProfile(context)
     }
 
     /* val firstName = PrefHelper.customPrefs(context)[AppConstants.KEY_FIRSTNAME, ""]

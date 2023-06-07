@@ -94,7 +94,7 @@ fun MyProfileLandingView(navProfileViewController: NavHostController) {
                             .fillMaxWidth()
                             .background(MyProfileScreenBG)
                     )
-                    VoucherRow(navProfileViewController)
+                    VoucherRow(navProfileViewController, voucherModel)
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)
