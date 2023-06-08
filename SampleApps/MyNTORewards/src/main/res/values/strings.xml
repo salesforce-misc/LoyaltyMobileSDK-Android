@@ -38,6 +38,7 @@
     <string name="onboard_text_msg_part_3">Please login with username and password you have created.</string>
     <string name="text_we_sent_email">"We’ve sent an email to "</string>
     <string name="text_with_more_details">"" with more details.""</string>
+    <string name="join_text_already_signed_in">Currently you are not in our rewards program. You are welcome to join. We have made easy for you by simply clicking Join button below.</string>
 
     <string name="screen_title_home">"Home"</string>
     <string name="screen_title_my_offers">"My Offers"</string>

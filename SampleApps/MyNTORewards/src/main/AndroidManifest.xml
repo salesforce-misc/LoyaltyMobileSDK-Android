@@ -12,6 +12,7 @@
             android:name="com.salesforce.loyalty.mobile.myntorewards.views.LoyaltyAppBaseActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.LoyaltyMobileSDKApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

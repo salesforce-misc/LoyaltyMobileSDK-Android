@@ -37,7 +37,7 @@ fun JoinLoginButtonBox(
     Spacer(modifier = Modifier.height(24.dp))
 
     JoinButton {
-        setBottomSheetState(BottomSheetType.POPUP_JOIN)
+        setBottomSheetState(BottomSheetType.POPUP_SELF_REGISTER)
         openBottomSheet()
     }
 

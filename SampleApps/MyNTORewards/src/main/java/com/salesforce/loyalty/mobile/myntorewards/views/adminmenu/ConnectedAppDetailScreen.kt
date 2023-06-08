@@ -269,7 +269,8 @@ fun ConnectedAppDetails(
                                 name = newText
                             },
                             colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -300,7 +301,8 @@ fun ConnectedAppDetails(
                             onValueChange = { newText ->
                                 consumerKey = newText
                             }, colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -323,7 +325,8 @@ fun ConnectedAppDetails(
                             onValueChange = { newText ->
                                 consumerSecret = newText
                             }, colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -346,7 +349,8 @@ fun ConnectedAppDetails(
                             onValueChange = { newText ->
                                 callbackUrl = newText
                             }, colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -369,7 +373,8 @@ fun ConnectedAppDetails(
                             onValueChange = { newText ->
                                 baseUrl = newText
                             }, colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -391,7 +396,8 @@ fun ConnectedAppDetails(
                             onValueChange = { newText ->
                                 instanceUrl = newText
                             }, colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -413,7 +419,8 @@ fun ConnectedAppDetails(
                             onValueChange = { newText ->
                                 communityUrl = newText
                             }, colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -436,7 +443,8 @@ fun ConnectedAppDetails(
                             onValueChange = { newText ->
                                 selfRegisterUrl = newText
                             }, colors = TextFieldDefaults.textFieldColors(
-                                textColor = CardFieldText,
+                                focusedTextColor = CardFieldText,
+                                unfocusedTextColor = CardFieldText,
                                 containerColor = Color.White,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,

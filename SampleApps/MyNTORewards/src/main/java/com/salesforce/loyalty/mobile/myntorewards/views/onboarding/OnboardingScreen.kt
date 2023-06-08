@@ -41,7 +41,11 @@ fun OnboardingScreenBox(navController: NavController) {
     var currentPopupState: BottomSheetType? by remember { mutableStateOf(null) }
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
+            confirmValueChange = {
+                // Prevent collapsing by swipe down gesture
+                it != BottomSheetValue.Collapsed
+            })
     )
 
     // Declaring Coroutine scope
@@ -83,7 +87,8 @@ fun OnboardingScreenBox(navController: NavController) {
                 )
             }
         },
-        sheetPeekHeight = 0.dp
+        sheetPeekHeight = 0.dp,
+        sheetGesturesEnabled = false
     ) {
         Box(modifier = Modifier.fillMaxSize())
         {
@@ -186,10 +191,10 @@ fun OpenBottomSheetContent(
 
     when (bottomSheetType) {
         BottomSheetType.POPUP_JOIN -> {
-            EnrollmentWebView(
-                url = ForceAuthManager.forceAuthManager.getConnectedApp().selfRegisterUrl,
+            EnrollmentUI(
                 openPopup = { setBottomSheetState(it) },
-            closeSheet = closeSheet)
+                closeSheet = closeSheet
+            )
         }
         BottomSheetType.POPUP_LOGIN -> {
             LoginUI(
@@ -204,6 +209,18 @@ fun OpenBottomSheetContent(
         BottomSheetType.SETTINGS -> {
             SettingsMain(
                 closeSheet = closeSheet
+            )
+        }
+        BottomSheetType.POPUP_SELF_REGISTER -> {
+            EnrollmentWebView(
+                url = ForceAuthManager.forceAuthManager.getConnectedApp().selfRegisterUrl,
+                openPopup = { setBottomSheetState(it) },
+                closeSheet = closeSheet)
+        }
+        BottomSheetType.POPUP_ENROLLMENT -> {
+            JoinWithTermsAndConditions(
+                closeSheet = closeSheet,
+                navController = navController
             )
         }
     }

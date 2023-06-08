@@ -1,16 +1,13 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.webkit.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,10 +16,13 @@ import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,8 +36,10 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.WebUtility
 import com.salesforce.loyalty.mobile.myntorewards.views.PopupHeader
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EnrollmentWebView(
     url: String,
@@ -48,6 +50,7 @@ fun EnrollmentWebView(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.92f)
+            .imePadding()
             .background(Color.White, shape = RoundedCornerShape(16.dp)),
     ) {
         Row(
@@ -70,6 +73,8 @@ fun EnrollmentWebView(
             )
 
             val interactionSource = remember { MutableInteractionSource() }
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val focusManager = LocalFocusManager.current
             Image(
                 painter = painterResource(id = R.drawable.close_popup_icon),
                 contentDescription = stringResource(id = R.string.cd_close_popup),
@@ -77,6 +82,8 @@ fun EnrollmentWebView(
                     .width(16.dp)
                     .height(16.dp)
                     .clickable(interactionSource = interactionSource, indication = null) {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
                         closeSheet()
                     },
                 contentScale = ContentScale.FillWidth,
@@ -100,6 +107,8 @@ fun loadWebUrl(url: String, openPopup: (popupStatus: BottomSheetType) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .navigationBarsPadding()
+            .imePadding()
             .background(Color.White),
         contentAlignment = Alignment.TopStart
     ) {
@@ -138,16 +147,20 @@ fun loadWebUrl(url: String, openPopup: (popupStatus: BottomSheetType) -> Unit) {
                     settings.domStorageEnabled = true
                     settings.loadWithOverviewMode = true
                     settings.useWideViewPort = true
-                    settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
                     setInitialScale(0)
+                    clearCache(true)
+                    clearHistory()
+                    clearFormData()
                     loadUrl(url)
+                    WebUtility.clearCookies(context)
                     layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                 }
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         )
         if (isInProgress) {
             CircularProgressIndicator(
