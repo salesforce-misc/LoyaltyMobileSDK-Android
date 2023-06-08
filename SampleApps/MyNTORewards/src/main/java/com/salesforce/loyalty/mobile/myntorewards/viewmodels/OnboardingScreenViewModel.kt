@@ -207,13 +207,13 @@ class OnboardingScreenViewModel : ViewModel() {
             val contactRecord =
                 ForceAuthManager.forceAuthManager.getFirstNameLastNameFromContactEmail(email)
             contactRecord?.let {
-                val firstName = it.firstName
-                val lastName = it.lastName
+                val firstName = it.firstName ?:""
+                val lastName = it.lastName ?: ""
                 val phone = it.phone
                 val additionalContactAttributes = mapOf(AppConstants.KEY_PHONE to phone)
                 loyaltyAPIManager.postEnrollment(
-                    firstName!!,
-                    lastName!!,
+                    firstName,
+                    lastName,
                     email,
                     additionalContactAttributes,
                     true,
