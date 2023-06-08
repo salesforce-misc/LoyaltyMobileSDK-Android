@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -75,6 +76,7 @@ fun EnrollmentWebView(
             val interactionSource = remember { MutableInteractionSource() }
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusManager = LocalFocusManager.current
+            val activity = LocalContext.current as Activity
             Image(
                 painter = painterResource(id = R.drawable.close_popup_icon),
                 contentDescription = stringResource(id = R.string.cd_close_popup),
@@ -84,6 +86,7 @@ fun EnrollmentWebView(
                     .clickable(interactionSource = interactionSource, indication = null) {
                         keyboardController?.hide()
                         focusManager.clearFocus()
+                        WebUtility.hideKeyboard(activity)
                         closeSheet()
                     },
                 contentScale = ContentScale.FillWidth,
