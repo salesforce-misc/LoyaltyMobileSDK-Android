@@ -14,6 +14,7 @@ class AppConstants {
         const val KEY_LOGIN_SUCCESSFUL = "login_success"
         const val KEY_COMMUNITY_MEMBER = "community_member_details"
         const val KEY_EMAIL = "email"
+        const val KEY_PHONE = "Phone"
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"

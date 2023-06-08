@@ -10,6 +10,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthEncryptedPreference
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConnectedAppEncryptedPreference
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
@@ -209,11 +210,12 @@ class OnboardingScreenViewModel : ViewModel() {
                 val firstName = it.firstName
                 val lastName = it.lastName
                 val phone = it.phone
+                val additionalContactAttributes = mapOf(AppConstants.KEY_PHONE to phone)
                 loyaltyAPIManager.postEnrollment(
                     firstName!!,
                     lastName!!,
                     email,
-                    null,
+                    additionalContactAttributes,
                     true,
                     MemberStatus.ACTIVE,
                     true,
