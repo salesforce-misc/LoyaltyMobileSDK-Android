@@ -4,7 +4,7 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.ForceError
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
-class ForceErrorTests {
+class ForceErrorTest {
 
     @Test
     fun testForceErrorDescriptions() {

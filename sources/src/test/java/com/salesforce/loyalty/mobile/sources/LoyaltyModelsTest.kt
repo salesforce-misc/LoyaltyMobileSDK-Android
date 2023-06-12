@@ -7,7 +7,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
-class LoyaltyModelsTests {
+class LoyaltyModelsTest {
 
     @Test
     fun testVoucherResponse() {
@@ -150,7 +150,7 @@ class LoyaltyModelsTests {
                 firstName = "Aman",
                 lastName = "Bindal"
             ),
-            associatedAccount = null,
+            associatedAccount = AssociatedAccount(accountId = "1234567", name = "Aman Bindal"),
             canReceivePartnerPromotions = true,
             canReceivePromotions = true,
             enrollmentChannel = EnrollmentChannel.EMAIL.channel,
@@ -241,7 +241,7 @@ class LoyaltyModelsTests {
     }
 
     @Test
-    fun testEnrollmentRequest() {
+    fun testEnrollmentResponse() {
         val enrollmentResponse = EnrollmentResponse(
             contactId = "0034x00001JdPg6",
             loyaltyProgramName = "NTO Insider",
@@ -266,10 +266,10 @@ class LoyaltyModelsTests {
     }
 
     @Test
-    fun testEnrollmentResponse() {
+    fun testEnrollmentRequest() {
         val enrollmentRequest = EnrollmentRequest(
-            enrollmentDate = DateUtils.getCurrentDateTime(DateUtils.DATE_FORMAT_YYYYMMDDTHHMMSS),
-            membershipNumber = LoyaltyUtils.generateRandomString(),
+            enrollmentDate = "2022-01-01T08:00:00.000Z",
+            membershipNumber = "Member2",
             associatedContactDetails = AssociatedContactDetails(
                 firstName = "Aman",
                 lastName = "Bindal",
@@ -288,6 +288,27 @@ class LoyaltyModelsTests {
             AdditionalMemberFieldValues()
         )
         assertEquals(enrollmentRequest.associatedContactDetails.firstName, "Aman")
+        assertEquals(
+            enrollmentRequest.associatedContactDetails.additionalContactFieldValues.attributes?.get(
+                "Phone"
+            ), "9876543211"
+        )
         assertEquals(enrollmentRequest.canReceivePromotions, true)
+        assertEquals(enrollmentRequest.enrollmentDate, "2022-01-01T08:00:00.000Z")
+        assertEquals(enrollmentRequest.membershipNumber, "Member2")
+        assertEquals(enrollmentRequest.membershipEndDate, null)
+        assertEquals(enrollmentRequest.canReceivePartnerPromotions, true)
+        assertEquals(enrollmentRequest.enrollmentChannel, "Mobile")
+        assertEquals(enrollmentRequest.transactionJournalStatementFrequency, "Quarterly")
+        assertEquals(enrollmentRequest.transactionJournalStatementMethod, "Email")
+        assertEquals(enrollmentRequest.createTransactionJournals, true)
+        assertEquals(enrollmentRequest.memberStatus, "Active")
+        assertEquals(enrollmentRequest.associatedContactDetails.lastName, "Bindal")
+        assertEquals(enrollmentRequest.associatedContactDetails.email, "abc@gmail.com")
+        assertEquals(enrollmentRequest.associatedContactDetails.allowDuplicateRecords, false)
+        assertEquals(
+            enrollmentRequest.additionalMemberFieldValues.attributes,
+            mapOf<String, Any?>()
+        )
     }
 }

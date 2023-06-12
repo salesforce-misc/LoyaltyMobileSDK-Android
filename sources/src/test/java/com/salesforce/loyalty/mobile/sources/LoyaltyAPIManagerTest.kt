@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
-class LoyaltyAPIManagerTests {
+class LoyaltyAPIManagerTest {
 
     private lateinit var loyaltyAPIManager: LoyaltyAPIManager
 
@@ -264,6 +264,11 @@ class LoyaltyAPIManagerTests {
                 "1234", null
             )
             assertEquals(result.isSuccess, true)
+
+            val resultWithMemberId = loyaltyAPIManager.getEligiblePromotions(
+                null, "Member1234"
+            )
+            assertEquals(resultWithMemberId.isSuccess, true)
         }
     }
 
