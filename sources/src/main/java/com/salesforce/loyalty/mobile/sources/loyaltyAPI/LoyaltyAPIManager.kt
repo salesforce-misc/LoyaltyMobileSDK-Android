@@ -98,7 +98,8 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
     suspend fun getMemberProfile(
         memberId: String?,
         memberShipNumber: String?,
-        programCurrencyName: String?
+        programCurrencyName: String?,
+        devMode: Boolean = false
     ): Result<MemberProfileResponse> {
         Logger.d(TAG, "getMemberProfile() $memberId $memberShipNumber")
 
