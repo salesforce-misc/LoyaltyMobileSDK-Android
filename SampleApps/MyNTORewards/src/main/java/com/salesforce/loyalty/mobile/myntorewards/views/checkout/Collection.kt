@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +39,10 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .testTag("CheckoutFlowElementContainer")
+            .verticalScroll(
+                rememberScrollState()
+            )
 
     )
     {
@@ -52,13 +57,13 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
             Spacer(modifier = Modifier.height(15.dp))
             Image(
                 painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                contentDescription = "back button checkout order description screen",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp)
                     .clickable {
                         navCheckOutFlowController.popBackStack()
-                    }
+                    }.testTag("back_button_checkout_first_screen")
             )
         }
         OrderSelectHeader(promoName)
@@ -143,7 +148,7 @@ fun OrderSelectHeader(promoName:String) {
             fontSize = 22.sp,
             modifier = Modifier
                 .padding(start = 16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth().testTag("checkout_promo_name")
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -154,7 +159,7 @@ fun OrderSelectHeader(promoName:String) {
             fontSize = 16.sp,
             modifier = Modifier
                 .padding(start = 16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth().testTag("checkout_promo_description")
         )
         Spacer(modifier = Modifier.height(15.dp))
         Spacer(modifier = Modifier.height(16.dp))
@@ -168,9 +173,7 @@ fun OrderSelectionDetail(navCheckOutFlowController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .background(VibrantIndigo95)
-            .verticalScroll(
-                rememberScrollState()
-            )
+
     )
     {
 
@@ -204,10 +207,10 @@ fun RatingRow() {
             textAlign = TextAlign.Start,
             fontSize = 14.sp,
             modifier = Modifier
-                .padding(start = 16.dp)
+                .padding(start = 16.dp).testTag("collection_type")
         )
 
-        Row(modifier = Modifier.padding(end = 17.dp)) {
+        Row(modifier = Modifier.padding(end = 17.dp).testTag("rating")) {
             ReviewStarImage(true)
             ReviewStarImage(true)
             ReviewStarImage(true)
@@ -229,7 +232,7 @@ fun OrderDescriptionRow() {
         fontSize = 12.sp,
         fontWeight = FontWeight.Medium,
         modifier = Modifier
-            .padding(start = 16.dp)
+            .padding(start = 16.dp).testTag("order_description")
     )
 
 }
@@ -240,7 +243,7 @@ fun OrderLargeImageRow() {
     Row(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
         Image(
             painter = painterResource(id = R.drawable.jacket),
-            contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+            contentDescription ="Order Image",
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp)),
@@ -263,7 +266,7 @@ fun SelectImageRow() {
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             .horizontalScroll(
                 rememberScrollState()
-            )
+            ).testTag("order_image_selection_row")
     )
     {
 
@@ -323,7 +326,7 @@ fun OrderSelectSizeRow() {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = CenterVertically,
-        modifier = Modifier.padding(start = 5.dp)
+        modifier = Modifier.padding(start = 5.dp).testTag("size_selection_row")
 
     ) {
 
@@ -349,7 +352,7 @@ fun OrderAvailableColoursRow() {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = CenterVertically,
-        modifier = Modifier.padding(start = 5.dp, end = 16.dp)
+        modifier = Modifier.padding(start = 5.dp, end = 16.dp).testTag("select_colour_row")
 
     ) {
         SelectionImageTile(Color(0xFFEA001E))
@@ -379,7 +382,7 @@ fun OrderQuantityRow() {
         verticalAlignment = CenterVertically,
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
-            .fillMaxWidth()
+            .fillMaxWidth().testTag("select_quantity_row")
 
     ) {
 
@@ -438,6 +441,7 @@ fun OrderQuantityRow() {
                 color = LighterBlack,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier.testTag("product_price")
             )
             Text(
                 text = "Free shipping",
@@ -446,6 +450,7 @@ fun OrderQuantityRow() {
                 color = Color.Black,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Normal,
+                modifier = Modifier.testTag("shipping_price")
             )
 
         }

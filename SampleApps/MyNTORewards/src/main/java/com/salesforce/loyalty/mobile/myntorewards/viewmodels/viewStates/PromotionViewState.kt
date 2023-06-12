@@ -4,7 +4,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 
 sealed class PromotionViewState {
 
-    class PromotionsFetchSuccess(val response: PromotionsResponse?) : PromotionViewState()
-    class PromotionsFetchFailure(val message: String?) : PromotionViewState()
+    object PromotionsFetchSuccess : PromotionViewState()
+    object PromotionsFetchFailure : PromotionViewState()
     object PromotionFetchInProgress : PromotionViewState()
 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -44,6 +45,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
@@ -52,7 +54,8 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 fun PromotionEnrollPopup(
     results: Results,
     closePopup: () -> Unit,
-    navCheckOutFlowController: NavController
+    navCheckOutFlowController: NavController,
+    promotionViewModel: MyPromotionViewModelInterface
 ) {
     Popup(
         alignment = Alignment.Center,
@@ -67,7 +70,8 @@ fun PromotionEnrollPopup(
             closePopup = {
                 closePopup()
             },
-            navCheckOutFlowController
+            navCheckOutFlowController,
+            promotionViewModel
         )
     }
 }
@@ -78,7 +82,8 @@ fun PromotionEnrollPopup(
 fun PromotionEnrollPopupUI(
     results: Results,
     closePopup: () -> Unit,
-    navCheckOutFlowController: NavController
+    navCheckOutFlowController: NavController,
+    promotionViewModel: MyPromotionViewModelInterface
 ) {
 
 
@@ -96,15 +101,15 @@ fun PromotionEnrollPopupUI(
                 .background(Color.White, RoundedCornerShape(16.dp))
                 .verticalScroll(
                     rememberScrollState()
-                ),
+                ).testTag("promotion_popup"),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         )
 
         {
 
-            val model: MyPromotionViewModel = viewModel()
-            val membershipPromo by model.membershipPromotionLiveData.observeAsState() // collecting livedata as state
+
+            val membershipPromo by promotionViewModel.membershipPromotionLiveData.observeAsState() // collecting livedata as state
             val context: Context = LocalContext.current
             Column{
             Box()
@@ -123,7 +128,7 @@ fun PromotionEnrollPopupUI(
 
                     GlideImage(
                         model = results.promotionImageUrl,
-                        contentDescription = description,
+                        contentDescription = "promotion popup image",
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(250.dp)
@@ -151,7 +156,7 @@ fun PromotionEnrollPopupUI(
                             .padding(3.dp)
                             .clickable {
                                 closePopup()
-                            }
+                            }.testTag("close_button")
 
                     )
                 }
@@ -171,7 +176,7 @@ fun PromotionEnrollPopupUI(
                     fontSize = 24.sp,
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth().testTag("promo_name")
                 )
             }
 
@@ -185,7 +190,7 @@ fun PromotionEnrollPopupUI(
                 fontSize = 16.sp,
                 modifier = Modifier
                     .padding(start = 16.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth().testTag("detail_heading")
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -196,7 +201,7 @@ fun PromotionEnrollPopupUI(
                 fontSize = 16.sp,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth().testTag("promo_description")
             )
 
 
@@ -221,7 +226,7 @@ fun PromotionEnrollPopupUI(
                     color = Color.Black,
                     modifier = Modifier
                         .align(Alignment.Start)
-                        .padding(start = 16.dp),
+                        .padding(start = 16.dp).testTag("expiration_date"),
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp
 
@@ -295,7 +300,7 @@ fun PromotionEnrollPopupUI(
                             Button(
                                 modifier = Modifier.width(150.dp), onClick = {
                                     isInProgress = true
-                                    model.unEnrollInPromotions(context, it)
+                                    promotionViewModel.unEnrollInPromotions(context, it)
                                 },
                                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
                                 shape = RoundedCornerShape(100.dp)

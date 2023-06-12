@@ -36,10 +36,14 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             .get(AppConstants.KEY_LOGIN_SUCCESSFUL, false)
         setContent {
             if (loginSuccess == true) {
+                val onboardingModel: OnboardingScreenViewModel = viewModel()
                 val profileModel: MembershipProfileViewModel = viewModel()
                 val promotionModel: MyPromotionViewModel = viewModel()
                 val voucherModel: VoucherViewModel = viewModel()
-                HomeTabScreen(profileModel, promotionModel, voucherModel)
+                val benefitModel: MembershipBenefitViewModel = viewModel()
+                val transactionModel: TransactionsViewModel = viewModel()
+                val checkoutFlowModel: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
+                HomeTabScreen(profileModel, promotionModel, voucherModel, onboardingModel, benefitModel, transactionModel, checkoutFlowModel)
             } else {
                 MainScreenStart()
             }

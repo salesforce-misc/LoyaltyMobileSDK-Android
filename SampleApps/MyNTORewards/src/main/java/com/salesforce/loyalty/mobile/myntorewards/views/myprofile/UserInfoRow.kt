@@ -21,12 +21,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 
 @Composable
-fun UserInfoRow() {
+fun UserInfoRow(profileModel: MembershipProfileViewModelInterface) {
 
-    val model: MembershipProfileViewModel = viewModel()
-    val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
+    val membershipProfile by profileModel.membershipProfileLiveData.observeAsState() // collecting livedata as state
 
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""

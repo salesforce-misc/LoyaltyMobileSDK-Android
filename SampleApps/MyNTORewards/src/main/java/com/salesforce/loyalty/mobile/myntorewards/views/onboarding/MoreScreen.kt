@@ -30,11 +30,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreOptionsScreen
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 
 @Composable
-fun MoreOptions(navController: NavController) {
+fun MoreOptions(navController: NavController, onBoardingModel: OnBoardingViewModelAbstractInterface) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,15 +69,18 @@ fun MoreOptions(navController: NavController) {
             fontSize = 20.sp
         )
 
-        LogoutOption(navController = navController)
+        LogoutOption(navController = navController, onBoardingModel)
     }
 }
 
 @Composable
-fun LogoutOption(navController: NavController) {
-    val model: OnboardingScreenViewModel = viewModel()
+fun LogoutOption(
+    navController: NavController,
+    onBoardingModel: OnBoardingViewModelAbstractInterface
+) {
+
     val context = LocalContext.current
-    val logoutState by model.logoutStateLiveData.observeAsState(LogoutState.LOGOUT_DEFAULT_EMPTY) // collecting livedata as state
+    val logoutState by onBoardingModel.logoutStateLiveData.observeAsState(LogoutState.LOGOUT_DEFAULT_EMPTY) // collecting livedata as state
     var isInProgress by remember { mutableStateOf(false) }
     when (logoutState) {
         LogoutState.LOGOUT_SUCCESS -> {
@@ -116,7 +120,7 @@ fun LogoutOption(navController: NavController) {
                     .padding(top = 24.dp, bottom = 24.dp)
                     .background(Color.White)
                     .clickable(indication = null, interactionSource = interactionSource) {
-                        model.logoutAndClearAllSettings(context)
+                        onBoardingModel.logoutAndClearAllSettings(context)
                     },
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically

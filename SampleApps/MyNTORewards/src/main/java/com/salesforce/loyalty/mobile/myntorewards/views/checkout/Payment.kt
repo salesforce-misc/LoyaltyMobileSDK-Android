@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -33,12 +34,14 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.myCheckBoxColors
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 
 @Composable
-fun PaymentsUI(navCheckOutFlowController: NavController) {
+fun PaymentsUI(navCheckOutFlowController: NavController, voucherModel: VoucherViewModelInterface, checkOutFlowViewModel: CheckOutFlowViewModelInterface) {
 
 
     Box() {
@@ -47,11 +50,11 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
             .padding(start = 20.dp, end = 20.dp)
             .verticalScroll(
                 rememberScrollState()
-            )
+            ).testTag("payment_ui_container")
         ) {
 
             Spacer(modifier = Modifier.height(23.dp))
-            VoucherRow()
+            VoucherRow(voucherModel)
             Spacer(modifier = Modifier.height(24.dp))
             PointsRow("432")
             AmountPaybleRow()
@@ -61,17 +64,16 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
             Spacer(modifier = Modifier.height(16.dp))
 
-            val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
-            val orderPlaceStatus by model.orderPlacedStatusLiveData.observeAsState(OrderPlacedState.ORDER_PLACED_DEFAULT_EMPTY) // collecting livedata as state
+            val orderPlaceStatus by checkOutFlowViewModel.orderPlacedStatusLiveData.observeAsState(OrderPlacedState.ORDER_PLACED_DEFAULT_EMPTY) // collecting livedata as state
 
             if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_SUCCESS) {
-                var orderID = model.orderIDLiveData.value.toString()
+                var orderID = checkOutFlowViewModel.orderIDLiveData.value.toString()
                 Toast.makeText(
                     LocalContext.current,
-                    "Order Success:: " + model.orderIDLiveData.value.toString(),
+                    "Order Success:: " + checkOutFlowViewModel.orderIDLiveData.value.toString(),
                     Toast.LENGTH_LONG
                 ).show()
-                model.resetOrderPlacedStatusDefault()
+                checkOutFlowViewModel.resetOrderPlacedStatusDefault()
                 isInProgress = false
                 navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
                     set(ORDER_ID, orderID)
@@ -80,7 +82,7 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
             } else if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_FAILURE) {
                 Toast.makeText(LocalContext.current, "orderPlaceStatus Failed", Toast.LENGTH_LONG)
                     .show()
-                model.resetOrderPlacedStatusDefault()
+                checkOutFlowViewModel.resetOrderPlacedStatusDefault()
                 isInProgress = false
             }
 
@@ -88,7 +90,7 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
                     isInProgress = true
-                    model.placeOrder()
+                    checkOutFlowViewModel.placeOrder()
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)
@@ -102,7 +104,7 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp)
+                        .padding(top = 10.dp, bottom = 10.dp).testTag("confirm_order_button")
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -121,7 +123,7 @@ fun PaymentsUI(navCheckOutFlowController: NavController) {
 }
 
 @Composable
-fun VoucherRow() {
+fun VoucherRow(voucherModel: VoucherViewModelInterface) {
     Column(modifier = Modifier.background(Color.White, RoundedCornerShape(20.dp))) {
 
         Text(
@@ -136,7 +138,7 @@ fun VoucherRow() {
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        VoucherMenuBox()
+        VoucherMenuBox(voucherModel)
         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -386,11 +388,10 @@ fun CVVInputField(text: String) {
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun VoucherMenuBox() {
-    val model: VoucherViewModel = viewModel()
-    model.loadVoucher(LocalContext.current)
+fun VoucherMenuBox(voucherModel: VoucherViewModelInterface) {
+    voucherModel.loadVoucher(LocalContext.current)
     val options = mutableListOf<String>()
-    val vouchers by model.voucherLiveData.observeAsState()
+    val vouchers by voucherModel.voucherLiveData.observeAsState()
     vouchers?.let { it ->
         for (voucher in it) {
             voucher.voucherDefinition?.let { name ->

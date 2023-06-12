@@ -22,24 +22,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.TransactionViewModelInterface
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyProfileTransactionFullScreenView(navProfileController: NavHostController) {
+fun MyProfileTransactionFullScreenView(
+    navProfileController: NavHostController,
+    transactionViewModel: TransactionViewModelInterface
+) {
 
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
     val context: Context = LocalContext.current
-    val tranModel: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
+
     fun refresh() = refreshScope.launch {
-        tranModel.loadTransactions(context, true)
+        transactionViewModel.loadTransactions(context, true)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
@@ -61,7 +63,7 @@ fun MyProfileTransactionFullScreenView(navProfileController: NavHostController) 
                 Spacer(modifier = Modifier.height(50.dp))
                 Image(
                     painter = painterResource(id = R.drawable.back_arrow),
-                    contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                    contentDescription = "transaction_back_button",
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
                         .padding(top = 10.dp, bottom = 10.dp)
@@ -86,7 +88,7 @@ fun MyProfileTransactionFullScreenView(navProfileController: NavHostController) 
                     .padding(start = 16.dp, end = 16.dp)
             ) {
                 Spacer(modifier = Modifier.height(12.dp))
-                TransactionFullScreenListView()
+                TransactionFullScreenListView(transactionViewModel)
             }
         }
         PullRefreshIndicator(refreshing, state)

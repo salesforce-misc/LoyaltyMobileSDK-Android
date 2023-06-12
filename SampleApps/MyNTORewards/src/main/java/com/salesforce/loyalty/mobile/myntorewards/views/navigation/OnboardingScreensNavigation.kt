@@ -5,41 +5,51 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 
 @Composable
 fun MainScreenStart() {
-    val model: OnboardingScreenViewModel = viewModel()
+    val onboardingModel: OnboardingScreenViewModel = viewModel()
     val profileModel: MembershipProfileViewModel = viewModel()
     val promotionModel:  MyPromotionViewModel = viewModel()
     val voucherModel: VoucherViewModel = viewModel()
-    Navigation(model,profileModel, promotionModel, voucherModel)
+    val benefitModel: MembershipBenefitViewModel = viewModel()
+    val transactionModel: TransactionsViewModel = viewModel()
+    val checkoutFlowModel: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
+    Navigation(
+
+        profileModel,
+        promotionModel,
+        voucherModel,
+        onboardingModel,
+        benefitModel,
+        transactionModel,
+        checkoutFlowModel
+    )
 }
 
 @Composable
 fun Navigation(
-    model: OnBoardingViewModelAbstractInterface,
     profileModel: MembershipProfileViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
-    voucherModel: VoucherViewModelInterface
+    voucherModel: VoucherViewModelInterface,
+    onboardingModel: OnBoardingViewModelAbstractInterface,
+    benefitViewModel: BenefitViewModelInterface,
+    transactionViewModel: TransactionViewModelInterface,
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface
+
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.OnboardingScreen.route)
     {
 
         composable(route = Screen.OnboardingScreen.route) {
-            OnboardingScreenBox(navController, model)
+            OnboardingScreenBox(navController, onboardingModel)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeTabScreen(profileModel,promotionModel,voucherModel )
+            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel)
         }
     }
 }

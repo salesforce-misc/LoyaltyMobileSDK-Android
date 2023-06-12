@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -28,10 +29,10 @@ class MyPromotionViewModel : ViewModel(), MyPromotionViewModelInterface {
         ForceAuthManager.forceAuthManager,
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     )
-    override val membershipPromotionLiveData: LiveData<List<Results>>
+    override val membershipPromotionLiveData: LiveData<PromotionsResponse>
         get() = membershipPromo
 
-    private val membershipPromo = MutableLiveData<List<Results>>()
+    private val membershipPromo = MutableLiveData<PromotionsResponse>()
 
     override val promEnrollmentStatusLiveData: LiveData<PromotionEnrollmentUpdateState>
         get() = promEnrollmentStatus
@@ -77,7 +78,8 @@ class MyPromotionViewModel : ViewModel(), MyPromotionViewModelInterface {
                 if (promotionCache == null) {
                     fetchPromotions(context, memberId, membershipKey)
                 } else {
-                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess(promotionCache))
+                    membershipPromo.value= promotionCache!!
+                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess)
                 }
             }
 
@@ -95,13 +97,15 @@ class MyPromotionViewModel : ViewModel(), MyPromotionViewModelInterface {
                         membershipKey,
                         LocalFileManager.DIRECTORY_PROMOTIONS
                     )
-                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess(it))
+                    membershipPromo.value= it
+                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess)
                 } else {
-                    viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
+                    viewState.postValue(PromotionViewState.PromotionsFetchFailure)
                 }
                 Log.d(TAG, "success member promotion response: $it")
             }.onFailure {
-                viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
+
+                viewState.postValue(PromotionViewState.PromotionsFetchFailure)
                 Log.d(TAG, "failed: member promotion ${it.message}")
             }
         }

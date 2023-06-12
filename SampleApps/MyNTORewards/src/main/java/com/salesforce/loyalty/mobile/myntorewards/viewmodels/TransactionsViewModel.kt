@@ -12,13 +12,14 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.TransactionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionsResponse
 import kotlinx.coroutines.launch
 
-class TransactionsViewModel : ViewModel() {
+class TransactionsViewModel : ViewModel(), TransactionViewModelInterface {
     private val TAG = TransactionsViewModel::class.java.simpleName
 
     private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
@@ -26,17 +27,17 @@ class TransactionsViewModel : ViewModel() {
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     )
     //live data for transaction data
-    val transactionsLiveData: LiveData<TransactionsResponse>
+    override val transactionsLiveData: LiveData<TransactionsResponse>
         get() = transactions
 
     private val transactions = MutableLiveData<TransactionsResponse>()
 
-    val transactionViewState: LiveData<TransactionViewState>
+    override val transactionViewState: LiveData<TransactionViewState>
         get() = viewState
 
     private val viewState = MutableLiveData<TransactionViewState>()
 
-    fun loadTransactions(context: Context, refreshRequired:Boolean=false) {
+    override fun loadTransactions(context: Context, refreshRequired:Boolean) {
         viewState.postValue(TransactionViewState.TransactionFetchInProgress)
         viewModelScope.launch {
             val memberJson =
@@ -81,6 +82,10 @@ class TransactionsViewModel : ViewModel() {
             membershipNumber?.let { membershipNumber ->
                 loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)
                     .onSuccess {
+
+                        var gson = Gson()
+                        var jsonString:String = gson.toJson(it)
+                        Log.d(TAG, "Akash*** Profile Cache"+ jsonString )
 
                         LocalFileManager.saveData(
                             context,

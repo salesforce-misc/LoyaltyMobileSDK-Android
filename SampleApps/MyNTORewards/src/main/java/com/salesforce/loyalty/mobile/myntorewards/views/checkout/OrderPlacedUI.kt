@@ -29,13 +29,13 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 @Composable
-fun OrderPlacedUI(navCheckOutFlowController: NavController) {
+fun OrderPlacedUI(navCheckOutFlowController: NavController,  checkOutFlowViewModel: CheckOutFlowViewModelInterface) {
 
-    val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
-    val orderDetails by model.orderDetailLiveData.observeAsState() // collecting livedata as state
+    val orderDetails by checkOutFlowViewModel.orderDetailLiveData.observeAsState() // collecting livedata as state
     val orderID = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
         ORDER_ID
     )
@@ -48,7 +48,7 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController) {
         profileViewModel.loadProfile(context, true)
     }
     orderID?.let {
-        model.fetchOrderDetails(orderID)
+        checkOutFlowViewModel.fetchOrderDetails(orderID)
     }
 
     Column(

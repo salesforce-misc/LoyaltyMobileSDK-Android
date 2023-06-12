@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -29,6 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
@@ -37,7 +39,8 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 fun PromotionCard(
     page: Int,
     membershipPromo: List<Results>?,
-    navCheckOutFlowController: NavController
+    navCheckOutFlowController: NavController,
+    promotionViewModel: MyPromotionViewModelInterface
 ) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
@@ -49,7 +52,7 @@ fun PromotionCard(
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-            .background(Color.White)
+            .background(Color.White).testTag("promotioncard")
             .clickable {
                 currentPromotionDetailPopupState = true
             }
@@ -163,7 +166,8 @@ fun PromotionCard(
                 closePopup = {
                     currentPromotionDetailPopupState = false
                 },
-                navCheckOutFlowController
+                navCheckOutFlowController,
+                promotionViewModel
             )
         }
     }

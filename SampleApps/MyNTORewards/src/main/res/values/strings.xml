@@ -90,8 +90,8 @@
     <string name="tab_payment">"2. Payment"</string>
     <string name="text_shipping_address">"Shipping Address"</string>
     <string name="text_add_new_address">"Add New Address"</string>
-    <string name="text_edit_address">"Edit  Address"</string>
-    <string name="text_delete_address">"Delete  Address"</string>
+    <string name="text_edit_address">"Edit Address"</string>
+    <string name="text_delete_address">"Delete Address"</string>
     <string name="text_deliver_to_this_address">"Deliver To This Address"</string>
     <string name="text_select_size">"Select Size"</string>
     <string name="text_available_colours">"Available Colors"</string>

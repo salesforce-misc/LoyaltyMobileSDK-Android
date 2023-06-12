@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -103,12 +104,12 @@ fun ShippingAndPaymentRow() {
 
 @Composable
 fun AddressRow() {
-    val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
+   /* val model: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
     val shippingDetails by model.shippingDetailsLiveData.observeAsState() // collecting livedata as state
-    model.fetchShippingDetails()
+    model.fetchShippingDetails()*/
 
 //temporary Log
-    Log.d("Shipping Address Code", "shipping code: " + shippingDetails?.get(0)?.shppingCode)
+    //Log.d("Shipping Address Code", "shipping code: " + shippingDetails?.get(0)?.shppingCode)
     Spacer(
         modifier = Modifier
             .height(16.dp)
@@ -117,7 +118,7 @@ fun AddressRow() {
         modifier = Modifier
             .fillMaxWidth()
             .height(126.dp)
-            .background(Color.White)
+            .background(Color.White).testTag("address_detail")
             .padding(start = 11.dp, end = 11.dp),
     )
     {

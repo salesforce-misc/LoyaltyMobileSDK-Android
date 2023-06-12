@@ -14,11 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BenefitViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.TransactionViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.MyBenefitMiniScreenView
 import com.salesforce.loyalty.mobile.myntorewards.views.ScreenTabHeader
 import com.salesforce.loyalty.mobile.myntorewards.views.TransactionCard
@@ -28,21 +32,21 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyProfileLandingView(navProfileViewController: NavHostController) {
+fun MyProfileLandingView(navProfileViewController: NavHostController,
+                         profileModel: MembershipProfileViewModelInterface,
+                         voucherModel: VoucherViewModelInterface,
+                         benefitViewModel: BenefitViewModelInterface,
+                         transactionViewModel: TransactionViewModelInterface
+) {
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
-
-    val profileModel: MembershipProfileViewModel = viewModel()
-    val context: Context = LocalContext.current
-    val voucherModel: VoucherViewModel = viewModel()
-    val tranModel: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
-    val benModel: MembershipBenefitViewModel = viewModel()
+    val context: Context = LocalContext.current //fetching reference of viewmodel
 
     fun refresh() = refreshScope.launch {
         profileModel.loadProfile(context, true)
-        tranModel.loadTransactions(context, true)
+        transactionViewModel.loadTransactions(context, true)
         voucherModel.loadVoucher(context,true )
-        benModel.loadBenefits(context, true)
+        benefitViewModel.loadBenefits(context, true)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
@@ -52,7 +56,7 @@ fun MyProfileLandingView(navProfileViewController: NavHostController) {
                 .fillMaxWidth(1f)
                 .background(Color.White)
                 .pullRefresh(state)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState()).testTag("ProfileScreenElementContainer"),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         )
@@ -73,21 +77,21 @@ fun MyProfileLandingView(navProfileViewController: NavHostController) {
                             .fillMaxWidth()
                             .background(Color.White)
                     )
-                    UserInfoRow()
+                    UserInfoRow(profileModel)
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)
                             .fillMaxWidth()
                             .background(Color.White)
                     )
-                    ProfileCard()
+                    ProfileCard(profileModel)
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)
                             .fillMaxWidth()
                             .background(MyProfileScreenBG)
                     )
-                    TransactionCard(navProfileViewController)
+                    TransactionCard(navProfileViewController, transactionViewModel)
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)
@@ -102,7 +106,7 @@ fun MyProfileLandingView(navProfileViewController: NavHostController) {
                             .background(MyProfileScreenBG)
                     )
 
-                    MyBenefitMiniScreenView(navProfileViewController)
+                    MyBenefitMiniScreenView(navProfileViewController, benefitViewModel)
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)

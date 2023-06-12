@@ -13,18 +13,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
 @Composable
 fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                   promotionModel: MyPromotionViewModelInterface,
-                  voucherModel: VoucherViewModelInterface
+                  voucherModel: VoucherViewModelInterface,
+                  onboardingModel: OnBoardingViewModelAbstractInterface,
+                  benefitViewModel: BenefitViewModelInterface,
+                  transactionViewModel: TransactionViewModelInterface,
+                  checkOutFlowViewModel: CheckOutFlowViewModelInterface
 ) {
     val bottomTabsNavController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -39,7 +38,7 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                 .padding(padding)
                 .background(TextPurpleLightBG).testTag("HomeScreen")
         ) {
-            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel) {
+            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel) {
                 bottomBarState.value = it
             }
         }
@@ -52,6 +51,10 @@ fun TabNavigation(
     profileModel: MembershipProfileViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
+    onboardingModel: OnBoardingViewModelAbstractInterface,
+    benefitViewModel: BenefitViewModelInterface,
+    transactionViewModel: TransactionViewModelInterface,
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
 
@@ -59,24 +62,24 @@ fun TabNavigation(
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel) {
+            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel) {
                 showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            PromotionScreenAndCheckOutFlowNavigation {
+            PromotionScreenAndCheckOutFlowNavigation(promotionModel, voucherModel, checkOutFlowViewModel) {
                 showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.MyProfile.route) {
-            MyProfileScreen()
+            MyProfileScreen(profileModel,voucherModel, benefitViewModel, transactionViewModel)
         }
         //part of UX but not part of MVP
         /*  composable(route = BottomNavTabs.Redeem.route) {
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreen {
+            MoreScreen(onboardingModel) {
                 showBottomBar(it)
             }
         }

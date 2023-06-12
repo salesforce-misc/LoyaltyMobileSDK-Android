@@ -12,6 +12,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BenefitViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -19,7 +20,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
 import kotlinx.coroutines.launch
 
-class MembershipBenefitViewModel : ViewModel() {
+class MembershipBenefitViewModel : ViewModel(), BenefitViewModelInterface {
 
     private val TAG = MembershipBenefitViewModel::class.java.simpleName
 
@@ -28,17 +29,17 @@ class MembershipBenefitViewModel : ViewModel() {
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     )
     //live data for login status
-    val membershipBenefitLiveData: LiveData<List<MemberBenefit>>
+    override val membershipBenefitLiveData: LiveData<List<MemberBenefit>>
         get() = membershipBenefit
 
     private val membershipBenefit = MutableLiveData<List<MemberBenefit>>()
 
-    val benefitViewState: LiveData<BenefitViewStates>
+    override val benefitViewState: LiveData<BenefitViewStates>
         get() = viewState
 
     private val viewState = MutableLiveData<BenefitViewStates>()
 
-    fun loadBenefits(context: Context, refreshRequired:Boolean=false) {
+    override fun loadBenefits(context: Context, refreshRequired:Boolean) {
         viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
 
         viewModelScope.launch {

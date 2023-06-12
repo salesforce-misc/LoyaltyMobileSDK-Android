@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,13 +32,17 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatTransactionDateTime
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.TransactionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PointsChange
 import kotlin.math.round
 
 @Composable
-fun TransactionCard(navProfileController: NavHostController) {
+fun TransactionCard(
+    navProfileController: NavHostController,
+    transactionViewModel: TransactionViewModelInterface
+) {
     Column(
         modifier = Modifier
             .background(MyProfileScreenBG)
@@ -50,20 +55,20 @@ fun TransactionCard(navProfileController: NavHostController) {
             navProfileController.navigate(ProfileViewScreen.TransactionFullScreen.route)
         }
 
-        TransactionListView(modifier = Modifier.height(200.dp))
+        TransactionListView(modifier = Modifier.height(200.dp), transactionViewModel)
 
     }
 }
 
 @Composable
-fun TransactionListView(modifier: Modifier) {
-    val model: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
-    val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
-    val transactionViewState by model.transactionViewState.observeAsState()
+fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionViewModelInterface) {
+ //fetching reference of viewmodel
+    val transactions by transactionViewModel.transactionsLiveData.observeAsState() // collecting livedata as state
+    val transactionViewState by transactionViewModel.transactionViewState.observeAsState()
     val context: Context = LocalContext.current
 
     LaunchedEffect(true) {
-        model.loadTransactions(context)
+        transactionViewModel.loadTransactions(context)
     }
 
     var isInProgress by remember { mutableStateOf(false) }
@@ -86,7 +91,7 @@ fun TransactionListView(modifier: Modifier) {
                     }
                     var index = 0
                     var previewTransactionCount = 0
-                    Column(modifier = Modifier.wrapContentHeight()) {
+                    Column(modifier = Modifier.wrapContentHeight().testTag("transaction_list")) {
                         Spacer(modifier = Modifier.height(12.dp))
                         while (previewTransactionCount < pageCount && index < count) {
                             transactions?.transactionJournals?.get(index)?.apply {
@@ -133,14 +138,13 @@ fun TransactionListView(modifier: Modifier) {
 
 
 @Composable
-fun TransactionFullScreenListView() {
-    val model: TransactionsViewModel = viewModel()  //fetching reference of viewmodel
-    val transactions by model.transactionsLiveData.observeAsState() // collecting livedata as state
-    val transactionViewState by model.transactionViewState.observeAsState()
+fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInterface) {
+    val transactions by transactionViewModel.transactionsLiveData.observeAsState() // collecting livedata as state
+    val transactionViewState by transactionViewModel.transactionViewState.observeAsState()
     val context: Context = LocalContext.current
 
     LaunchedEffect(true) {
-        model.loadTransactions(context)
+        transactionViewModel.loadTransactions(context)
     }
     var isInProgress by remember { mutableStateOf(false) }
 
@@ -188,7 +192,7 @@ fun TransactionFullScreenListView() {
 
         recentTransactions?.let { transactionsJournals ->
             if (transactionsJournals.isNotEmpty()) {
-                Column(modifier = Modifier.wrapContentHeight()) {
+                Column(modifier = Modifier.wrapContentHeight().testTag("recent_transaction")) {
                     Text(
                         text = stringResource(id = R.string.label_transactions_recent),
                         color = Color.Black,

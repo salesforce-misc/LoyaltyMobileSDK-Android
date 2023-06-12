@@ -40,9 +40,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileVi
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import kotlinx.coroutines.launch
@@ -54,7 +52,7 @@ fun HomeScreenLandingView(
     navCheckOutFlowController: NavController,
     profileModel: MembershipProfileViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
-    voucherModel: VoucherViewModelInterface
+    voucherModel: VoucherViewModelInterface,
 ) {
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
@@ -125,6 +123,7 @@ fun PromotionCardRow(
         val context: Context = LocalContext.current
 
         val promoViewState by promotionModel.promotionViewState.observeAsState()
+        val promoViewValue by promotionModel.membershipPromotionLiveData.observeAsState()
         LaunchedEffect(true) {
             promotionModel.loadPromotions(context)
         }
@@ -132,8 +131,7 @@ fun PromotionCardRow(
         when (promoViewState) {
             is PromotionViewState.PromotionsFetchSuccess -> {
                 isInProgress = false
-                val membershipPromo =
-                    (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+                val membershipPromo = promoViewValue?.outputParameters?.outputParameters?.results
 
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
@@ -149,7 +147,7 @@ fun PromotionCardRow(
                 }
                 membershipPromo?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
-                        PromotionCard(page, membershipPromo, navCheckOutFlowController)
+                        PromotionCard(page, membershipPromo, navCheckOutFlowController, promotionModel)
                     }
                 }
 
