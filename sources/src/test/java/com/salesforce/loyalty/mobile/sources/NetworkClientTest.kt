@@ -332,6 +332,8 @@ class NetworkClientTest {
                 assertEquals(it.transactionJournals[1].journalTypeName, "Manual Points Adjustment")
                 assertEquals(it.transactionJournals[1].transactionJournalId, "0lVRO00000002ob2AA")
                 assertEquals(it.transactionJournals[1].activityDate, "2023-04-08T04:58:07.000Z")
+
+                assertEquals(it.transactionJournals[0].additionalTransactionJournalAttributes, listOf<AdditionalAttributes>())
             }
         }
     }
