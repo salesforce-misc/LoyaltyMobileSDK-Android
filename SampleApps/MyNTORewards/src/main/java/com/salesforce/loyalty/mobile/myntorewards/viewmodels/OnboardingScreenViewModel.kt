@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.launch
 
@@ -58,7 +58,7 @@ open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractI
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
     override fun loginUser(emailAddressText: String, passwordText: String, context: Context) {
-        Log.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
+        Logger.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
             val connectedApp = ForceAuthManager.forceAuthManager.getConnectedApp()
@@ -72,7 +72,7 @@ open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractI
             )
 
             if (accessTokenResponse != null) {
-                Log.d(TAG, "Access token Success: $accessTokenResponse")
+                Logger.d(TAG, "Access token Success: $accessTokenResponse")
                 val memberProfileResponse = loyaltyAPIManager.getMemberProfile(null, null, null)
                 memberProfileResponse.onSuccess {
                     if (it != null) {
@@ -112,7 +112,7 @@ open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractI
 
             } else {
                 loginStatus.value = LoginState.LOGIN_FAILURE
-                Log.d(TAG, "Access token Failure")
+                Logger.d(TAG, "Access token Failure")
             }
         }
     }
@@ -136,7 +136,7 @@ open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractI
     ) {
         enrollmentStatus.value =
             EnrollmentState.ENROLLMENT_SUCCESS
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             var enrollmentResponse: EnrollmentResponse? = null
             loyaltyAPIManager.postEnrollment(
                 firstNameText,
@@ -167,14 +167,14 @@ open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractI
                 .onFailure {
                     enrollmentStatus.value =
                         EnrollmentState.ENROLLMENT_FAILURE   // enrollment state is being observed in Enrollment UI Composable
-                    Log.d(TAG, "Enrollment request failed: ${it.message}")
+                    Logger.d(TAG, "Enrollment request failed: ${it.message}")
                 }
             if (enrollmentResponse != null) {
                 enrollmentStatus.value =
                     EnrollmentState.ENROLLMENT_SUCCESS   // enrollment state is being observed in Enrollment UI Composable
-                Log.d(TAG, "Enrollment request Success: $enrollmentResponse")
+                Logger.d(TAG, "Enrollment request Success: $enrollmentResponse")
             }
-        }*/
+        }
     }
 
     override fun logoutAndClearAllSettings(context: Context) {

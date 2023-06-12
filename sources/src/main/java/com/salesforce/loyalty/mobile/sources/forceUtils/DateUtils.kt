@@ -7,7 +7,6 @@
 
 package com.salesforce.loyalty.mobile.sources.forceUtils
 
-import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -29,7 +28,7 @@ object DateUtils {
             val sdf = SimpleDateFormat(format)
             sdf.format(Calendar.getInstance().timeInMillis)
         } catch (e: java.lang.Exception) {
-            Log.d(TAG, "Exception occurred when retrieving current date time in $format")
+            Logger.e(TAG, "Exception occurred when retrieving current date time in $format", e)
             null
         }
     }

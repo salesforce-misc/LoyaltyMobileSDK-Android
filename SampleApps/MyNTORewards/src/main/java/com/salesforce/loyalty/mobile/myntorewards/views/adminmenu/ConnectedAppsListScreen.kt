@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -37,11 +36,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ConnectedApp
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_OPEN_CONNECTED_APP_INSTANCE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModelFactory
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 @Composable
 fun ConnectedAppsListAppBar(
@@ -104,13 +103,13 @@ fun SelectedConnectedApp(navController: NavController) {
         LaunchedEffect(Unit) {
             model.retrieveAll(context)
         }
-        Log.d("ConnectedApps", " connectedApps : $connectedApps")
+        Logger.d("ConnectedApps", " connectedApps : $connectedApps")
         val selectedApp = connectedApps?.filter {
             it.instanceUrl?.let { instance ->
                 selectedInstanceUrl.equals(instance)
             } == true
         }
-        Log.d("ConnectedApps", " selected : $selectedApp")
+        Logger.d("ConnectedApps", " selected : $selectedApp")
         var myConnectedApps: MutableList<ConnectedApp> = mutableListOf()
         if (connectedApps != null) {
 
@@ -120,7 +119,7 @@ fun SelectedConnectedApp(navController: NavController) {
                 myConnectedApps?.remove(it)
             }
         }
-        Log.d("ConnectedApps", " myConnectedApps : $myConnectedApps")
+        Logger.d("ConnectedApps", " myConnectedApps : $myConnectedApps")
 
         selectedApp?.get(0)?.let {
             Column(

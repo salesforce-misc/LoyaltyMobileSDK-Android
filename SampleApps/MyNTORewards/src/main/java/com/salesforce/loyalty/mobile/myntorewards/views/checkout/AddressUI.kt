@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.checkout
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +25,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 @Composable
 fun OrderAddressUI(switchPaymentTab: () -> Unit) {
@@ -109,7 +109,7 @@ fun AddressRow() {
     model.fetchShippingDetails()*/
 
 //temporary Log
-    //Log.d("Shipping Address Code", "shipping code: " + shippingDetails?.get(0)?.shppingCode)
+    Logger.d("Shipping Address Code", "shipping code: " + shippingDetails?.get(0)?.shppingCode)
     Spacer(
         modifier = Modifier
             .height(16.dp)

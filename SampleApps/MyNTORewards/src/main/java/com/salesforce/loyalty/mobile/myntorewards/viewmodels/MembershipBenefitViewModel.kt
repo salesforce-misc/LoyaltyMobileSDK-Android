@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BenefitViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
 import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
@@ -47,7 +47,7 @@ class MembershipBenefitViewModel : ViewModel(), BenefitViewModelInterface {
                 PrefHelper.customPrefs(context)
                     .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
-                Log.d(TAG, "failed: member benefit Member details not present")
+                Logger.d(TAG, "failed: member benefit Member details not present")
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
@@ -66,7 +66,7 @@ class MembershipBenefitViewModel : ViewModel(), BenefitViewModelInterface {
                     MemberBenefitsResponse::class.java
                 )
 
-                Log.d(TAG, "cache : $benefitsCache")
+                Logger.d(TAG, "cache : $benefitsCache")
                 if (benefitsCache == null || refreshRequired) {
                     memberBenefitAPI(context, memberId, membershipKey)
                 } else {
@@ -91,10 +91,10 @@ class MembershipBenefitViewModel : ViewModel(), BenefitViewModelInterface {
                     LocalFileManager.DIRECTORY_BENEFITS
                 )
                 viewState.postValue(BenefitViewStates.BenefitFetchSuccess)
-                Log.d(TAG, "success member benefit response: $it")
+                Logger.d(TAG, "success member benefit response: $it")
 
             }.onFailure {
-                Log.d(TAG, "failed: member benefit ${it.message}")
+                Logger.d(TAG, "failed: member benefit ${it.message}")
                 viewState.postValue(BenefitViewStates.BenefitFetchFailure)
 
             }

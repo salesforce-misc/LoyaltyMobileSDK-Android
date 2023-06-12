@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -32,6 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.Vie
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.adminmenu.SettingsMain
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentCongratulationsView
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
 
@@ -104,11 +104,11 @@ fun OnboardingScreenBox(navController: NavController,model: OnBoardingViewModelA
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = {
                                 tapCount++
-                                Log.d("Onboarding", "Tap detected $tapCount")
+                                Logger.d("Onboarding", "Tap detected $tapCount")
                                 if (tapCount == AppConstants.TAP_COUNT_OPEN_ADMIN_SETTINGS) {
                                     //navigate to admin settings
                                     tapCount = 0
-                                    Log.d("Onboarding", "Tap detected navigate to admin settings")
+                                    Logger.d("Onboarding", "Tap detected navigate to admin settings")
                                     openAdminMenu = true
                                 }
                             })

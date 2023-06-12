@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -9,6 +8,7 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import okhttp3.HttpUrl
 import retrofit2.HttpException
 import java.net.HttpURLConnection
@@ -52,7 +52,7 @@ object ForceAuthManager: ForceAuthenticator {
     }
 
     override suspend fun grantAccessToken(): String? {
-        Log.d(TAG, "grantAccessToken()")
+        Logger.d(TAG, "grantAccessToken()")
         val connectedApp = getConnectedApp()
         if (auth != null) {
             auth?.refreshToken?.let {
@@ -132,13 +132,13 @@ object ForceAuthManager: ForceAuthenticator {
                 password = password
             )
         } catch (ex: HttpException) {
-            Log.d(TAG, "Access token HttpException ${ex.message}")
+            Logger.e(TAG, "Access token HttpException ${ex.message}", ex)
             val responseCode = ex.response()?.code()
             if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 val redirectUrl = ex.response()?.raw()?.request?.url
                 redirectUrl?.let {
                     val code = getAuthorizationCode(it)
-                    Log.d(TAG, "Auth code : $code")
+                    Logger.d(TAG, "Auth code : $code")
                     code?.let { authCode ->
                         return requestAccessToken(
                             communityUrl = communityUrl,
@@ -150,7 +150,7 @@ object ForceAuthManager: ForceAuthenticator {
                 }
             }
         } catch (ex: java.lang.Exception) {
-            Log.d(TAG, "Failed to generate access token ${ex.message}")
+            Logger.e(TAG, "Failed to generate access token ${ex.message}", ex)
         }
         return null
     }
@@ -206,11 +206,11 @@ object ForceAuthManager: ForceAuthenticator {
             callbackUrl
         )
         response.onSuccess {
-            Log.d(TAG, "Access token success: ${it}")
+            Logger.d(TAG, "Access token success: ${it}")
             saveAuth(it)
             return it.accessToken
         }.onFailure {
-            Log.d(TAG, "Access token failure : ${it.message}")
+            Logger.d(TAG, "Access token failure : ${it.message}")
         }
         return null
     }
@@ -248,7 +248,7 @@ object ForceAuthManager: ForceAuthenticator {
                 saveAuth(newAuthToSave)
                 return newAuthToSave
             }.onFailure {
-                Log.d(TAG,"refresh token returned failure: ${it.message}  Localized message: ${it.localizedMessage}")
+                Logger.d(TAG,"refresh token returned failure: ${it.message}  Localized message: ${it.localizedMessage}")
                 authenticationStatus.postValue(AuthenticationStatus.UNAUTHENTICATED)
                 return null
             }
@@ -281,7 +281,7 @@ object ForceAuthManager: ForceAuthenticator {
             return it
         }
 
-        Log.d(TAG, "No auth found. Please login.")
+        Logger.d(TAG, "No auth found. Please Loggerin.")
         return null
     }
 
@@ -310,9 +310,9 @@ object ForceAuthManager: ForceAuthenticator {
             val result = ForceClient.authApi.revokeAccessToken(url, accessToken = it)
 
             result.onSuccess {
-                Log.d(TAG, "Revoked Access token successfully!")
+                Logger.d(TAG, "Revoked Access token successfully!")
             }.onFailure {
-                Log.d(TAG, "Could not revoke Access token! ${it.message}")
+                Logger.d(TAG, "Could not revoke Access token! ${it.message}")
             }
             auth = null
         }

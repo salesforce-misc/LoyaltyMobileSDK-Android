@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +12,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
 class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
@@ -44,7 +44,7 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
     }
 
     fun getConnectedApp(context: Context, instanceUrl: String): ConnectedApp {
-        Log.d(TAG, "getConnectedApp() instanceUrl : $instanceUrl")
+        Logger.d(TAG, "getConnectedApp() instanceUrl : $instanceUrl")
 
         return ForceConnectedAppEncryptedPreference.getConnectedApp(context, instanceUrl)
     }
@@ -62,7 +62,7 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
         var connectedApps: MutableList<ConnectedApp>?
         connectedApps = ForceConnectedAppEncryptedPreference.retrieveAll(context)?.toMutableList()
         if (connectedApps == null || connectedApps.isEmpty()) {
-            Log.d("ConnectedApps", " connectedApps null or empty")
+            Logger.d("ConnectedApps", " connectedApps null or empty")
             connectedApps = mutableListOf()
             val initApp = AppSettings.DEFAULT_FORCE_CONNECTED_APP
             connectedApps.add(initApp)
@@ -71,7 +71,7 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
             connectedApps?.let { it -> savedApps.value = it }
             return connectedApps
         } else {
-            Log.d("ConnectedApps", " connectedApps $connectedApps")
+            Logger.d("ConnectedApps", " connectedApps $connectedApps")
             connectedApps?.let { it -> savedApps.value = it }
             return connectedApps
         }

@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.myprofile
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import com.google.zxing.common.BitMatrix
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourBlackQR
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourWhiteQR
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,7 +52,7 @@ fun QRCode(value: String, width: Int, height: Int, colour:Long= ColourBlackQR ) 
                         ), colour
                     )?.asImageBitmap()
                 } catch (e: Exception) {
-                    Log.e("ComposeBarcodes", "Invalid Barcode Format", e)
+                    Logger.e("ComposeBarcodes", "Invalid Barcode Format", e)
                     null
                 }
             }

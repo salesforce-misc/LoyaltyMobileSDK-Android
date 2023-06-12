@@ -3,6 +3,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def connectedappPropertiesFile = rootProject.file("SampleApps/MyNTORewards/connectedapp.properties")
+def connectedappProperties = new Properties()
+connectedappProperties.load(new FileInputStream(connectedappPropertiesFile))
+
 android {
     namespace 'com.salesforce.loyalty.mobile.MyNTORewards'
     compileSdk 33
@@ -15,6 +19,14 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "CONNECTED_APP_NAME", connectedappProperties['CONNECTED_APP_NAME'])
+        buildConfigField("String", "CONSUMER_KEY", connectedappProperties['CONSUMER_KEY'])
+        buildConfigField("String", "CONSUMER_SECRET", connectedappProperties['CONSUMER_SECRET'])
+        buildConfigField("String", "CALLBACK_URL", connectedappProperties['CALLBACK_URL'])
+        buildConfigField("String", "BASE_URL", connectedappProperties['BASE_URL'])
+        buildConfigField("String", "INSTANCE_URL", connectedappProperties['INSTANCE_URL'])
+        buildConfigField("String", "COMMUNITY_URL", connectedappProperties['COMMUNITY_URL'])
     }
 
     buildTypes {

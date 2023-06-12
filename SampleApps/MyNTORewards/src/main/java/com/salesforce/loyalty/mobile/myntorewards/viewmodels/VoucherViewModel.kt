@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResult
@@ -46,7 +46,7 @@ class VoucherViewModel : ViewModel(), VoucherViewModelInterface {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
-                Log.d(TAG, "failed: member getVoucher Member details not present")
+                Logger.d(TAG, "failed: member getVoucher Member details not present")
                 return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
@@ -64,7 +64,7 @@ class VoucherViewModel : ViewModel(), VoucherViewModelInterface {
                     VoucherResult::class.java
                 )
 
-                Log.d(TAG, "cache : $voucherCache")
+                Logger.d(TAG, "cache : $voucherCache")
                 if (voucherCache == null) {
                     getVoucher(context, membershipKey)
                 } else {
@@ -91,10 +91,10 @@ class VoucherViewModel : ViewModel(), VoucherViewModelInterface {
 
                 vouchers.value = it.voucherResponse
                 viewState.postValue(VoucherViewState.VoucherFetchSuccess)
-                Log.d(TAG, "getVoucher success: ${it.voucherResponse}")
+                Logger.d(TAG, "getVoucher success: ${it.voucherResponse}")
             }.onFailure {
                 viewState.postValue(VoucherViewState.VoucherFetchFailure)
-                Log.d(TAG, "getVoucher failed: ${it.message}")
+                Logger.d(TAG, "getVoucher failed: ${it.message}")
             }
         }
     }
