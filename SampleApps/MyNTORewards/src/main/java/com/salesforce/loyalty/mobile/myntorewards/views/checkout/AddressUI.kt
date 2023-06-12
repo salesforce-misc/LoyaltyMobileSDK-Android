@@ -109,7 +109,7 @@ fun AddressRow() {
     model.fetchShippingDetails()*/
 
 //temporary Log
-    Logger.d("Shipping Address Code", "shipping code: " + shippingDetails?.get(0)?.shppingCode)
+    //Logger.d("Shipping Address Code", "shipping code: " + shippingDetails?.get(0)?.shppingCode)
     Spacer(
         modifier = Modifier
             .height(16.dp)

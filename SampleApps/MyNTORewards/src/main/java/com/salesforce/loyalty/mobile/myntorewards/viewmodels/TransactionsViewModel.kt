@@ -82,11 +82,6 @@ class TransactionsViewModel : ViewModel(), TransactionViewModelInterface {
             membershipNumber?.let { membershipNumber ->
                 loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)
                     .onSuccess {
-
-                        var gson = Gson()
-                        var jsonString:String = gson.toJson(it)
-                        Log.d(TAG, "Akash*** Profile Cache"+ jsonString )
-
                         LocalFileManager.saveData(
                             context,
                             it,
