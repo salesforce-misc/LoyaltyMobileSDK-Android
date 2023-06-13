@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthEncryptedPreference
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConnectedAppEncryptedPreference
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
@@ -113,7 +110,7 @@ class OnboardingScreenViewModel : ViewModel() {
                 }.onFailure {
                     val errorMessage = it.localizedMessage
                     Logger.d(TAG, "Member Profile failure: ${errorMessage}")
-                    if (errorMessage.contains("500")) {
+                    if (errorMessage.contains(ForceConfig.HTTP_RESPONSE_CODE_SERVER_ERROR.toString())) {
                         loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
                     } else {
                         loginStatus.value = LoginState.LOGIN_FAILURE
