@@ -87,6 +87,17 @@ class NetworkClientTest {
                 assertEquals(it.memberCurrencies?.get(0)?.totalEscrowRolloverPoints, 0.0)
                 assertEquals(it.memberCurrencies?.get(0)?.totalPointsExpired, 0.0)
                 assertEquals(it.memberCurrencies?.get(0)?.totalPointsRedeemed, 0.0)
+                assertEquals(it.memberCurrencies?.get(0)?.escrowPointsBalance, 0.0)
+                assertEquals(it.memberCurrencies?.get(0)?.expirablePoints, 0.0)
+                assertNull(it.memberCurrencies?.get(0)?.lastAccrualProcessedDate)
+                assertNull(it.memberCurrencies?.get(0)?.lastEscrowProcessedDate)
+                assertNull(it.memberCurrencies?.get(0)?.lastExpirationProcessRunDate)
+                assertNull(it.memberCurrencies?.get(0)?.lastPointsAggregationDate)
+                assertNull(it.memberCurrencies?.get(0)?.lastPointsResetDate)
+                assertNull(it.memberCurrencies?.get(0)?.loyaltyProgramCurrencyName)
+                assertNull(it.memberCurrencies?.get(0)?.nextQualifyingPointsResetDate)
+                assertEquals(it.memberCurrencies?.get(0)?.qualifyingPointsBalanceBeforeReset, 0.0)
+                assertEquals(it.memberCurrencies?.get(0)?.additionalLoyaltyMemberCurrencyFields, mapOf<String, Any?>())
 
                 assertEquals(it.memberTiers?.get(0)?.loyaltyMemberTierId, "0ly4x000000btVzAAI")
                 assertEquals(it.memberTiers?.get(0)?.loyaltyMemberTierName, "Silver")
@@ -95,18 +106,71 @@ class NetworkClientTest {
                 assertEquals(it.memberTiers?.get(0)?.tierSequenceNumber, 10)
                 assertEquals(it.memberTiers?.get(0)?.tierEffectiveDate, "2022-01-01")
                 assertEquals(it.memberTiers?.get(0)?.tierExpirationDate, "2023-08-31")
+                assertEquals(it.memberTiers?.get(0)?.additionalLoyaltyMemberTierFields, mapOf<String, Any?>())
+                assertEquals(it.memberTiers?.get(0)?.areTierBenefitsAssigned, false)
+                assertNull(it.memberTiers?.get(0)?.tierChangeReason, null)
+                assertNull(it.memberTiers?.get(0)?.tierChangeReasonType, null)
+                assertNull(it.memberTiers?.get(0)?.tierGroupName, null)
 
                 assertEquals(it.memberStatus, "Active")
                 assertEquals(it.memberType, "Individual")
                 assertEquals(it.membershipEndDate, "2023-01-01")
                 assertEquals(it.membershipNumber, "Member1")
                 assertEquals(it.transactionJournalStatementFrequency, "Monthly")
-//                assertEquals(it.transactionJournalStatementLastGeneratedDate, "")
+                assertNull(it.transactionJournalStatementLastGeneratedDate)
                 assertEquals(it.transactionJournalStatementMethod, "Mail")
+                assertNull(it.programName)
+                assertNull(it.associatedAccount)
+                assertNull(it.groupCreatedByMember)
+                assertNull(it.groupName)
+                assertNull(it.lastActivityDate)
+                assertNull(it.membershipLastRenewalDate)
+                assertNull(it.referredBy)
+                assertNull(it.relatedCorporateMembershipNumber)
             }
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun testMemberProfileAPIUnauthorized() {
+        runBlocking {
+            val response = MockResponse()
+                .setResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED)
+            mockWebServer.enqueue(response)
+
+            val actualResponse = loyaltyClient.getNetworkClient().getMemberProfile(
+                mockWebServer.url("/").toString(),
+                memberId = "MRI706",
+                membershipNumber = null,
+                programCurrencyName = "MyNTORewards"
+            )
+            mockWebServer.takeRequest()
+            assertEquals(actualResponse.isFailure, true)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun testMemberProfileAPI400Error() {
+        runBlocking {
+            val response = MockResponse()
+                .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+                .setBody(MockResponseFileReader("Benefits.json").content)
+            mockWebServer.enqueue(response)
+
+            val actualResponse = loyaltyClient.getNetworkClient().getMemberProfile(
+                mockWebServer.url("/").toString(),
+                memberId = "MRI706",
+                membershipNumber = null,
+                programCurrencyName = "MyNTORewards"
+            )
+            mockWebServer.takeRequest()
+            actualResponse.onFailure {
+                assertEquals(actualResponse.isFailure, true)
+            }
+        }
+    }
     @Test
     fun tesPostEnrollmentAPI() {
         runBlocking {
@@ -183,6 +247,7 @@ class NetworkClientTest {
                 assertEquals(it.memberBenefits[0].isActive, true)
                 assertEquals(it.memberBenefits[0].createdRecordName, null)
                 assertEquals(it.memberBenefits[0].benefitId, "0ji4x0000008REdAAM")
+                assertEquals(it.memberBenefits[0].benefitTypeName, "Extended Returns")
 
                 assertEquals(it.memberBenefits[1].benefitId, "0ji4x0000008REjAAM")
                 assertEquals(it.memberBenefits[2].benefitId, "0ji4x0000008REeAAM")
@@ -289,6 +354,7 @@ class NetworkClientTest {
                 assertEquals(it.status, true)
                 assertEquals(it.outputParameters?.outputParameters?.results?.size, 8)
                 assertEquals(it.message, null)
+                assertEquals(it.simulationDetails, mapOf<String, Any?>())
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.loyaltyPromotionType, "STANDARD")
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.maximumPromotionRewardValue, 0)
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.totalPromotionRewardPointsVal, 0)
@@ -301,6 +367,9 @@ class NetworkClientTest {
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.startDate, "2020-01-01")
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.endDate, "2022-12-31")
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.description, "Double point promotion on member purchases on their anniversary")
+                assertNull(it.outputParameters?.outputParameters?.results?.get(0)?.promEnrollmentStartDate)
+                assertNull(it.outputParameters?.outputParameters?.results?.get(0)?.promotionEnrollmentEndDate)
+                assertNull(it.outputParameters?.outputParameters?.results?.get(0)?.promotionImageUrl)
 
             }
         }
@@ -322,14 +391,22 @@ class NetworkClientTest {
             assertEquals(actualResponse.isSuccess, true)
             actualResponse.onSuccess { it ->
                 assertEquals(it.transactionJournalCount, 4)
+                assertEquals(it.status, true)
                 assertEquals(it.transactionJournals[0].journalTypeName, "Manual Points Adjustment")
                 assertEquals(it.transactionJournals[0].transactionJournalId, "0lVRO00000002og2AA")
                 assertEquals(it.transactionJournals[0].activityDate, "2023-04-08T04:59:40.000Z")
                 assertEquals(it.transactionJournals[0].pointsChange.get(0).changeInPoints, 100.0)
                 assertEquals(it.transactionJournals[0].pointsChange.get(0).loyaltyMemberCurrency, "Reward Points")
                 assertEquals(it.transactionJournals[0].transactionJournalNumber, "00000035")
+                assertEquals(it.externalTransactionNumber, null)
+                assertEquals(it.transactionJournals[0].transactionAmount, null)
+                assertEquals(
+                    it.transactionJournals[0].additionalTransactionJournalAttributes,
+                    mutableListOf<AdditionalAttributes>()
+                )
 
                 assertEquals(it.transactionJournals[1].journalTypeName, "Manual Points Adjustment")
+                assertEquals(it.transactionJournals[1].journalSubTypeName, null)
                 assertEquals(it.transactionJournals[1].transactionJournalId, "0lVRO00000002ob2AA")
                 assertEquals(it.transactionJournals[1].activityDate, "2023-04-08T04:58:07.000Z")
 
@@ -371,6 +448,15 @@ class NetworkClientTest {
                 assertEquals(it.voucherResponse[0].voucherDefinition, "Birthday Discount Voucher")
                 assertEquals(it.voucherResponse[0].voucherImageUrl, "https://thumbs.dreamstime.com/b/10-percent-discount-24471598.jpg")
                 assertEquals(it.voucherResponse[0].voucherNumber, "00000001")
+                assertNull(it.voucherResponse[0].useDate)
+                assertNull(it.voucherResponse[0].attributesUrl)
+                assertNull(it.voucherResponse[0].partnerAccount)
+                assertNull(it.voucherResponse[0].faceValue)
+                assertNull(it.voucherResponse[0].currencyIsoCode)
+                assertNull(it.voucherResponse[0].product)
+                assertNull(it.voucherResponse[0].productId)
+                assertNull(it.voucherResponse[0].productCategoryId)
+                assertNull(it.voucherResponse[0].productCategory)
 
                 assertEquals(it.voucherResponse[1].id, "0kDRO00000000Hp2AI")
                 assertEquals(it.voucherResponse[1].discountPercent, 40)
