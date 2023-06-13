@@ -22,7 +22,7 @@ data class MemberBenefit(
     val benefitId: String?,
     @SerializedName("benefitName")
     val benefitName: String?,
-    @SerializedName("firstName")
+    @SerializedName("benefitTypeId")
     val benefitTypeId: String?,
     @SerializedName("benefitTypeName")
     val benefitTypeName: String?,

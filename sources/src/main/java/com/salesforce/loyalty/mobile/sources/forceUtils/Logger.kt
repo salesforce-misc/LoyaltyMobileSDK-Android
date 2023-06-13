@@ -7,10 +7,11 @@ object Logger {
 
     private val isDebug = BuildConfig.LOG_ENABLED
 
-    fun d(tag: String, message: String) {
+    fun d(tag: String, message: String): Int {
         if (isDebug) {
             Log.d(tag, message)
         }
+        return 0
     }
 
     fun v(tag: String, message: String) {
