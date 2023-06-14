@@ -154,8 +154,8 @@ fun loadWebUrl(url: String, openPopup: (popupStatus: BottomSheetType) -> Unit) {
                     clearCache(true)
                     clearHistory()
                     clearFormData()
-                    loadUrl(url)
                     WebUtility.clearCookies(context)
+                    loadUrl(url)
                     layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT

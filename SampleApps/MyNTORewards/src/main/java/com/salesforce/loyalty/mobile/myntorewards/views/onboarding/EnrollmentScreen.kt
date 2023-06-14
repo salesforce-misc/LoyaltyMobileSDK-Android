@@ -366,7 +366,7 @@ fun JoinWithTermsAndConditions(closeSheet: () -> Unit, navController: NavControl
                         isInProgress = true
                         isJoinClicked = true
                     }, enabled = isJoinWithTandCButtonEnabled(
-                        tncCheckedState, mailCheckedState
+                        tncCheckedState
                     ), colors = buttonColors(VibrantPurple40), shape = RoundedCornerShape(100.dp)
 
                 ) {
@@ -401,8 +401,7 @@ fun JoinWithTermsAndConditions(closeSheet: () -> Unit, navController: NavControl
 }
 
 fun isJoinWithTandCButtonEnabled(
-    tncAcceptance: Boolean,
-    mailCheckedState: Boolean
+    tncAcceptance: Boolean
 ): Boolean {
-    return (tncAcceptance && mailCheckedState)
+    return (tncAcceptance)
 }
