@@ -7,6 +7,9 @@
 
 package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
+/**
+ * Enum class that holds values of Member Eligibility criteria for Promotions.
+ */
 enum class MemberEligibilityCriteria(val criteria: String) {
     ELIGIBLE("Eligible"),
     ELIGIBLE_BUT_NOT_ENROLLED("EligibleButNotEnrolled"),

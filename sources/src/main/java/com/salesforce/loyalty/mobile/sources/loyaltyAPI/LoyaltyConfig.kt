@@ -21,11 +21,19 @@ object LoyaltyConfig {
     const val KEY_PROMOTION_NAME = "PromotionName"
     const val KEY_PROGRAM_NAME = "programName"
     const val HEADER_AUTHORIZATION = "Authorization"
+
+    /**
+     * Enum class to hold the mapping of process name with the Processes.
+     */
     enum class ProgramProcessName(val processName: String) {
         GET_PROMOTIONS("GetMemberPromotions"),
         ENROLL_IN_PROMOTION("EnrollInPromotion"),
         UNENROLL_PROMOTION("OptOutOfPromotion")
     }
+
+    /**
+     * Sealed class that is used to define the Resources and its corresponding parameters.
+     */
     sealed class Resource {
         class IndividualEnrollment(val programName: String) : Resource()
         class MemberProfile(val programName: String) : Resource()
@@ -35,6 +43,13 @@ object LoyaltyConfig {
         class Vouchers(val programName: String, val membershipNumber: String): Resource()
     }
 
+    /**
+     * Get the request URL with appropriate end path for various resources using their corresponding parameters.
+     *
+     * @param instanceUrl Base URL used for all APIs.
+     * @param resource Resource for which url is generated.
+     * @return String The request URL to be used for API call.
+     */
     fun getRequestUrl(instanceUrl: String, resource: Resource): String {
         return when (resource) {
             is Resource.IndividualEnrollment -> {

@@ -11,7 +11,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import retrofit2.http.*
 
 /**
- * LoyaltyApiInterface class holds the RESTAPI call definitions.
+ * LoyaltyApiInterface class holds the RESTAPI call definitions for all Loyalty APIs.
  */
 interface LoyaltyApiInterface {
 
