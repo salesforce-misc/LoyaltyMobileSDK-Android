@@ -73,7 +73,7 @@ fun LoginUI(
                 .imePadding()
         )
         {
-            LoginForm(navController, openPopup, closeSheet)
+            LoginForm(navController, openPopup, model, closeSheet)
             LinkNewMemberJoin {
                 openPopup(it)
             }
@@ -82,11 +82,6 @@ fun LoginUI(
 }
 
 @Composable
-fun LoginForm(
-    navController: NavController,
-    openPopup: (popupStatus: BottomSheetType) -> Unit,
-    closeSheet: () -> Unit
-) {
 fun LoginForm(
     navController: NavController,
     openPopup: (popupStatus: BottomSheetType) -> Unit,

@@ -43,11 +43,9 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.CustomTextField
-import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldTextWithError
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextFieldWithError
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
-import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 //Enrollment Screen UI
 

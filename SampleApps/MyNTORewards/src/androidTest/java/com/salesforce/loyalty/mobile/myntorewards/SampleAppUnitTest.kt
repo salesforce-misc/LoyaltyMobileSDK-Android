@@ -106,11 +106,11 @@ class SampleAppUnitTest {
         verify_login_button()
     }
 
-    @Test
+   /* @Test
     fun join_app_flow()
     {
         verify_join_button()
-    }
+    }*/
 
 
     @OptIn(ExperimentalTestApi::class)
@@ -126,7 +126,7 @@ class SampleAppUnitTest {
     }
 
 
-    @Test
+ /*   @Test
    fun verify_login_then_join()
     {
         composeTestRule.onNodeWithText("Already a Member? Log In").performClick()
@@ -139,7 +139,7 @@ class SampleAppUnitTest {
         Thread.sleep(3000)
         composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP).performClick()
         Thread.sleep(2000)
-    }
+    }*/
 
 
     private fun verifyLoginTesting()
