@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
@@ -40,6 +41,9 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenVie
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldText
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextField
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.set
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 
@@ -65,12 +69,11 @@ fun LoginUI(
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp).navigationBarsPadding()
+                .imePadding()
         )
         {
-            LoginForm(navController, openPopup) {
-                closeSheet()
-            }
+            LoginForm(navController, openPopup, closeSheet)
             LinkNewMemberJoin {
                 openPopup(it)
             }
@@ -79,7 +82,11 @@ fun LoginUI(
 }
 
 @Composable
-fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheetType) -> Unit, closeSheet: () -> Unit) {
+fun LoginForm(
+    navController: NavController,
+    openPopup: (popupStatus: BottomSheetType) -> Unit,
+    closeSheet: () -> Unit
+) {
     Box() {
         val context = LocalContext.current
         var isInProgress by remember { mutableStateOf(false) }
@@ -139,7 +146,8 @@ fun LoginForm(navController: NavController, openPopup: (popupStatus: BottomSheet
                 LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED -> {
                     isInProgress = false
                     model.resetLoginStatusDefault()
-                    openPopup(BottomSheetType.POPUP_JOIN)
+                    PrefHelper.customPrefs(context).set(AppConstants.KEY_EMAIL, emailAddressPhoneNumberText.text)
+                    openPopup(BottomSheetType.POPUP_ENROLLMENT)
                 }
                 else -> {}
             }
@@ -216,7 +224,7 @@ fun LinkNewMemberJoin(openPopup: (popupStatus: BottomSheetType) -> Unit) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .clickable {
-                openPopup(BottomSheetType.POPUP_JOIN)
+                openPopup(BottomSheetType.POPUP_SELF_REGISTER)
             },
         textAlign = TextAlign.Center
     )

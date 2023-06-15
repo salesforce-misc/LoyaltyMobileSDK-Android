@@ -7,5 +7,6 @@ data class ConnectedApp(
     val callbackUrl: String,
     val baseUrl: String,
     val instanceUrl: String,
-    val communityUrl: String
+    val communityUrl: String,
+    val selfRegisterUrl: String
 )

@@ -35,8 +35,10 @@
     <string name="text_welcome_onboard">"Welcome on board!"</string>
     <string name="onboard_text_msg_part_1">"We’re thrilled that you joined "</string>
     <string name="onboard_text_msg_part_2">". You’re on your way to earning points and receiving exclusive rewards.\n"</string>
+    <string name="onboard_text_msg_part_3">Please login with username and password you have created.</string>
     <string name="text_we_sent_email">"We’ve sent an email to "</string>
     <string name="text_with_more_details">"" with more details.""</string>
+    <string name="join_text_already_signed_in">Currently you are not in our rewards program. You are welcome to join. We have made easy for you by simply clicking Join button below.</string>
 
     <string name="screen_title_home">"Home"</string>
     <string name="screen_title_my_offers">"My Offers"</string>
@@ -122,6 +124,7 @@
     <string name="label_base_url">Base URL</string>
     <string name="label_instance_url">Instance URL</string>
     <string name="label_community_url">Community URL</string>
+    <string name="label_self_register_url">Self Register URL</string>
     <string name="label_selected_connected_app">Selected Connected App</string>
     <string name="label_my_connected_apps">My Connected Apps</string>
     <string name="text_others">Other...</string>
@@ -130,4 +133,5 @@
     <string name="back_button">Back button</string>
     <string name="delete_icon_description">Delete item</string>
     <string name="label_logout">Log Out</string>
+    <string name="heading_register">Register</string>
 </resources>

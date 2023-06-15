@@ -19,6 +19,10 @@ object ForceConfig {
     const val AUTHORIZATION_REQ_PATH = "/services/oauth2/authorize"
     const val ACCESS_TOKEN_REQ_PATH = "/services/oauth2/token"
     const val REVOKE_TOKEN_REQ_PATH = "/services/oauth2/revoke"
+    const val SOQL_QUERY_PATH = "/services/data/v"
+    const val SOQL_QUERY_VERSION = "58.0"
+    const val QUERY = "/query/"
+    const val HTTP_RESPONSE_CODE_SERVER_ERROR = 500
 
     object MimeType {
         const val JSON = "application/json;charset=UTF-8"

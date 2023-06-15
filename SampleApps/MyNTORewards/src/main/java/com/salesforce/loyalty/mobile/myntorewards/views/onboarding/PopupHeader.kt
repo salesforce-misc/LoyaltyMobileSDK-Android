@@ -35,7 +35,7 @@ fun PopupHeader(headingText: String, closeSheet: () -> Unit) {
             fontFamily = font_sf_pro,
             color = Color.Black,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .padding(start = 10.dp),

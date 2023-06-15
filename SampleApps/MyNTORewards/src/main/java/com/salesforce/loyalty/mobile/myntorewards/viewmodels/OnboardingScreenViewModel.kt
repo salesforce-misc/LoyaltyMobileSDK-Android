@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
@@ -111,7 +112,13 @@ class OnboardingScreenViewModel : ViewModel() {
                         loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
                     }
                 }.onFailure {
-                    loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
+                    val errorMessage = it.localizedMessage
+                    Logger.d(TAG, "Member Profile failure: ${errorMessage}")
+                    if (errorMessage.contains(ForceConfig.HTTP_RESPONSE_CODE_SERVER_ERROR.toString())) {
+                        loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
+                    } else {
+                        loginStatus.value = LoginState.LOGIN_FAILURE
+                    }
                 }
 
             } else {
@@ -191,6 +198,78 @@ class OnboardingScreenViewModel : ViewModel() {
             //clear cache
             LocalFileManager.clearAllFolders(context)
             logoutState.postValue(LogoutState.LOGOUT_SUCCESS)
+        }
+    }
+
+    fun joinUser(email: String, context: Context) {
+        Logger.d(TAG, "joinUser()")
+        enrollmentStatus.value = EnrollmentState.ENROLLMENT_IN_PROGRESS
+        viewModelScope.launch {
+            val contactRecord =
+                ForceAuthManager.forceAuthManager.getFirstNameLastNameFromContactEmail(email)
+            contactRecord?.let {
+                val firstName = it.firstName ?:""
+                val lastName = it.lastName ?: ""
+                val phone = it.phone
+                val additionalContactAttributes = mapOf(AppConstants.KEY_PHONE to phone)
+                loyaltyAPIManager.postEnrollment(
+                    firstName,
+                    lastName,
+                    email,
+                    additionalContactAttributes,
+                    true,
+                    MemberStatus.ACTIVE,
+                    true,
+                    TransactionalJournalStatementFrequency.MONTHLY,
+                    TransactionalJournalStatementMethod.EMAIL,
+                    EnrollmentChannel.EMAIL,
+                    true,
+                    true,
+                ).onSuccess {
+
+                    val memberProfileResponse = loyaltyAPIManager.getMemberProfile(null, null, null)
+                    memberProfileResponse.onSuccess {
+                        if (it != null) {
+                            val memberId = it.loyaltyProgramMemberId
+                            val memberShipNumber = it.membershipNumber
+                            val communityMemberModel = CommunityMemberModel(
+                                firstName = it.associatedContact?.firstName,
+                                lastName = it.associatedContact?.lastName,
+                                email = it.associatedContact?.email,
+                                loyaltyProgramMemberId = it.loyaltyProgramMemberId,
+                                loyaltyProgramName = it.loyaltyProgramName,
+                                membershipNumber = it.membershipNumber
+                            )
+                            memberId?.let { loyaltyMemberId ->
+                                val member = Gson().toJson(
+                                    communityMemberModel, CommunityMemberModel::class.java
+                                )
+                                PrefHelper.customPrefs(context).set(KEY_COMMUNITY_MEMBER, member)
+                            }
+
+                            if (memberShipNumber != null) {
+                                LocalFileManager.saveData(
+                                    context,
+                                    it,
+                                    memberShipNumber,
+                                    LocalFileManager.DIRECTORY_PROFILE
+                                )
+                            }
+                            // Set Login status to success
+                            PrefHelper.customPrefs(context).set(KEY_LOGIN_SUCCESSFUL, true)
+                            enrollmentStatus.value = EnrollmentState.ENROLLMENT_SUCCESS
+                        } else {
+                            enrollmentStatus.value = EnrollmentState.ENROLLMENT_FAILURE
+                        }
+                    }.onFailure {
+                        enrollmentStatus.value = EnrollmentState.ENROLLMENT_FAILURE
+                    }
+                }.onFailure {
+                        enrollmentStatus.value =
+                            EnrollmentState.ENROLLMENT_FAILURE   // enrollment state is being observed in Enrollment UI Composable
+                        Logger.d(TAG, "Enrollment request failed: ${it.message}")
+                    }
+            }
         }
     }
 }
