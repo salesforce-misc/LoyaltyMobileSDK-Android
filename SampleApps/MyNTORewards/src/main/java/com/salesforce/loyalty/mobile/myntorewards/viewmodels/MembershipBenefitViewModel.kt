@@ -16,6 +16,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitV
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
 import kotlinx.coroutines.launch
@@ -24,9 +25,12 @@ class MembershipBenefitViewModel : ViewModel(), BenefitViewModelInterface {
 
     private val TAG = MembershipBenefitViewModel::class.java.simpleName
 
+    private val mInstanceUrl =
+        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
         ForceAuthManager.forceAuthManager,
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        mInstanceUrl,
+        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
     )
     //live data for login status
     override val membershipBenefitLiveData: LiveData<List<MemberBenefit>>

@@ -28,7 +28,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 @Composable
 fun CheckBoxMailingList(mailCheckBox: (mailCheckBox: Boolean) -> Unit) {
-    val checkedStateMailing = remember { mutableStateOf(true) }
+    val checkedStateMailing = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
@@ -54,7 +54,7 @@ fun CheckBoxMailingList(mailCheckBox: (mailCheckBox: Boolean) -> Unit) {
 
 @Composable
 fun CheckBoxTnC(tncCheckBox: (tncCheckBox: Boolean) -> Unit) {
-    val checkedStateTnC = remember { mutableStateOf(true) }
+    val checkedStateTnC = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,

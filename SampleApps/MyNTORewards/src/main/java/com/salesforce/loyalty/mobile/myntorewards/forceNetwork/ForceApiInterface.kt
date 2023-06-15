@@ -1,10 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.QueryResult
 import retrofit2.Call
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 /**
  * ForceApiInterface class holds the RESTAPI call definitions.
@@ -57,4 +55,11 @@ interface ForceApiInterface {
         @Url url: String,
         @Query("token") accessToken: String
     ): Result<Any?>
+
+    @GET()
+    suspend fun getFirstNameLastNameFromContactEmail(
+        @Url url: String,
+        @Query("q") query: String?,
+        @Header("Authorization")bearerToken: String
+    ): Result<QueryResult<ContactRecord>>
 }

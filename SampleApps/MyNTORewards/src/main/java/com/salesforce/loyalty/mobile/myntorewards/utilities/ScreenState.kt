@@ -4,5 +4,7 @@ enum class BottomSheetType {
     POPUP_LOGIN,
     POPUP_JOIN,
     POPUP_CONGRATULATIONS,
-    SETTINGS
+    SETTINGS,
+    POPUP_SELF_REGISTER,
+    POPUP_ENROLLMENT
 }

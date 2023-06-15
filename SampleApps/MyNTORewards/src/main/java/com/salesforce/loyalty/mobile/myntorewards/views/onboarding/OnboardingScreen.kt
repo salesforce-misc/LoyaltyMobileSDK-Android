@@ -23,6 +23,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
@@ -31,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.Vie
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.adminmenu.SettingsMain
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentCongratulationsView
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentWebView
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
@@ -43,7 +45,11 @@ fun OnboardingScreenBox(navController: NavController,model: OnBoardingViewModelA
     var currentPopupState: BottomSheetType? by remember { mutableStateOf(null) }
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
+            confirmValueChange = {
+                // Prevent collapsing by swipe down gesture
+                it != BottomSheetValue.Collapsed
+            })
     )
 
     // Declaring Coroutine scope
@@ -86,7 +92,8 @@ fun OnboardingScreenBox(navController: NavController,model: OnBoardingViewModelA
                 )
             }
         },
-        sheetPeekHeight = 0.dp
+        sheetPeekHeight = 0.dp,
+        sheetGesturesEnabled = false
     ) {
         Box(modifier = Modifier.fillMaxSize())
         {
@@ -108,7 +115,10 @@ fun OnboardingScreenBox(navController: NavController,model: OnBoardingViewModelA
                                 if (tapCount == AppConstants.TAP_COUNT_OPEN_ADMIN_SETTINGS) {
                                     //navigate to admin settings
                                     tapCount = 0
-                                    Logger.d("Onboarding", "Tap detected navigate to admin settings")
+                                    Logger.d(
+                                        "Onboarding",
+                                        "Tap detected navigate to admin settings"
+                                    )
                                     openAdminMenu = true
                                 }
                             })
@@ -204,11 +214,23 @@ fun OpenBottomSheetContent(
             )
         }
         BottomSheetType.POPUP_CONGRATULATIONS -> {
-            EnrollmentCongratulationsView(navController, closeSheet = closeSheet)
+            EnrollmentCongratulationsView(navController, closeSheet = closeSheet, openPopup = { setBottomSheetState(it) })
         }
         BottomSheetType.SETTINGS -> {
             SettingsMain(
                 closeSheet = closeSheet
+            )
+        }
+        BottomSheetType.POPUP_SELF_REGISTER -> {
+            EnrollmentWebView(
+                url = ForceAuthManager.forceAuthManager.getConnectedApp().selfRegisterUrl,
+                openPopup = { setBottomSheetState(it) },
+                closeSheet = closeSheet)
+        }
+        BottomSheetType.POPUP_ENROLLMENT -> {
+            JoinWithTermsAndConditions(
+                closeSheet = closeSheet,
+                navController = navController
             )
         }
     }

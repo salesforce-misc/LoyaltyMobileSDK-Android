@@ -3,6 +3,8 @@ package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
@@ -289,7 +291,6 @@ object ForceAuthManager: ForceAuthenticator {
         return PrefHelper.customPrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
     }
-
     fun getConnectedApp(): ConnectedApp {
         val selectedConnectedApp = PrefHelper.customPrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, null)
@@ -316,5 +317,32 @@ object ForceAuthManager: ForceAuthenticator {
             }
             auth = null
         }
+    }
+
+    suspend fun getFirstNameLastNameFromContactEmail(email: String): ContactRecord? {
+        val accessToken = getForceAuth()?.accessToken
+        accessToken?.let {
+            val result = ForceClient.authApi.getFirstNameLastNameFromContactEmail(
+                getContactDetailsSOQLUrl(),
+                getContactDetailsSOQLQuery(email),
+                "Bearer $accessToken"
+            )
+            result.onSuccess { queryResult: QueryResult<ContactRecord> ->
+                queryResult?.records?.let {
+                    Logger.d(TAG, "getFirstNameLastNameFromContactEmail records: ${it}")
+                    if (!it.isNullOrEmpty()) {
+                        return it.get(0)
+                    }
+                }
+            }
+        }
+        return null
+    }
+    private fun getContactDetailsSOQLUrl(): String {
+        return getInstanceUrl() + ForceConfig.SOQL_QUERY_PATH + ForceConfig.SOQL_QUERY_VERSION + ForceConfig.QUERY
+    }
+
+    private fun getContactDetailsSOQLQuery(email: String): String {
+        return "SELECT FirstName, LastName, Phone FROM Contact WHERE Email = " + "'${email}'"
     }
 }

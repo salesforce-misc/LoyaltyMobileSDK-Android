@@ -11,7 +11,8 @@ object AppSettings {
         BuildConfig.CALLBACK_URL,
         BuildConfig.BASE_URL,
         BuildConfig.INSTANCE_URL,
-        BuildConfig.COMMUNITY_URL
+        BuildConfig.COMMUNITY_URL,
+        BuildConfig.SELF_REGISTER_URL
     )
 
 }

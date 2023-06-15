@@ -10,7 +10,7 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 import com.google.gson.annotations.SerializedName
 
 data class VoucherResponse(
-    @SerializedName("id")
+    @SerializedName("voucherId")
     val id: String?,
     @SerializedName("voucherDefinition")
     val voucherDefinition: String?,
@@ -23,7 +23,7 @@ data class VoucherResponse(
     @SerializedName("type")
     val type: String?,
     @SerializedName("discountPercent")
-    val discountPercent: String?,
+    val discountPercent: Int?,
     @SerializedName("expirationDate")
     val expirationDate: String?,
     @SerializedName("effectiveDate")

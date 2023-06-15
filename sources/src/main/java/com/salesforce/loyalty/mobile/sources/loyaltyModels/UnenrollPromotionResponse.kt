@@ -20,7 +20,7 @@ data class UnenrollPromotionResponse(
     @SerializedName("simulationDetails")
     val simulationDetails: Map<String, Any?>? = mutableMapOf(),
     @SerializedName("status")
-    val status: Boolean?,
+    val status: Boolean?
 )
 
 data class UERPOutputParameters1(

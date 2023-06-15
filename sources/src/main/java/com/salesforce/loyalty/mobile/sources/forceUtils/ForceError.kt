@@ -20,5 +20,5 @@ enum class ForceError(val customDescription: String) {
     FAILED_SERIALIZATION("Serialization print for debug failed."),
     AUTHENTICATION_NEEDED("Authentication needed"),
     USER_IDENTITY_NEEDED("User Identity has not been set."),
-    AUTH_NOT_FOUND_IN_KEYCHAIN("Cannot find the auth from Keychain.")
+    AUTH_NOT_FOUND_IN_PREFERENCES("Cannot find the auth from Preferences.")
 }
