@@ -27,6 +27,19 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_FIRST_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_FLOW_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_DESCRIPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_COLLECTION_TYPE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_DESCRIPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_IMAGE_SELCTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PRODUCT_PRICE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RATING
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_COLOUR_ROW
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_QUANTITY_ROW
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PRICE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SIZE_SELECTION_ROW
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.OrderTabs
 
@@ -39,7 +52,7 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .testTag("CheckoutFlowElementContainer")
+            .testTag(TEST_TAG_CHECKOUT_FLOW_CONTAINER)
             .verticalScroll(
                 rememberScrollState()
             )
@@ -63,7 +76,7 @@ fun CheckOutFlowOrderSelectScreen(navCheckOutFlowController: NavController) {
                     .padding(top = 10.dp, bottom = 10.dp)
                     .clickable {
                         navCheckOutFlowController.popBackStack()
-                    }.testTag("back_button_checkout_first_screen")
+                    }.testTag(TEST_TAG_BACK_BUTTON_CHECKOUT_FIRST_SCREEN)
             )
         }
         OrderSelectHeader(promoName)
@@ -148,7 +161,7 @@ fun OrderSelectHeader(promoName:String) {
             fontSize = 22.sp,
             modifier = Modifier
                 .padding(start = 16.dp)
-                .fillMaxWidth().testTag("checkout_promo_name")
+                .fillMaxWidth().testTag(TEST_TAG_CHECKOUT_PROMO_NAME)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -159,7 +172,7 @@ fun OrderSelectHeader(promoName:String) {
             fontSize = 16.sp,
             modifier = Modifier
                 .padding(start = 16.dp)
-                .fillMaxWidth().testTag("checkout_promo_description")
+                .fillMaxWidth().testTag(TEST_TAG_CHECKOUT_PROMO_DESCRIPTION)
         )
         Spacer(modifier = Modifier.height(15.dp))
         Spacer(modifier = Modifier.height(16.dp))
@@ -207,10 +220,10 @@ fun RatingRow() {
             textAlign = TextAlign.Start,
             fontSize = 14.sp,
             modifier = Modifier
-                .padding(start = 16.dp).testTag("collection_type")
+                .padding(start = 16.dp).testTag(TEST_TAG_COLLECTION_TYPE)
         )
 
-        Row(modifier = Modifier.padding(end = 17.dp).testTag("rating")) {
+        Row(modifier = Modifier.padding(end = 17.dp).testTag(TEST_TAG_RATING)) {
             ReviewStarImage(true)
             ReviewStarImage(true)
             ReviewStarImage(true)
@@ -232,7 +245,7 @@ fun OrderDescriptionRow() {
         fontSize = 12.sp,
         fontWeight = FontWeight.Medium,
         modifier = Modifier
-            .padding(start = 16.dp).testTag("order_description")
+            .padding(start = 16.dp).testTag(TEST_TAG_ORDER_DESCRIPTION)
     )
 
 }
@@ -266,7 +279,7 @@ fun SelectImageRow() {
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             .horizontalScroll(
                 rememberScrollState()
-            ).testTag("order_image_selection_row")
+            ).testTag(TEST_TAG_ORDER_IMAGE_SELCTION)
     )
     {
 
@@ -326,7 +339,7 @@ fun OrderSelectSizeRow() {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = CenterVertically,
-        modifier = Modifier.padding(start = 5.dp).testTag("size_selection_row")
+        modifier = Modifier.padding(start = 5.dp).testTag(TEST_TAG_SIZE_SELECTION_ROW)
 
     ) {
 
@@ -352,7 +365,7 @@ fun OrderAvailableColoursRow() {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = CenterVertically,
-        modifier = Modifier.padding(start = 5.dp, end = 16.dp).testTag("select_colour_row")
+        modifier = Modifier.padding(start = 5.dp, end = 16.dp).testTag(TEST_TAG_SELECT_COLOUR_ROW)
 
     ) {
         SelectionImageTile(Color(0xFFEA001E))
@@ -382,7 +395,7 @@ fun OrderQuantityRow() {
         verticalAlignment = CenterVertically,
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
-            .fillMaxWidth().testTag("select_quantity_row")
+            .fillMaxWidth().testTag(TEST_TAG_SELECT_QUANTITY_ROW)
 
     ) {
 
@@ -441,7 +454,7 @@ fun OrderQuantityRow() {
                 color = LighterBlack,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier.testTag("product_price")
+                modifier = Modifier.testTag(TEST_TAG_PRODUCT_PRICE)
             )
             Text(
                 text = "Free shipping",
@@ -450,7 +463,7 @@ fun OrderQuantityRow() {
                 color = Color.Black,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Normal,
-                modifier = Modifier.testTag("shipping_price")
+                modifier = Modifier.testTag(TEST_TAG_SHIPPING_PRICE)
             )
 
         }

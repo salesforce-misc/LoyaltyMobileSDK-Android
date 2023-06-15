@@ -31,6 +31,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatTransactionDateTime
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECENT_TRANSACTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.TransactionsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.TransactionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.TransactionViewState
@@ -91,7 +93,7 @@ fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionVie
                     }
                     var index = 0
                     var previewTransactionCount = 0
-                    Column(modifier = Modifier.wrapContentHeight().testTag("transaction_list")) {
+                    Column(modifier = Modifier.wrapContentHeight().testTag(TEST_TAG_TRANSACTION_LIST)) {
                         Spacer(modifier = Modifier.height(12.dp))
                         while (previewTransactionCount < pageCount && index < count) {
                             transactions?.transactionJournals?.get(index)?.apply {
@@ -192,7 +194,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
 
         recentTransactions?.let { transactionsJournals ->
             if (transactionsJournals.isNotEmpty()) {
-                Column(modifier = Modifier.wrapContentHeight().testTag("recent_transaction")) {
+                Column(modifier = Modifier.wrapContentHeight().testTag(TEST_TAG_RECENT_TRANSACTION)) {
                     Text(
                         text = stringResource(id = R.string.label_transactions_recent),
                         color = Color.Black,

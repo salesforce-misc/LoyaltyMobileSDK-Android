@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 
@@ -36,7 +37,7 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
         Column(
             modifier = Modifier
                 .padding(padding)
-                .background(TextPurpleLightBG).testTag("HomeScreen")
+                .background(TextPurpleLightBG).testTag(TEST_TAG_HOME_SCREEN)
         ) {
             TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel) {
                 bottomBarState.value = it

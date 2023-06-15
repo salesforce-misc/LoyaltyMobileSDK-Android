@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROFILE_ELEMENT_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BenefitViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
@@ -56,7 +57,7 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                 .fillMaxWidth(1f)
                 .background(Color.White)
                 .pullRefresh(state)
-                .verticalScroll(rememberScrollState()).testTag("ProfileScreenElementContainer"),
+                .verticalScroll(rememberScrollState()).testTag(TEST_TAG_PROFILE_ELEMENT_CONTAINER),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         )

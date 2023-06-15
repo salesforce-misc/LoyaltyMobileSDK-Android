@@ -31,6 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourPurpleQR
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_QR_CODE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
@@ -219,7 +220,7 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
         )
         Column(modifier = Modifier.clickable {
             popupControlQRCOde = true
-        }.testTag("QR Code")) {
+        }.testTag(TEST_TAG_QR_CODE)) {
             QRCode(value = membershipID, width = 46, height = 46, ColourPurpleQR)
         }
 

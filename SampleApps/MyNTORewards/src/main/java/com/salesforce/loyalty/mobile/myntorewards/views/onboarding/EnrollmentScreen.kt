@@ -32,6 +32,8 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_JOIN_BUTTON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_JOIN_UI
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.*
@@ -49,7 +51,7 @@ fun EnrollmentUI(
             .navigationBarsPadding()
             .imePadding()
             .fillMaxWidth()
-            .testTag("JoinUI")
+            .testTag(TEST_TAG_JOIN_UI)
             .fillMaxHeight(0.92f)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -184,7 +186,7 @@ fun OnboardingForm(
 
             Button(
                 modifier = Modifier
-                    .fillMaxWidth().testTag("JoinButton"), onClick = {
+                    .fillMaxWidth().testTag(TEST_TAG_JOIN_BUTTON), onClick = {
 
                     isInProgress = true
                     model.enrollUser(

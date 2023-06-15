@@ -13,6 +13,44 @@ import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ADDRESS_DETAIL
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_APP_LOGO_HOME_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BENEFITS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_FLOW_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_DESCRIPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_POPUP
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_POPUP_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_COLLECTION_TYPE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMAIL_PHONE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ENROLLMENT_CONGRATULATIONS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EXPIRATION_DATE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_JOIN_BUTTON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_JOIN_UI
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_LOGIN_UI
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_DESCRIPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_IMAGE_SELCTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PAYMENT_UI_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PRODUCT_PRICE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROFILE_ELEMENT_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMOTION_CARD
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_DESCRIPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_LIST
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_QR_CODE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RATING
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECENT_TRANSACTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_COLOUR_ROW
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_QUANTITY_ROW
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PAYMENT_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PRICE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SIZE_SELECTION_ROW
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
@@ -97,9 +135,9 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Not a Member?Join Now").assertIsDisplayed()
         Thread.sleep(3000)
         composeTestRule.onNodeWithText("Not a Member?Join Now").performClick()
-        composeTestRule.onNodeWithTag("JoinUI").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_JOIN_UI).assertIsDisplayed()
         Thread.sleep(3000)
-        composeTestRule.onNodeWithTag("closePopup").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP).performClick()
         Thread.sleep(2000)
     }
 
@@ -109,13 +147,13 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Already a Member? Log In").assertIsDisplayed()
         composeTestRule.onNodeWithText("Already a Member? Log In").performClick()
         //Thread.sleep(1000)
-        composeTestRule.onNodeWithTag("LoginUI").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("EmailID_PhoneNumber").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_LOGIN_UI).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_EMAIL_PHONE).assertIsDisplayed()
         composeTestRule.onNodeWithTag("Password").assertIsDisplayed()
         composeTestRule.onNodeWithText("Log In").assertIsDisplayed()
         composeTestRule.onNodeWithText("Log In").assertIsNotEnabled()
         Thread.sleep(1000)
-        composeTestRule.onNodeWithTag("EmailID_PhoneNumber").performTextInput("vasanthkumar.work@gmail.com")
+        composeTestRule.onNodeWithTag(TEST_TAG_EMAIL_PHONE).performTextInput("vasanthkumar.work@gmail.com")
         composeTestRule.onNodeWithTag("Password").performTextInput("test@321")
         composeTestRule.onNodeWithText("Log In").assertIsEnabled()
         Thread.sleep(2000)
@@ -140,37 +178,37 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("search_icon").assertIsDisplayed()
 
         composeTestRule.onNodeWithText("All").performClick()
-        composeTestRule.onNodeWithTag("promotion_list").assertIsDisplayed()
-        composeTestRule.onAllNodes(hasTestTag("promo_item")).assertCountEquals(3)
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
 
 
         Thread.sleep(2000)
            composeTestRule.onNodeWithText("Active").performClick()
-           composeTestRule.onNodeWithTag("promotion_list").assertIsDisplayed()
+           composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
 
-           composeTestRule.onAllNodes(hasTestTag("promo_item")).assertCountEquals(3)
+           composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
 
 
 
         Thread.sleep(5000)
          composeTestRule.onNodeWithText("Unenrolled").performClick()
-         composeTestRule.onNodeWithTag("promotion_list").assertIsDisplayed()
+         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
 
-         composeTestRule.onAllNodes(hasTestTag("promo_item")).assertCountEquals(2)
+         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
 
          composeTestRule.onNodeWithText("Active").performClick()
 
 //        composeTestRule.onNodeWithTag("promotion_popup").assertIsDisplayed()
 //      composeTestRule.onNodeWithContentDescription("promotion popup image").assertIsDisplayed()
-        composeTestRule.onAllNodes(hasTestTag("promo_item")).onFirst().performClick()
-        composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("promo_name").assertIsDisplayed()
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).onFirst().performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMO_NAME).assertIsDisplayed()
 //         composeTestRule.onNodeWithTag("detail_heading").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("promo_description").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMO_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNodeWithTag("expiration_date").assertIsDisplayed()
         composeTestRule.onNodeWithTag("expiration_date").assertIsDisplayed()
         composeTestRule.onNodeWithText("Shop").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("close_button").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).performClick()
         //composeTestRule.onNodeWithContentDescription("close_button").performClick()
 
 
@@ -178,25 +216,25 @@ class SampleAppUnitTest {
     }
     private fun display_promo_popup_testing()
     {
-        composeTestRule.onNodeWithTag("promotioncard").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("promotioncard").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMOTION_CARD).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMOTION_CARD).performClick()
         Thread.sleep(2000)
-        composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).assertIsDisplayed()
         Thread.sleep(2000)
-        composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("promo_name").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMO_NAME).assertIsDisplayed()
         //   composeTestRule.onNodeWithTag("detail_heading").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("promo_description").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("expiration_date").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMO_DESCRIPTION).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_EXPIRATION_DATE).assertIsDisplayed()
         composeTestRule.onNodeWithText("Shop").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("close_button").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).performClick()
     }
     @OptIn(ExperimentalTestApi::class)
     private fun display_home_ui_testing()
     {
-        composeTestRule.onNodeWithTag("HomeScreen").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("AppLogoHomeScreen").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("promotioncard").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_HOME_SCREEN).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_APP_LOGO_HOME_SCREEN).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMOTION_CARD).assertIsDisplayed()
         Thread.sleep(2000)
         composeTestRule.onNodeWithContentDescription("Home").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("My Offers").assertIsDisplayed()
@@ -210,19 +248,19 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("Home").performClick()
 
         composeTestRule.onNodeWithText("5619.0 Points").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("PromotionCard").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMOTION_CARD).assertIsDisplayed()
         Thread.sleep(2000)
-        composeTestRule.onNodeWithTag("HomeScreenElementContainer").performMouseInput { scroll(10F) }
+        composeTestRule.onNodeWithTag(TEST_TAG_HOME_SCREEN_CONTAINER).performMouseInput { scroll(10F) }
         Thread.sleep(5000)
-        composeTestRule.onNodeWithTag("VoucherRowView").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("HomeScreenElementContainer").performMouseInput { scroll(-10F) }
+        composeTestRule.onNodeWithTag(TEST_TAG_VOUCHER_ROW).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_HOME_SCREEN_CONTAINER).performMouseInput { scroll(-10F) }
         checkout_ui_testing()
         Thread.sleep(5000)
     }
 
     @OptIn(ExperimentalTestApi::class)
     private fun checkout_ui_testing() {
-        composeTestRule.onNodeWithTag("promotioncard").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PROMOTION_CARD).performClick()
         composeTestRule.onNodeWithText("Shop").assertIsDisplayed()
         composeTestRule.onNodeWithText("Shop").performClick()
 
@@ -230,59 +268,59 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("back button checkout order description screen").assertIsDisplayed()
 
 
-        composeTestRule.onNodeWithTag("checkout_promo_name").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("checkout_promo_description").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_PROMO_NAME).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_PROMO_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNodeWithText("Details").assertIsDisplayed()
         composeTestRule.onNodeWithText("Reviews").assertIsDisplayed()
         composeTestRule.onNodeWithText("TnC").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("rating").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("collection_type").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("order_description").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("order_image_selection_row").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RATING).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_COLLECTION_TYPE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_ORDER_DESCRIPTION).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_ORDER_IMAGE_SELCTION).assertIsDisplayed()
 
 
         composeTestRule.onNodeWithContentDescription("Order Image").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("CheckoutFlowElementContainer").performMouseInput { scroll(10F) }
+        composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_FLOW_CONTAINER).performMouseInput { scroll(10F) }
         Thread.sleep(5000)
         composeTestRule.onNodeWithText("Select Size").assertIsDisplayed()
         composeTestRule.onNodeWithText("View Size Chart").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("size_selection_row").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_SIZE_SELECTION_ROW).assertIsDisplayed()
         composeTestRule.onNodeWithText("Available Colors").assertIsDisplayed()
         composeTestRule.onNodeWithText("Quantity").assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("select_colour_row").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("select_quantity_row").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("product_price").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("shipping_price").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("CheckoutFlowElementContainer").performMouseInput { scroll(5F) }
+        composeTestRule.onNodeWithTag(TEST_TAG_SELECT_COLOUR_ROW).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_SELECT_QUANTITY_ROW).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PRODUCT_PRICE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_SHIPPING_PRICE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_FLOW_CONTAINER).performMouseInput { scroll(5F) }
 
         composeTestRule.onNodeWithText("Buy Now").assertIsDisplayed()
         composeTestRule.onNodeWithText("Add To Cart").assertIsDisplayed()
         composeTestRule.onNodeWithText("Buy Now").performClick()
 
-        composeTestRule.onNodeWithTag("shipping_payment_screen").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_SHIPPING_PAYMENT_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("shipping payment back button").assertIsDisplayed()
         composeTestRule.onNodeWithText("Order Details").assertIsDisplayed()
         composeTestRule.onNodeWithText("1. Shipping").assertIsDisplayed()
         composeTestRule.onNodeWithText("2. Payment").assertIsDisplayed()
         composeTestRule.onNodeWithText("Shipping Address").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("address_detail").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_ADDRESS_DETAIL).assertIsDisplayed()
         composeTestRule.onNodeWithText("Add New Address").assertIsDisplayed()
         composeTestRule.onNodeWithText("Edit Address").assertIsDisplayed()
         composeTestRule.onNodeWithText("Delete Address").assertIsDisplayed()
         composeTestRule.onNodeWithText("Deliver To This Address").assertIsDisplayed()
         composeTestRule.onNodeWithText("Deliver To This Address").performClick()
 
-        composeTestRule.onNodeWithTag("payment_ui_container").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("back_button_checkout_payment").performClick()
-        composeTestRule.onNodeWithTag("back_button_checkout_payment").performClick()
-        //composeTestRule.onNodeWithTag("CheckoutFlowElementContainer").performMouseInput { scroll(-5F) }
-        //composeTestRule.onNodeWithTag("back_button_checkout_first_screen").performClick()
-//        composeTestRule.onNodeWithTag("payment_ui_container").performMouseInput { scroll(10F) }
+        composeTestRule.onNodeWithTag(TEST_TAG_PAYMENT_UI_CONTAINER).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT).performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT).performClick()
+        //composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_FLOW_CONTAINER).performMouseInput { scroll(-5F) }
+        //composeTestRule.onNodeWithTag(TEST_TAG_BACK_BUTTON_CHECKOUT_FIRST_SCREEN).performClick()
+//        composeTestRule.onNodeWithTag(TEST_TAG_PAYMENT_UI_CONTAINER).performMouseInput { scroll(10F) }
 
 
 //        composeTestRule.onNodeWithText("Confirm Order").assertIsDisplayed()
-        //composeTestRule.onNodeWithTag("confirm_order_button").performClick()
+        //composeTestRule.onNodeWithTag(TEST_TAG_CONFIRM_ORDER_BUTTON).performClick()
 
 
         Thread.sleep(5000)
@@ -303,24 +341,24 @@ class SampleAppUnitTest {
 
         composeTestRule.onNodeWithText("5619.0").assertIsDisplayed()
         composeTestRule.onNodeWithText("Reward Points").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("QR Code").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_QR_CODE).assertIsDisplayed()
 
         composeTestRule.onNodeWithText("My Transactions").assertIsDisplayed()
         composeTestRule.onNodeWithTag("My Transactions click").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("transaction_list").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_TRANSACTION_LIST).assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("My Transactions click").performClick()
         Thread.sleep(2000)
         composeTestRule.onNodeWithContentDescription("transaction_back_button").assertIsDisplayed()
         composeTestRule.onNodeWithText("My Transactions").assertIsDisplayed()
         composeTestRule.onNodeWithText("Recent").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("recent_transaction").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECENT_TRANSACTION).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("transaction_back_button").performClick()
         Thread.sleep(2000)
-        composeTestRule.onNodeWithTag("ProfileScreenElementContainer").performMouseInput { scroll(10F) }
+        composeTestRule.onNodeWithTag(TEST_TAG_PROFILE_ELEMENT_CONTAINER).performMouseInput { scroll(10F) }
         composeTestRule.onNodeWithText("Vouchers").assertIsDisplayed()
         Thread.sleep(2000)
-        composeTestRule.onNodeWithTag("ProfileScreenElementContainer").performMouseInput { scroll(10F) }
+        composeTestRule.onNodeWithTag(TEST_TAG_PROFILE_ELEMENT_CONTAINER).performMouseInput { scroll(10F) }
         composeTestRule.onNodeWithText("My Benefits").assertIsDisplayed()
 
 
@@ -329,7 +367,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("benefit_back_button").assertIsDisplayed()
         composeTestRule.onNodeWithText("My Benefits").assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("benefits").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_BENEFITS).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("benefit_back_button").performClick()
 
 
@@ -342,13 +380,13 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Join").assertIsDisplayed()
         composeTestRule.onNodeWithText("Join").performClick()
         Thread.sleep(1000)
-        composeTestRule.onNodeWithTag("JoinUI").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_JOIN_UI).assertIsDisplayed()
         Thread.sleep(1000)
 
         //composeTestRule.onNodeWithTag("closePopup").performClick()
         Thread.sleep(1000)
 
-        composeTestRule.onNodeWithTag("JoinButton").assertIsNotEnabled()
+        composeTestRule.onNodeWithTag(TEST_TAG_JOIN_BUTTON).assertIsNotEnabled()
         Thread.sleep(1000)
         composeTestRule.onNodeWithTag("firstName").performTextInput("Akash")
         composeTestRule.onNodeWithTag("lastName").performTextInput("Agarwal")
@@ -360,11 +398,11 @@ class SampleAppUnitTest {
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag("confirmPasswordOnBoarding", true).performTextInput("Akash123#")
         Thread.sleep(2000)
-        composeTestRule.onNodeWithTag("JoinButton").assertIsEnabled()
+        composeTestRule.onNodeWithTag(TEST_TAG_JOIN_BUTTON).assertIsEnabled()
         Thread.sleep(2000)
-        composeTestRule.onNodeWithTag("JoinButton").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_JOIN_BUTTON).performClick()
         Thread.sleep(2000)
-       composeTestRule.onNodeWithTag("EnrollmentCongratsScreenTag").assertIsDisplayed()
+       composeTestRule.onNodeWithTag(TEST_TAG_ENROLLMENT_CONGRATULATIONS).assertIsDisplayed()
         Thread.sleep(2000)
     }
 

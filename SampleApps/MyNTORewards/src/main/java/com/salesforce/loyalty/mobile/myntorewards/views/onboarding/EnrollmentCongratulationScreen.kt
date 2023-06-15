@@ -30,6 +30,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ENROLLMENT_CONGRATULATIONS
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 
@@ -41,7 +42,7 @@ fun EnrollmentCongratulationsView(navController: NavController, closeSheet: () -
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.92f)
-            .background(Color.White, shape = RoundedCornerShape(16.dp)).testTag("EnrollmentCongratsScreenTag"),
+            .background(Color.White, shape = RoundedCornerShape(16.dp)).testTag(TEST_TAG_ENROLLMENT_CONGRATULATIONS),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(

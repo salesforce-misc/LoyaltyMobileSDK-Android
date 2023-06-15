@@ -39,6 +39,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_LIST
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
@@ -168,7 +170,7 @@ fun MyPromotionScreen(
                         membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE }
                     LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth().testTag("promotion_list")
+                            .fillMaxWidth().testTag(TEST_TAG_PROMO_LIST)
                             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                     ) {
                         items(it) {
@@ -292,7 +294,7 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  p
 
                 currentPromotionDetailPopupState = true
             }
-            .background(Color.White, shape = RoundedCornerShape(8.dp)).testTag("promo_item"),
+            .background(Color.White, shape = RoundedCornerShape(8.dp)).testTag(TEST_TAG_PROMO_ITEM),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
 

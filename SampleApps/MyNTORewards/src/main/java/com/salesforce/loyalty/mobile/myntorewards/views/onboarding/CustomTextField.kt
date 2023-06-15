@@ -29,6 +29,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMAIL_PHONE
 import java.util.regex.Pattern
 
 
@@ -58,7 +59,7 @@ fun OutlineFieldText(
 
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag("EmailID_PhoneNumber"),
+            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)).testTag(TEST_TAG_EMAIL_PHONE),
 
         enabled = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),

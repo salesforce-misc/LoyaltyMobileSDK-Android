@@ -44,6 +44,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_POPUP_PROMOTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_DETAIL_HEADING
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EXPIRATION_DATE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_DESCRIPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_POPUP
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
@@ -101,7 +107,7 @@ fun PromotionEnrollPopupUI(
                 .background(Color.White, RoundedCornerShape(16.dp))
                 .verticalScroll(
                     rememberScrollState()
-                ).testTag("promotion_popup"),
+                ).testTag(TEST_TAG_PROMO_POPUP),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         )
@@ -156,7 +162,7 @@ fun PromotionEnrollPopupUI(
                             .padding(3.dp)
                             .clickable {
                                 closePopup()
-                            }.testTag("close_button")
+                            }.testTag(TEST_TAG_CLOSE_POPUP_PROMOTION)
 
                     )
                 }
@@ -176,7 +182,7 @@ fun PromotionEnrollPopupUI(
                     fontSize = 24.sp,
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
-                        .fillMaxWidth().testTag("promo_name")
+                        .fillMaxWidth().testTag(TEST_TAG_PROMO_NAME)
                 )
             }
 
@@ -190,7 +196,7 @@ fun PromotionEnrollPopupUI(
                 fontSize = 16.sp,
                 modifier = Modifier
                     .padding(start = 16.dp)
-                    .fillMaxWidth().testTag("detail_heading")
+                    .fillMaxWidth().testTag(TEST_TAG_DETAIL_HEADING)
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -201,7 +207,7 @@ fun PromotionEnrollPopupUI(
                 fontSize = 16.sp,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
-                    .fillMaxWidth().testTag("promo_description")
+                    .fillMaxWidth().testTag(TEST_TAG_PROMO_DESCRIPTION)
             )
 
 
@@ -226,7 +232,7 @@ fun PromotionEnrollPopupUI(
                     color = Color.Black,
                     modifier = Modifier
                         .align(Alignment.Start)
-                        .padding(start = 16.dp).testTag("expiration_date"),
+                        .padding(start = 16.dp).testTag(TEST_TAG_EXPIRATION_DATE),
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp
 

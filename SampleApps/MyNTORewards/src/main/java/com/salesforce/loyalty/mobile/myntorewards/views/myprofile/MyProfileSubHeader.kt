@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLICK
 
 @Composable
 fun ProfileSubViewHeader(heading: String, openProfileScreen: () -> Unit) {
@@ -39,7 +40,7 @@ fun ProfileSubViewHeader(heading: String, openProfileScreen: () -> Unit) {
             fontSize = 13.sp,
             modifier = Modifier.clickable {
                 openProfileScreen()
-            }.testTag(heading+" click")
+            }.testTag(heading+TEST_TAG_CLICK)
         )
     }
 }

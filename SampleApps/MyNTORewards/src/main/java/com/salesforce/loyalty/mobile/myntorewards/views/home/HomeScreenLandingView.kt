@@ -36,6 +36,9 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMOTION_CARD
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
@@ -71,7 +74,7 @@ fun HomeScreenLandingView(
             .fillMaxSize()
             .background(MyProfileScreenBG)
             .pullRefresh(state)
-            .testTag("HomeScreenElementContainer")
+            .testTag(TEST_TAG_HOME_SCREEN_CONTAINER)
             .verticalScroll(rememberScrollState())
     )
     {
@@ -116,7 +119,7 @@ fun PromotionCardRow(
             .wrapContentSize(Alignment.Center)
             .height(450.dp)
             .background(PromotionCardBG)
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp).testTag("PromotionCard"),
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp).testTag(TEST_TAG_PROMOTION_CARD),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
         HomeSubViewHeader(R.string.text_promotions, bottomTabsNavController)
@@ -197,7 +200,7 @@ fun VoucherRow(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .wrapContentSize(Alignment.Center)
-            .background(PromotionCardBG).testTag("VoucherRowView")
+            .background(PromotionCardBG).testTag(TEST_TAG_VOUCHER_ROW)
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
 

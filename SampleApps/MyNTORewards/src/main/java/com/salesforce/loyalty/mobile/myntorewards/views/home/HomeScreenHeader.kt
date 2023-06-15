@@ -26,6 +26,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_APP_LOGO_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 
@@ -44,7 +45,7 @@ fun AppLogoAndSearchRow() {
             painter = painterResource(id = R.drawable.membership_card_logo),
             contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
             modifier = Modifier
-                .padding(start = 16.dp).testTag("AppLogoHomeScreen"),
+                .padding(start = 16.dp).testTag(TEST_TAG_APP_LOGO_HOME_SCREEN),
             contentScale = ContentScale.FillWidth
         )
         Image(

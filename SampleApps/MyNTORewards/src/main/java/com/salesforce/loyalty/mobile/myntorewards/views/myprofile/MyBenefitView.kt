@@ -35,6 +35,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets.LoyaltyAppAsset.getBenefitsLogo
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BENEFITS
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BenefitViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
@@ -177,7 +178,7 @@ fun BenefitListView(modifier: Modifier, benefitViewModel: BenefitViewModelInterf
             }
 
             membershipBenefit?.let {
-                LazyColumn(modifier = modifier.testTag("benefits")) {
+                LazyColumn(modifier = modifier.testTag(TEST_TAG_BENEFITS)) {
                     if (it.size >= AppConstants.MAX_SIZE_BENEFIT_LIST) {
                         items(it.subList(0, AppConstants.MAX_SIZE_BENEFIT_LIST)) {
                             ListItemMyBenefit(it)

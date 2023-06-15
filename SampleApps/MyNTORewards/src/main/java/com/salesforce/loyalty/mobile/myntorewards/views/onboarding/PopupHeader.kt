@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_POPUP
 
 //header Component being used in Popup
 @Composable
@@ -49,7 +50,7 @@ fun PopupHeader(headingText: String, closeSheet: () -> Unit) {
             modifier = Modifier
                 .width(16.dp)
                 .height(16.dp)
-                .testTag("closePopup")
+                .testTag(TEST_TAG_CLOSE_POPUP)
                 .clickable {
                     closeSheet()
                 },

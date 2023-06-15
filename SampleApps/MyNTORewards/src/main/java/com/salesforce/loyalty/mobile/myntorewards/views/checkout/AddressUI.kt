@@ -24,6 +24,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ADDRESS_DETAIL
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
@@ -118,7 +119,7 @@ fun AddressRow() {
         modifier = Modifier
             .fillMaxWidth()
             .height(126.dp)
-            .background(Color.White).testTag("address_detail")
+            .background(Color.White).testTag(TEST_TAG_ADDRESS_DETAIL)
             .padding(start = 11.dp, end = 11.dp),
     )
     {

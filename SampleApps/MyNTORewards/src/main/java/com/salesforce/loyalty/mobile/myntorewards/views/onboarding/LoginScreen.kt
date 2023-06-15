@@ -32,6 +32,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_LOGIN_UI
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LoginState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
@@ -53,7 +54,7 @@ fun LoginUI(
             .imePadding()
             .verticalScroll(rememberScrollState())
             .fillMaxWidth()
-            .testTag("LoginUI")
+            .testTag(TEST_TAG_LOGIN_UI)
             .background(Color.White, RoundedCornerShape(16.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     )

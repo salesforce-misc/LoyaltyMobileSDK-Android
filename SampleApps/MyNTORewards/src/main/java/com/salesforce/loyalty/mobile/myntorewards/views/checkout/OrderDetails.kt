@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PAYMENT_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavigationTabs
@@ -37,7 +39,7 @@ fun OrderDetails(navCheckOutFlowController: NavController,
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
-            .background(OrderScreenBG).testTag("shipping_payment_screen")
+            .background(OrderScreenBG).testTag(TEST_TAG_SHIPPING_PAYMENT_SCREEN)
     )
     {
         //default tab selected as 0 which is ShippingNavigationTabs.TabShipping
@@ -63,7 +65,7 @@ fun OrderDetails(navCheckOutFlowController: NavController,
                         } else {
                             selectedTab = 0
                         }
-                    }.testTag("back_button_checkout_payment")
+                    }.testTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT)
             )
         }
 

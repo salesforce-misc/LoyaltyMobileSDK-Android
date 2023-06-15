@@ -31,6 +31,8 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONFIRM_ORDER_BUTTON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PAYMENT_UI_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.CheckOutFlowViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.VoucherViewModel
@@ -50,7 +52,7 @@ fun PaymentsUI(navCheckOutFlowController: NavController, voucherModel: VoucherVi
             .padding(start = 20.dp, end = 20.dp)
             .verticalScroll(
                 rememberScrollState()
-            ).testTag("payment_ui_container")
+            ).testTag(TEST_TAG_PAYMENT_UI_CONTAINER)
         ) {
 
             Spacer(modifier = Modifier.height(23.dp))
@@ -104,7 +106,7 @@ fun PaymentsUI(navCheckOutFlowController: NavController, voucherModel: VoucherVi
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp).testTag("confirm_order_button")
+                        .padding(top = 10.dp, bottom = 10.dp).testTag(TEST_TAG_CONFIRM_ORDER_BUTTON)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))

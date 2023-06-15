@@ -30,6 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
@@ -52,7 +53,7 @@ fun PromotionCard(
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-            .background(Color.White).testTag("promotioncard")
+            .background(Color.White).testTag(TEST_TAG_PROMO_CARD)
             .clickable {
                 currentPromotionDetailPopupState = true
             }
