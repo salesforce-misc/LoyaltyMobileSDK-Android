@@ -83,11 +83,11 @@ dependencies {
     testImplementation "io.mockk:mockk:1.12.4"
 }
 
-tasks.named("dokkaHtml") {
+tasks.named("dokkaJavadoc") {
     outputDirectory.set(file("$rootProject.projectDir/docs/"))
 }
 
-dokkaHtml.configure {
+dokkaJavadoc.configure {
     dokkaSourceSets {
         named("main") {
             includeNonPublic.set(true)
