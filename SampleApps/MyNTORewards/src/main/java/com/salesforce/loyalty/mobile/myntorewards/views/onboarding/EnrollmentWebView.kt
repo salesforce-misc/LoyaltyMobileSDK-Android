@@ -97,16 +97,17 @@ fun EnrollmentWebView(
             Divider(color = Color.LightGray, thickness = 1.dp)
         }
 
-            loadWebUrl(url = url, openPopup = openPopup)
+            LoadWebUrl(url = url, openPopup = openPopup)
     }
 }
 
 @Composable
-fun loadWebUrl(url: String, openPopup: (popupStatus: BottomSheetType) -> Unit) {
+fun LoadWebUrl(url: String, openPopup: (popupStatus: BottomSheetType) -> Unit) {
     val context = LocalContext.current
     var isInProgress by remember { mutableStateOf(false) }
     val redirectUrl =
         ForceAuthManager.forceAuthManager.getConnectedApp().communityUrl + AppConstants.SELF_REGISTER_REDIRECT_URL_PATH
+    val isUrlValid = URLUtil.isValidUrl(url)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -115,62 +116,105 @@ fun loadWebUrl(url: String, openPopup: (popupStatus: BottomSheetType) -> Unit) {
             .background(Color.White),
         contentAlignment = Alignment.TopStart
     ) {
-        AndroidView(
-            factory = {
-                WebView(context).apply {
-                    webViewClient = object : WebViewClient() {
-                        override fun shouldOverrideUrlLoading(
-                            view: WebView?,
-                            request: WebResourceRequest?
-                        ): Boolean {
-                            Log.d(
-                                "WebViewSignUp",
-                                "URL: ${request?.url} isRedirect: ${request?.isRedirect}"
-                            )
-                            if (request?.url?.toString().equals(redirectUrl)) {
-                                Log.d("WebViewSignUp", "redirectUrl matches!!!")
-                                openPopup(BottomSheetType.POPUP_CONGRATULATIONS)
-                                return false
+        if (!isUrlValid) {
+            EmptyView()
+        } else {
+            AndroidView(
+                factory = {
+                    WebView(context).apply {
+                        webViewClient = object : WebViewClient() {
+                            override fun shouldOverrideUrlLoading(
+                                view: WebView?,
+                                request: WebResourceRequest?
+                            ): Boolean {
+                                Log.d(
+                                    "WebViewSignUp",
+                                    "URL: ${request?.url} isRedirect: ${request?.isRedirect}"
+                                )
+                                if (request?.url?.toString().equals(redirectUrl)) {
+                                    Log.d("WebViewSignUp", "redirectUrl matches!!!")
+                                    openPopup(BottomSheetType.POPUP_CONGRATULATIONS)
+                                    return false
+                                }
+                                return super.shouldOverrideUrlLoading(view, request)
                             }
-                            return super.shouldOverrideUrlLoading(view, request)
-                        }
 
-                        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                            isInProgress = true
-                            super.onPageStarted(view, url, favicon)
-                        }
+                            override fun onPageStarted(
+                                view: WebView?,
+                                url: String?,
+                                favicon: Bitmap?
+                            ) {
+                                isInProgress = true
+                                super.onPageStarted(view, url, favicon)
+                            }
 
-                        override fun onPageFinished(view: WebView?, url: String?) {
-                            isInProgress = false
-                            super.onPageFinished(view, url)
+                            override fun onPageFinished(view: WebView?, url: String?) {
+                                isInProgress = false
+                                super.onPageFinished(view, url)
+                            }
                         }
+                        settings.javaScriptEnabled = true
+                        setLayerType(View.LAYER_TYPE_HARDWARE, null)
+                        settings.domStorageEnabled = true
+                        settings.loadWithOverviewMode = true
+                        settings.useWideViewPort = true
+                        setInitialScale(0)
+                        clearCache(true)
+                        clearHistory()
+                        clearFormData()
+                        WebUtility.clearCookies(context)
+                        loadUrl(url)
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
                     }
-                    settings.javaScriptEnabled = true
-                    setLayerType(View.LAYER_TYPE_HARDWARE, null)
-                    settings.domStorageEnabled = true
-                    settings.loadWithOverviewMode = true
-                    settings.useWideViewPort = true
-                    setInitialScale(0)
-                    clearCache(true)
-                    clearHistory()
-                    clearFormData()
-                    WebUtility.clearCookies(context)
-                    loadUrl(url)
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                }
-            },
-            modifier = Modifier
-                .fillMaxSize()
-        )
-        if (isInProgress) {
-            CircularProgressIndicator(
+                },
                 modifier = Modifier
-                    .fillMaxSize(0.1f)
-                    .align(Alignment.Center)
+                    .fillMaxSize()
             )
+            if (isInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                        .align(Alignment.Center)
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun EmptyView() {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_empty_view),
+            contentDescription = stringResource(id = R.string.label_empty_self_reg)
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        androidx.compose.material3.Text(
+            text = stringResource(id = R.string.label_empty_self_reg),
+            fontWeight = FontWeight.Bold,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.padding(4.dp))
+        androidx.compose.material3.Text(
+            text = stringResource(id = R.string.description_empty_self_reg),
+            fontWeight = FontWeight.Normal,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }
