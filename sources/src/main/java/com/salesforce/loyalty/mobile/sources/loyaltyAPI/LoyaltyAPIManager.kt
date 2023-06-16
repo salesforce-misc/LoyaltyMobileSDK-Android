@@ -14,7 +14,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 
 /**
- * LoyaltyAPIManager class holds APIs related to Loyalty Mobile SDK.
+ * LoyaltyAPIManager class manages the requests related to loyalty program and it inturn invokes the rest APIs
  */
 class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: String, loyaltyClient: NetworkClient){
 
@@ -31,18 +31,26 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
     init {
         authenticator = auth
         mInstanceUrl = instanceUrl
-//        mLoyaltyClient = LoyaltyClient(auth, instanceUrl)
         mLoyaltyClient = loyaltyClient
     }
+
     /**
-     * API to create new individual enrollment
+     * API to create new individual enrollment.
+     * Reference: https://developer.salesforce.com/docs/atlas.en-us.loyalty.meta/loyalty/connect_resources_enroll_individual_member.htm
      *
      * @param firstName First name of the user
      * @param lastName Last name of the user
      * @param email Email ID of the user
-     * @param phone Phone number of the user
+     * @param additionalContactAttributes Map of contact related attributes like phone number
      * @param emailNotification If user prefers to have email notifications.
-     * @return EnrollmentResponse JSON of the enrollment API response.
+     * @param memberStatus Status of the enrolled member [MemberStatus]
+     * @param createTransactionJournals Indicates whether to create the transaction journal records (true) or not (false)
+     * @param transactionalJournalStatementFrequency The frequency at which transaction journal statements must be delivered to the member.[TransactionalJournalStatementFrequency]
+     * @param transactionalJournalStatementMethod The method used to deliver transaction journal statements to the member.[TransactionalJournalStatementMethod]
+     * @param enrollmentChannel The channel used to by loyalty program member to enroll in to the loyalty program. [EnrollmentChannel]
+     * @param canReceivePromotions Indicates whether the loyalty program member can receive promotions.
+     * @param canReceivePartnerPromotions Indicates whether the member can receive partner promotions for the program (true) or not (false).
+     * @return [EnrollmentResponse] wrapped in Kotlin [Result] class if successful.
      */
     suspend fun postEnrollment(
         firstName: String,
@@ -90,10 +98,13 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
     }
 
     /**
-     * API to retrieve Member Profile details
+     * API to retrieve Member Profile details.
+     * Reference: https://developer.salesforce.com/docs/atlas.en-us.loyalty.meta/loyalty/connect_resources_member_profile.htm
      *
-     * @param memberId Loyalty Program Member Id
-     * @return MemberProfileResponse
+     * @param memberId The ID of the loyalty program member.
+     * @param memberShipNumber The membership number of the loyalty program member.
+     * @param programCurrencyName The name of the loyalty program currency associated with the member.
+     * @return [MemberProfileResponse] wrapped in Kotlin [Result] class if successful.
      */
     suspend fun getMemberProfile(
         memberId: String?,
@@ -114,11 +125,12 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
     }
 
     /**
-     * API to retrieve Member Benefits detail
+     * API to retrieve Member Benefits details.
+     * Reference: https://developer.salesforce.com/docs/atlas.en-us.loyalty.meta/loyalty/connect_resources_member_benefits.htm
      *
-     * @param memberId Loyalty Program Member Id
-     * @param membershipNumber Unique membership number of the user
-     * @return MemberBenefitsResponse
+     * @param memberId The ID of the loyalty program member.
+     * @param membershipNumber The membership number of the loyalty program member.
+     * @return [MemberBenefitsResponse] wrapped in Kotlin [Result] class if successful.
      */
     suspend fun getMemberBenefits(
         memberId: String,
@@ -137,11 +149,11 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
      *
      * @param membershipNumber The membership number of the loyalty program member.
      * @param pageNumber Number of the page you want returned.
-     * @param journalType The journal type of transaction journals that are retrieved.
-     * @param journalSubType The journal subtype of transaction journals that are retrieved.
+     * @param journalTypeName The journal type of transaction journals that are retrieved.
+     * @param journalSubTypeName The journal subtype of transaction journals that are retrieved.
      * @param periodStartDate Retrieve transaction journals until this date.
      * @param periodEndDate Retrieve transaction journals until this date.
-     * @return TransactionModel JSON of the Transactions API response.
+     * @return [TransactionsResponse] wrapped in Kotlin [Result] class if successful.
      */
     suspend fun getTransactions(
         membershipNumber: String,
@@ -170,10 +182,12 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
 
 
     /**
-     * API to retrieve Eligible Promotions
+     * API to retrieve Eligible Promotions of the loyalty member.
+     * Reference: https://developer.salesforce.com/docs/atlas.en-us.loyalty.meta/loyalty/connect_resources_enroll_ln_promotion.htm
      *
-     * @param membershipNumber Unique membership number of the user
-     * @return PromotionsResponse
+     * @param membershipNumber The membership number of the loyalty program member.
+     * @param memberId The ID of the loyalty program member.
+     * @return [PromotionsResponse] wrapped in Kotlin [Result] class if successful.
      */
     suspend fun getEligiblePromotions(
         membershipNumber: String?,
@@ -202,11 +216,12 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
     }
 
     /**
-     * API to Enroll in Promotion
+     * API to Enroll in Promotion.
+     * Reference: https://developer.salesforce.com/docs/atlas.en-us.loyalty.meta/loyalty/connect_resources_enroll_ln_promotion.htm
      *
-     * @param membershipNumber Unique membership number of the user
-     * @param promotionName Name of the promotion enrolled to
-     * @return EnrollPromotionsResponse
+     * @param membershipNumber The membership number of the loyalty program member.
+     * @param promotionName Name of the promotion enrolled to.
+     * @return [EnrollPromotionsResponse] wrapped in Kotlin [Result] class if successful.
      */
     suspend fun enrollInPromotions(
         membershipNumber: String,
@@ -229,11 +244,11 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
     }
 
     /**
-     * API to Unenroll from Promotion
+     * API to Unenroll from a Promotion.
      *
-     * @param membershipNumber Unique membership number of the user
-     * @param promotionName Name of the promotion enrolled to
-     * @return EnrollPromotionsResponse
+     * @param membershipNumber The membership number of the loyalty program member.
+     * @param promotionName Name of the promotion un enrolled from.
+     * @return [UnenrollPromotionResponse] wrapped in Kotlin [Result] class if successful.
      */
     suspend fun unEnrollPromotion(
         membershipNumber: String,
@@ -256,6 +271,19 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         )
     }
 
+    /**
+     * API to get vouchers information for the loyalty member.
+     * Reference: https://developer.salesforce.com/docs/atlas.en-us.loyalty.meta/loyalty/connect_resources_member_vouchers.htm
+     *
+     * @param membershipNumber The membership number of the loyalty program member.
+     * @param voucherStatus The list of statuses for which you want to the get member’s vouchers.
+     * @param pageNumber Number of the page you want returned. If you don’t specify a value, the first page is returned. Each page contains 200 vouchers and the vouchers are sorted based on the date on which the Voucher record was created.
+     * @param productId The ID of products that are related with the member vouchers you want to get. You can specify the ID of up to 20 products.
+     * @param productCategoryId The ID of product categories that are related with the member vouchers you want to get. You can specify the ID of up to 20 product categories.
+     * @param productName The product name associated with the vouchers to be retrieved. You can specify up to 20 product names.
+     * @param productCategoryName The names of product categories that are related with the member vouchers you want to get. You can specify the ID of up to 20 product categories.
+     * @return [VoucherResult] wrapped in Kotlin [Result] class if successful.
+     */
     suspend fun getVouchers(
         membershipNumber: String,
         voucherStatus: Array<String>?,
@@ -284,6 +312,11 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         )
     }
 
-    private fun getStringOfArrayItems(items: Array<String>?) = items?.reduce { acc, item -> "$acc,$item" }
+    /**
+     * Convert array items into comma seperated string.
+     * @param items Array of strings
+     * @return String Comma seperated array items into a string
+     */
+    private fun getStringOfArrayItems(items: Array<String>?): String? = items?.reduce { acc, item -> "$acc,$item" }
 
 }

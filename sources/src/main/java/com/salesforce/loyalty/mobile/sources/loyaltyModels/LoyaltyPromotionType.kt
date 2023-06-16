@@ -7,6 +7,9 @@
 
 package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
+/**
+ * Enum class that holds values of a Loyalty Promotion Type.
+ */
 enum class LoyaltyPromotionType(val promotionType: String) {
     STANDARD("STANDARD"),
     CUMULATIVE("CUMULATIVE"),

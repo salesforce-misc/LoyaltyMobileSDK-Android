@@ -1,0 +1,15 @@
+$dokka.format:javadoc-v1
+$dokka.linkExtension:html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.ProgramProcessName///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.ProgramProcessName.html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.Resource.IndividualEnrollment///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.Resource.IndividualEnrollment.html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.Resource.LoyaltyProgramProcess///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.Resource.LoyaltyProgramProcess.html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.Resource.MemberBenefits///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.Resource.MemberBenefits.html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.Resource.MemberProfile///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.Resource.MemberProfile.html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.Resource.TransactionsHistory///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.Resource.TransactionsHistory.html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.Resource.Vouchers///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.Resource.Vouchers.html
+$dokka.location:com.salesforce.loyalty.mobile.sources.loyaltyAPI/LoyaltyConfig.Resource///PointingToDeclaration/com/salesforce/loyalty/mobile/sources/loyaltyAPI/LoyaltyConfig.Resource.html
+com.salesforce.loyalty.mobile.sources.forceUtils
+com.salesforce.loyalty.mobile.sources.loyaltyAPI
+com.salesforce.loyalty.mobile.sources.loyaltyExtensions
+com.salesforce.loyalty.mobile.sources.loyaltyModels
+

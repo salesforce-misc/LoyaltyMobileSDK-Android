@@ -17,7 +17,16 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * An abstract class NetworkClient which defines the class that configures Retrofit client for invoking the REST APIs.
+ */
 abstract class NetworkClient(auth: ForceAuthenticator, instanceUrl: String) {
+
+    /**
+     * Gives an implementation of the retrofit interface using an instance of retrofit.
+     *
+     * @return [LoyaltyApiInterface]
+     */
     abstract fun getNetworkClient(): LoyaltyApiInterface
 }
 
