@@ -197,13 +197,6 @@ fun OpenBottomSheetContent(
 ) {
 
     when (bottomSheetType) {
-        BottomSheetType.POPUP_JOIN -> {
-            EnrollmentUI(
-                openPopup = { setBottomSheetState(it) },
-                closeSheet = closeSheet,
-                model
-            )
-        }
         BottomSheetType.POPUP_LOGIN -> {
             LoginUI(
                 navController = navController,
