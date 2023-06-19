@@ -11,6 +11,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
@@ -20,7 +21,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 import kotlinx.coroutines.launch
 
-class MembershipProfileViewModel : ViewModel() {
+class MembershipProfileViewModel : ViewModel(), MembershipProfileViewModelInterface {
     private val TAG = MembershipProfileViewModel::class.java.simpleName
 
     private val mInstanceUrl =
@@ -32,17 +33,17 @@ class MembershipProfileViewModel : ViewModel() {
     )
 
     //live data for login status
-    val membershipProfileLiveData: LiveData<MemberProfileResponse?>
+    override val membershipProfileLiveData: LiveData<MemberProfileResponse?>
         get() = membershipProfile
 
     private val membershipProfile = MutableLiveData<MemberProfileResponse?>()
 
-    val profileViewState: LiveData<MyProfileViewStates>
+    override val profileViewState: LiveData<MyProfileViewStates>
         get() = viewState
 
     private val viewState = MutableLiveData<MyProfileViewStates>()
 
-    fun loadProfile(context: Context, refreshRequired:Boolean=false) {
+    override fun loadProfile(context: Context, refreshRequired:Boolean) {
         viewState.postValue(MyProfileViewStates.MyProfileFetchInProgress)
         viewModelScope.launch {
             val memberJson =

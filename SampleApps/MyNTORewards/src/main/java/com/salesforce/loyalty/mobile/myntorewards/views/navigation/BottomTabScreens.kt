@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
@@ -34,6 +35,13 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(
     bottomTabsNavController: NavController,
+    profileModel: MembershipProfileViewModelInterface,
+    promotionModel: MyPromotionViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
+    onboardingModel: OnBoardingViewModelAbstractInterface,
+    benefitViewModel: BenefitViewModelInterface,
+    transactionViewModel: TransactionViewModelInterface,
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -45,7 +53,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
 
         composable(route = CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
             showBottomBar(true)
-            HomeScreenLandingView(bottomTabsNavController, navCheckOutFlowController)
+            HomeScreenLandingView(bottomTabsNavController, navCheckOutFlowController, profileModel,promotionModel,voucherModel)
         }
         composable(route = CheckOutFlowScreen.OrderDetailScreen.route) {
             showBottomBar(false)
@@ -53,11 +61,11 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = CheckOutFlowScreen.OrderAddressAndPaymentScreen.route) {
             showBottomBar(false)
-            OrderDetails(navCheckOutFlowController)
+            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel)
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
-            OrderPlacedUI(navCheckOutFlowController)
+            OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel)
         }
         composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
             showBottomBar(true)
@@ -68,7 +76,10 @@ fun HomeScreenAndCheckOutFlowNavigation(
 
 
 @Composable
-fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
+fun PromotionScreenAndCheckOutFlowNavigation(promotionViewModel: MyPromotionViewModelInterface,
+                                             voucherModel: VoucherViewModelInterface,
+                                             checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+                                             showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
     val navCheckOutFlowController = rememberNavController()
     NavHost(
         navController = navCheckOutFlowController,
@@ -80,7 +91,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible: B
 
 
             showBottomBar(true)
-            MyPromotionScreen(navCheckOutFlowController)
+            MyPromotionScreen(navCheckOutFlowController, promotionViewModel)
 
 
         }
@@ -90,18 +101,21 @@ fun PromotionScreenAndCheckOutFlowNavigation(showBottomBar: (bottomBarVisible: B
         }
         composable(route = CheckOutFlowScreen.OrderAddressAndPaymentScreen.route) {
             showBottomBar(false)
-            OrderDetails(navCheckOutFlowController)
+            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel)
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
-            OrderPlacedUI(navCheckOutFlowController)
+            OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel)
         }
 
     }
 }
 
 @Composable
-fun MyProfileScreen() {
+fun MyProfileScreen( profileModel: MembershipProfileViewModelInterface,
+                     voucherModel: VoucherViewModelInterface,
+                     benefitViewModel: BenefitViewModelInterface,
+                     transactionViewModel: TransactionViewModelInterface) {
     val navProfileViewController = rememberNavController()
     NavHost(
         navController = navProfileViewController,
@@ -110,13 +124,13 @@ fun MyProfileScreen() {
     {
 
         composable(route = ProfileViewScreen.LandingProfileViewScreen.route) {
-            MyProfileLandingView(navProfileViewController)
+            MyProfileLandingView(navProfileViewController, profileModel,voucherModel, benefitViewModel, transactionViewModel)
         }
         composable(route = ProfileViewScreen.BenefitFullScreen.route) {
-            MyProfileBenefitFullScreenView(navProfileViewController)
+            MyProfileBenefitFullScreenView(navProfileViewController, benefitViewModel)
         }
         composable(route = ProfileViewScreen.TransactionFullScreen.route) {
-            MyProfileTransactionFullScreenView(navProfileViewController)
+            MyProfileTransactionFullScreenView(navProfileViewController, transactionViewModel)
         }
         composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
             VoucherFullScreen(navProfileViewController)
@@ -148,7 +162,7 @@ fun RedeemScreen() {
 
 
 @Composable
-fun MoreScreen(showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
+fun MoreScreen(onBoardingModel: OnBoardingViewModelAbstractInterface, showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
 
     val navController = rememberNavController()
     NavHost(
@@ -158,7 +172,7 @@ fun MoreScreen(showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
     {
 
         composable(route = MoreOptionsScreen.MoreOptions.route) {
-            MoreOptions(navController)
+            MoreOptions(navController, onBoardingModel)
         }
         composable(route = MoreOptionsScreen.PostLogout.route) {
             showBottomBar(false)

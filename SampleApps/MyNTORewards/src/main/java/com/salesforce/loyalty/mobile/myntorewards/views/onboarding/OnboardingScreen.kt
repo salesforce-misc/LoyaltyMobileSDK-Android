@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,15 +29,18 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport.ViewPagerSupport.screenTextID
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.adminmenu.SettingsMain
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentCongratulationsView
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentWebView
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
+
+
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun OnboardingScreenBox(navController: NavController) {
+fun OnboardingScreenBox(navController: NavController,model: OnBoardingViewModelAbstractInterface) {
 
     var currentPopupState: BottomSheetType? by remember { mutableStateOf(null) }
 
@@ -83,7 +87,8 @@ fun OnboardingScreenBox(navController: NavController) {
                     navController = navController,
                     setBottomSheetState = {
                         currentPopupState = it
-                    }, closeSheet = { closeBottomSheet() }
+                    }, closeSheet = { closeBottomSheet() },
+                    model
                 )
             }
         },
@@ -102,6 +107,7 @@ fun OnboardingScreenBox(navController: NavController) {
                     contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
                     modifier = Modifier
                         .fillMaxSize()
+                        .testTag(""+ViewPagerSupport.imageID(page))
                         .pointerInput(Unit) {
                             detectTapGestures(onTap = {
                                 tapCount++
@@ -186,21 +192,18 @@ fun OpenBottomSheetContent(
     bottomSheetType: BottomSheetType,
     navController: NavController,
     setBottomSheetState: (bottomSheetState: BottomSheetType) -> Unit,
-    closeSheet: () -> Unit
+    closeSheet: () -> Unit,
+    model: OnBoardingViewModelAbstractInterface
 ) {
 
     when (bottomSheetType) {
-        BottomSheetType.POPUP_JOIN -> {
-            EnrollmentUI(
-                openPopup = { setBottomSheetState(it) },
-                closeSheet = closeSheet
-            )
-        }
         BottomSheetType.POPUP_LOGIN -> {
             LoginUI(
                 navController = navController,
                 openPopup = { setBottomSheetState(it) },
-                closeSheet = closeSheet
+                closeSheet = closeSheet,
+                model
+
             )
         }
         BottomSheetType.POPUP_CONGRATULATIONS -> {

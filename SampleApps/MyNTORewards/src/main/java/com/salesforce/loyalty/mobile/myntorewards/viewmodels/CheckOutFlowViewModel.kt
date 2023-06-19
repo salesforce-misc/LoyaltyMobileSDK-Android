@@ -9,10 +9,11 @@ import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsRe
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
-class CheckOutFlowViewModel : ViewModel() {
+class CheckOutFlowViewModel : ViewModel(), CheckOutFlowViewModelInterface {
     private val TAG = CheckOutFlowViewModel::class.java.simpleName
 
     private val checkoutManager: CheckoutManager = CheckoutManager(
@@ -20,31 +21,31 @@ class CheckOutFlowViewModel : ViewModel() {
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     )
 
-    val orderPlacedStatusLiveData: LiveData<OrderPlacedState>
+    override val orderPlacedStatusLiveData: LiveData<OrderPlacedState>
         get() = orderPlacedStatus
 
     private val orderPlacedStatus = MutableLiveData<OrderPlacedState>()
 
-    fun resetOrderPlacedStatusDefault() {
+    override fun resetOrderPlacedStatusDefault() {
         orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_DEFAULT_EMPTY
     }
 
-    val orderIDLiveData: LiveData<String>
+    override val orderIDLiveData: LiveData<String>
         get() = orderID
 
     private var orderID = MutableLiveData<String>()
 
-    val orderDetailLiveData: LiveData<OrderDetailsResponse>
+    override val orderDetailLiveData: LiveData<OrderDetailsResponse>
         get() = orderDetails
 
     private val orderDetails = MutableLiveData<OrderDetailsResponse>()
 
-    val shippingDetailsLiveData: LiveData<List<ShippingMethod>>
+    override val shippingDetailsLiveData: LiveData<List<ShippingMethod>>
         get() = shippingDetails
 
     private val shippingDetails = MutableLiveData<List<ShippingMethod>>()
 
-    fun placeOrder() {
+    override fun placeOrder() {
         Logger.d(TAG, "Order Placed request")
         viewModelScope.launch {
 
@@ -62,7 +63,7 @@ class CheckOutFlowViewModel : ViewModel() {
         }
     }
 
-    fun fetchOrderDetails(orderID: String) {
+    override fun fetchOrderDetails(orderID: String) {
         Logger.d(TAG, "Order details fetch request")
         viewModelScope.launch {
 
@@ -77,7 +78,7 @@ class CheckOutFlowViewModel : ViewModel() {
         }
     }
 
-    fun fetchShippingDetails() {
+    override fun fetchShippingDetails() {
         Logger.d(TAG, "fetch shipping details request")
         viewModelScope.launch {
 

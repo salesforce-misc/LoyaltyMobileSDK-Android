@@ -6,11 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -20,7 +22,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import kotlinx.coroutines.launch
 
-class MyPromotionViewModel : ViewModel() {
+class MyPromotionViewModel : ViewModel(), MyPromotionViewModelInterface {
 
     private val TAG = MyPromotionViewModel::class.java.simpleName
 
@@ -31,28 +33,28 @@ class MyPromotionViewModel : ViewModel() {
         mInstanceUrl,
         LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
     )
-    val membershipPromotionLiveData: LiveData<List<Results>>
+    override val membershipPromotionLiveData: LiveData<PromotionsResponse>
         get() = membershipPromo
 
-    private val membershipPromo = MutableLiveData<List<Results>>()
+    private val membershipPromo = MutableLiveData<PromotionsResponse>()
 
-    val promEnrollmentStatusLiveData: LiveData<PromotionEnrollmentUpdateState>
+    override val promEnrollmentStatusLiveData: LiveData<PromotionEnrollmentUpdateState>
         get() = promEnrollmentStatus
 
     private val promEnrollmentStatus = MutableLiveData<PromotionEnrollmentUpdateState>()
 
-    val promotionViewState: LiveData<PromotionViewState>
+    override val promotionViewState: LiveData<PromotionViewState>
         get() = viewState
 
     private val viewState = MutableLiveData<PromotionViewState>()
 
     //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
-    fun resetPromEnrollmentStatusDefault() {
+    override fun resetPromEnrollmentStatusDefault() {
         promEnrollmentStatus.value =
             PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
     }
 
-    fun loadPromotions(context: Context, refreshRequired:Boolean=false) {
+    override fun loadPromotions(context: Context, refreshRequired:Boolean) {
         viewState.postValue(PromotionViewState.PromotionFetchInProgress)
         viewModelScope.launch {
             val memberJson =
@@ -80,7 +82,8 @@ class MyPromotionViewModel : ViewModel() {
                 if (promotionCache == null) {
                     fetchPromotions(context, memberId, membershipKey)
                 } else {
-                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess(promotionCache))
+                    membershipPromo.value= promotionCache!!
+                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess)
                 }
             }
 
@@ -98,19 +101,21 @@ class MyPromotionViewModel : ViewModel() {
                         membershipKey,
                         LocalFileManager.DIRECTORY_PROMOTIONS
                     )
-                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess(it))
+                    membershipPromo.value= it
+                    viewState.postValue(PromotionViewState.PromotionsFetchSuccess)
                 } else {
-                    viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
+                    viewState.postValue(PromotionViewState.PromotionsFetchFailure)
                 }
                 Logger.d(TAG, "success member promotion response: $it")
             }.onFailure {
-                viewState.postValue(PromotionViewState.PromotionsFetchFailure(it.message))
+
+                viewState.postValue(PromotionViewState.PromotionsFetchFailure)
                 Logger.d(TAG, "failed: member promotion ${it.message}")
             }
         }
     }
 
-    fun enrollInPromotions(context: Context, promotionName: String) {
+    override fun enrollInPromotions(context: Context, promotionName: String) {
         viewModelScope.launch {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
@@ -134,7 +139,7 @@ class MyPromotionViewModel : ViewModel() {
         }
     }
 
-    fun unEnrollInPromotions(context: Context, promotionName: String) {
+    override fun unEnrollInPromotions(context: Context, promotionName: String) {
         viewModelScope.launch {
             val memberJson =
                 PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)

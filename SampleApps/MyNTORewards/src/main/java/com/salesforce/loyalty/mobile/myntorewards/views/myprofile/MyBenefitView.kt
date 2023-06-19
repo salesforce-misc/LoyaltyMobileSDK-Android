@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +35,9 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets.LoyaltyAppAsset.getBenefitsLogo
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BENEFITS
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipBenefitViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BenefitViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
@@ -42,16 +45,19 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyProfileBenefitFullScreenView(navProfileController: NavHostController) {
+fun MyProfileBenefitFullScreenView(
+    navProfileController: NavHostController,
+    benefitViewModel: BenefitViewModelInterface
+) {
 
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
 
     val context: Context = LocalContext.current
-    val benModel: MembershipBenefitViewModel = viewModel()
+
 
     fun refresh() = refreshScope.launch {
-        benModel.loadBenefits(context, true)
+        benefitViewModel.loadBenefits(context, true)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
@@ -67,7 +73,7 @@ fun MyProfileBenefitFullScreenView(navProfileController: NavHostController) {
             Spacer(modifier = Modifier.height(50.dp))
             Image(
                 painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                contentDescription = "benefit_back_button",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)
@@ -97,7 +103,7 @@ fun MyProfileBenefitFullScreenView(navProfileController: NavHostController) {
                     .padding(16.dp)
 
             ) {
-                BenefitListView(Modifier.fillMaxHeight())
+                BenefitListView(Modifier.fillMaxHeight(), benefitViewModel)
             }
         }
         PullRefreshIndicator(refreshing, state)
@@ -106,7 +112,10 @@ fun MyProfileBenefitFullScreenView(navProfileController: NavHostController) {
 }
 
 @Composable
-fun MyBenefitMiniScreenView(navProfileController: NavHostController) {
+fun MyBenefitMiniScreenView(
+    navProfileController: NavHostController,
+    benefitViewModel: BenefitViewModelInterface
+) {
 
     Column(
         modifier = Modifier
@@ -120,21 +129,21 @@ fun MyBenefitMiniScreenView(navProfileController: NavHostController) {
         {
             navProfileController.navigate(ProfileViewScreen.BenefitFullScreen.route)
         }
-        BenefitListView(Modifier.height(300.dp))
+        BenefitListView(Modifier.height(300.dp), benefitViewModel)
     }
 }
 
 @Composable
-fun BenefitListView(modifier: Modifier) {
+fun BenefitListView(modifier: Modifier, benefitViewModel: BenefitViewModelInterface) {
 
     var isInProgress by remember { mutableStateOf(false) }
-    val model: MembershipBenefitViewModel = viewModel()
-    val membershipBenefit by model.membershipBenefitLiveData.observeAsState() // collecting livedata as state
-    val membershipBenefitFetchStatus by model.benefitViewState.observeAsState() // collecting livedata as state
+
+    val membershipBenefit by benefitViewModel.membershipBenefitLiveData.observeAsState() // collecting livedata as state
+    val membershipBenefitFetchStatus by benefitViewModel.benefitViewState.observeAsState() // collecting livedata as state
     val context: Context = LocalContext.current
     //calling member benefit
     LaunchedEffect(key1 = true) {
-        model.loadBenefits(context)
+        benefitViewModel.loadBenefits(context)
         isInProgress = true
     }
 
@@ -169,7 +178,7 @@ fun BenefitListView(modifier: Modifier) {
             }
 
             membershipBenefit?.let {
-                LazyColumn(modifier = modifier) {
+                LazyColumn(modifier = modifier.testTag(TEST_TAG_BENEFITS)) {
                     if (it.size >= AppConstants.MAX_SIZE_BENEFIT_LIST) {
                         items(it.subList(0, AppConstants.MAX_SIZE_BENEFIT_LIST)) {
                             ListItemMyBenefit(it)

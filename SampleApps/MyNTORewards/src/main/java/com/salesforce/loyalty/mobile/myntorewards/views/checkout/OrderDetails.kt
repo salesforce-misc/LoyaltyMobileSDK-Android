@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,16 +23,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PAYMENT_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavigationTabs
 
 @Composable
-fun OrderDetails(navCheckOutFlowController: NavController) {
+fun OrderDetails(navCheckOutFlowController: NavController,
+                 voucherModel: VoucherViewModelInterface,
+                 checkOutFlowViewModel: CheckOutFlowViewModelInterface
+                 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
-            .background(OrderScreenBG)
+            .background(OrderScreenBG).testTag(TEST_TAG_SHIPPING_PAYMENT_SCREEN)
     )
     {
         //default tab selected as 0 which is ShippingNavigationTabs.TabShipping
@@ -47,7 +55,7 @@ fun OrderDetails(navCheckOutFlowController: NavController) {
             Spacer(modifier = Modifier.height(15.dp))
             Image(
                 painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                contentDescription = "shipping payment back button",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp)
@@ -57,7 +65,7 @@ fun OrderDetails(navCheckOutFlowController: NavController) {
                         } else {
                             selectedTab = 0
                         }
-                    }
+                    }.testTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT)
             )
         }
 
@@ -134,7 +142,7 @@ fun OrderDetails(navCheckOutFlowController: NavController) {
             0 -> OrderAddressUI {
                 selectedTab = 1
             }
-            1 -> PaymentsUI(navCheckOutFlowController)
+            1 -> PaymentsUI(navCheckOutFlowController, voucherModel, checkOutFlowViewModel)
         }
 
 

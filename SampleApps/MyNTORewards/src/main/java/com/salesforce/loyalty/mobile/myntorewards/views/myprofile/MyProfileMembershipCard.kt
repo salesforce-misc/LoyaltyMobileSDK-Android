@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,13 +31,15 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourPurpleQR
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_QR_CODE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 
 @Composable
-fun ProfileCard() {
+fun ProfileCard(profileModel: MembershipProfileViewModelInterface) {
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
@@ -51,7 +54,7 @@ fun ProfileCard() {
                 .background(Color.White, RoundedCornerShape(4.dp))
         ) {
             CardBackground()
-            CardContent()
+            CardContent(profileModel)
         }
     }
 }
@@ -70,7 +73,7 @@ fun CardBackground() {
 }
 
 @Composable
-fun CardContent() {
+fun CardContent(profileModel: MembershipProfileViewModelInterface) {
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
         Column(
@@ -82,12 +85,12 @@ fun CardContent() {
             horizontalAlignment = Alignment.Start,
         ) {
 
-            val model: MembershipProfileViewModel = viewModel()  //fetching reference of viewmodel
-            val membershipProfile by model.membershipProfileLiveData.observeAsState() // collecting livedata as state
-            val membershipProfileFetchStatus by model.profileViewState.observeAsState() // collecting livedata as state
+
+            val membershipProfile by profileModel.membershipProfileLiveData.observeAsState() // collecting livedata as state
+            val membershipProfileFetchStatus by profileModel.profileViewState.observeAsState() // collecting livedata as state
             val context: Context = LocalContext.current
             LaunchedEffect(key1 = true) {
-                model.loadProfile(context)
+                profileModel.loadProfile(context)
                 isInProgress = true
             }
 
@@ -158,7 +161,7 @@ fun MembershipTierRow(tierName: String) {
         )
         Image(
             painter = painterResource(id = R.drawable.membership_card_logo),
-            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+            contentDescription = "Profile Card Image Content Logo",
             modifier = Modifier.width(96.dp),
             contentScale = ContentScale.FillWidth
 
@@ -217,7 +220,7 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
         )
         Column(modifier = Modifier.clickable {
             popupControlQRCOde = true
-        }) {
+        }.testTag(TEST_TAG_QR_CODE)) {
             QRCode(value = membershipID, width = 46, height = 46, ColourPurpleQR)
         }
 

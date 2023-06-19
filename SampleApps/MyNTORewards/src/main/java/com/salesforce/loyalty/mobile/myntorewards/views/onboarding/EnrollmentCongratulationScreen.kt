@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -30,6 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ENROLLMENT_CONGRATULATIONS
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 
@@ -41,7 +43,7 @@ fun EnrollmentCongratulationsView(navController: NavController, closeSheet: () -
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.92f)
-            .background(Color.White, shape = RoundedCornerShape(16.dp)),
+            .background(Color.White, shape = RoundedCornerShape(16.dp)).testTag(TEST_TAG_ENROLLMENT_CONGRATULATIONS),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(

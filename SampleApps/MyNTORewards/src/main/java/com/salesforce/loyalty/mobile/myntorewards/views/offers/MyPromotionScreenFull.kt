@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +39,10 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_LIST
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyPromotionViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
@@ -48,14 +52,18 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyPromotionScreen(navCheckOutFlowController: NavController) {
+fun MyPromotionScreen(
+    navCheckOutFlowController: NavController,
+    promotionViewModel: MyPromotionViewModelInterface
+) {
 
 
-    val model: MyPromotionViewModel = viewModel()
     val context: Context = LocalContext.current
-    val promoViewState by model.promotionViewState.observeAsState()
+    val promoViewState by promotionViewModel.promotionViewState.observeAsState()
+    val promoViewValue by promotionViewModel.membershipPromotionLiveData.observeAsState()
+
     LaunchedEffect(true) {
-        model.loadPromotions(context)
+        promotionViewModel.loadPromotions(context)
     }
     var isInProgress by remember { mutableStateOf(false) }
 
@@ -63,7 +71,7 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
     val refreshScope = rememberCoroutineScope()
 
     fun refresh() = refreshScope.launch {
-        model.loadPromotions(context, true)
+        promotionViewModel.loadPromotions(context, true)
 
     }
 
@@ -74,8 +82,7 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
     when (promoViewState) {
         is PromotionViewState.PromotionsFetchSuccess -> {
             isInProgress = false
-            membershipPromo =
-                (promoViewState as PromotionViewState.PromotionsFetchSuccess).response?.outputParameters?.outputParameters?.results
+            membershipPromo = promoViewValue?.outputParameters?.outputParameters?.results
         }
         is PromotionViewState.PromotionsFetchFailure -> {
             isInProgress = false
@@ -163,7 +170,7 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
                         membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE }
                     LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth().testTag(TEST_TAG_PROMO_LIST)
                             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                     ) {
                         items(it) {
@@ -171,16 +178,16 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
 
                             when (selectedTab) {
                                 0 -> {
-                                    PromotionItem(it, navCheckOutFlowController)
+                                    PromotionItem(it, navCheckOutFlowController, promotionViewModel)
                                 }
                                 1 -> {
                                     if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE) {
-                                        PromotionItem(it, navCheckOutFlowController)
+                                        PromotionItem(it, navCheckOutFlowController, promotionViewModel)
                                     }
                                 }
                                 2 -> {
                                     if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-                                        PromotionItem(it, navCheckOutFlowController)
+                                        PromotionItem(it, navCheckOutFlowController, promotionViewModel)
                                     }
                                 }
                             }
@@ -246,7 +253,7 @@ fun MyPromotionScreenHeader() {
 
         Image(
             painter = painterResource(R.drawable.search_icon_black),
-            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+            contentDescription = "search_icon",
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp),
             contentScale = ContentScale.FillWidth
@@ -257,7 +264,7 @@ fun MyPromotionScreenHeader() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionItem(results: Results, navCheckOutFlowController: NavController) {
+fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  promotionViewModel: MyPromotionViewModelInterface) {
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
@@ -271,7 +278,8 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController) {
             closePopup = {
                 currentPromotionDetailPopupState = false
             },
-            navCheckOutFlowController
+            navCheckOutFlowController,
+            promotionViewModel
         )
     }
 
@@ -286,14 +294,14 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController) {
 
                 currentPromotionDetailPopupState = true
             }
-            .background(Color.White, shape = RoundedCornerShape(8.dp)),
+            .background(Color.White, shape = RoundedCornerShape(8.dp)).testTag(TEST_TAG_PROMO_ITEM),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
 
         Box() {
             Image(
                 painter = painterResource(R.drawable.promotionlist_image_placeholder),
-                contentDescription = stringResource(com.salesforce.loyalty.mobile.MyNTORewards.R.string.cd_onboard_screen_bottom_fade),
+                contentDescription = "promotion_item_placeholder",
                 modifier = Modifier
                     .size(130.dp, 166.dp)
                     .clip(RoundedCornerShape(10.dp)),
