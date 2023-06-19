@@ -20,16 +20,9 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionsResponse
 import kotlinx.coroutines.launch
 
-class TransactionsViewModel : ViewModel(), TransactionViewModelInterface {
+class TransactionsViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), TransactionViewModelInterface {
     private val TAG = TransactionsViewModel::class.java.simpleName
 
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
     //live data for transaction data
     override val transactionsLiveData: LiveData<TransactionsResponse>
         get() = transactions
@@ -80,8 +73,6 @@ class TransactionsViewModel : ViewModel(), TransactionViewModelInterface {
     }
 
     private fun getTransactions(context: Context, membershipNumber: String) {
-        viewState.postValue(TransactionViewState.TransactionFetchInProgress)
-
         viewModelScope.launch {
             membershipNumber?.let { membershipNumber ->
                 loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)

@@ -21,18 +21,11 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResult
 import kotlinx.coroutines.launch
 
-class VoucherViewModel : ViewModel(), VoucherViewModelInterface {
+class VoucherViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), VoucherViewModelInterface {
 
 
     private val TAG = VoucherViewModel::class.java.simpleName
 
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
     override val voucherLiveData: LiveData<List<VoucherResponse>>
         get() = vouchers
 
