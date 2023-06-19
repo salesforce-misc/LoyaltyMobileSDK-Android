@@ -9,11 +9,9 @@ import android.webkit.CookieManager
 
 object WebUtility {
 
-    fun clearCookies(context: Context?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            CookieManager.getInstance().removeAllCookies(null)
-            CookieManager.getInstance().flush()
-        }
+    fun clearCookies() {
+        CookieManager.getInstance().removeAllCookies(null)
+        CookieManager.getInstance().flush()
     }
 
     fun hideKeyboard(activity: Activity) {

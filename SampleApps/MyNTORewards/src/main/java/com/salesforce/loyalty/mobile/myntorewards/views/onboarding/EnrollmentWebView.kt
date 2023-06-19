@@ -162,7 +162,7 @@ fun LoadWebUrl(
                         clearCache(true)
                         clearHistory()
                         clearFormData()
-                        WebUtility.clearCookies(context)
+                        WebUtility.clearCookies()
                         loadUrl(url)
                         layoutParams = ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
