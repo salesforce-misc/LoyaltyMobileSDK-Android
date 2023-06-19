@@ -21,16 +21,8 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 import kotlinx.coroutines.launch
 
-class MembershipProfileViewModel : ViewModel(), MembershipProfileViewModelInterface {
+class MembershipProfileViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), MembershipProfileViewModelInterface {
     private val TAG = MembershipProfileViewModel::class.java.simpleName
-
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
 
     //live data for login status
     override val membershipProfileLiveData: LiveData<MemberProfileResponse?>
@@ -82,7 +74,6 @@ class MembershipProfileViewModel : ViewModel(), MembershipProfileViewModelInterf
     }
 
     private fun getMemberProfile(context: Context, memberId: String, membershipKey: String) {
-        viewState.postValue(MyProfileViewStates.MyProfileFetchInProgress)
 
         viewModelScope.launch {
             loyaltyAPIManager.getMemberProfile(memberId, membershipKey, null).onSuccess {

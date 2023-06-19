@@ -4,9 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.MockResponseFileReader
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionsResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResult
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 
 object LocalFileManager {
 
@@ -35,6 +33,14 @@ object LocalFileManager {
             return  Gson().fromJson(MockResponseFileReader("GetVouchers.json").content, VoucherResult::class.java) as T
 
              }
+            DIRECTORY_PROFILE -> {
+                return  Gson().fromJson(MockResponseFileReader("Profile.json").content, MemberProfileResponse::class.java) as T
+
+            }
+            DIRECTORY_PROMOTIONS -> {
+                return  Gson().fromJson(MockResponseFileReader("Promotions.json").content, PromotionsResponse::class.java) as T
+
+            }
             else -> {
                 val mockResponse = MockResponseFileReader("Benefits.json").content
                 val mockMemberBenefitsResponse =

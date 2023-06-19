@@ -129,65 +129,6 @@ open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractI
         }
     }
 
-    //invoke enrollment API
-    /*
-    * Upon Success or Failure of Enrollment API Enrollment status will be updated
-    * Status is being updated in the form of Live data which is being observed inside EnrollementUI
-    * Based om status change State change will trigger and corresponding flow will be executed
-    * */
-    override fun enrollUser(
-        firstNameText: String,
-        lastNameText: String,
-        mobileNumberText: String,
-        emailAddressText: String,
-        passwordText: String,
-        confirmPasswordText: String,
-        mailCheckedState: Boolean,
-        tncCheckedState: Boolean,
-        context: Context
-    ) {
-        enrollmentStatus.value =
-            EnrollmentState.ENROLLMENT_SUCCESS
-        viewModelScope.launch {
-            var enrollmentResponse: EnrollmentResponse? = null
-            loyaltyAPIManager.postEnrollment(
-                firstNameText,
-                lastNameText,
-                emailAddressText,
-                null,
-                true,
-                MemberStatus.ACTIVE,
-                true,
-                TransactionalJournalStatementFrequency.MONTHLY,
-                TransactionalJournalStatementMethod.EMAIL,
-                EnrollmentChannel.EMAIL,
-                true,
-                true,
-            ).onSuccess {
-                enrollmentResponse = it
-                val communityMemberModel = CommunityMemberModel(
-                    firstName = firstNameText,
-                    lastName = lastNameText,
-                    email = emailAddressText,
-                    loyaltyProgramMemberId = it.loyaltyProgramMemberId,
-                    loyaltyProgramName = it.loyaltyProgramName,
-                    membershipNumber = it.membershipNumber
-                )
-                val member = Gson().toJson(communityMemberModel, CommunityMemberModel::class.java)
-                PrefHelper.customPrefs(context).set(KEY_COMMUNITY_MEMBER, member)
-            }
-                .onFailure {
-                    enrollmentStatus.value =
-                        EnrollmentState.ENROLLMENT_FAILURE   // enrollment state is being observed in Enrollment UI Composable
-                    Logger.d(TAG, "Enrollment request failed: ${it.message}")
-                }
-            if (enrollmentResponse != null) {
-                enrollmentStatus.value =
-                    EnrollmentState.ENROLLMENT_SUCCESS   // enrollment state is being observed in Enrollment UI Composable
-                Logger.d(TAG, "Enrollment request Success: $enrollmentResponse")
-            }
-        }
-    }
 
     override fun logoutAndClearAllSettings(context: Context) {
         logoutState.value = LogoutState.LOGOUT_IN_PROGRESS

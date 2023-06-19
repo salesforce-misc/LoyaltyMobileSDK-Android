@@ -11,13 +11,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.BenefitViewModelFactory
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.TransactionViewModelFactory
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.VoucherViewModelFactory
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.*
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -38,7 +37,6 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
 
         ForceAuthManager.getInstance(applicationContext)
-
         val loginSuccess = PrefHelper.customPrefs(applicationContext)
             .get(AppConstants.KEY_LOGIN_SUCCESSFUL, false)
         setContent {
@@ -50,15 +48,18 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     mInstanceUrl,
                     LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
                 )
-
+                val checkoutManager: CheckoutManager = CheckoutManager(
+                    ForceAuthManager.forceAuthManager,
+                    ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+                )
 
                 val onboardingModel: OnboardingScreenViewModel = viewModel()
-                val profileModel: MembershipProfileViewModel = viewModel()
-                val promotionModel: MyPromotionViewModel = viewModel()
+                val profileModel: MembershipProfileViewModel= ViewModelProvider(this, ProfileViewModelFactory(loyaltyAPIManager)).get(MembershipProfileViewModel::class.java)
+                val promotionModel: MyPromotionViewModel= ViewModelProvider(this, MyPromotionViewModelFactory(loyaltyAPIManager)).get(MyPromotionViewModel::class.java)
                 val voucherModel: VoucherViewModel= ViewModelProvider(this, VoucherViewModelFactory(loyaltyAPIManager)).get(VoucherViewModel::class.java)
                 val benefitModel: MembershipBenefitViewModel= ViewModelProvider(this, BenefitViewModelFactory(loyaltyAPIManager)).get(MembershipBenefitViewModel::class.java)
                 val transactionModel: TransactionsViewModel= ViewModelProvider(this, TransactionViewModelFactory(loyaltyAPIManager)).get(TransactionsViewModel::class.java)
-                val checkoutFlowModel: CheckOutFlowViewModel = viewModel()  //fetching reference of viewmodel
+                val checkoutFlowModel: CheckOutFlowViewModel= ViewModelProvider(this, CheckOutFlowViewModelFactory(checkoutManager)).get(CheckOutFlowViewModel::class.java)
                 HomeTabScreen(profileModel, promotionModel, voucherModel, onboardingModel, benefitModel, transactionModel, checkoutFlowModel)
             } else {
                 MainScreenStart()

@@ -11,15 +11,11 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.launch
 
-class CheckOutFlowViewModel : ViewModel(), CheckOutFlowViewModelInterface {
+class CheckOutFlowViewModel(private val checkoutManager: CheckoutManager) : ViewModel(), CheckOutFlowViewModelInterface {
     private val TAG = CheckOutFlowViewModel::class.java.simpleName
-
-    private val checkoutManager: CheckoutManager = CheckoutManager(
-        ForceAuthManager.forceAuthManager,
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    )
 
     override val orderPlacedStatusLiveData: LiveData<OrderPlacedState>
         get() = orderPlacedStatus
