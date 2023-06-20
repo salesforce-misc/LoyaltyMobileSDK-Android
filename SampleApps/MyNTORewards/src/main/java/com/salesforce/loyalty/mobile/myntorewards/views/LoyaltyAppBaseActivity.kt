@@ -26,7 +26,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 //Main Activity Application Entry Point
 class LoyaltyAppBaseActivity : ComponentActivity() {
     private val TAG = LoyaltyAppBaseActivity::class.java.simpleName
-    val model: OnboardingScreenViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,21 +39,24 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         ForceAuthManager.getInstance(applicationContext)
         val loginSuccess = PrefHelper.customPrefs(applicationContext)
             .get(AppConstants.KEY_LOGIN_SUCCESSFUL, false)
+
+        val mInstanceUrl =
+            ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
+            ForceAuthManager.forceAuthManager,
+            mInstanceUrl,
+            LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
+        )
+        val onboardingModel: OnboardingScreenViewModel = ViewModelProvider(this, OnboardingScreenViewModelFactory(loyaltyAPIManager)).get(OnboardingScreenViewModel::class.java)
+
         setContent {
             if (loginSuccess == true) {
-                 val mInstanceUrl =
-                    ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-                 val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-                    ForceAuthManager.forceAuthManager,
-                    mInstanceUrl,
-                    LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-                )
+
                 val checkoutManager: CheckoutManager = CheckoutManager(
                     ForceAuthManager.forceAuthManager,
                     ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
                 )
 
-                val onboardingModel: OnboardingScreenViewModel= ViewModelProvider(this, OnboardingScreenViewModelFactory(loyaltyAPIManager)).get(OnboardingScreenViewModel::class.java)
                 val profileModel: MembershipProfileViewModel= ViewModelProvider(this, ProfileViewModelFactory(loyaltyAPIManager)).get(MembershipProfileViewModel::class.java)
                 val promotionModel: MyPromotionViewModel= ViewModelProvider(this, MyPromotionViewModelFactory(loyaltyAPIManager)).get(MyPromotionViewModel::class.java)
                 val voucherModel: VoucherViewModel= ViewModelProvider(this, VoucherViewModelFactory(loyaltyAPIManager)).get(VoucherViewModel::class.java)
@@ -65,11 +68,11 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                 MainScreenStart()
             }
         }
-        observeSessionExpiry()
-        observeLoginStatus(model)
+        observeSessionExpiry(onboardingModel)
+        observeLoginStatus(onboardingModel)
     }
 
-    private fun observeSessionExpiry() {
+    private fun observeSessionExpiry(model: OnboardingScreenViewModel) {
         ForceAuthManager.forceAuthManager.authenticationStatusLiveData.observe(this) { status ->
             if (ForceAuthManager.AuthenticationStatus.UNAUTHENTICATED == status) {
                 Logger.d(TAG, "observeSessionExpiry() status: $status")
