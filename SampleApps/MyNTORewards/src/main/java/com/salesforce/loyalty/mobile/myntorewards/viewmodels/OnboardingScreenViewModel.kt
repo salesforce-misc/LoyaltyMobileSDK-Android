@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.*
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthEncryptedPreference
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConfig
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConnectedAppEncryptedPreference
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
@@ -17,22 +20,17 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.EnrollmentChannel
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberStatus
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionalJournalStatementFrequency
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionalJournalStatementMethod
 import kotlinx.coroutines.launch
 
 
 //view model
-open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractInterface {
+open class OnboardingScreenViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), OnBoardingViewModelAbstractInterface {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
     //live data for login status
     override val loginStatusLiveData: LiveData<LoginState>
         get() = loginStatus
@@ -129,65 +127,6 @@ open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractI
         }
     }
 
-    //invoke enrollment API
-    /*
-    * Upon Success or Failure of Enrollment API Enrollment status will be updated
-    * Status is being updated in the form of Live data which is being observed inside EnrollementUI
-    * Based om status change State change will trigger and corresponding flow will be executed
-    * */
-    override fun enrollUser(
-        firstNameText: String,
-        lastNameText: String,
-        mobileNumberText: String,
-        emailAddressText: String,
-        passwordText: String,
-        confirmPasswordText: String,
-        mailCheckedState: Boolean,
-        tncCheckedState: Boolean,
-        context: Context
-    ) {
-        enrollmentStatus.value =
-            EnrollmentState.ENROLLMENT_SUCCESS
-        viewModelScope.launch {
-            var enrollmentResponse: EnrollmentResponse? = null
-            loyaltyAPIManager.postEnrollment(
-                firstNameText,
-                lastNameText,
-                emailAddressText,
-                null,
-                true,
-                MemberStatus.ACTIVE,
-                true,
-                TransactionalJournalStatementFrequency.MONTHLY,
-                TransactionalJournalStatementMethod.EMAIL,
-                EnrollmentChannel.EMAIL,
-                true,
-                true,
-            ).onSuccess {
-                enrollmentResponse = it
-                val communityMemberModel = CommunityMemberModel(
-                    firstName = firstNameText,
-                    lastName = lastNameText,
-                    email = emailAddressText,
-                    loyaltyProgramMemberId = it.loyaltyProgramMemberId,
-                    loyaltyProgramName = it.loyaltyProgramName,
-                    membershipNumber = it.membershipNumber
-                )
-                val member = Gson().toJson(communityMemberModel, CommunityMemberModel::class.java)
-                PrefHelper.customPrefs(context).set(KEY_COMMUNITY_MEMBER, member)
-            }
-                .onFailure {
-                    enrollmentStatus.value =
-                        EnrollmentState.ENROLLMENT_FAILURE   // enrollment state is being observed in Enrollment UI Composable
-                    Logger.d(TAG, "Enrollment request failed: ${it.message}")
-                }
-            if (enrollmentResponse != null) {
-                enrollmentStatus.value =
-                    EnrollmentState.ENROLLMENT_SUCCESS   // enrollment state is being observed in Enrollment UI Composable
-                Logger.d(TAG, "Enrollment request Success: $enrollmentResponse")
-            }
-        }
-    }
 
     override fun logoutAndClearAllSettings(context: Context) {
         logoutState.value = LogoutState.LOGOUT_IN_PROGRESS

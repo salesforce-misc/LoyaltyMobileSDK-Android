@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
@@ -16,22 +14,14 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitV
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefitsResponse
 import kotlinx.coroutines.launch
 
-class MembershipBenefitViewModel : ViewModel(), BenefitViewModelInterface {
+class MembershipBenefitViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), BenefitViewModelInterface {
 
     private val TAG = MembershipBenefitViewModel::class.java.simpleName
 
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
     //live data for login status
     override val membershipBenefitLiveData: LiveData<List<MemberBenefit>>
         get() = membershipBenefit
@@ -44,9 +34,10 @@ class MembershipBenefitViewModel : ViewModel(), BenefitViewModelInterface {
     private val viewState = MutableLiveData<BenefitViewStates>()
 
     override fun loadBenefits(context: Context, refreshRequired:Boolean) {
-        viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
+
 
         viewModelScope.launch {
+            viewState.postValue(BenefitViewStates.BenefitFetchInProgress)
             val memberJson =
                 PrefHelper.customPrefs(context)
                     .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)

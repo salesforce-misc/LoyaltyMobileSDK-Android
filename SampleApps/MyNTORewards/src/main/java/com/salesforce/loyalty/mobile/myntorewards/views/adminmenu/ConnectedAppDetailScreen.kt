@@ -36,7 +36,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ConnectedApp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModelFactory
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.ConnectedAppViewModelFactory
 
 @Composable
 fun ConnectedAppBar(

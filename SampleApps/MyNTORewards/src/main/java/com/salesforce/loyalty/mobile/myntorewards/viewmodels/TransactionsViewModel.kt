@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
@@ -16,20 +14,12 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.Transact
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionsResponse
 import kotlinx.coroutines.launch
 
-class TransactionsViewModel : ViewModel(), TransactionViewModelInterface {
+class TransactionsViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), TransactionViewModelInterface {
     private val TAG = TransactionsViewModel::class.java.simpleName
 
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
     //live data for transaction data
     override val transactionsLiveData: LiveData<TransactionsResponse>
         get() = transactions
@@ -80,8 +70,6 @@ class TransactionsViewModel : ViewModel(), TransactionViewModelInterface {
     }
 
     private fun getTransactions(context: Context, membershipNumber: String) {
-        viewState.postValue(TransactionViewState.TransactionFetchInProgress)
-
         viewModelScope.launch {
             membershipNumber?.let { membershipNumber ->
                 loyaltyAPIManager.getTransactions(membershipNumber, null, null, null, null, null)

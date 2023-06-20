@@ -41,7 +41,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.OutlineFieldT
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.PasswordTextField
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
-import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 //Login UI. getting triggered from Onboarding Screen or from Join UI bottom link
 

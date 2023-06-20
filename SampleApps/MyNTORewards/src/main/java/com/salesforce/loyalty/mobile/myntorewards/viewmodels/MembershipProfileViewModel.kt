@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
@@ -17,20 +15,11 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 import kotlinx.coroutines.launch
 
-class MembershipProfileViewModel : ViewModel(), MembershipProfileViewModelInterface {
+class MembershipProfileViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), MembershipProfileViewModelInterface {
     private val TAG = MembershipProfileViewModel::class.java.simpleName
-
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
 
     //live data for login status
     override val membershipProfileLiveData: LiveData<MemberProfileResponse?>
@@ -82,7 +71,6 @@ class MembershipProfileViewModel : ViewModel(), MembershipProfileViewModelInterf
     }
 
     private fun getMemberProfile(context: Context, memberId: String, membershipKey: String) {
-        viewState.postValue(MyProfileViewStates.MyProfileFetchInProgress)
 
         viewModelScope.launch {
             loyaltyAPIManager.getMemberProfile(memberId, membershipKey, null).onSuccess {

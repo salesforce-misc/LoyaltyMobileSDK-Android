@@ -13,17 +13,6 @@ interface OnBoardingViewModelAbstractInterface {
     fun resetEnrollmentStatusDefault()
     fun resetLoginStatusDefault()
     fun loginUser(emailAddressText: String, passwordText: String, context: Context)
-    fun enrollUser(
-        firstNameText: String,
-        lastNameText: String,
-        mobileNumberText: String,
-        emailAddressText: String,
-        passwordText: String,
-        confirmPasswordText: String,
-        mailCheckedState: Boolean,
-        tncCheckedState: Boolean,
-        context: Context
-    )
     fun logoutAndClearAllSettings(context: Context)
 
 }

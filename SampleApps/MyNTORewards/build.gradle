@@ -148,6 +148,11 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:2.7.15'
 
     testImplementation 'io.mockk:mockk:1.13.4'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+
+
+
 
 
 
