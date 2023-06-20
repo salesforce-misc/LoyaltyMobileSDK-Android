@@ -33,7 +33,7 @@ fun MainScreenStart() {
 
     val activity = LocalContext.current as LoyaltyAppBaseActivity
 
-    val onboardingModel: OnboardingScreenViewModel = viewModel()
+    val onboardingModel: OnboardingScreenViewModel= ViewModelProvider(activity, OnboardingScreenViewModelFactory(loyaltyAPIManager)).get(OnboardingScreenViewModel::class.java)
     val profileModel: MembershipProfileViewModel= ViewModelProvider(activity, ProfileViewModelFactory(loyaltyAPIManager)).get(MembershipProfileViewModel::class.java)
     val promotionModel: MyPromotionViewModel= ViewModelProvider(activity, MyPromotionViewModelFactory(loyaltyAPIManager)).get(MyPromotionViewModel::class.java)
     val voucherModel: VoucherViewModel= ViewModelProvider(activity, VoucherViewModelFactory(loyaltyAPIManager)).get(VoucherViewModel::class.java)

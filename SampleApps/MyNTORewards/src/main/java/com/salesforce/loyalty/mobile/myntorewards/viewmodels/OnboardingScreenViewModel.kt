@@ -23,16 +23,9 @@ import kotlinx.coroutines.launch
 
 
 //view model
-open class OnboardingScreenViewModel : ViewModel(), OnBoardingViewModelAbstractInterface {
+open class OnboardingScreenViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), OnBoardingViewModelAbstractInterface {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
-    private val mInstanceUrl =
-        ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    private val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-        ForceAuthManager.forceAuthManager,
-        mInstanceUrl,
-        LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
-    )
     //live data for login status
     override val loginStatusLiveData: LiveData<LoginState>
         get() = loginStatus

@@ -36,6 +36,7 @@ class SampleAppViewModelTest
     private lateinit var profileViewModel: MembershipProfileViewModel
     private lateinit var myPromotionViewModel: MyPromotionViewModel
     private lateinit var checkOutFlowViewModel: CheckOutFlowViewModel
+    private lateinit var onboardingScreenViewModel: OnboardingScreenViewModel
 
     private val loyaltyAPIManager: LoyaltyAPIManager = mockk()
     private val checkoutManager: CheckoutManager = mockk()
@@ -57,6 +58,7 @@ class SampleAppViewModelTest
     private lateinit var profileViewStates: MutableList<MyProfileViewStates>
     private lateinit var promoViewStates: MutableList<PromotionViewState>
     private lateinit var orderPlacedState: MutableList<OrderPlacedState>
+    private lateinit var loginState: MutableList<LoginState>
 
   /*  @get:Rule
     val rule = InstantTaskExecutorRule()*/
@@ -99,6 +101,12 @@ class SampleAppViewModelTest
         orderPlacedState = mutableListOf()
         checkOutFlowViewModel.orderPlacedStatusLiveData.observeForever {
             orderPlacedState.add(it)
+        }
+
+        onboardingScreenViewModel =  OnboardingScreenViewModel(loyaltyAPIManager)
+        loginState = mutableListOf()
+        onboardingScreenViewModel.loginStatusLiveData.observeForever {
+            loginState.add(it)
         }
 
     }
@@ -762,6 +770,35 @@ class SampleAppViewModelTest
             checkoutManager.getShippingMethods()
         }
         Assert.assertEquals(checkOutFlowViewModel.shippingDetailsLiveData.value, shippingMethod)
+    }
+
+    @Test
+    fun `for login failed`()
+    {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val sharedPrefsEditor =
+            mockk<SharedPreferences.Editor>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every{context.getSharedPreferences(any(),any())}
+            .returns(sharedPrefs)
+        every{sharedPrefs.getString(any(), any())}
+            .returns(mockResponse)
+
+
+        val value = Result.failure<MemberProfileResponse>(Exception("HTTP 401 Unauthorized"))
+        coEvery {
+            loyaltyAPIManager.getMemberProfile(any(), any(), any())
+        } returns value
+
+        profileViewModel.loadProfile(context , true)
+
+        coVerify {
+            loyaltyAPIManager.getMemberProfile(any(), any(), any())
+        }
+
+        Assert.assertEquals(MyProfileViewStates.MyProfileFetchInProgress, profileViewStates[0])
+        Assert.assertEquals(MyProfileViewStates.MyProfileFetchFailure, profileViewStates[1])
     }
 
 }

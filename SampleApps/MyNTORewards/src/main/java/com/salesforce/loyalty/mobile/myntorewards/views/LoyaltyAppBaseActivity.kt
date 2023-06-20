@@ -53,7 +53,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
                 )
 
-                val onboardingModel: OnboardingScreenViewModel = viewModel()
+                val onboardingModel: OnboardingScreenViewModel= ViewModelProvider(this, OnboardingScreenViewModelFactory(loyaltyAPIManager)).get(OnboardingScreenViewModel::class.java)
                 val profileModel: MembershipProfileViewModel= ViewModelProvider(this, ProfileViewModelFactory(loyaltyAPIManager)).get(MembershipProfileViewModel::class.java)
                 val promotionModel: MyPromotionViewModel= ViewModelProvider(this, MyPromotionViewModelFactory(loyaltyAPIManager)).get(MyPromotionViewModel::class.java)
                 val voucherModel: VoucherViewModel= ViewModelProvider(this, VoucherViewModelFactory(loyaltyAPIManager)).get(VoucherViewModel::class.java)
