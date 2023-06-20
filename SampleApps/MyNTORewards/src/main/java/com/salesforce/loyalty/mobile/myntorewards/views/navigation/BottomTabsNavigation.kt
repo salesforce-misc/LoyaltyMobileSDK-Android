@@ -69,7 +69,7 @@ fun TabNavigation(
             }
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            PromotionScreenAndCheckOutFlowNavigation(promotionModel, voucherModel, checkOutFlowViewModel) {
+            PromotionScreenAndCheckOutFlowNavigation(promotionModel, voucherModel, checkOutFlowViewModel, profileModel) {
                 showBottomBar(it)
             }
         }

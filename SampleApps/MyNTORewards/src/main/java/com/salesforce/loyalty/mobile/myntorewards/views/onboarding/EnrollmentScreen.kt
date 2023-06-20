@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views
+package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
 
 import android.widget.Toast
@@ -20,20 +20,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.EnrollmentState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OnboardingScreenViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.CheckBoxMailingList
+import com.salesforce.loyalty.mobile.myntorewards.views.CheckBoxTnC
+import com.salesforce.loyalty.mobile.myntorewards.views.PopupHeader
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 
 @Composable
-fun JoinWithTermsAndConditions(closeSheet: () -> Unit, navController: NavController) {
+fun JoinWithTermsAndConditions(
+    closeSheet: () -> Unit,
+    navController: NavController,
+    model: OnBoardingViewModelAbstractInterface
+) {
     var tncCheckedState by remember { mutableStateOf(false) }
     var mailCheckedState by remember { mutableStateOf(false) }
     Column(
@@ -53,7 +59,6 @@ fun JoinWithTermsAndConditions(closeSheet: () -> Unit, navController: NavControl
             var isInProgress by remember { mutableStateOf(false) }
             var isJoinClicked by remember { mutableStateOf(false) }
             val context = LocalContext.current
-            val model: OnboardingScreenViewModel = viewModel() // fetching view mode reference
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier

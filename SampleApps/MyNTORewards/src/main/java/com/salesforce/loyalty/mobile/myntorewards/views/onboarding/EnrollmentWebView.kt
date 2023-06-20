@@ -35,11 +35,12 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.WebUtility
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EnrollmentWebView(
-    url: String,
+    model: OnBoardingViewModelAbstractInterface,
     openPopup: (popupStatus: BottomSheetType) -> Unit,
     closeSheet: () -> Unit
 ) {
@@ -92,17 +93,20 @@ fun EnrollmentWebView(
         Box(modifier = Modifier.fillMaxWidth()) {
             Divider(color = Color.LightGray, thickness = 1.dp)
         }
-
-            LoadWebUrl(url = url, openPopup = openPopup)
+        LoadWebUrl(model, openPopup = openPopup)
     }
 }
 
 @Composable
-fun LoadWebUrl(url: String, openPopup: (popupStatus: BottomSheetType) -> Unit) {
+fun LoadWebUrl(
+    model: OnBoardingViewModelAbstractInterface,
+    openPopup: (popupStatus: BottomSheetType) -> Unit
+) {
     val context = LocalContext.current
     var isInProgress by remember { mutableStateOf(false) }
-    val redirectUrl =
-        ForceAuthManager.forceAuthManager.getConnectedApp().communityUrl + AppConstants.SELF_REGISTER_REDIRECT_URL_PATH
+    val url = model.getSelfRegisterUrl()
+    val redirectUrl = model.getSelfRegisterRedirectUrl()
+
     val isUrlValid = URLUtil.isValidUrl(url)
     Box(
         modifier = Modifier

@@ -28,7 +28,10 @@ import kotlinx.coroutines.launch
 
 
 //view model
-open class OnboardingScreenViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), OnBoardingViewModelAbstractInterface {
+open class OnboardingScreenViewModel(
+    private val loyaltyAPIManager: LoyaltyAPIManager,
+    val forceAuthManager: ForceAuthManager
+) : ViewModel(), OnBoardingViewModelAbstractInterface {
     private val TAG = OnboardingScreenViewModel::class.java.simpleName
 
     //live data for login status
@@ -65,9 +68,9 @@ open class OnboardingScreenViewModel(private val loyaltyAPIManager: LoyaltyAPIMa
         Logger.d(TAG, "email: " + emailAddressText + "password: " + passwordText)
         loginStatus.value = LoginState.LOGIN_IN_PROGRESS
         viewModelScope.launch {
-            val connectedApp = ForceAuthManager.forceAuthManager.getConnectedApp()
+            val connectedApp = forceAuthManager.getConnectedApp()
             var accessTokenResponse: String? = null
-            accessTokenResponse = ForceAuthManager.forceAuthManager.authenticate(
+            accessTokenResponse = forceAuthManager.authenticate(
                 communityUrl = connectedApp.communityUrl,
                 consumerKey = connectedApp.consumerKey,
                 callbackUrl = connectedApp.callbackUrl,
@@ -131,7 +134,7 @@ open class OnboardingScreenViewModel(private val loyaltyAPIManager: LoyaltyAPIMa
     override fun logoutAndClearAllSettings(context: Context) {
         logoutState.value = LogoutState.LOGOUT_IN_PROGRESS
         viewModelScope.launch {
-            ForceAuthManager.forceAuthManager.revokeAccessToken()
+            forceAuthManager.revokeAccessToken()
             // clear Shared Preferences
             ForceAuthEncryptedPreference.clearAll(context)
             ForceConnectedAppEncryptedPreference.clearAll(context)
@@ -143,12 +146,12 @@ open class OnboardingScreenViewModel(private val loyaltyAPIManager: LoyaltyAPIMa
         }
     }
 
-    fun joinUser(email: String, context: Context) {
+    override fun joinUser(email: String, context: Context) {
         Logger.d(TAG, "joinUser()")
         enrollmentStatus.value = EnrollmentState.ENROLLMENT_IN_PROGRESS
         viewModelScope.launch {
             val contactRecord =
-                ForceAuthManager.forceAuthManager.getFirstNameLastNameFromContactEmail(email)
+                forceAuthManager.getFirstNameLastNameFromContactEmail(email)
             contactRecord?.let {
                 val firstName = it.firstName ?:""
                 val lastName = it.lastName ?: ""
@@ -213,5 +216,13 @@ open class OnboardingScreenViewModel(private val loyaltyAPIManager: LoyaltyAPIMa
                     }
             }
         }
+    }
+
+    override fun getSelfRegisterUrl(): String {
+        return forceAuthManager.getConnectedApp().selfRegisterUrl
+    }
+
+    override fun getSelfRegisterRedirectUrl(): String {
+        return forceAuthManager.getConnectedApp().communityUrl + AppConstants.SELF_REGISTER_REDIRECT_URL_PATH
     }
 }

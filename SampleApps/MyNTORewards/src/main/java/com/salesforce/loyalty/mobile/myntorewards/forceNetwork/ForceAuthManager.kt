@@ -17,11 +17,7 @@ import java.net.HttpURLConnection
 /**
  * ForceAuthManager class handles authentication of Salesforce credentials
  */
-object ForceAuthManager: ForceAuthenticator {
-
-    lateinit var forceAuthManager: ForceAuthManager
-
-    lateinit var mContext: Context
+class ForceAuthManager(val mContext: Context): ForceAuthenticator {
 
     enum class AuthenticationStatus {
         AUTHENTICATED,
@@ -30,18 +26,11 @@ object ForceAuthManager: ForceAuthenticator {
 
     private val authenticationStatus = MutableLiveData<AuthenticationStatus>()
     val authenticationStatusLiveData: LiveData<AuthenticationStatus> = authenticationStatus
-
-    fun getInstance(context: Context): ForceAuthManager {
-        if (!::forceAuthManager.isInitialized) {
-            mContext = context
-            forceAuthManager = ForceAuthManager
-        }
-        return forceAuthManager
+    companion object {
+        private const val TAG = "ForceAuthManager"
+        private const val AUTH_SCOPE = "api refresh_token"
+        private const val RESPONSE_TYPE_VALUE = "code_credentials"
     }
-
-    private const val TAG = "ForceAuthManager"
-    private const val AUTH_SCOPE = "api refresh_token"
-    private const val RESPONSE_TYPE_VALUE = "code_credentials"
 
     var auth: ForceAuth? = null
     override fun getAccessToken(): String? {

@@ -14,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.*
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
@@ -34,44 +35,91 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
 
-        ForceAuthManager.getInstance(applicationContext)
+        val forceAuthManager = ForceAuthManager(applicationContext)
         val loginSuccess = PrefHelper.customPrefs(applicationContext)
             .get(AppConstants.KEY_LOGIN_SUCCESSFUL, false)
 
         val mInstanceUrl =
-            ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-        val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
-            ForceAuthManager.forceAuthManager,
+            forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        val loyaltyAPIManager = LoyaltyAPIManager(
+            forceAuthManager,
             mInstanceUrl,
-            LoyaltyClient(ForceAuthManager.forceAuthManager, mInstanceUrl)
+            LoyaltyClient(forceAuthManager, mInstanceUrl)
         )
-        val onboardingModel: OnboardingScreenViewModel = ViewModelProvider(this, OnboardingScreenViewModelFactory(loyaltyAPIManager)).get(OnboardingScreenViewModel::class.java)
+        val onboardingModel: OnboardingScreenViewModel =
+            ViewModelProvider(
+                this,
+                OnboardingScreenViewModelFactory(loyaltyAPIManager, forceAuthManager)
+            ).get(
+                OnboardingScreenViewModel::class.java
+            )
+        val profileModel: MembershipProfileViewModel =
+            ViewModelProvider(this, ProfileViewModelFactory(loyaltyAPIManager)).get(
+                MembershipProfileViewModel::class.java
+            )
+        val promotionModel: MyPromotionViewModel =
+            ViewModelProvider(this, MyPromotionViewModelFactory(loyaltyAPIManager)).get(
+                MyPromotionViewModel::class.java
+            )
+        val voucherModel: VoucherViewModel = ViewModelProvider(
+            this,
+            VoucherViewModelFactory(loyaltyAPIManager)
+        ).get(VoucherViewModel::class.java)
+        val benefitModel: MembershipBenefitViewModel =
+            ViewModelProvider(this, BenefitViewModelFactory(loyaltyAPIManager)).get(
+                MembershipBenefitViewModel::class.java
+            )
+        val transactionModel: TransactionsViewModel =
+            ViewModelProvider(this, TransactionViewModelFactory(loyaltyAPIManager)).get(
+                TransactionsViewModel::class.java
+            )
+
+        val checkoutManager: CheckoutManager = CheckoutManager(
+            forceAuthManager,
+            forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        )
+        val checkoutFlowModel: CheckOutFlowViewModel =
+            ViewModelProvider(this, CheckOutFlowViewModelFactory(checkoutManager)).get(
+                CheckOutFlowViewModel::class.java
+            )
 
         setContent {
             if (loginSuccess == true) {
-
-                val checkoutManager: CheckoutManager = CheckoutManager(
-                    ForceAuthManager.forceAuthManager,
-                    ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+                HomeTabScreen(
+                    profileModel,
+                    promotionModel,
+                    voucherModel,
+                    onboardingModel,
+                    benefitModel,
+                    transactionModel,
+                    checkoutFlowModel
                 )
-
-                val profileModel: MembershipProfileViewModel= ViewModelProvider(this, ProfileViewModelFactory(loyaltyAPIManager)).get(MembershipProfileViewModel::class.java)
-                val promotionModel: MyPromotionViewModel= ViewModelProvider(this, MyPromotionViewModelFactory(loyaltyAPIManager)).get(MyPromotionViewModel::class.java)
-                val voucherModel: VoucherViewModel= ViewModelProvider(this, VoucherViewModelFactory(loyaltyAPIManager)).get(VoucherViewModel::class.java)
-                val benefitModel: MembershipBenefitViewModel= ViewModelProvider(this, BenefitViewModelFactory(loyaltyAPIManager)).get(MembershipBenefitViewModel::class.java)
-                val transactionModel: TransactionsViewModel= ViewModelProvider(this, TransactionViewModelFactory(loyaltyAPIManager)).get(TransactionsViewModel::class.java)
-                val checkoutFlowModel: CheckOutFlowViewModel= ViewModelProvider(this, CheckOutFlowViewModelFactory(checkoutManager)).get(CheckOutFlowViewModel::class.java)
-                HomeTabScreen(profileModel, promotionModel, voucherModel, onboardingModel, benefitModel, transactionModel, checkoutFlowModel)
             } else {
-                MainScreenStart()
+                MainScreenStart(
+                    profileModel,
+                    promotionModel,
+                    voucherModel,
+                    onboardingModel,
+                    benefitModel,
+                    transactionModel,
+                    checkoutFlowModel
+                )
             }
         }
-        observeSessionExpiry(onboardingModel)
-        observeLoginStatus(onboardingModel)
+        observeSessionExpiry(onboardingModel, forceAuthManager)
+        observeLoginStatus(
+            profileModel,
+            promotionModel,
+            voucherModel,
+            onboardingModel,
+            benefitModel,
+            transactionModel,
+            checkoutFlowModel
+        )
     }
 
-    private fun observeSessionExpiry(model: OnboardingScreenViewModel) {
-        ForceAuthManager.forceAuthManager.authenticationStatusLiveData.observe(this) { status ->
+    private fun observeSessionExpiry(model: OnboardingScreenViewModel, forceAuthManager: ForceAuthManager) {
+        forceAuthManager.authenticationStatusLiveData.observe(this) { status ->
             if (ForceAuthManager.AuthenticationStatus.UNAUTHENTICATED == status) {
                 Logger.d(TAG, "observeSessionExpiry() status: $status")
                 model.logoutAndClearAllSettings(applicationContext)
@@ -79,14 +127,29 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         }
     }
 
-    private fun observeLoginStatus(model: OnboardingScreenViewModel) {
-        model.logoutStateLiveData.observe(this) { logoutState ->
+    private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
+                                   promotionModel: MyPromotionViewModelInterface,
+                                   voucherModel: VoucherViewModelInterface,
+                                   onboardingModel: OnBoardingViewModelAbstractInterface,
+                                   benefitModel: BenefitViewModelInterface,
+                                   transactionModel: TransactionViewModelInterface,
+                                   checkoutFlowModel: CheckOutFlowViewModelInterface
+    ) {
+        onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
             run {
                 if (LogoutState.LOGOUT_SUCCESS == logoutState) {
                     Logger.d(TAG, "observeLoginStatus() logout success")
                     setContent {
                         rememberNavController().clearBackStack(0)
-                        MainScreenStart()
+                        MainScreenStart(
+                            profileModel,
+                            promotionModel,
+                            voucherModel,
+                            onboardingModel,
+                            benefitModel,
+                            transactionModel,
+                            checkoutFlowModel
+                        )
                     }
                 }
             }

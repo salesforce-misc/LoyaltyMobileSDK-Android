@@ -17,8 +17,14 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 
 @Composable
-fun MainScreenStart() {
-    val mInstanceUrl =
+fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
+                    promotionModel: MyPromotionViewModelInterface,
+                    voucherModel: VoucherViewModelInterface,
+                    onboardingModel: OnBoardingViewModelAbstractInterface,
+                    benefitModel: BenefitViewModelInterface,
+                    transactionModel: TransactionViewModelInterface,
+                    checkoutFlowModel: CheckOutFlowViewModelInterface) {
+/*    val mInstanceUrl =
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     val loyaltyAPIManager: LoyaltyAPIManager = LoyaltyAPIManager(
         ForceAuthManager.forceAuthManager,
@@ -28,9 +34,9 @@ fun MainScreenStart() {
     val checkoutManager: CheckoutManager = CheckoutManager(
         ForceAuthManager.forceAuthManager,
         ForceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    )
+    )*/
 
-    val activity = LocalContext.current as LoyaltyAppBaseActivity
+/*    val activity = LocalContext.current as LoyaltyAppBaseActivity
 
     val onboardingModel: OnboardingScreenViewModel= ViewModelProvider(activity, OnboardingScreenViewModelFactory(loyaltyAPIManager)).get(OnboardingScreenViewModel::class.java)
     val profileModel: MembershipProfileViewModel= ViewModelProvider(activity, ProfileViewModelFactory(loyaltyAPIManager)).get(MembershipProfileViewModel::class.java)
@@ -38,7 +44,7 @@ fun MainScreenStart() {
     val voucherModel: VoucherViewModel= ViewModelProvider(activity, VoucherViewModelFactory(loyaltyAPIManager)).get(VoucherViewModel::class.java)
     val benefitModel: MembershipBenefitViewModel= ViewModelProvider(activity, BenefitViewModelFactory(loyaltyAPIManager)).get(MembershipBenefitViewModel::class.java)
     val transactionModel: TransactionsViewModel= ViewModelProvider(activity, TransactionViewModelFactory(loyaltyAPIManager)).get(TransactionsViewModel::class.java)
-    val checkoutFlowModel: CheckOutFlowViewModel= ViewModelProvider(activity, CheckOutFlowViewModelFactory(checkoutManager)).get(CheckOutFlowViewModel::class.java)
+    val checkoutFlowModel: CheckOutFlowViewModel= ViewModelProvider(activity, CheckOutFlowViewModelFactory(checkoutManager)).get(CheckOutFlowViewModel::class.java)*/
 
     Navigation(
         profileModel,
