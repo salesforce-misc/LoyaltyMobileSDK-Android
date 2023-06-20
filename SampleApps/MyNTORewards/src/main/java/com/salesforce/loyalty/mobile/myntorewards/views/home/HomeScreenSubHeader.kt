@@ -44,8 +44,7 @@ fun HomeSubViewHeader(headingId: Int, bottomTabsNavController: NavController) {
             textAlign = TextAlign.Center,
             fontSize = 13.sp,
             modifier = Modifier.clickable {
-                bottomTabsNavController.navigate(BottomNavTabs.MyOffers.route)
-            }
+                bottomTabsNavController.navigate(BottomNavTabs.MyOffers.route) }
         )
-    }
+}
 }

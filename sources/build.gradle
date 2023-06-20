@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 apply from: "$project.rootDir/jacoco.gradle"
+apply plugin: "org.jetbrains.dokka"
 
 android {
     namespace 'com.salesforce.loyalty.mobile.sources'
@@ -40,6 +41,7 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
 }
 
 dependencies {
@@ -79,4 +81,18 @@ dependencies {
 
     //Mockk
     testImplementation "io.mockk:mockk:1.12.4"
+}
+
+tasks.named("dokkaJavadoc") {
+    outputDirectory.set(file("$rootProject.projectDir/docs/"))
+}
+
+dokkaJavadoc.configure {
+    dokkaSourceSets {
+        named("main") {
+            includeNonPublic.set(true)
+            skipDeprecated.set(true)
+            skipEmptyPackages.set(true)
+        }
+    }
 }

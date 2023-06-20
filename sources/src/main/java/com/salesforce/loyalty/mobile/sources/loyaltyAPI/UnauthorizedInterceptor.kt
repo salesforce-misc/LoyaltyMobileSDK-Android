@@ -46,6 +46,13 @@ class UnauthorizedInterceptor(auth: ForceAuthenticator) : Interceptor {
         return response
     }
 
+    /**
+     * Adds Authorization header to the request.
+     *
+     * @param accessToken The value of access token that has to be added to the header.
+     * @param request The request to which the authorization header has to be added.
+     * @return New [Request] with Authorization header added.
+     */
     private fun newRequestWithAccessToken(accessToken: String?, request: Request): Request {
         val bearerTokenValue = BEARER_HEADER + accessToken
         return request.newBuilder()

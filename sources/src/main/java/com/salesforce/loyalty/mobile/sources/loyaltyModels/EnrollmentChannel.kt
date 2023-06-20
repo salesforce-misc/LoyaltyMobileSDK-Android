@@ -7,6 +7,9 @@
 
 package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
+/**
+ * Enum that holds the values of channels used by loyalty program member to enroll in to the loyalty program.
+ */
 enum class EnrollmentChannel(val channel: String) {
     POS("Pos"),
     WEB("Web"),

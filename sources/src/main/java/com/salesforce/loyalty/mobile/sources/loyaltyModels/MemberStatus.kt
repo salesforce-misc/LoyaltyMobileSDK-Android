@@ -7,6 +7,9 @@
 
 package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
+/**
+ * Enum class that holds the status of the loyalty program member.
+ */
 enum class MemberStatus(val status: String) {
     ACTIVE("Active"),
     INACTIVE("Inactive"),

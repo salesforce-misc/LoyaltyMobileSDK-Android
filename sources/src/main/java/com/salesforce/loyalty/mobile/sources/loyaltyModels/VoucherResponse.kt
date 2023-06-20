@@ -9,6 +9,9 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * VoucherResult data class holds response parameters of Get Vouchers API.
+ */
 data class VoucherResponse(
     @SerializedName("voucherId")
     val id: String?,

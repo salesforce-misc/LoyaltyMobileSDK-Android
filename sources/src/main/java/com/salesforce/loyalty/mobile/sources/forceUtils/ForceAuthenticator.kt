@@ -7,8 +7,23 @@
 
 package com.salesforce.loyalty.mobile.sources.forceUtils
 
+/**
+ * An interface that defines the necessary methods for handling access tokens in the Salesforce API.
+ */
 interface ForceAuthenticator {
+
+    /**
+     * Get a valid access token.
+     *
+     * @return A valid access token as a String if available, otherwise null.
+     */
     fun getAccessToken(): String?
+
+    /**
+     * Grant (or refresh) an access token.
+     *
+     * @return A refreshed or newly granted access token as a String.
+     */
     suspend fun grantAccessToken(): String?
 
 }

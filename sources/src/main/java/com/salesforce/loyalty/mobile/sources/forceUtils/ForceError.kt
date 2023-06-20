@@ -8,7 +8,7 @@
 package com.salesforce.loyalty.mobile.sources.forceUtils
 
 /**
- * ForceError class is an enum class that holds various error cases.
+ * ForceError class is an enum class that holds various common error cases.
  */
 enum class ForceError(val customDescription: String) {
     REQUEST_FAILED("Request Failed Error"),
