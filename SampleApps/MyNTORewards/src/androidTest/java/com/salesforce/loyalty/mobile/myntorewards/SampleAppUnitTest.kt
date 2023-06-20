@@ -448,7 +448,7 @@ private fun getOnBoardingMockViewModel(): OnBoardingViewModelAbstractInterface {
             loginStatus.value = LoginState.LOGIN_SUCCESS
         }
 
-        override fun enrollUser(
+        fun enrollUser(
             firstNameText: String,
             lastNameText: String,
             mobileNumberText: String,
@@ -464,6 +464,18 @@ private fun getOnBoardingMockViewModel(): OnBoardingViewModelAbstractInterface {
 
         override fun logoutAndClearAllSettings(context: Context) {
 
+        }
+
+        override fun joinUser(email: String, context: Context) {
+            enrollmentStatus.value = EnrollmentState.ENROLLMENT_SUCCESS
+        }
+
+        override fun getSelfRegisterUrl(): String {
+            return ""
+        }
+
+        override fun getSelfRegisterRedirectUrl(): String {
+            return ""
         }
 
     }
