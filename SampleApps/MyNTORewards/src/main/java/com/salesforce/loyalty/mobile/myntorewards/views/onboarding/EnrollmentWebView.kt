@@ -1,9 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Bitmap
-import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -33,12 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.WebUtility
-import com.salesforce.loyalty.mobile.myntorewards.views.PopupHeader
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

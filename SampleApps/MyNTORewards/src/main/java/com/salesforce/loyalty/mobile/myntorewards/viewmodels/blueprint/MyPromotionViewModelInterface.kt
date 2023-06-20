@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.PromotionEnrollmentUpdateState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 interface MyPromotionViewModelInterface {
     val membershipPromotionLiveData: LiveData<PromotionsResponse>

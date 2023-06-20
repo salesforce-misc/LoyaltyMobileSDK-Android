@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.*
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthEncryptedPreference
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConfig
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConnectedAppEncryptedPreference
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
@@ -17,8 +20,10 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.EnrollmentChannel
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberStatus
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionalJournalStatementFrequency
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.TransactionalJournalStatementMethod
 import kotlinx.coroutines.launch
 
 
