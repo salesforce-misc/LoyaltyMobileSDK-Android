@@ -95,9 +95,10 @@ fun SelectedConnectedApp(navController: NavController) {
 
         val context: Context = LocalContext.current
         val model: ConnectedAppViewModel =
-            viewModel(factory = ConnectedAppViewModelFactory(context))  //fetching reference of viewmodel
+            viewModel(factory = ConnectedAppViewModelFactory())  //fetching reference of viewmodel
         // collecting livedata as state
         val connectedApps by model.savedAppsLiveData.observeAsState()
+        model.getSelectedApp(context)
         val selectedInstanceUrl by model.selectedInstanceLiveData.observeAsState()
 
         LaunchedEffect(Unit) {
@@ -286,6 +287,7 @@ fun SelectedConnectedApp(navController: NavController) {
                                                         ) {
                                                             app.instanceUrl?.let { instance ->
                                                                 model.setSelectedApp(
+                                                                    context,
                                                                     instance
                                                                 )
                                                             }
