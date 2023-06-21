@@ -131,5 +131,5 @@
     <string name="heading_register">Register</string>
     <string name="label_empty_self_reg">Self Registration Not Available</string>
     <string name="description_empty_self_reg">Sorry, we\'re having some technical difficulties and self registration is not available.</string>
-
+    <string name="label_app_version">App Version </string>
 </resources>

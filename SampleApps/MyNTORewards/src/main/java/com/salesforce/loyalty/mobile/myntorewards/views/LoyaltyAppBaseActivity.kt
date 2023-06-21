@@ -42,9 +42,9 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         val mInstanceUrl =
             forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
         val loyaltyAPIManager = LoyaltyAPIManager(
-            forceAuthManager,
-            mInstanceUrl,
-            LoyaltyClient(forceAuthManager, mInstanceUrl)
+            auth = forceAuthManager,
+            instanceUrl = mInstanceUrl,
+            loyaltyClient = LoyaltyClient(forceAuthManager, mInstanceUrl)
         )
         val onboardingModel: OnboardingScreenViewModel =
             ViewModelProvider(
