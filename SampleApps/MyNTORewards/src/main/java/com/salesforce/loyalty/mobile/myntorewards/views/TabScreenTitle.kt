@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 @Composable
 fun ScreenTabHeader() {
@@ -19,6 +20,7 @@ fun ScreenTabHeader() {
         text = stringResource(id = R.string.screen_title_my_profiles),
         fontWeight = FontWeight.Bold,
         color = Color.Black,
+        fontFamily = font_sf_pro,
         textAlign = TextAlign.Start,
         fontSize = 24.sp,
         modifier = Modifier

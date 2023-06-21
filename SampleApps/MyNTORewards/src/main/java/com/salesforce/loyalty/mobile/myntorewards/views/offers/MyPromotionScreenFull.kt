@@ -104,7 +104,6 @@ fun MyPromotionScreen(navCheckOutFlowController: NavController) {
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .background(LightPurple)
-                    .padding(bottom = 16.dp)
                     .pullRefresh(state)
             ) {
                 Spacer(
@@ -227,14 +226,13 @@ fun MyPromotionScreenHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
-            .padding(top = 13.dp),
+            .background(Color.White),
 
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Top
 
     ) {
-        Text(
+      Text(
             text = stringResource(id = R.string.text_my_promotions),
             fontWeight = FontWeight.Bold,
             fontFamily = font_sf_pro,
