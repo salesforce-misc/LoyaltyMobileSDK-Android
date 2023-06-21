@@ -14,36 +14,29 @@ Enhance brand engagement by providing Loyalty Management features on your Androi
 
 | Tool or Component | Supported Version | Installation Details                             |
 |-------------------|-------------------|--------------------------------------------------|
-| Kotlin Version    | 5.7+              | Installed by Android Studio                      |
-| Android Studio    | 14.0+             | Install from the Official Android Developer site |
-| Compose version   | 5.7+              | Included as a dependency in gradle file          |
+| Kotlin Version    | 1.8.0             | Installed by Android Studio                      |
+| Android Studio    | Electric Eel      | Install from the Official Android Developer site |
 
 ### Installation
 
 To integrate Loyalty Management Mobile SDK for Android with your Android project, add it as a package dependency.
 
-1. With your app project open in Xcode, select **File** → **Swift Packages** → **Add Package Dependency**.
-2. Enter the repository URL: `https://github.com/salesforce-misc/LoyaltyMobileSDK-iOS`
-3. Select a version, and click **Add Package**.
+In the Android Project gradle file, add the following lines:
+   `dependencies {
+      implementation fileTree(dir: 'libs', include: ['*.jar'])
+      implementation project(path: ':Sources')
+    }`
 
-## Import SDK in an iOS Swift Project
 
-Automatically download and manage external dependencies. To import Loyalty Management Mobile SDK for iOS, open the swift file where you want to save LoyaltyMobileSDK, and to the first line of code, add:
+## Import SDK in an Android Project
 
-```swift
-import LoyaltyMobileSDK
-```
+Adding the above lines in gradle file will automatically download and manage the external dependencies.
+Start using the SDK files by importing the appropriate SDK package.
 
-## ForceSwift
-
-ForceSwift is a library that uses SwiftUI to build user interfaces in iOS apps while interacting with Salesforce. ForceSwift provides tools, structures, classes, and utilities that make it easier to perform common operations, such as authentication and network requests. Key components of ForceSwift include:
-
-- `ForceAPI` - A struct that generates the path for API endpoints, based on the API name and version.
-- `ForceAuthenticator` - A  protocol that defines the required methods for handling access tokens in Salesforce API.
-- `ForceClient` - A class that handles network requests with authentication by using `ForceAuthenticator`. This class provides methods to fetch data from Salesforce API or a local JSON file.
-- `ForceRequest` - A struct to help create and configure URLRequest instances. It provides utility functions to create requests with a URL, add query parameters, and set authorization.
-- `NetworkManagerProtocol` - A protocol that defines the requirements for a network manager.
-- `NetworkManager` - A class that handles network requests and data processing. This class conforms to the NetworkManagerProtocol and provides a method to fetch and decode the data into the specified type.
+`import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
+ import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator`
 
 ## LoyaltyAPIManager
 
@@ -58,28 +51,33 @@ The `LoyaltyAPIManager` class manages requests related to loyalty programs using
     - Member Vouchers
     - Transaction History
     - Opt Out from a Promotion
-- Support both live API calls and local JSON file fetch for development mode.
-- Manage asynchronous requests by using Swift Aync/Await syntax.
+- Manage asynchronous requests by using Retrofit and Kotlin coroutines.
 
 ### Usage
 
 1. Create an instance of `LoyaltyAPIManager` with the necessary parameters:
 
-```swift
-let loyaltyAPIManager = LoyaltyAPIManager(auth: forceAuthenticator, loyaltyProgramName: "YourLoyaltyProgramName", instanceURL: "YourInstanceURL", forceClient: forceClient)
 ```
+val loyaltyAPIManager = LoyaltyAPIManager(
+            auth = forceAuthManager,
+            instanceUrl = mInstanceUrl,
+            loyaltyClient = LoyaltyClient(forceAuthManager, mInstanceUrl)
+        )```
 
 2. Call the appropriate methods to interact with the Loyalty Management API:
 
-```swift
+```Kotlin
 import LoyaltyMobileSDK
 
-let instanceURL = URL(string: "https://your_salesforce_instance_url")!
-let loyaltyProgramName = "YourLoyaltyProgramName"
-let forceClient = ForceClient(clientId: "your_client_id", clientSecret: "your_client_secret", redirectURI: "your_redirect_uri")
-
-let loyaltyAPIManager = LoyaltyAPIManager(instanceURL: instanceURL, loyaltyProgramName: loyaltyProgramName, forceClient: forceClient)
-
+val forceAuthManager = ForceAuthManager(applicationContext)
+val mInstanceUrl =
+            forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+val loyaltyAPIManager = LoyaltyAPIManager(
+            auth = forceAuthManager,
+            instanceUrl = mInstanceUrl,
+            loyaltyClient = LoyaltyClient(forceAuthManager, mInstanceUrl)
+        )         
+        
 // Enroll Members
 let membershipNumber = "1234567890"
 let firstName = "John"
@@ -88,80 +86,57 @@ let email = "john.doe@example.com"
 let phone = "4157891234"
 let emailNotification = true
 
-let enrollmentOutput = try await loyaltyAPIManager.postEnrollment(
-    membershipNumber: membershipNumber,
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    phone: phone,
-    emailNotification: emailNotification
-)
+loyaltyAPIManager.postEnrollment(
+                    firstName = firstName,
+                    lastName = lastName,
+                    email = email,
+                    additionalContactAttributes = mapof("phone" to phone),
+                    emailNotification = emailNotification,
+                    memberStatus = MemberStatus.ACTIVE,
+                    createTransactionJournals = true,
+                    transactionJournalStatementFrequency = TransactionalJournalStatementFrequency.MONTHLY,
+                    transcationJournalStatementMethod = TransactionalJournalStatementMethod.EMAIL,
+                    enrollmentChannel = EnrollmentChannel.EMAIL,
+                    canReceivePromotions = true,
+                    canReceivePartnerPromotions = true
+                )
 
 // Retrieve the member benefits
-let benefits = try await loyaltyAPIManager.getMemberBenefits(for: "memberId")
+loyaltyAPIManager.getMemberBenefits(memberId = null, membershipKey = "1234567890")
 
 // Retrieve the member profile
-let profile = try await loyaltyAPIManager.getMemberProfile(for: "memberId")
-
-// Retrive the community member profile
-let communityProfile = try await loyaltyAPIManager.getCommunityMemberProfile()
+loyaltyAPIManager.getMemberProfile(memberId = null, membershipKey = "1234567890", programCurrencyName = null)
 
 // Opt in a promotion for member
-try await loyaltyAPIManager.enrollIn(promotion: "PromotionName", for: "1234567890")
+loyaltyAPIManager.enrollInPromotions(membershipNumber = "1234567890", promotionName = "PromotionName")
 
 // Opt out a member from a promotion using promotion ID or promotion name
-try await loyaltyAPIManager.unenroll(promotionId: "promotionId", for: "1234567890")
-try await loyaltyAPIManager.unenroll(promotionName: "PromotionName", for: "1234567890")
+loyaltyAPIManager.unEnrollPromotion(membershipNumber = "1234567890", promotionName = "PromotionName")
 
 // Retrieve loyalty member transactions
-let transactions = try await loyaltyAPIManager.getTransactions(for: "1234567890")
+loyaltyAPIManager.getTransactions(membershipNumber = "1234567890", pageNumber = null, 
+            journalTypeName = null, journalSubTypeName = null, periodStartDate = null, periodEndDate = null)
 
 // Retrieve promotions for a loyalty member
-let promotions = try await loyaltyAPIManager.getPromotions(membershipNumber: "1234567890")
+loyaltyAPIManager.getEligiblePromotions(membershipKey = "1234567890", memberId = null)
 
 // Retrieve vouchers for a loyalty member
-let vouchers = try await loyaltyAPIManager.getVouchers(membershipNumber: "1234567890")
-
+loyaltyAPIManager.getVouchers(
+                membershipKey = "1234567890", vouchreStatus = null, pageNumber = 1, productId = null,
+                productCategoryId = null, productName = null, productCategoryName = null
+            )
 ```
 
 For a detailed understanding of each method and its parameters, please refer to the comments in the provided `LoyaltyAPIManager` code.
 
-## Test the Loyalty Management Mobile SDK for iOS and Sample App
+## Test the Loyalty Management Mobile SDK for Android and Sample App
 
-Run the `run_tests.sh` script from the command line to test the LoyaltyMobileSDK-iOS and the sample app. To ensure that the script is executable, run the `chmod +x run_tests.sh` script. The script provides these capabilities.
-- Verifies if `xcpretty` is installed, which is a formatter for xcodebuild and makes the output more readable. If not installed, install `xcpretty` by using the code `gem install xcpretty`.
-- Determines the tests to run and whether the tests save the logs and reports.
-  Runs tests for the specified schemes and test targets. Also provides options to customize the test run. To customize the `run_tests.sh` script, choose from these options:
-    - `-full`: Run all tests for the SDK and the sample app.
-    - `-sdkOnly`: Run only the SDK tests.
-    - `-appOnly`: Run only the sample app tests.
-    - `-log`: Save the test output to a log file in the `build/TestRun_TIMESTAMP` directory.
-    - `-report`: Save test reports as HTML files in the `build/TestRun_TIMESTAMP` directory.
-
-### Examples
-
-- Run SDK tests only:
-
-  ```bash
-  ./run_tests.sh
-  ```
-
-- Run all tests and save logs and reports:
-
-  ```bash
-  ./run_tests.sh -full -log -report
-  ```
-
-- Run sample app tests and save logs:
-
-  ```bash
-  ./run_tests.sh -appOnly -log
-  ```
+Run the `run_tests.sh` script from the command line to test the LoyaltyMobileSDK-Android and the sample app. To ensure that the script is executable, run the `chmod +x run_tests.sh` script. The script provides these capabilities.
 
 ## Contribute to the SDK
 
 You can contribute to the development of the Loyalty Management Mobile SDK.
-1. Fork the Loyalty Management Mobile SDK for iOS [repository](https://github.com/salesforce-misc/LoyaltyMobileSDK-iOS).
+1. Fork the Loyalty Management Mobile SDK for Android // TODO Add the repository link.
 2. Create a branch with a descriptive name.
 3. Implement your changes.
 4. Test your changes.
@@ -172,7 +147,7 @@ See also:
 
 ## License
 
-LoyaltyMobileSDK-iOS is available under the BSD 3-Clause License.
+LoyaltyMobileSDK-Android is available under the BSD 3-Clause License.
 
 Copyright (c) 2023, Salesforce Industries
 All rights reserved.
