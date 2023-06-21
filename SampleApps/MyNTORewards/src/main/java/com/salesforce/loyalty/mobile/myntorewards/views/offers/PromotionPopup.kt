@@ -244,14 +244,12 @@ fun PromotionEnrollPopupUI(
                 results.promotionName?.let {
                     if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
 
-
-                        val model: MyPromotionViewModel = viewModel()
-                        val membershipPromoEnrollmentState by model.promEnrollmentStatusLiveData.observeAsState(
+                        val membershipPromoEnrollmentState by promotionViewModel.promEnrollmentStatusLiveData.observeAsState(
                             PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
                         )
                         if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS) {
                             isInProgress = false
-                            model.resetPromEnrollmentStatusDefault()
+                            promotionViewModel.resetPromEnrollmentStatusDefault()
                             Toast.makeText(
                                 LocalContext.current,
                                 "Promotion Enrol/UnEnrol Success",
@@ -268,7 +266,7 @@ fun PromotionEnrollPopupUI(
                                 "Promotion Enrol/UnEnrol Failed",
                                 Toast.LENGTH_LONG
                             ).show()
-                            model.resetPromEnrollmentStatusDefault()
+                            promotionViewModel.resetPromEnrollmentStatusDefault()
 
                         }
 
@@ -276,7 +274,7 @@ fun PromotionEnrollPopupUI(
                             modifier = Modifier
                                 .fillMaxWidth(0.7f), onClick = {
                                 isInProgress = true
-                                model.enrollInPromotions(context, it)
+                                promotionViewModel.enrollInPromotions(context, it)
 
                             },
                             colors = ButtonDefaults.buttonColors(VibrantPurple40),

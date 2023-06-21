@@ -33,6 +33,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardin
 import com.salesforce.loyalty.mobile.myntorewards.views.adminmenu.SettingsMain
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentCongratulationsView
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.EnrollmentWebView
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.JoinWithTermsAndConditions
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
@@ -216,14 +217,15 @@ fun OpenBottomSheetContent(
         }
         BottomSheetType.POPUP_SELF_REGISTER -> {
             EnrollmentWebView(
-                url = ForceAuthManager.forceAuthManager.getConnectedApp().selfRegisterUrl,
+                model = model,
                 openPopup = { setBottomSheetState(it) },
                 closeSheet = closeSheet)
         }
         BottomSheetType.POPUP_ENROLLMENT -> {
             JoinWithTermsAndConditions(
                 closeSheet = closeSheet,
-                navController = navController
+                navController = navController,
+                model = model
             )
         }
     }

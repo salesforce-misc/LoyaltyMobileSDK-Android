@@ -14,5 +14,7 @@ interface OnBoardingViewModelAbstractInterface {
     fun resetLoginStatusDefault()
     fun loginUser(emailAddressText: String, passwordText: String, context: Context)
     fun logoutAndClearAllSettings(context: Context)
-
+    fun joinUser(email: String, context: Context)
+    fun getSelfRegisterUrl(): String
+    fun getSelfRegisterRedirectUrl(): String
 }

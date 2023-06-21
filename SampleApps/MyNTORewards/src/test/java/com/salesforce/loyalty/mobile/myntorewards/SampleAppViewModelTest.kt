@@ -103,7 +103,7 @@ class SampleAppViewModelTest
             orderPlacedState.add(it)
         }
 
-        onboardingScreenViewModel =  OnboardingScreenViewModel(loyaltyAPIManager)
+        onboardingScreenViewModel =  OnboardingScreenViewModel(loyaltyAPIManager, forceAuthManager)
         loginState = mutableListOf()
         onboardingScreenViewModel.loginStatusLiveData.observeForever {
             loginState.add(it)

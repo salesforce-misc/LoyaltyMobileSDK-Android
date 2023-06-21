@@ -30,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
@@ -38,20 +37,19 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.VoucherTabs
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun VoucherFullScreen(navCheckOutFlowController: NavController) {
+fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: VoucherViewModelInterface) {
 
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
 
     val context: Context = LocalContext.current
-    val voucherModel: VoucherViewModel = viewModel()
-
 
     fun refresh() = refreshScope.launch {
 
@@ -139,12 +137,11 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController) {
                 }
             }
 
-            val model: VoucherViewModel = viewModel()
-            val vouchers by model.voucherLiveData.observeAsState() // collecting livedata as state
-            val vouchersFetchStatus by model.voucherViewState.observeAsState() // collecting livedata as state
+            val vouchers by voucherModel.voucherLiveData.observeAsState() // collecting livedata as state
+            val vouchersFetchStatus by voucherModel.voucherViewState.observeAsState() // collecting livedata as state
             val context: Context = LocalContext.current
             LaunchedEffect(true) {
-                model.loadVoucher(context)
+                voucherModel.loadVoucher(context)
             }
 
             when (vouchersFetchStatus) {

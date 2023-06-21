@@ -15,21 +15,14 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
-class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
+class ConnectedAppViewModel : ViewModel() {
     private val TAG = ConnectedAppViewModel::class.java.simpleName
-    var mContext: Context
+
     //live data for Saved connected apps
     val selectedInstanceLiveData: LiveData<String>
         get() = selectedInstanceUrl
 
     private val selectedInstanceUrl = MutableLiveData<String>()
-
-    init {
-        mContext = context
-        selectedInstanceUrl.value =
-            PrefHelper.customPrefs(mContext).get(AppConstants.KEY_SELECTED_INSTANCE_URL)
-                ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
-    }
 
     //live data for Saved connected apps
     val savedAppsLiveData: LiveData<List<ConnectedApp>>
@@ -81,11 +74,18 @@ class ConnectedAppViewModel constructor(context: Context) : ViewModel() {
         savedApps.value = ForceConnectedAppEncryptedPreference.retrieveAll(context)
     }
 
-    fun setSelectedApp(instanceUrl: String) {
+    fun setSelectedApp(context: Context, instanceUrl: String) {
         selectedInstanceUrl.value = instanceUrl
         viewModelScope.launch {
-            PrefHelper.customPrefs(mContext)
+            PrefHelper.customPrefs(context)
                 .set(AppConstants.KEY_SELECTED_INSTANCE_URL, instanceUrl)
         }
+    }
+    fun getSelectedApp(context: Context): String {
+        val instanceUrl =
+            PrefHelper.customPrefs(context).get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL)
+                ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        selectedInstanceUrl.value = instanceUrl
+        return instanceUrl
     }
 }

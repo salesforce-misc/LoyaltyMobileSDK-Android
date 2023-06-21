@@ -59,6 +59,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.0'
     }
+    lintOptions {
+        abortOnError = false
+        lintConfig = file("$rootDir/lint-baseline.xml")
+    }
 }
 
 

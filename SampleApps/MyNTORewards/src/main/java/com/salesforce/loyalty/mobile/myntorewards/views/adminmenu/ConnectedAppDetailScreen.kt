@@ -138,7 +138,7 @@ fun ConnectedAppDetails(
     )
     val context = LocalContext.current
     val viewModel: ConnectedAppViewModel =
-        viewModel(factory = ConnectedAppViewModelFactory(context))
+        viewModel(factory = ConnectedAppViewModelFactory())
 
     val connectedApp = connectedAppInstance?.let { viewModel.getConnectedApp(context, it) }
     var isEditing by remember { mutableStateOf(false) }

@@ -65,11 +65,11 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
-            OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel)
+            OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel, profileModel)
         }
         composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
             showBottomBar(true)
-            VoucherFullScreen(navCheckOutFlowController)
+            VoucherFullScreen(navCheckOutFlowController, voucherModel)
         }
     }
 }
@@ -79,6 +79,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
 fun PromotionScreenAndCheckOutFlowNavigation(promotionViewModel: MyPromotionViewModelInterface,
                                              voucherModel: VoucherViewModelInterface,
                                              checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+                                             profileModel: MembershipProfileViewModelInterface,
                                              showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
     val navCheckOutFlowController = rememberNavController()
     NavHost(
@@ -105,7 +106,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(promotionViewModel: MyPromotionView
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
-            OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel)
+            OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel, profileModel)
         }
 
     }
@@ -133,7 +134,7 @@ fun MyProfileScreen( profileModel: MembershipProfileViewModelInterface,
             MyProfileTransactionFullScreenView(navProfileViewController, transactionViewModel)
         }
         composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
-            VoucherFullScreen(navProfileViewController)
+            VoucherFullScreen(navProfileViewController, voucherModel)
         }
     }
 
@@ -176,7 +177,7 @@ fun MoreScreen(onBoardingModel: OnBoardingViewModelAbstractInterface, showBottom
         }
         composable(route = MoreOptionsScreen.PostLogout.route) {
             showBottomBar(false)
-            MainScreenStart()
+//            MainScreenStart()
         }
     }
 }

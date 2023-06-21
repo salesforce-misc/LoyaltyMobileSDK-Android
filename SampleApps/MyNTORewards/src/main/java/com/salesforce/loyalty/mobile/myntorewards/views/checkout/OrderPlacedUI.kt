@@ -32,10 +32,15 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 @Composable
-fun OrderPlacedUI(navCheckOutFlowController: NavController,  checkOutFlowViewModel: CheckOutFlowViewModelInterface) {
+fun OrderPlacedUI(
+    navCheckOutFlowController: NavController,
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    profileModel: MembershipProfileViewModelInterface
+) {
 
     val orderDetails by checkOutFlowViewModel.orderDetailLiveData.observeAsState() // collecting livedata as state
     val orderID = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
@@ -44,10 +49,9 @@ fun OrderPlacedUI(navCheckOutFlowController: NavController,  checkOutFlowViewMod
 
     //refreshing profile information and reward points. fresh rewards points will be pulled and cache will be
     //updated
-    val profileViewModel: MembershipProfileViewModel = viewModel()
     val context: Context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        profileViewModel.loadProfile(context, true)
+        profileModel.loadProfile(context, true)
     }
     orderID?.let {
         checkOutFlowViewModel.fetchOrderDetails(orderID)
