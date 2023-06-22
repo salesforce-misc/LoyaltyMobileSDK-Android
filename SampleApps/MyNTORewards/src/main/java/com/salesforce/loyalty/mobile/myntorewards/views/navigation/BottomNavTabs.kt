@@ -9,20 +9,20 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 sealed class BottomNavTabs(var titleID: Int, var iconID: Int, var route: String) {
     object Home : BottomNavTabs(
         R.string.screen_title_home,
-        R.drawable.home_bottom_bar_icon,
+        R.drawable.home_updated_image,
         ROUTE_HOME_SCREEN
     )
 
     object MyOffers : BottomNavTabs(
         R.string.screen_title_my_offers,
-        R.drawable.myoffer_tab_bar_item,
+        R.drawable.offer_updated_image,
         ROUTE_OFFER_SCREEN
     )
 
     object MyProfile :
         BottomNavTabs(
             R.string.screen_title_my_profiles,
-            R.drawable.myprofile_tab_bar_item,
+            R.drawable.profile_updated_image,
             ROUTE_PROFILE_SCREEN
         )
     //part of UX but not part of MVP
@@ -33,5 +33,8 @@ sealed class BottomNavTabs(var titleID: Int, var iconID: Int, var route: String)
      )*/
 
     object More :
-        BottomNavTabs(R.string.screen_title_more, R.drawable.more_tab_bar_item, ROUTE_MORE_SCREEN)
+        BottomNavTabs(
+            R.string.screen_title_more,
+            R.drawable.more_updated_image,
+            ROUTE_MORE_SCREEN)
 }
