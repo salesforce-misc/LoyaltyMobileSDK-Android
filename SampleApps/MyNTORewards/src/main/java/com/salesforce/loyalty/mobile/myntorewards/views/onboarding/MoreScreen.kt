@@ -1,8 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
@@ -18,13 +16,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightGray
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple90
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
@@ -65,20 +65,20 @@ fun MoreOptions(navController: NavController, onBoardingModel: OnBoardingViewMod
             text = "$firstName $lastName",
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            modifier = Modifier.padding(top = 4.dp)
         )
 
-        LogoutOption(navController = navController, onBoardingModel)
+        MoreOptionList(navController = navController, onBoardingModel)
     }
 }
 
 @Composable
-fun LogoutOption(
+fun MoreOptionList(
     navController: NavController,
     onBoardingModel: OnBoardingViewModelAbstractInterface
 ) {
 
-    val context = LocalContext.current
     val logoutState by onBoardingModel.logoutStateLiveData.observeAsState(LogoutState.LOGOUT_DEFAULT_EMPTY) // collecting livedata as state
     var isInProgress by remember { mutableStateOf(false) }
     when (logoutState) {
@@ -105,44 +105,36 @@ fun LogoutOption(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(Color.White)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top
         ) {
 
-            Divider(color = VeryLightGray, thickness = 1.dp)
-
-            val interactionSource = remember { MutableInteractionSource() }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 24.dp, bottom = 24.dp)
-                    .background(Color.White)
-                    .clickable(indication = null, interactionSource = interactionSource) {
-                        onBoardingModel.logoutAndClearAllSettings(context)
-                    },
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.baseline_logout_24),
-                    contentDescription = stringResource(R.string.label_logout),
-                    modifier = Modifier
-                        .width(30.dp)
-                        .height(30.dp),
-                    contentScale = ContentScale.FillWidth
-                )
-                Text(
-                    text = stringResource(id = R.string.label_logout),
-                    fontFamily = font_sf_pro,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black,
-                    modifier = Modifier.padding(start = 16.dp),
-                    fontSize = 18.sp
-                )
-            }
-
-            Divider(color = VeryLightGray, thickness = 1.dp)
+            AddMoreOption(
+                imageRes = R.drawable.ic_user_account,
+                textRes = R.string.header_label_account
+            )
+            AddMoreOption(
+                imageRes = R.drawable.ic_addresses,
+                textRes = R.string.header_label_addresses
+            )
+            AddMoreOption(
+                imageRes = R.drawable.ic_preference,
+                textRes = R.string.header_label_payment_methods
+            )
+            AddMoreOption(
+                imageRes = R.drawable.ic_notification,
+                textRes = R.string.header_label_orders
+            )
+            AddMoreOption(
+                imageRes = R.drawable.ic_quote,
+                textRes = R.string.header_label_support
+            )
+            AddMoreOption(
+                imageRes = R.drawable.ic_favorite,
+                textRes = R.string.header_label_favourite
+            )
+            LogoutOption(onBoardingModel)
             AppVersionHolder()
         }
         if (isInProgress) {
@@ -166,4 +158,79 @@ fun AppVersionHolder() {
         modifier = Modifier.padding(top = 16.dp),
         fontSize = 14.sp
     )
+}
+
+@Composable
+fun AddMoreOption(imageRes: Int, textRes: Int){
+    Divider(color = VibrantPurple90, thickness = Dp.Hairline)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(top = 24.dp, bottom = 24.dp)
+            .background(Color.White),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = imageRes),
+            contentDescription = stringResource(textRes),
+            modifier = Modifier
+                .width(30.dp)
+                .height(30.dp)
+                .padding(4.dp),
+            contentScale = ContentScale.Inside
+        )
+        Text(
+            text = stringResource(id = textRes),
+            fontFamily = font_sf_pro,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black,
+            modifier = Modifier.padding(start = 16.dp),
+            fontSize = 18.sp
+        )
+    }
+
+    Divider(color = VibrantPurple90, thickness = Dp.Hairline)
+}
+
+@Composable
+fun LogoutOption(onBoardingModel: OnBoardingViewModelAbstractInterface){
+    val context = LocalContext.current
+    Divider(color = VibrantPurple90, thickness = Dp.Hairline)
+
+    val interactionSource = remember { MutableInteractionSource() }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(top = 24.dp, bottom = 24.dp)
+            .background(Color.White)
+            .clickable(indication = null, interactionSource = interactionSource) {
+                onBoardingModel.logoutAndClearAllSettings(context)
+            },
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.baseline_logout_24),
+            contentDescription = stringResource(R.string.label_logout),
+            modifier = Modifier
+                .width(30.dp)
+                .height(30.dp)
+                .padding(4.dp),
+            contentScale = ContentScale.Inside
+        )
+        Text(
+            text = stringResource(id = R.string.label_logout),
+            fontFamily = font_sf_pro,
+            fontWeight = FontWeight.Normal,
+            color = VibrantPurple40,
+            modifier = Modifier.padding(start = 16.dp),
+            fontSize = 18.sp
+        )
+    }
+
+    Divider(color = VibrantPurple90, thickness = Dp.Hairline)
 }
