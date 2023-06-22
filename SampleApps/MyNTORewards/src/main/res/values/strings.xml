@@ -38,7 +38,7 @@
     <string name="join_text_already_signed_in">Currently you are not in our rewards program. You are welcome to join. We have made easy for you by simply clicking Join button below.</string>
 
     <string name="screen_title_home">"Home"</string>
-    <string name="screen_title_my_offers">"My Offers"</string>
+    <string name="screen_title_my_offers">"My Promotions"</string>
     <string name="screen_title_my_profiles">"My Profile"</string>
     <string name="text_my_promotions">"My Promotions"</string>
     <string name="text_promotions">"Promotions"</string>
@@ -53,8 +53,8 @@
     <string name="my_membership_number">"Membership Number: "</string>
     <string name="close_text">"Close"</string>
     <string name="tab_all">"All"</string>
-    <string name="tab_active">"Active"</string>
-    <string name="tab_unenrolled">"Unenrolled"</string>
+    <string name="tab_active">"Opted In"</string>
+    <string name="tab_unenrolled">"Available to Opt In"</string>
 
     <string name="voucher_text_available">"Available"</string>
     <string name="voucher_text_redeemed">"Redeemed"</string>
@@ -63,8 +63,8 @@
     <string name="home_screen_welcome_start_text">"Welcome"</string>
     <string name="home_screen_welcome_end_text">"!"</string>
     <string name="content_description_promotion_image">"Image"</string>
-    <string name="prom_screen_expiration_text">"Expiration:"</string>
-    <string name="prom_full_screen_expiration_text">"Exp"</string>
+    <string name="prom_screen_expiration_text">"Expiring on "</string>
+    <string name="prom_full_screen_expiration_text">"Expiring on"</string>
     <string name="reward_type_points">"Points"</string>
     <string name="text_details">"Details"</string>
     <string name="text_leave">"Leave"</string>
@@ -131,5 +131,5 @@
     <string name="heading_register">Register</string>
     <string name="label_empty_self_reg">Self Registration Not Available</string>
     <string name="description_empty_self_reg">Sorry, we\'re having some technical difficulties and self registration is not available.</string>
-
+    <string name="label_app_version">App Version </string>
 </resources>

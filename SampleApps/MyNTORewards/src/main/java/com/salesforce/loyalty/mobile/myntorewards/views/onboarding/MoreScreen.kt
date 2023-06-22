@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
@@ -142,7 +143,7 @@ fun LogoutOption(
             }
 
             Divider(color = VeryLightGray, thickness = 1.dp)
-
+            AppVersionHolder()
         }
         if (isInProgress) {
             CircularProgressIndicator(
@@ -152,4 +153,17 @@ fun LogoutOption(
             )
         }
     }
+}
+
+@Composable
+fun AppVersionHolder() {
+    val appVersionValue = stringResource(id = R.string.label_app_version) + " " + BuildConfig.VERSION_NAME
+    Text(
+        text = appVersionValue,
+        fontFamily = font_sf_pro,
+        fontWeight = FontWeight.Normal,
+        color = Color.Gray,
+        modifier = Modifier.padding(top = 16.dp),
+        fontSize = 14.sp
+    )
 }

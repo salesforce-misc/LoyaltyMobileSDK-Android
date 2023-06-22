@@ -139,7 +139,12 @@ fun MyPromotionScreen(
                             Tab(
                                 selected = selectedTab == index,
                                 onClick = { selectedTab = index },
-                                text = { Text(text = stringResource(it.tabName)) },
+                                text = {
+                                    Text(
+                                        text = stringResource(it.tabName)/*,
+                                        fontSize = 14.sp*/
+                                    )
+                                },
                                 selectedContentColor = VibrantPurple40,
                                 unselectedContentColor = TextGray,
                             )
@@ -155,7 +160,8 @@ fun MyPromotionScreen(
                         membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE }
                     LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth().testTag(TEST_TAG_PROMO_LIST)
+                            .fillMaxWidth()
+                            .testTag(TEST_TAG_PROMO_LIST)
                             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                     ) {
                         items(it) {
@@ -289,7 +295,8 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  p
 
                 currentPromotionDetailPopupState = true
             }
-            .background(Color.White, shape = RoundedCornerShape(8.dp)).testTag(TEST_TAG_PROMO_ITEM),
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .testTag(TEST_TAG_PROMO_ITEM),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
 
