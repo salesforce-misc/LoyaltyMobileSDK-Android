@@ -155,6 +155,7 @@ fun MyPromotionScreen(
                                 text = {
                                     Text(
                                         text = stringResource(it.tabName),
+                                        // Add padding if space between tabs needed
 //                                        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                                     )
                                 },
