@@ -82,7 +82,6 @@ open class OnboardingScreenViewModel(
                 Logger.d(TAG, "Access token Success: $accessTokenResponse")
                 val memberProfileResponse = loyaltyAPIManager.getMemberProfile(null, null, null)
                 memberProfileResponse.onSuccess {
-                    if (it != null) {
                         val memberId = it.loyaltyProgramMemberId
                         val memberShipNumber = it.membershipNumber
                         val communityMemberModel = CommunityMemberModel(
@@ -110,9 +109,6 @@ open class OnboardingScreenViewModel(
                         PrefHelper.customPrefs(context)
                             .set(KEY_LOGIN_SUCCESSFUL, true)
                         loginStatus.value = LoginState.LOGIN_SUCCESS
-                    } else {
-                        loginStatus.value = LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED
-                    }
                 }.onFailure {
                     val errorMessage = it.localizedMessage
                     Logger.d(TAG, "Member Profile failure: ${errorMessage}")
@@ -174,38 +170,34 @@ open class OnboardingScreenViewModel(
 
                     val memberProfileResponse = loyaltyAPIManager.getMemberProfile(null, null, null)
                     memberProfileResponse.onSuccess {
-                        if (it != null) {
-                            val memberId = it.loyaltyProgramMemberId
-                            val memberShipNumber = it.membershipNumber
-                            val communityMemberModel = CommunityMemberModel(
-                                firstName = it.associatedContact?.firstName,
-                                lastName = it.associatedContact?.lastName,
-                                email = it.associatedContact?.email,
-                                loyaltyProgramMemberId = it.loyaltyProgramMemberId,
-                                loyaltyProgramName = it.loyaltyProgramName,
-                                membershipNumber = it.membershipNumber
+                        val memberId = it.loyaltyProgramMemberId
+                        val memberShipNumber = it.membershipNumber
+                        val communityMemberModel = CommunityMemberModel(
+                            firstName = it.associatedContact?.firstName,
+                            lastName = it.associatedContact?.lastName,
+                            email = it.associatedContact?.email,
+                            loyaltyProgramMemberId = it.loyaltyProgramMemberId,
+                            loyaltyProgramName = it.loyaltyProgramName,
+                            membershipNumber = it.membershipNumber
+                        )
+                        memberId?.let { loyaltyMemberId ->
+                            val member = Gson().toJson(
+                                communityMemberModel, CommunityMemberModel::class.java
                             )
-                            memberId?.let { loyaltyMemberId ->
-                                val member = Gson().toJson(
-                                    communityMemberModel, CommunityMemberModel::class.java
-                                )
-                                PrefHelper.customPrefs(context).set(KEY_COMMUNITY_MEMBER, member)
-                            }
-
-                            if (memberShipNumber != null) {
-                                LocalFileManager.saveData(
-                                    context,
-                                    it,
-                                    memberShipNumber,
-                                    LocalFileManager.DIRECTORY_PROFILE
-                                )
-                            }
-                            // Set Login status to success
-                            PrefHelper.customPrefs(context).set(KEY_LOGIN_SUCCESSFUL, true)
-                            enrollmentStatus.value = EnrollmentState.ENROLLMENT_SUCCESS
-                        } else {
-                            enrollmentStatus.value = EnrollmentState.ENROLLMENT_FAILURE
+                            PrefHelper.customPrefs(context).set(KEY_COMMUNITY_MEMBER, member)
                         }
+
+                        if (memberShipNumber != null) {
+                            LocalFileManager.saveData(
+                                context,
+                                it,
+                                memberShipNumber,
+                                LocalFileManager.DIRECTORY_PROFILE
+                            )
+                        }
+                        // Set Login status to success
+                        PrefHelper.customPrefs(context).set(KEY_LOGIN_SUCCESSFUL, true)
+                        enrollmentStatus.value = EnrollmentState.ENROLLMENT_SUCCESS
                     }.onFailure {
                         enrollmentStatus.value = EnrollmentState.ENROLLMENT_FAILURE
                     }

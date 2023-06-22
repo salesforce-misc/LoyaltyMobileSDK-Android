@@ -80,7 +80,6 @@ fun MyPromotionScreen(
     when (promoViewState) {
         is PromotionViewState.PromotionsFetchSuccess -> {
             isInProgress = false
-            membershipPromo = promoViewValue?.outputParameters?.outputParameters?.results
         }
         is PromotionViewState.PromotionsFetchFailure -> {
             isInProgress = false
@@ -90,18 +89,7 @@ fun MyPromotionScreen(
         }
         else -> {}
     }
-    if (isInProgress) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .fillMaxSize(0.1f)
-            )
-        }
-
-    } else {
+    membershipPromo = promoViewValue?.outputParameters?.outputParameters?.results
         Box(contentAlignment = Alignment.TopCenter) {
 
             Column(
@@ -219,9 +207,20 @@ fun MyPromotionScreen(
                 }
 
             }
+            if (isInProgress) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxSize(0.1f)
+                    )
+                }
+
+            }
             PullRefreshIndicator(refreshing, state)
         }
-    }
 
 
 }
