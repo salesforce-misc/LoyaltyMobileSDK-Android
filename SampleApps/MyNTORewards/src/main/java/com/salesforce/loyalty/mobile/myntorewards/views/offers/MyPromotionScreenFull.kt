@@ -131,12 +131,13 @@ fun MyPromotionScreen(
                             PromotionTabs.TabUnEnrolled
                         )
 
-                    TabRow(selectedTabIndex = selectedTab,
+                    ScrollableTabRow(selectedTabIndex = selectedTab,
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(Color.White),
                         containerColor = Color.White,
                         divider = {},
+                        edgePadding = 0.dp,
                         indicator = { tabPositions ->
                             TabRowDefaults.Indicator(
                                 Modifier
@@ -153,8 +154,9 @@ fun MyPromotionScreen(
                                 onClick = { selectedTab = index },
                                 text = {
                                     Text(
-                                        text = stringResource(it.tabName)/*,
-                                        fontSize = 14.sp*/
+                                        text = stringResource(it.tabName),
+                                        // Add padding if space between tabs needed
+//                                        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                                     )
                                 },
                                 selectedContentColor = VibrantPurple40,
