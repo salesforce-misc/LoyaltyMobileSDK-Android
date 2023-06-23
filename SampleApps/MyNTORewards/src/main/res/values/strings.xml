@@ -132,4 +132,10 @@
     <string name="label_empty_self_reg">Self Registration Not Available</string>
     <string name="description_empty_self_reg">Sorry, we\'re having some technical difficulties and self registration is not available.</string>
     <string name="label_app_version">App Version </string>
+    <string name="header_label_account">Account</string>
+    <string name="header_label_addresses">Addresses</string>
+    <string name="header_label_payment_methods">Payment Methods</string>
+    <string name="header_label_orders">Orders</string>
+    <string name="header_label_support">Support</string>
+    <string name="header_label_favourite">Favorites</string>
 </resources>
