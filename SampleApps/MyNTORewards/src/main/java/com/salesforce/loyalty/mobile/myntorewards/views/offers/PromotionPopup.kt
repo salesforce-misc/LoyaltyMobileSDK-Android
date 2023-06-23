@@ -107,7 +107,8 @@ fun PromotionEnrollPopupUI(
                 .background(Color.White, RoundedCornerShape(16.dp))
                 .verticalScroll(
                     rememberScrollState()
-                ).testTag(TEST_TAG_PROMO_POPUP),
+                )
+                .testTag(TEST_TAG_PROMO_POPUP),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         )
@@ -161,7 +162,8 @@ fun PromotionEnrollPopupUI(
                             .padding(3.dp)
                             .clickable {
                                 closePopup()
-                            }.testTag(TEST_TAG_CLOSE_POPUP_PROMOTION)
+                            }
+                            .testTag(TEST_TAG_CLOSE_POPUP_PROMOTION)
 
                     )
                 }
@@ -181,7 +183,8 @@ fun PromotionEnrollPopupUI(
                     fontSize = 24.sp,
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
-                        .fillMaxWidth().testTag(TEST_TAG_PROMO_NAME)
+                        .fillMaxWidth()
+                        .testTag(TEST_TAG_PROMO_NAME)
                 )
             }
 
@@ -195,7 +198,8 @@ fun PromotionEnrollPopupUI(
                 fontSize = 16.sp,
                 modifier = Modifier
                     .padding(start = 16.dp)
-                    .fillMaxWidth().testTag(TEST_TAG_DETAIL_HEADING)
+                    .fillMaxWidth()
+                    .testTag(TEST_TAG_DETAIL_HEADING)
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -206,7 +210,8 @@ fun PromotionEnrollPopupUI(
                 fontSize = 16.sp,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
-                    .fillMaxWidth().testTag(TEST_TAG_PROMO_DESCRIPTION)
+                    .fillMaxWidth()
+                    .testTag(TEST_TAG_PROMO_DESCRIPTION)
             )
 
 
@@ -231,7 +236,8 @@ fun PromotionEnrollPopupUI(
                     color = Color.Black,
                     modifier = Modifier
                         .align(Alignment.Start)
-                        .padding(start = 16.dp).testTag(TEST_TAG_EXPIRATION_DATE),
+                        .padding(start = 16.dp)
+                        .testTag(TEST_TAG_EXPIRATION_DATE),
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp
 
@@ -281,7 +287,7 @@ fun PromotionEnrollPopupUI(
 
                         ) {
                             Text(
-                                text = stringResource(id = R.string.join_text),
+                                text = stringResource(id = R.string.label_opt_in),
                                 fontFamily = font_sf_pro,
                                 textAlign = TextAlign.Center,
                                 fontSize = 16.sp,
@@ -310,7 +316,7 @@ fun PromotionEnrollPopupUI(
 
                             ) {
                                 Text(
-                                    text = stringResource(id = R.string.text_leave),
+                                    text = stringResource(id = R.string.label_opt_out),
                                     fontFamily = font_sf_pro,
                                     textAlign = TextAlign.Center,
                                     fontSize = 16.sp,
@@ -356,10 +362,12 @@ fun ShopButton(width: Dp, navCheckOutFlowController: NavController, promotionNam
     Button(
         modifier = Modifier
             .width(width), onClick = {
-            navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
-                set(AppConstants.PROMOTION_NAME,promotionName )
+            if (AppConstants.CHECKOUT_PROMOTION_NAME == promotionName) {
+                navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
+                    set(AppConstants.PROMOTION_NAME, promotionName)
+                }
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderDetailScreen.route)
             }
-            navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderDetailScreen.route)
         },
         colors = ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)

@@ -138,4 +138,6 @@
     <string name="header_label_orders">Orders</string>
     <string name="header_label_support">Support</string>
     <string name="header_label_favourite">Favorites</string>
+    <string name="label_opt_in">"Opt In"</string>
+    <string name="label_opt_out">"Opt Out"</string>
 </resources>

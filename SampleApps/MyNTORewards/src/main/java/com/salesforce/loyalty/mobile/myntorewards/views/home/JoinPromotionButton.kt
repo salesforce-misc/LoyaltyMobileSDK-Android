@@ -31,7 +31,7 @@ fun JoinButtonProm(openJoinPopup: () -> Unit) {
 
     ) {
         Text(
-            text = stringResource(id = R.string.join_text),
+            text = stringResource(id = R.string.label_opt_in),
             fontFamily = font_sf_pro,
             color = VibrantPurple40,
             textAlign = TextAlign.Center,
