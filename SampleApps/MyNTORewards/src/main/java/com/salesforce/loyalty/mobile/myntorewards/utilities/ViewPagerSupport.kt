@@ -6,9 +6,9 @@ class ViewPagerSupport {
     companion object ViewPagerSupport {
         fun imageID(page: Int): Int {
             return when (page) {
-                0 -> R.drawable.onboarding_image_1
-                1 -> R.drawable.onboarding_image_2
-                2 -> R.drawable.onboarding_image_3
+                0 -> R.drawable.onboarding_image_2
+                1 -> R.drawable.onboarding_image_3
+                2 -> R.drawable.onboarding_image_1
                 else -> 0
             }
         }

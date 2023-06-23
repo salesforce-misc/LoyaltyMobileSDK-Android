@@ -18,6 +18,9 @@ object LocalFileManager {
     fun <T> saveData(context: Context, data: T, id: String, folderName: String) {
         println("DEBUG: $id: $folderName")
     }
+    fun clearAllFolders(context: Context) {
+        println("DEBUG: clear all folder")
+    }
 
     fun <T> getData(context: Context, id: String, folderName: String, type: Class<T>): T?{
 
