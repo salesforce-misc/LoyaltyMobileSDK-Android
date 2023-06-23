@@ -115,7 +115,6 @@ fun PromotionEnrollPopupUI(
         {
 
 
-            val membershipPromo by promotionViewModel.membershipPromotionLiveData.observeAsState() // collecting livedata as state
             val context: Context = LocalContext.current
             Column{
             Box()

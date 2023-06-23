@@ -4,8 +4,10 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_APP_DATE_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class Common {
     companion object {
@@ -35,6 +37,20 @@ class Common {
                 return true
             }
             return false
+        }
+
+        fun isEndDateExpired(endDateString: String?): Boolean {
+            try {
+                val currentDate = Date()
+                val sdf = SimpleDateFormat("yyyy-MM-dd")
+                val endDate = endDateString?.let { sdf.parse(it) }
+                if (currentDate.after(endDate)) {
+                    return true
+                }
+                return false
+            } catch (e: Exception) {
+                return false
+            }
         }
     }
 

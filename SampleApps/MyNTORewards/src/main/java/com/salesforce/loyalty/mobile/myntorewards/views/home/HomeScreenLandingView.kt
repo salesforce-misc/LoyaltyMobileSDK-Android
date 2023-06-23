@@ -35,6 +35,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MAX_PAGE_COUNT_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMOTION_CARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
@@ -131,6 +132,7 @@ fun PromotionCardRow(
             is PromotionViewState.PromotionsFetchSuccess -> {
                 isInProgress = false
                 val membershipPromo = promoViewValue?.outputParameters?.outputParameters?.results
+                val activePromotions = membershipPromo?.filter { !Common.isEndDateExpired(it.endDate) }
 
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
@@ -141,12 +143,12 @@ fun PromotionCardRow(
                     promListListSize
                 }
 
-                if (membershipPromo?.isEmpty() == true) {
+                if (membershipPromo?.isEmpty() == true || activePromotions?.isEmpty() == true) {
                     PromotionEmptyView(R.string.description_empty_promotions)
                 }
-                membershipPromo?.let {
+                activePromotions?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
-                        PromotionCard(page, membershipPromo, navCheckOutFlowController, promotionModel)
+                        PromotionCard(page, activePromotions, navCheckOutFlowController, promotionModel)
                     }
                 }
 
