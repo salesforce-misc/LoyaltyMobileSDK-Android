@@ -12,6 +12,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.ConnectedAppViewModelFactory
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
@@ -21,6 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.junit.*
 import org.junit.runner.Description
+import org.mockito.kotlin.any
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SampleAppViewModelTest {
@@ -35,6 +37,7 @@ class SampleAppViewModelTest {
     private lateinit var myPromotionViewModel: MyPromotionViewModel
     private lateinit var checkOutFlowViewModel: CheckOutFlowViewModel
     private lateinit var onboardingScreenViewModel: OnboardingScreenViewModel
+    private lateinit var connectedAppViewModel: ConnectedAppViewModel
 
     private val loyaltyAPIManager: LoyaltyAPIManager = mockk()
     private val checkoutManager: CheckoutManager = mockk()
@@ -118,6 +121,8 @@ class SampleAppViewModelTest {
         onboardingScreenViewModel.enrollmentStatusLiveData.observeForever {
             enrollmentState.add(it)
         }
+
+        connectedAppViewModel= ConnectedAppViewModel()
 
     }
 
@@ -1311,6 +1316,151 @@ class SampleAppViewModelTest {
             forceAuthManager.getConnectedApp().communityUrl
         }
     }
+
+    @Test
+    fun `for saveConnectedApp`() {
+        val context = mockk<Context>(relaxed = true)
+        val connectedApp = mockk<ConnectedApp>(relaxed = true)
+        mockkObject(ForceConnectedAppEncryptedPreference)
+        every { ForceConnectedAppEncryptedPreference.saveConnectedApp(context, connectedApp) } returns Unit
+        connectedAppViewModel.saveConnectedApp(context, connectedApp)
+        coVerify {
+            ForceConnectedAppEncryptedPreference.saveConnectedApp(context, connectedApp)
+        }
+
+    }
+
+    @Test
+    fun `for getAllConnectedApps`() {
+        val context = mockk<Context>(relaxed = true)
+        val connectedApp = mockk<ConnectedApp>(relaxed = true)
+        mockkObject(ForceConnectedAppEncryptedPreference)
+        every { ForceConnectedAppEncryptedPreference.retrieveAll(context) } returns mutableListOf()
+        connectedAppViewModel.getAllConnectedApps(context)
+        coVerify {
+            ForceConnectedAppEncryptedPreference.retrieveAll(context)
+        }
+
+    }
+
+   @Test
+    fun `for getConnectedApp`() {
+        val context = mockk<Context>(relaxed = true)
+        val connectedApp = mockk<ConnectedApp>(relaxed = true)
+        mockkObject(ForceConnectedAppEncryptedPreference)
+        every { ForceConnectedAppEncryptedPreference.getConnectedApp(context, "") } returns connectedApp
+        connectedAppViewModel.getConnectedApp(context, "")
+        coVerify {
+            ForceConnectedAppEncryptedPreference.getConnectedApp(context, "")
+        }
+
+    }
+    @Test
+    fun `for setSelectedApp`() {
+        val context = mockk<Context>(relaxed = true)
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val sharedPrefsEditor =
+            mockk<SharedPreferences.Editor>(relaxed = true)
+
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponse)
+
+        connectedAppViewModel.setSelectedApp(context, "instance_url")
+
+        coVerify {
+            sharedPrefs.edit().putString(AppConstants.KEY_SELECTED_INSTANCE_URL, "instance_url")
+        }
+
+        Assert.assertEquals(connectedAppViewModel.selectedInstanceLiveData.value, "instance_url")
+
+    }
+
+    @Test
+    fun `for getSelectedApp`() {
+        val context = mockk<Context>(relaxed = true)
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val sharedPrefsEditor =
+            mockk<SharedPreferences.Editor>(relaxed = true)
+
+        val mockResponse = "instance_url"
+
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(AppConstants.KEY_SELECTED_INSTANCE_URL, any()) }
+            .returns(mockResponse)
+
+        connectedAppViewModel.getSelectedApp(context)
+
+        coVerify {
+            sharedPrefs.getString(AppConstants.KEY_SELECTED_INSTANCE_URL, any())
+        }
+
+        Assert.assertEquals(connectedAppViewModel.selectedInstanceLiveData.value, "instance_url")
+
+    }
+    @Test
+    fun `for deleteConnectedApp`() {
+        val context = mockk<Context>(relaxed = true)
+        //val connectedAppList = mockk<List<ConnectedApp>>(relaxed = true)
+        val connectedAppList =  mutableListOf<ConnectedApp>()
+
+
+        mockkObject(ForceConnectedAppEncryptedPreference)
+        every { ForceConnectedAppEncryptedPreference.deleteConnectedApp(context, "") } returns Unit
+        every { ForceConnectedAppEncryptedPreference.retrieveAll(context,) } returns connectedAppList
+
+        connectedAppViewModel.deleteConnectedApp(context, "")
+        coVerify {
+            ForceConnectedAppEncryptedPreference.deleteConnectedApp(context, "")
+        }
+        coVerify {
+            ForceConnectedAppEncryptedPreference.retrieveAll(context)
+        }
+
+
+
+        Assert.assertEquals(connectedAppViewModel.savedAppsLiveData.value, connectedAppList)
+
+    }
+
+    @Test
+    fun `for retrieveAll`() {
+        val context = mockk<Context>(relaxed = true)
+        val connectedApp = mockk<ConnectedApp>(relaxed = true)
+        val connectedAppList =  mutableListOf<ConnectedApp>()
+
+        mockkObject(ForceConnectedAppEncryptedPreference)
+        mockkObject(AppSettings)
+        every { ForceConnectedAppEncryptedPreference.deleteConnectedApp(context, "") } returns Unit
+        every { ForceConnectedAppEncryptedPreference.retrieveAll(context,) } returns connectedAppList
+        every { AppSettings.DEFAULT_FORCE_CONNECTED_APP } returns connectedApp
+        every { ForceConnectedAppEncryptedPreference.saveConnectedApp(context, connectedApp) } returns Unit
+
+        connectedAppViewModel.retrieveAll(context)
+
+        coVerify {
+            ForceConnectedAppEncryptedPreference.retrieveAll(context)
+        }
+        coVerify {
+            AppSettings.DEFAULT_FORCE_CONNECTED_APP
+        }
+
+
+        coVerify {
+            ForceConnectedAppEncryptedPreference.saveConnectedApp(context, connectedApp)
+        }
+
+
+
+
+    }
+
 
 }
 
