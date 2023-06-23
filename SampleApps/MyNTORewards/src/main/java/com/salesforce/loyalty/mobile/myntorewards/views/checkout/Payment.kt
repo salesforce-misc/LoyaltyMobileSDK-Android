@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.checkout
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,14 +35,24 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PAYMENT_UI_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.myCheckBoxColors
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
 
 @Composable
-fun PaymentsUI(navCheckOutFlowController: NavController, voucherModel: VoucherViewModelInterface, checkOutFlowViewModel: CheckOutFlowViewModelInterface) {
-
+fun PaymentsUI(
+    navCheckOutFlowController: NavController,
+    voucherModel: VoucherViewModelInterface,
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    profileModel: MembershipProfileViewModelInterface
+) {
+    val membershipProfile by profileModel.membershipProfileLiveData.observeAsState()
+    val context: Context = LocalContext.current
+    LaunchedEffect(key1 = true) {
+        profileModel.loadProfile(context)
+    }
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
@@ -49,13 +60,16 @@ fun PaymentsUI(navCheckOutFlowController: NavController, voucherModel: VoucherVi
             .padding(start = 20.dp, end = 20.dp)
             .verticalScroll(
                 rememberScrollState()
-            ).testTag(TEST_TAG_PAYMENT_UI_CONTAINER)
+            )
+            .testTag(TEST_TAG_PAYMENT_UI_CONTAINER)
         ) {
 
             Spacer(modifier = Modifier.height(23.dp))
             VoucherRow(voucherModel)
             Spacer(modifier = Modifier.height(24.dp))
-            PointsRow("432")
+            membershipProfile?.memberCurrencies?.get(0)?.pointsBalance.let {
+                PointsRow(it.toString())
+            }
             AmountPaybleRow()
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -103,7 +117,8 @@ fun PaymentsUI(navCheckOutFlowController: NavController, voucherModel: VoucherVi
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp).testTag(TEST_TAG_CONFIRM_ORDER_BUTTON)
+                        .padding(top = 10.dp, bottom = 10.dp)
+                        .testTag(TEST_TAG_CONFIRM_ORDER_BUTTON)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -166,7 +181,7 @@ fun AmountPaybleRow() {
             modifier = Modifier
         )
         Text(
-            text = "$154",
+            text = "$207",
             fontFamily = font_archivo,
             fontWeight = FontWeight.ExtraBold,
             color = LighterBlack,

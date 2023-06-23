@@ -61,7 +61,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = CheckOutFlowScreen.OrderAddressAndPaymentScreen.route) {
             showBottomBar(false)
-            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel)
+            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel, profileModel)
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
@@ -102,7 +102,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(promotionViewModel: MyPromotionView
         }
         composable(route = CheckOutFlowScreen.OrderAddressAndPaymentScreen.route) {
             showBottomBar(false)
-            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel)
+            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel, profileModel)
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)

@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
 import android.content.Context
+import android.text.Html
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -101,7 +102,7 @@ fun MyProfileBenefitFullScreenView(
                     .padding(16.dp)
 
             ) {
-                BenefitListView(Modifier.fillMaxHeight(), benefitViewModel)
+                BenefitListView(Modifier.fillMaxHeight(), benefitViewModel, isFullScreen = true)
             }
         }
         PullRefreshIndicator(refreshing, state)
@@ -132,7 +133,7 @@ fun MyBenefitMiniScreenView(
 }
 
 @Composable
-fun BenefitListView(modifier: Modifier, benefitViewModel: BenefitViewModelInterface) {
+fun BenefitListView(modifier: Modifier, benefitViewModel: BenefitViewModelInterface, isFullScreen: Boolean = false) {
 
     var isInProgress by remember { mutableStateOf(false) }
 
@@ -177,7 +178,7 @@ fun BenefitListView(modifier: Modifier, benefitViewModel: BenefitViewModelInterf
 
             membershipBenefit?.let {
                 LazyColumn(modifier = modifier.testTag(TEST_TAG_BENEFITS)) {
-                    if (it.size >= AppConstants.MAX_SIZE_BENEFIT_LIST) {
+                    if (!isFullScreen && it.size >= AppConstants.MAX_SIZE_BENEFIT_LIST) {
                         items(it.subList(0, AppConstants.MAX_SIZE_BENEFIT_LIST)) {
                             ListItemMyBenefit(it)
                         }
@@ -232,8 +233,9 @@ fun ListItemMyBenefit(benefit: MemberBenefit) {
                 )
             }
             benefit.benefitName?.let {
+                val desc = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY).toString()
                 Text(
-                    text = it,
+                    text = desc,
                     fontFamily = font_sf_pro,
                     color = LightBlack,
                     textAlign = TextAlign.Center,
