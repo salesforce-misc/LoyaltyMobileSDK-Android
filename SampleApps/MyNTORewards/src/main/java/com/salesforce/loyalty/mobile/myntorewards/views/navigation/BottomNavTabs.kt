@@ -35,6 +35,6 @@ sealed class BottomNavTabs(var titleID: Int, var iconID: Int, var route: String)
     object More :
         BottomNavTabs(
             R.string.screen_title_more,
-            R.drawable.more_updated_image,
+            R.drawable.more_image_with_padding,
             ROUTE_MORE_SCREEN)
 }
