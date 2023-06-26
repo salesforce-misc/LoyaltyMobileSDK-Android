@@ -38,6 +38,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_LIST
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
@@ -90,7 +91,7 @@ fun MyPromotionScreen(
         else -> {}
     }
     membershipPromo = promoViewValue?.outputParameters?.outputParameters?.results
-        Box(contentAlignment = Alignment.TopCenter) {
+    Box(contentAlignment = Alignment.TopCenter) {
 
             Column(
                 modifier = Modifier
@@ -154,12 +155,12 @@ fun MyPromotionScreen(
                     }
 
                 }
-
-                membershipPromo?.let {
+                val activePromotions = membershipPromo?.filter { !isEndDateExpired(it.endDate) }
+                activePromotions?.let {
                     val unenrolledPromotions =
-                        membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED }
+                        activePromotions.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED }
                     val enrolledPromotions =
-                        membershipPromo.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE }
+                        activePromotions.filter { it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE }
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -203,7 +204,7 @@ fun MyPromotionScreen(
                     }
                 }
 
-                if (membershipPromo == null || membershipPromo?.isEmpty() == true) {
+                if (membershipPromo == null || membershipPromo?.isEmpty() == true || activePromotions?.isEmpty() == true) {
                     when (selectedTab) {
                         0, 2 -> {
                             PromotionEmptyView(R.string.description_empty_promotions)

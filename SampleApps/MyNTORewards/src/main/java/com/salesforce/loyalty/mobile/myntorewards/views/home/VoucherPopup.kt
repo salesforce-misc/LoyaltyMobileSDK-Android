@@ -150,6 +150,7 @@ fun VoucherPopupUI(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                val discountPercent = voucher.discountPercent ?: 0
                 Text(
                     buildAnnotatedString {
                         withStyle(
@@ -160,7 +161,7 @@ fun VoucherPopupUI(
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(voucher.discountPercent.toString()+"%")
+                            append("$discountPercent%")
                         }
                     },
                     fontFamily = font_sf_pro,
@@ -233,7 +234,8 @@ fun VoucherPopupUI(
                             textAlign = TextAlign.Center,
                             fontSize = 14.sp,
                             modifier = Modifier
-                                .align(Alignment.CenterVertically).padding(start=5.dp)
+                                .align(Alignment.CenterVertically)
+                                .padding(start = 5.dp)
                         )
                         Spacer(modifier = Modifier.width(5.dp))
                         Image(
@@ -241,7 +243,9 @@ fun VoucherPopupUI(
                             contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                             modifier = Modifier
                                 .height(11.dp)
-                                .height(11.dp).align(Alignment.CenterVertically).padding(end = 5.dp),
+                                .height(11.dp)
+                                .align(Alignment.CenterVertically)
+                                .padding(end = 5.dp),
                             contentScale = ContentScale.Fit
                         )
                     }

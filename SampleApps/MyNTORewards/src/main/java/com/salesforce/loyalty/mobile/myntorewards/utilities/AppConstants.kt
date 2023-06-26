@@ -87,5 +87,7 @@ class AppConstants {
         const val MAX_SIZE_BENEFIT_LIST = 3
 
         const val SELF_REGISTER_REDIRECT_URL_PATH = "/apex/CommunitiesLanding"
+
+        const val CHECKOUT_PROMOTION_NAME = "Gold Tier Rejuvenation"
     }
 }

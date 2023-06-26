@@ -17,9 +17,14 @@ object LoyaltyUtils {
     /**
      * Returns a randomly generated string
      *
+     * @param length Length of random string needed
      * @return Random String
      */
-    fun generateRandomString(): String {
-        return UUID.randomUUID().toString()
+
+    fun getRandomString(length: Int): String {
+        val allowedChars = ('A'..'Z') + ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
     }
 }

@@ -237,7 +237,7 @@ fun RatingRow() {
 fun OrderDescriptionRow() {
     Spacer(modifier = Modifier.height(18.dp))
     Text(
-        text = "Women’s Flight Jacket",
+        text = "Men's Rainier L4 Windproof Soft Shell Hoodie",
 
         fontFamily = font_archivo,
         color = Black2TextOrderScreen,
@@ -448,7 +448,7 @@ fun OrderQuantityRow() {
         Column()
         {
             Text(
-                text = "$179",
+                text = "$207",
                 textAlign = TextAlign.Center,
                 fontFamily = font_archivo_bold,
                 color = LighterBlack,
