@@ -175,7 +175,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
             // Redeemed tab
             if(selectedTab == 1){
                 filteredVouchers = filteredVouchers?.filter {
-                    it.expirationDate?.let { date ->
+                    it.useDate?.let { date ->
                         Common.isWithinMentionedDay(
                             date,
                             AppConstants.REDEEMED_VOUCHERS_FILTER_DAYS.toLong()
