@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -67,9 +69,9 @@ fun VoucherPopupUI(
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     var clippedText by remember { mutableStateOf("") }
 
-        Column(
+    Column(
             modifier = Modifier
-                .fillMaxHeight(0.95f)
+                .fillMaxHeight(0.98f)
                 .background(Color.White, RoundedCornerShape(16.dp))
                 .verticalScroll(
                     rememberScrollState()
@@ -212,7 +214,8 @@ fun VoucherPopupUI(
                         .width(145.dp),
                     contentScale = ContentScale.FillWidth
                 )
-
+                val context = LocalContext.current
+                val voucherCopyText = stringResource(id = R.string.text_voucher_copy_copied)
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
@@ -221,6 +224,9 @@ fun VoucherPopupUI(
                         .clickable {
                             voucher.voucherCode?.let {
                                 clipboardManager.setText(AnnotatedString((it)))
+                                Toast
+                                    .makeText(context,voucherCopyText, Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                 ) {

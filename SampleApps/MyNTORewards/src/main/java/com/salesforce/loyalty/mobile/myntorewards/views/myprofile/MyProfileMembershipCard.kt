@@ -29,11 +29,12 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourPurpleQR
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.REWARD_CURRENCY_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_QR_CODE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfileViewStates
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 
 @Composable
@@ -119,7 +120,9 @@ fun CardContent(profileModel: MembershipProfileViewModelInterface) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                membershipProfile?.memberCurrencies?.get(0)?.let { RewardPointsAndExpiry(it) }
+                membershipProfile?.memberCurrencies?.let {
+                    RewardPointsAndExpiry(Common.getCurrencyPointBalance(it))
+                }
                 Spacer(modifier = Modifier.height(10.dp))
 
                 QRCodeRow(membershipProfile)
@@ -168,11 +171,10 @@ fun MembershipTierRow(tierName: String) {
 }
 
 @Composable
-fun RewardPointsAndExpiry(memberCurrency: MemberCurrency) {
+fun RewardPointsAndExpiry(memberCurrencyPointBalance: Double?) {
 
-    val pointBalance: String = memberCurrency.pointsBalance.toString()
     Text(
-        text = pointBalance,
+        text = memberCurrencyPointBalance.toString(),
         fontFamily = font_sf_pro,
         fontWeight = FontWeight.Bold,
         color = Color.White,
@@ -198,8 +200,7 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
 
     val membershipID =
         membershipProfile?.loyaltyProgramMemberId ?: ""
-    val loyaltyMemberCurrencyName =
-        membershipProfile?.memberCurrencies?.get(0)?.loyaltyMemberCurrencyName ?: ""
+    val loyaltyMemberCurrencyName = REWARD_CURRENCY_NAME
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,

@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -197,7 +199,8 @@ fun VoucherView(voucher: VoucherResponse) {
                             .width(200.dp),
                         contentScale = ContentScale.FillWidth
                     )
-
+                    val context = LocalContext.current
+                    val voucherCopyText = stringResource(id = R.string.text_voucher_copy_copied)
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
@@ -206,6 +209,8 @@ fun VoucherView(voucher: VoucherResponse) {
                             .clickable {
                                 voucher.voucherCode?.let {
                                     clipboardManager.setText(AnnotatedString((it)))
+                                    Toast.makeText(context, voucherCopyText, Toast.LENGTH_SHORT).show()
+
                                 }
                             }
                     ) {

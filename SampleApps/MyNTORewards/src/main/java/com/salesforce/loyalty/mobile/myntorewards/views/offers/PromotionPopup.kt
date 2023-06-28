@@ -93,11 +93,11 @@ fun PromotionEnrollPopupUI(
 ) {
 
 
-    var memberEligibilityCategory = results.memberEligibilityCategory
-    var promotionEnrollmentRqr = results.promotionEnrollmentRqr
-
+    val memberEligibilityCategory = results.memberEligibilityCategory
+    val promotionEnrollmentRqr = results.promotionEnrollmentRqr
+    val membershipPromoEnrollmentState by promotionViewModel.promEnrollmentStatusLiveData.observeAsState()
     val description = results.description ?: ""
-    var endDate = results.endDate ?: ""
+    val endDate = results.endDate ?: ""
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
@@ -120,32 +120,7 @@ fun PromotionEnrollPopupUI(
             Column{
             Box()
             {
-
-                Box() {
-                    Image(
-                        painter = painterResource(id = R.drawable.promotion_card_placeholder),
-                        contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp)
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    GlideImage(
-                        model = results.promotionImageUrl,
-                        contentDescription = "promotion popup image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp)
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-
-                        contentScale = ContentScale.Crop
-                    ) {
-                        it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    }
-                }
-
+                PromotionPopupImageBox(results.promotionImageUrl)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,7 +139,6 @@ fun PromotionEnrollPopupUI(
                                 closePopup()
                             }
                             .testTag(TEST_TAG_CLOSE_POPUP_PROMOTION)
-
                     )
                 }
 
@@ -218,63 +192,36 @@ fun PromotionEnrollPopupUI(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (endDate.isNotEmpty()) {
-                Text(
-                    buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle()
-                        ) {
-                            append(stringResource(id = R.string.prom_screen_expiration_text))
-                        }
-                        withStyle(
-                            style = SpanStyle(fontWeight = FontWeight.Bold)
-                        ) {
-                            append(formatPromotionDate(endDate))
-                        }
-                    },
-                    fontFamily = font_sf_pro,
-                    color = Color.Black,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(start = 16.dp)
-                        .testTag(TEST_TAG_EXPIRATION_DATE),
-                    textAlign = TextAlign.Start,
-                    fontSize = 12.sp
+                EndDateText(endDate)
 
-                )
             }
+
+            if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS) {
+                isInProgress = false
+                promotionViewModel.resetPromEnrollmentStatusDefault()
+                Toast.makeText(
+                    LocalContext.current,
+                    "Promotion Enrol/UnEnrol Success",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                closePopup()
+
+            } //after enrollment state change to failure
+            else if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE) {
+                isInProgress = false
+                Toast.makeText(
+                    LocalContext.current,
+                    "Promotion Enrol/UnEnrol Failed",
+                    Toast.LENGTH_LONG
+                ).show()
+                promotionViewModel.resetPromEnrollmentStatusDefault()
+
             }
 
             Column {
                 results.promotionName?.let {
                     if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-
-                        val membershipPromoEnrollmentState by promotionViewModel.promEnrollmentStatusLiveData.observeAsState(
-                            PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_DEFAULT_EMPTY
-                        )
-                        if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_SUCCESS) {
-                            isInProgress = false
-                            promotionViewModel.resetPromEnrollmentStatusDefault()
-                            Toast.makeText(
-                                LocalContext.current,
-                                "Promotion Enrol/UnEnrol Success",
-                                Toast.LENGTH_LONG
-                            ).show()
-
-                            closePopup()
-
-                        } //after enrollment state change to failure
-                        else if (membershipPromoEnrollmentState == PromotionEnrollmentUpdateState.PROMOTION_ENROLLMENTUPDATE_FAILURE) {
-                            isInProgress = false
-                            Toast.makeText(
-                                LocalContext.current,
-                                "Promotion Enrol/UnEnrol Failed",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            promotionViewModel.resetPromEnrollmentStatusDefault()
-
-                        }
-
                         Button(
                             modifier = Modifier
                                 .fillMaxWidth(0.7f), onClick = {
@@ -286,21 +233,10 @@ fun PromotionEnrollPopupUI(
                             shape = RoundedCornerShape(100.dp)
 
                         ) {
-                            Text(
-                                text = stringResource(id = R.string.label_opt_in),
-                                fontFamily = font_sf_pro,
-                                textAlign = TextAlign.Center,
-                                fontSize = 16.sp,
-                                color = White,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(top = 3.dp, bottom = 3.dp)
-                            )
+                            OptInText()
                         }
 
-
                     } else if (memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE && promotionEnrollmentRqr == true) {
-
                         Row() {
                             val promoName= results.promotionName?:""
                             ShopButton(150.dp, navCheckOutFlowController, promoName)
@@ -315,16 +251,7 @@ fun PromotionEnrollPopupUI(
                                 shape = RoundedCornerShape(100.dp)
 
                             ) {
-                                Text(
-                                    text = stringResource(id = R.string.label_opt_out),
-                                    fontFamily = font_sf_pro,
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 16.sp,
-                                    color = White,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier
-                                        .padding(top = 3.dp, bottom = 3.dp)
-                                )
+                                OptOutText()
                             }
 
                         }
@@ -382,6 +309,96 @@ fun ShopButton(width: Dp, navCheckOutFlowController: NavController, promotionNam
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(top = 3.dp, bottom = 3.dp)
+        )
+    }
+}
+
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun PromotionPopupImageBox(url:String?)
+{
+    Box() {
+        Image(
+            painter = painterResource(id = R.drawable.promotion_card_placeholder),
+            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        GlideImage(
+            model = url,
+            contentDescription = "promotion popup image",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+
+            contentScale = ContentScale.Crop
+        ) {
+            it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+        }
+    }
+
+}
+
+@Composable
+fun OptOutText()
+{
+    Text(
+        text = stringResource(id = R.string.label_opt_out),
+        fontFamily = font_sf_pro,
+        textAlign = TextAlign.Center,
+        fontSize = 16.sp,
+        color = White,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .padding(top = 3.dp, bottom = 3.dp)
+    )
+}
+@Composable
+fun OptInText()
+{
+    Text(
+        text = stringResource(id = R.string.label_opt_in),
+        fontFamily = font_sf_pro,
+        textAlign = TextAlign.Center,
+        fontSize = 16.sp,
+        color = White,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .padding(top = 3.dp, bottom = 3.dp)
+    )
+}
+
+
+@Composable
+fun EndDateText(endDate:String)
+{
+    if (endDate.isNotEmpty()) {
+        Text(
+            buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle()
+                ) {
+                    append(stringResource(id = R.string.prom_screen_expiration_text))
+                }
+                withStyle(
+                    style = SpanStyle(fontWeight = FontWeight.Bold)
+                ) {
+                    append(formatPromotionDate(endDate))
+                }
+            },
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .testTag(TEST_TAG_EXPIRATION_DATE),
+            textAlign = TextAlign.Start,
+            fontSize = 12.sp
         )
     }
 }

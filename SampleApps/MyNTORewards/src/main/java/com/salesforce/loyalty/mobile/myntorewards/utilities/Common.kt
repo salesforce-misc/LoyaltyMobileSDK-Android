@@ -4,6 +4,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_APP_DATE_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,6 +40,14 @@ class Common {
             return false
         }
 
+        fun getCurrencyPointBalance(currencyList: List<MemberCurrency>): Double? {
+            for (currency in currencyList) {
+                if (currency.loyaltyMemberCurrencyName?.uppercase() == AppConstants.REWARD_CURRENCY_NAME.uppercase()) {
+                    return currency.pointsBalance
+                }
+            }
+            return null
+        }
         fun isEndDateExpired(endDateString: String?): Boolean {
             try {
                 val currentDate = Date()
