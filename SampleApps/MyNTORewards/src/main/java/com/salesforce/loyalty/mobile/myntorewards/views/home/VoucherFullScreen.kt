@@ -33,9 +33,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
@@ -166,10 +168,33 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                 2 -> VOUCHER_EXPIRED
                 else -> VOUCHER_ISSUED
             }
-            val filteredVouchers = vouchers?.filter {
+            var filteredVouchers = vouchers?.filter {
                 it.status == filterType
             }
 
+            // Redeemed tab
+            if(selectedTab == 1){
+                filteredVouchers = filteredVouchers?.filter {
+                    it.useDate?.let { date ->
+                        Common.isWithinMentionedDay(
+                            date,
+                            AppConstants.REDEEMED_VOUCHERS_FILTER_DAYS.toLong()
+                        )
+                    } ?: false
+                }
+            }
+
+            // Expired tab
+            if (selectedTab == 2) {
+                filteredVouchers = filteredVouchers?.filter {
+                    it.expirationDate?.let { date ->
+                        Common.isWithinMentionedDay(
+                            date,
+                            AppConstants.EXPIRED_VOUCHERS_FILTER_DAYS.toLong()
+                        )
+                    } ?: false
+                }
+            }
 
             if (isInProgress) {
                 Box(

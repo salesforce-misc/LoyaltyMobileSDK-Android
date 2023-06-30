@@ -6,13 +6,6 @@ package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 object ForceConfig {
     const val ACCESS_TOKEN_BASE_URL_OLD = "https://login.salesforce.com/"
     const val ACCESS_TOKEN_BASE_URL = "https://na45.test1.pc-rnd.salesforce.com"
-    const val GRANT_TYPE_PASSWORD = "password"
-    const val ADMIN_USERNAME = "archit.sharma@salesforce.com"
-    const val ADMIN_PASSWORD = "test@321"
-    const val CONSUMER_SECRET = "4C64F15ECE02FFF0002BA74DFDE835A94FE05C7DC1DA3096604E634701E844AA"
-    const val CONSUMER_KEY =
-        "3MVG9sA57VMGPDff5IP2PZ3gePzAE087y65OQNiwULLemkJnFilih4d4Ttixw0abfb8XH__8miW3Xn9yStqlg"
-    const val HEADER_AUTHORIZATION = "Authorization"
     const val HEADER_AUTH_REQUEST_TYPE_VALUE = "Named-User"
     const val AUTHORIZATION_GRANT_TYPE = "authorization_code"
     const val REFRESH_GRANT_TYPE = "refresh_token"
