@@ -173,7 +173,9 @@ fun MoreScreen(onBoardingModel: OnBoardingViewModelAbstractInterface, showBottom
     {
 
         composable(route = MoreOptionsScreen.MoreOptions.route) {
-            MoreOptions(navController, onBoardingModel)
+            MoreOptions(navController, onBoardingModel){
+
+            }
         }
         composable(route = MoreOptionsScreen.PostLogout.route) {
             showBottomBar(false)

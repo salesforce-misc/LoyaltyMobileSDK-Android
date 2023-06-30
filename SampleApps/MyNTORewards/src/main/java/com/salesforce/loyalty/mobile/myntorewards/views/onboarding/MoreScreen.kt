@@ -1,5 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
+import android.app.Activity
+import android.content.Intent
+import android.content.Intent.getIntent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -19,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
@@ -30,11 +34,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreOptionsScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 
+
 @Composable
-fun MoreOptions(navController: NavController, onBoardingModel: OnBoardingViewModelAbstractInterface) {
+fun MoreOptions(bottomTabsNavController: NavController, onBoardingModel: OnBoardingViewModelAbstractInterface, showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,7 +74,7 @@ fun MoreOptions(navController: NavController, onBoardingModel: OnBoardingViewMod
             modifier = Modifier.padding(top = 4.dp)
         )
 
-        MoreOptionList(navController = navController, onBoardingModel)
+        MoreOptionList(navController = bottomTabsNavController, onBoardingModel)
     }
 }
 
@@ -84,11 +89,14 @@ fun MoreOptionList(
     when (logoutState) {
         LogoutState.LOGOUT_SUCCESS -> {
             isInProgress = false
-            LaunchedEffect(true) {
-                navController.navigate(MoreOptionsScreen.PostLogout.route) {
-                    popUpTo(0)
-                }
-            }
+            val activity = LocalContext.current as Activity
+            activity.finish();
+            activity.startActivity(activity.getIntent());
+
+           /* navController.navigate(BottomNavTabs.Home.route) }*/
+           /* navController.navigate(Screen.HomeScreen.route) {
+                popUpTo(0)
+            }*/
         }
         LogoutState.LOGOUT_IN_PROGRESS -> {
             isInProgress = true

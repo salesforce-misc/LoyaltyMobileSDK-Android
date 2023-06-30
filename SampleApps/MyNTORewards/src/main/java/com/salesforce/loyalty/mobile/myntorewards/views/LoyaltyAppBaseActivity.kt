@@ -107,7 +107,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             }
         }
         observeSessionExpiry(onboardingModel, forceAuthManager)
-        observeLoginStatus(
+       /* observeLoginStatus(
             profileModel,
             promotionModel,
             voucherModel,
@@ -115,7 +115,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             benefitModel,
             transactionModel,
             checkoutFlowModel
-        )
+        )*/
     }
 
     private fun observeSessionExpiry(model: OnboardingScreenViewModel, forceAuthManager: ForceAuthManager) {
@@ -127,7 +127,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         }
     }
 
-    private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
+   /* private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
                                    promotionModel: MyPromotionViewModelInterface,
                                    voucherModel: VoucherViewModelInterface,
                                    onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -154,6 +154,6 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                 }
             }
         }
-    }
+    }*/
 }
 

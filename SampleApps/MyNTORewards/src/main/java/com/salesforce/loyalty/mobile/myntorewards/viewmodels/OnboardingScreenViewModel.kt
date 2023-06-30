@@ -62,6 +62,11 @@ open class OnboardingScreenViewModel(
         loginStatus.value = LoginState.LOGIN_DEFAULT_EMPTY
     }
 
+
+    override fun resetLogOutDefault() {
+        logoutState.value = LogoutState.LOGOUT_DEFAULT_EMPTY
+    }
+
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
     override fun loginUser(emailAddressText: String, passwordText: String, context: Context) {
