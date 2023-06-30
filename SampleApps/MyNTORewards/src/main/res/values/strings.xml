@@ -128,4 +128,5 @@
     <string name="header_label_favourite">Favorites</string>
     <string name="label_opt_in">"Opt In"</string>
     <string name="label_opt_out">"Opt Out"</string>
+    <string name="text_voucher_copy_copied">"Voucher Code Copied"</string>
 </resources>

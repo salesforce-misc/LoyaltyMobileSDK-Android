@@ -63,7 +63,7 @@ class AppConstants {
         const val TRANSACTION_ENROLLMENT = "Enrollment"
         const val MAX_TRANSACTION_COUNT = 3
         const val TRANSACTION_REWARD_POINTS = "Points"
-        const val TRANSACTION_REWARD_CURRENCY_NAME = "Reward Points"
+        const val REWARD_CURRENCY_NAME = "Reward Points"
         const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val TRANSACTION_HISTORY_APP_DATE_FORMAT = "dd LLLL yyyy"
 

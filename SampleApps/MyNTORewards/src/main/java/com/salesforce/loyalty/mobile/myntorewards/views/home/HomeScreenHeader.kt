@@ -19,14 +19,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.getCurrencyPointBalance
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_APP_LOGO_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 
 
 @Composable
@@ -96,9 +100,9 @@ fun UserNameAndRewardRow(profileModel: MembershipProfileViewModelInterface) {
             modifier = Modifier.padding(start = 16.dp)
         )
 
-        membershipProfile?.memberCurrencies?.get(0)?.pointsBalance.let {
+        membershipProfile?.memberCurrencies?.let {
             Text(
-                text = "${it.toString()} " + stringResource(id = R.string.reward_type_points),
+                text = "${getCurrencyPointBalance(it).toString()} " + stringResource(id = R.string.reward_type_points),
                 fontWeight = FontWeight.Normal,
                 fontFamily = font_sf_pro,
                 color = Color.Black,
@@ -107,7 +111,5 @@ fun UserNameAndRewardRow(profileModel: MembershipProfileViewModelInterface) {
                 modifier = Modifier.padding(end = 16.dp)
             )
         }
-
     }
 }
-

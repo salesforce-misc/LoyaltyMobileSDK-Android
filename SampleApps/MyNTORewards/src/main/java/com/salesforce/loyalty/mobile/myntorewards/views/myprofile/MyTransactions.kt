@@ -245,7 +245,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
 fun getCurrencyPoints(pointsChange: List<PointsChange>): Double? {
     for (pointChange in pointsChange) {
         pointChange.loyaltyMemberCurrency?.let {
-            if (it.uppercase() == AppConstants.TRANSACTION_REWARD_CURRENCY_NAME.uppercase()) {
+            if (it.uppercase() == AppConstants.REWARD_CURRENCY_NAME.uppercase()) {
                 return pointChange.changeInPoints
             }
         }
