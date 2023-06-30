@@ -8,12 +8,7 @@
     <string name="onboard_screen_text_1">"Get personalized \noffers"</string>
     <string name="onboard_screen_text_2">"Redeem your points for exciting vouchers"</string>
     <string name="onboard_screen_text_3"> "Accumulate points and unlock new rewards"</string>
-    <string name="onboard_form_first_name"> "First name"</string>
-    <string name="onboard_form_last_name"> "Last name"</string>
-    <string name="onboard_form_mobile_number"> "Mobile number"</string>
-    <string name="onboard_form_email_address"> "Email Address"</string>
     <string name="form_password"> "Password"</string>
-    <string name="onboard_form_confirm_password">"Confirm Password"</string>
     <string name="existing_member_text">"Already a Member?"</string>
     <string name="login_text">" Log In"</string>
     <string name="login_text_header">"Log In"</string>
@@ -25,12 +20,6 @@
     <string name="not_a_member_text">"Not a Member?"</string>
     <string name="forget_your_password_text">"Forget Your Password?"</string>
     <string name="email_address_phone_number_text">"Email address or Phone number"</string>
-    <string name="error_msg_invalid_first_name">Enter your first name without any special characters.</string>
-    <string name="error_msg_invalid_last_name">Enter your last name without any special characters.</string>
-    <string name="error_msg_invalid_email">Enter a valid email address.</string>
-    <string name="error_msg_invalid_phone_number">Enter a valid 10 digit mobile number..</string>
-    <string name="error_msg_invalid_password">Enter a password with at least 6 characters</string>
-    <string name="error_msg_invalid_confirm_password">Ensure that your passwords match</string>
     <string name="text_welcome_onboard">"Welcome on board!"</string>
     <string name="onboard_text_msg_part_1">"We’re thrilled that you joined "</string>
     <string name="onboard_text_msg_part_2">". You’re on your way to earning points and receiving exclusive rewards.\n"</string>
@@ -67,7 +56,6 @@
     <string name="prom_full_screen_expiration_text">"Expiring on"</string>
     <string name="reward_type_points">"Points"</string>
     <string name="text_details">"Details"</string>
-    <string name="text_leave">"Leave"</string>
     <string name="text_shop">"Shop"</string>
     <string name="text_vouchers">"Vouchers"</string>
     <string name="scan_the_qr_code_text">"Scan the QR Code or enter your membership number at participating store and online sites to earn and redeem points"</string>

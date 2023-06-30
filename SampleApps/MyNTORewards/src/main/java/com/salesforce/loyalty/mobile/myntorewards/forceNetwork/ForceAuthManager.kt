@@ -80,27 +80,6 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator {
     }
 
     /**
-     * OAuth 2.0 Username-Password Flow - Use username and password behind screen to obtain a valid accessToken
-     * https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_username_password_flow.htm&type=5
-     */
-    suspend fun grantAuth(): String? {
-        val response = ForceClient.authApi.getAccessToken(
-            ForceConfig.MimeType.JSON,
-            ForceConfig.MimeType.FORM_ENCODED,
-            ForceConfig.ADMIN_USERNAME,
-            ForceConfig.ADMIN_PASSWORD,
-            ForceConfig.GRANT_TYPE_PASSWORD,
-            ForceConfig.CONSUMER_KEY,
-            ForceConfig.CONSUMER_SECRET
-        )
-        response.onSuccess {
-            saveAuth(it)
-            return it.accessToken
-        }
-        return null
-    }
-
-    /**
      * Authenticate Community Login by generating access token
      * OAuth 2.0 Authorization Code and Credentials Flow
      * https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authorization_code_credentials_flow.htm&type=5
@@ -271,7 +250,7 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator {
             return it
         }
 
-        Logger.d(TAG, "No auth found. Please Loggerin.")
+        Logger.d(TAG, "No auth found. Please Log in.")
         return null
     }
 

@@ -89,5 +89,9 @@ class AppConstants {
         const val SELF_REGISTER_REDIRECT_URL_PATH = "/apex/CommunitiesLanding"
 
         const val CHECKOUT_PROMOTION_NAME = "Gold Tier Rejuvenation"
+
+        const val EXPIRED_VOUCHERS_FILTER_DAYS = 30
+
+        const val REDEEMED_VOUCHERS_FILTER_DAYS = 90
     }
 }

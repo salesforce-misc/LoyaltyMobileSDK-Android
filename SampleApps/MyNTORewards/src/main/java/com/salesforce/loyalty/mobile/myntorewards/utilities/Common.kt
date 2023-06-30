@@ -61,6 +61,18 @@ class Common {
                 return false
             }
         }
+        fun isWithinMentionedDay(apiDateTime: String, withinDay: Long): Boolean {
+            val currentDate = LocalDate.now()
+            val currentDateMinus30Days = currentDate.minusDays(withinDay)
+
+            val apiFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val apiDate = apiDateTime?.let { LocalDate.parse(it, apiFormatter) }
+
+            if (apiDate?.isBefore(currentDateMinus30Days) == true) {
+                return false
+            }
+            return true
+        }
     }
 
 }
