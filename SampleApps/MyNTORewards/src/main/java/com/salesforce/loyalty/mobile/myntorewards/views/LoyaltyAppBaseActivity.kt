@@ -107,15 +107,6 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             }
         }
         observeSessionExpiry(onboardingModel, forceAuthManager)
-       /* observeLoginStatus(
-            profileModel,
-            promotionModel,
-            voucherModel,
-            onboardingModel,
-            benefitModel,
-            transactionModel,
-            checkoutFlowModel
-        )*/
     }
 
     private fun observeSessionExpiry(model: OnboardingScreenViewModel, forceAuthManager: ForceAuthManager) {
@@ -126,34 +117,5 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             }
         }
     }
-
-   /* private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
-                                   promotionModel: MyPromotionViewModelInterface,
-                                   voucherModel: VoucherViewModelInterface,
-                                   onboardingModel: OnBoardingViewModelAbstractInterface,
-                                   benefitModel: BenefitViewModelInterface,
-                                   transactionModel: TransactionViewModelInterface,
-                                   checkoutFlowModel: CheckOutFlowViewModelInterface
-    ) {
-        onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
-            run {
-                if (LogoutState.LOGOUT_SUCCESS == logoutState) {
-                    Logger.d(TAG, "observeLoginStatus() logout success")
-                    setContent {
-                        rememberNavController().clearBackStack(0)
-                        MainScreenStart(
-                            profileModel,
-                            promotionModel,
-                            voucherModel,
-                            onboardingModel,
-                            benefitModel,
-                            transactionModel,
-                            checkoutFlowModel
-                        )
-                    }
-                }
-            }
-        }
-    }*/
 }
 

@@ -160,26 +160,3 @@ fun RedeemScreen() {
         )
     }
 }
-
-
-@Composable
-fun MoreScreen(onBoardingModel: OnBoardingViewModelAbstractInterface, showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
-
-    val navController = rememberNavController()
-    NavHost(
-        navController = navController,
-        startDestination = MoreOptionsScreen.MoreOptions.route
-    )
-    {
-
-        composable(route = MoreOptionsScreen.MoreOptions.route) {
-            MoreOptions(navController, onBoardingModel){
-
-            }
-        }
-        composable(route = MoreOptionsScreen.PostLogout.route) {
-            showBottomBar(false)
-//            MainScreenStart()
-        }
-    }
-}
