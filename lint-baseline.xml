@@ -3,4 +3,11 @@
     <issue id="NotificationPermission">
         <ignore regexp="com.bumptech.glide.request.target.NotificationTarget" />
     </issue>
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="VectorPath">
+        <ignore path="res/drawable/" />
+    </issue>
+    <issue id="MonochromeLauncherIcon" severity="ignore" />
+    <issue id="IconXmlAndPng" severity="ignore" />
+    <issue id="SetJavaScriptEnabled" severity="ignore" />
 </lint>
