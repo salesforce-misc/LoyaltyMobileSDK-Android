@@ -51,7 +51,7 @@ class Common {
         fun isEndDateExpired(endDateString: String?): Boolean {
             try {
                 val currentDate = Date()
-                val sdf = SimpleDateFormat("yyyy-MM-dd")
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val endDate = endDateString?.let { sdf.parse(it) }
                 if (currentDate.after(endDate)) {
                     return true

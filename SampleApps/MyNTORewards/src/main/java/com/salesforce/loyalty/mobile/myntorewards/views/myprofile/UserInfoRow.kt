@@ -63,11 +63,11 @@ fun UserInfoRow(profileModel: MembershipProfileViewModelInterface) {
                 fontSize = 16.sp
             )
             Text(
-                text = membershipNumber,
+                text = stringResource(id = R.string.my_membership_number) + membershipNumber,
                 fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Bold,
-                color = Color.LightGray,
-                textAlign = TextAlign.Center,
+                color = Color.Gray,
+                textAlign = TextAlign.Start,
                 fontSize = 14.sp
             )
         }

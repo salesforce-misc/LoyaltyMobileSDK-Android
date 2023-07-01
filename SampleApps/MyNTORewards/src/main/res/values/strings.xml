@@ -112,7 +112,7 @@
     <string name="label_self_register_url">Self Register URL</string>
     <string name="label_selected_connected_app">Selected Connected App</string>
     <string name="label_my_connected_apps">My Connected Apps</string>
-    <string name="text_others">Other...</string>
+    <string name="text_others">Other\u2026</string>
     <string name="back_button">Back button</string>
     <string name="delete_icon_description">Delete item</string>
     <string name="label_logout">Log Out</string>
