@@ -18,4 +18,5 @@ interface OnBoardingViewModelAbstractInterface {
     fun getSelfRegisterUrl(): String
     fun getSelfRegisterRedirectUrl(): String
     fun resetLogOutDefault()
+    fun logoutAndClearAllSettingsAfterSessionExpiry(context: Context)
 }

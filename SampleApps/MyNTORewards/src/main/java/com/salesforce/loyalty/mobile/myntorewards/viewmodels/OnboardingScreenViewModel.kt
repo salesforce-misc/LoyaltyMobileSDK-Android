@@ -147,6 +147,21 @@ open class OnboardingScreenViewModel(
         }
     }
 
+    override fun logoutAndClearAllSettingsAfterSessionExpiry(context: Context) {
+        logoutState.value = LogoutState.LOGOUT_IN_PROGRESS
+        viewModelScope.launch {
+            forceAuthManager.revokeAccessToken()
+            // clear Shared Preferences
+            ForceAuthEncryptedPreference.clearAll(context)
+            ForceConnectedAppEncryptedPreference.clearAll(context)
+            PrefHelper.clearAll(context)
+
+            //clear cache
+            LocalFileManager.clearAllFolders(context)
+            logoutState.postValue(LogoutState.LOGOUT_SUCCESS_AFTER_SESSION_EXPIRY)
+        }
+    }
+
     override fun joinUser(email: String, context: Context) {
         Logger.d(TAG, "joinUser()")
         enrollmentStatus.value = EnrollmentState.ENROLLMENT_IN_PROGRESS
