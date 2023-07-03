@@ -428,7 +428,8 @@ private fun getOnBoardingMockViewModel(): OnBoardingViewModelAbstractInterface {
             get() = enrollmentStatus
         private val enrollmentStatus = MutableLiveData<EnrollmentState>()
         override val logoutStateLiveData: LiveData<LogoutState>
-            get() = MutableLiveData<LogoutState>()
+            get() = logoutStatus
+        private val logoutStatus = MutableLiveData<LogoutState>()
 
         override fun resetEnrollmentStatusDefault() {
             enrollmentStatus.value = EnrollmentState.ENROLLMENT_DEFAULT_EMPTY
@@ -476,6 +477,13 @@ private fun getOnBoardingMockViewModel(): OnBoardingViewModelAbstractInterface {
 
         override fun getSelfRegisterRedirectUrl(): String {
             return ""
+        }
+
+        override fun resetLogOutDefault() {
+        }
+
+        override fun logoutAndClearAllSettingsAfterSessionExpiry(context: Context) {
+            logoutStatus.value = LogoutState.LOGOUT_SUCCESS_AFTER_SESSION_EXPIRY
         }
 
     }
