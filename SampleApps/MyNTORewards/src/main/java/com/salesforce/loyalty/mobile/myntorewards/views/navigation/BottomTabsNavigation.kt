@@ -17,6 +17,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
+import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 
 @Composable
 fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
@@ -81,9 +82,7 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreen(onboardingModel) {
-                showBottomBar(it)
-            }
+            MoreOptions( onboardingModel)
         }
     }
 }

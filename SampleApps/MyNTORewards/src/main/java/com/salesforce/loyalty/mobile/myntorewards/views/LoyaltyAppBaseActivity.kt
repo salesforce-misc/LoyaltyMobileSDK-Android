@@ -116,13 +116,14 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             transactionModel,
             checkoutFlowModel
         )
+
     }
 
     private fun observeSessionExpiry(model: OnboardingScreenViewModel, forceAuthManager: ForceAuthManager) {
         forceAuthManager.authenticationStatusLiveData.observe(this) { status ->
             if (ForceAuthManager.AuthenticationStatus.UNAUTHENTICATED == status) {
                 Logger.d(TAG, "observeSessionExpiry() status: $status")
-                model.logoutAndClearAllSettings(applicationContext)
+                model.logoutAndClearAllSettingsAfterSessionExpiry(applicationContext)
             }
         }
     }
@@ -137,7 +138,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
     ) {
         onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
             run {
-                if (LogoutState.LOGOUT_SUCCESS == logoutState) {
+                if (LogoutState.LOGOUT_SUCCESS_AFTER_SESSION_EXPIRY == logoutState) {
                     Logger.d(TAG, "observeLoginStatus() logout success")
                     setContent {
                         rememberNavController().clearBackStack(0)

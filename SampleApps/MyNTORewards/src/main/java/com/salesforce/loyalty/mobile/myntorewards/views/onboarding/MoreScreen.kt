@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.onboarding
 
+import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -19,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -30,11 +30,11 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreOptionsScreen
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 
+
 @Composable
-fun MoreOptions(navController: NavController, onBoardingModel: OnBoardingViewModelAbstractInterface) {
+fun MoreOptions(onBoardingModel: OnBoardingViewModelAbstractInterface) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,13 +69,12 @@ fun MoreOptions(navController: NavController, onBoardingModel: OnBoardingViewMod
             modifier = Modifier.padding(top = 4.dp)
         )
 
-        MoreOptionList(navController = navController, onBoardingModel)
+        MoreOptionList(onBoardingModel)
     }
 }
 
 @Composable
 fun MoreOptionList(
-    navController: NavController,
     onBoardingModel: OnBoardingViewModelAbstractInterface
 ) {
 
@@ -84,11 +83,9 @@ fun MoreOptionList(
     when (logoutState) {
         LogoutState.LOGOUT_SUCCESS -> {
             isInProgress = false
-            LaunchedEffect(true) {
-                navController.navigate(MoreOptionsScreen.PostLogout.route) {
-                    popUpTo(0)
-                }
-            }
+            val activity = LocalContext.current as Activity
+            activity.finish();
+            activity.startActivity(activity.getIntent());
         }
         LogoutState.LOGOUT_IN_PROGRESS -> {
             isInProgress = true

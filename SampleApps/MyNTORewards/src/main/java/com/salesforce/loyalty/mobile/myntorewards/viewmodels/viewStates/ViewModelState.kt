@@ -29,6 +29,7 @@ enum class PromotionEnrollmentUpdateState {
 enum class LogoutState {
     LOGOUT_IN_PROGRESS,
     LOGOUT_SUCCESS,
+    LOGOUT_SUCCESS_AFTER_SESSION_EXPIRY,
     LOGOUT_FAILURE,
     LOGOUT_DEFAULT_EMPTY,
 }

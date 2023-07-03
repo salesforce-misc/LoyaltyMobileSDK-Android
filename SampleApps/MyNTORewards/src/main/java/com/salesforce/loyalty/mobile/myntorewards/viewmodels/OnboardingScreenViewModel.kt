@@ -62,6 +62,11 @@ open class OnboardingScreenViewModel(
         loginStatus.value = LoginState.LOGIN_DEFAULT_EMPTY
     }
 
+
+    override fun resetLogOutDefault() {
+        logoutState.value = LogoutState.LOGOUT_DEFAULT_EMPTY
+    }
+
     //invoke Login API. Since login Mechanism yet to be in place API fetching token and giving pass or fail. That token result
     //is being considered for login result as of now but it will be changed. Token will move to SDK code and will be replaced by Login API
     override fun loginUser(emailAddressText: String, passwordText: String, context: Context) {
@@ -139,6 +144,21 @@ open class OnboardingScreenViewModel(
             //clear cache
             LocalFileManager.clearAllFolders(context)
             logoutState.postValue(LogoutState.LOGOUT_SUCCESS)
+        }
+    }
+
+    override fun logoutAndClearAllSettingsAfterSessionExpiry(context: Context) {
+        logoutState.value = LogoutState.LOGOUT_IN_PROGRESS
+        viewModelScope.launch {
+            forceAuthManager.revokeAccessToken()
+            // clear Shared Preferences
+            ForceAuthEncryptedPreference.clearAll(context)
+            ForceConnectedAppEncryptedPreference.clearAll(context)
+            PrefHelper.clearAll(context)
+
+            //clear cache
+            LocalFileManager.clearAllFolders(context)
+            logoutState.postValue(LogoutState.LOGOUT_SUCCESS_AFTER_SESSION_EXPIRY)
         }
     }
 
