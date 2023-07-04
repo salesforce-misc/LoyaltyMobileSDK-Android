@@ -189,7 +189,7 @@ class NetworkClientTest {
 
             val body = EnrollmentRequest(
                 enrollmentDate = DateUtils.getCurrentDateTime(DateUtils.DATE_FORMAT_YYYYMMDDTHHMMSS),
-                membershipNumber = LoyaltyUtils.generateRandomString(),
+                membershipNumber = LoyaltyUtils.getRandomString(8),
                 associatedContactDetails = associatedContactDetails,
                 memberStatus = MemberStatus.ACTIVE.status,
                 createTransactionJournals = true,
