@@ -349,11 +349,11 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  p
                         fontSize = 14.sp,
                         modifier = Modifier
                             .padding(start = 16.dp)
-                            .fillMaxWidth(0.7f)
+                            .padding(end = 16.dp)
                     )
                 }
 
-                Image(
+                /*Image(
                     painter = painterResource(id = com.salesforce.loyalty.mobile.MyNTORewards.R.drawable.heart),
                     contentDescription = stringResource(com.salesforce.loyalty.mobile.MyNTORewards.R.string.cd_onboard_screen_bottom_fade),
                     modifier = Modifier
@@ -361,7 +361,7 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  p
                         .width(24.dp)
                         .height(24.dp),
                     contentScale = ContentScale.FillWidth
-                )
+                )*/
 
             }
 
