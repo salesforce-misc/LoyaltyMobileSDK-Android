@@ -66,8 +66,8 @@ fun PromotionEnrollPopup(
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
-        onDismissRequest = { },
-        properties = PopupProperties(focusable = true),
+        onDismissRequest = {closePopup() },
+        properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = false),
     ) {
 
 

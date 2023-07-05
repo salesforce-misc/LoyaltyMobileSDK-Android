@@ -47,8 +47,8 @@ fun VoucherPopup(
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
-        onDismissRequest = { },
-        properties = PopupProperties(focusable = true),
+        onDismissRequest = { closePopup() },
+        properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = false),
     ) {
 
 
@@ -225,7 +225,7 @@ fun VoucherPopupUI(
                             voucher.voucherCode?.let {
                                 clipboardManager.setText(AnnotatedString((it)))
                                 Toast
-                                    .makeText(context,voucherCopyText, Toast.LENGTH_SHORT)
+                                    .makeText(context, voucherCopyText, Toast.LENGTH_SHORT)
                                     .show()
                             }
                         }
