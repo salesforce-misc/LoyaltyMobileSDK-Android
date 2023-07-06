@@ -1,12 +1,11 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
@@ -32,8 +31,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         val windowInsetsController =
             WindowCompat.getInsetsController(window, window.decorView) ?: return
         windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
 
         val forceAuthManager = ForceAuthManager(applicationContext)
         val loginSuccess = PrefHelper.customPrefs(applicationContext)
