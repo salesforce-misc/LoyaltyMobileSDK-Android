@@ -53,6 +53,15 @@ class Common {
                 val currentDate = Date()
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val endDate = endDateString?.let { sdf.parse(it) }
+
+               /* adding 24 hour to end date as date coming from server is
+                having only date not time. and by default its taking time as 00:00
+                hence comparison was getting failed as time of start date was hight than time of end date
+                incase of same date*/
+
+                if (endDate != null) {
+                    endDate.time= endDate.time + (24 * 60 * 60 * 1000)
+                }
                 if (currentDate.after(endDate)) {
                     return true
                 }
