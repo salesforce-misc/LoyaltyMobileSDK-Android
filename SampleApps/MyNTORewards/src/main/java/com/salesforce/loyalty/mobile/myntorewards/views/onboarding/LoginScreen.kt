@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextRed
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -68,7 +69,9 @@ fun LoginUI(
         }
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp).navigationBarsPadding()
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                .navigationBarsPadding()
                 .imePadding()
         )
         {
@@ -90,6 +93,7 @@ fun LoginForm(
     Box() {
         val context = LocalContext.current
         var isInProgress by remember { mutableStateOf(false) }
+        var showError by remember { mutableStateOf(false) }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -110,17 +114,6 @@ fun LoginForm(
                 passwordtext = it
             }
 
-            //Form Fields
-
-            Text(
-                text = stringResource(id = R.string.forget_your_password_text),
-                fontFamily = font_sf_pro,
-                color = VibrantPurple40,
-                fontSize = 14.sp,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-
           //fetching reference of viewmodel
             val loginStatus by model.loginStatusLiveData.observeAsState(LoginState.LOGIN_DEFAULT_EMPTY) // collecting livedata as state
 
@@ -128,6 +121,7 @@ fun LoginForm(
            when (loginStatus) {
                 LoginState.LOGIN_SUCCESS -> {
                     isInProgress = false
+                    showError = false
                     Toast.makeText(LocalContext.current, "Login Success", Toast.LENGTH_LONG).show()
                     closeSheet()  // closing popup
                     model.resetLoginStatusDefault()
@@ -137,20 +131,40 @@ fun LoginForm(
                 }
                 LoginState.LOGIN_FAILURE -> {
                     isInProgress = false
+                    showError = true
                     Toast.makeText(LocalContext.current, "Login Failed", Toast.LENGTH_LONG).show()
                     model.resetLoginStatusDefault()//reset login status to default
                 }
                 LoginState.LOGIN_IN_PROGRESS -> {
                     isInProgress = true
+                    showError = false
                 }
                 LoginState.LOGIN_SUCCESS_ENROLLMENT_REQUIRED -> {
                     isInProgress = false
+                    showError = false
                     model.resetLoginStatusDefault()
                     PrefHelper.customPrefs(context).set(AppConstants.KEY_EMAIL, emailAddressPhoneNumberText.text)
                     openPopup(BottomSheetType.POPUP_ENROLLMENT)
                 }
                 else -> {}
             }
+
+            if (showError) {
+                Text(
+                    text = stringResource(id = R.string.login_error_message),
+                    fontFamily = font_sf_pro,
+                    color = TextRed,
+                    fontSize = 14.sp,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            Text(
+                text = stringResource(id = R.string.forget_your_password_text),
+                fontFamily = font_sf_pro,
+                color = VibrantPurple40,
+                fontSize = 14.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Button(
                 modifier = Modifier
