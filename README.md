@@ -12,10 +12,13 @@ Enhance brand engagement by providing Loyalty Management features on your Androi
 
 ### Supported Versions of Tools and Components
 
-| Tool or Component | Supported Version | Installation Details                             |
-|-------------------|-------------------|--------------------------------------------------|
-| Kotlin Version    | 1.8.0             | Installed by Android Studio                      |
-| Android Studio    | Electric Eel      | Install from the Official Android Developer site |
+| Tool or Component       | Supported Version    | Installation Details                    |
+|-------------------------|----------------------|-----------------------------------------|
+| Android Studio          | Electric Eel         | Install from the Android Developer site |
+| Android SDK and APIs    | 8.0+ (API level 26+) | Install from the Android Developer site |
+| Android SDK Tools       | 8.0+                 | Install from the Android Developer site |
+| Android Virtual Device  | 8.0+                 | Install from Android Studio             |
+| Kotlin                  | 1.8.0+               | Installed by Android Studio             |
 
 ### Installation
 
@@ -33,15 +36,15 @@ In the Android Project gradle file, add the following lines:
 Adding the above lines in gradle file will automatically download and manage the external dependencies.
 Start using the SDK files by importing the appropriate SDK package.
 
-`import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
- import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
- import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
- import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator`
+`import com.salesforce.loyalty.mobile.sources.forceUtils.*
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.*
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.*`
 
 ## LoyaltyAPIManager
 
 The `LoyaltyAPIManager` class manages requests related to loyalty programs using the Force API. Interact with the Salesforce Loyalty Management API and retrieve member benefits, transactions, profile, and more, in development and production environments. With LoyaltyAPIManager, you can:
-- Manage authentication by creating an instance of ForceAuthenticator.
+- Manage authentication by using the instance of ForceAuthenticator that was injected at the time of initialization.
 - Interact with the Loyalty Management APIs, including:
     - Individual Member Enrollments
     - Enroll for Promotions
@@ -129,14 +132,10 @@ loyaltyAPIManager.getVouchers(
 
 For a detailed understanding of each method and its parameters, please refer to the comments in the provided `LoyaltyAPIManager` code.
 
-## Test the Loyalty Management Mobile SDK for Android and Sample App
-
-Run the `run_tests.sh` script from the command line to test the LoyaltyMobileSDK-Android and the sample app. To ensure that the script is executable, run the `chmod +x run_tests.sh` script. The script provides these capabilities.
-
 ## Contribute to the SDK
 
 You can contribute to the development of the Loyalty Management Mobile SDK.
-1. Fork the Loyalty Management Mobile SDK for Android // TODO Add the repository link.
+1. Fork the Loyalty Management Mobile SDK for Android [repository](https://github.com/salesforce-misc/LoyaltyMobileSDK-Android)
 2. Create a branch with a descriptive name.
 3. Implement your changes.
 4. Test your changes.
