@@ -51,8 +51,8 @@ fun AppLogoAndSearchRow() {
             contentScale = ContentScale.FillWidth
         )
         Image(
-            painter = painterResource(id = R.drawable.research),
-            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+            painter = painterResource(id = R.drawable.receipt_icon),
+            contentDescription = stringResource(R.string.receipt_scanning),
             modifier = Modifier
                 .padding(end = 16.dp),
             contentScale = ContentScale.FillWidth
