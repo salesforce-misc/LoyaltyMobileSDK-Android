@@ -43,6 +43,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.POPUP_ROUNDED_CORNER_SIZE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_POPUP_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_DETAIL_HEADING
@@ -104,7 +105,7 @@ fun PromotionEnrollPopupUI(
         Column(
             modifier = Modifier
                 .fillMaxHeight(0.9f)
-                .background(Color.White, RoundedCornerShape(16.dp))
+                .background(Color.White, RoundedCornerShape(POPUP_ROUNDED_CORNER_SIZE))
                 .verticalScroll(
                     rememberScrollState()
                 )
@@ -325,7 +326,7 @@ fun PromotionPopupImageBox(url:String?)
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp)
-                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp)),
             contentScale = ContentScale.Crop
         )
 
@@ -335,7 +336,7 @@ fun PromotionPopupImageBox(url:String?)
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp)
-                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp)),
 
             contentScale = ContentScale.Crop
         ) {

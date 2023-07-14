@@ -18,12 +18,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -63,6 +65,7 @@ fun HomeScreenLandingView(
         voucherModel.loadVoucher(context, true)
     }
     val state = rememberPullRefreshState(refreshing, ::refresh)
+    var blurBG by remember { mutableStateOf(0.dp) }
 
 
     Column(
@@ -72,7 +75,7 @@ fun HomeScreenLandingView(
             .background(MyProfileScreenBG)
             .pullRefresh(state)
             .testTag(TEST_TAG_HOME_SCREEN_CONTAINER)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()).blur(blurBG)
     )
     {
 
@@ -91,7 +94,13 @@ fun HomeScreenLandingView(
                 UserNameAndRewardRow(profileModel)
 
                 PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)
+                {
+                    blurBG= it
+                }
                 VoucherRow(navCheckOutFlowController, voucherModel)
+                {
+                    blurBG= it
+                }
             }
 
             PullRefreshIndicator(refreshing, state)
@@ -107,7 +116,8 @@ fun HomeScreenLandingView(
 fun PromotionCardRow(
     bottomTabsNavController: NavController,
     navCheckOutFlowController: NavController,
-    promotionModel: MyPromotionViewModelInterface
+    promotionModel: MyPromotionViewModelInterface,
+    blurBG: (Dp) -> Unit
 ) {
 
     Column(
@@ -148,7 +158,9 @@ fun PromotionCardRow(
                 }
                 activePromotions?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
-                        PromotionCard(page, activePromotions, navCheckOutFlowController, promotionModel)
+                        PromotionCard(page, activePromotions, navCheckOutFlowController, promotionModel){
+                            blurBG(it)
+                        }
                     }
                 }
 
@@ -193,6 +205,7 @@ fun PromotionCardRow(
 fun VoucherRow(
     navCheckOutFlowController: NavController,
     voucherModel: VoucherViewModelInterface,
+    blurBG: (Dp) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -274,9 +287,11 @@ fun VoucherRow(
                         {
                             items= items.subList(0,2)
                         }
-                        items(items) {
-                                Spacer(modifier = Modifier.width(12.dp))
-                                VoucherView(it)
+                        items(items) { voucherItem ->
+                            Spacer(modifier = Modifier.width(12.dp))
+                                VoucherView(voucherItem){
+                                    blurBG(it)
+                                }
                         }
                     }
                 }

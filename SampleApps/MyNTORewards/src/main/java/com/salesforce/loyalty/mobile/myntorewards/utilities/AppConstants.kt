@@ -1,5 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
+import androidx.compose.ui.unit.dp
+
 class AppConstants {
 
     companion object {
@@ -93,5 +95,9 @@ class AppConstants {
         const val EXPIRED_VOUCHERS_FILTER_DAYS = 30
 
         const val REDEEMED_VOUCHERS_FILTER_DAYS = 90
+
+        val POPUP_ROUNDED_CORNER_SIZE= 22.dp
+        val BLUR_BG= 3.dp
+        val NO_BLUR_BG= 0.dp
     }
 }

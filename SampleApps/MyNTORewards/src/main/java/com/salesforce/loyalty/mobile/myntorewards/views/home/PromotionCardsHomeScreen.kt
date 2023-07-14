@@ -21,6 +21,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -29,6 +30,8 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BLUR_BG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
@@ -41,7 +44,8 @@ fun PromotionCard(
     page: Int,
     membershipPromo: List<Results>?,
     navCheckOutFlowController: NavController,
-    promotionViewModel: MyPromotionViewModelInterface
+    promotionViewModel: MyPromotionViewModelInterface,
+    blurBG: (Dp) -> Unit
 ) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
@@ -56,6 +60,7 @@ fun PromotionCard(
             .background(Color.White).testTag(TEST_TAG_PROMO_CARD)
             .clickable {
                 currentPromotionDetailPopupState = true
+                blurBG(BLUR_BG)
             }
     ) {
         Column(
@@ -166,6 +171,7 @@ fun PromotionCard(
                 it,
                 closePopup = {
                     currentPromotionDetailPopupState = false
+                    blurBG(NO_BLUR_BG)
                 },
                 navCheckOutFlowController,
                 promotionViewModel

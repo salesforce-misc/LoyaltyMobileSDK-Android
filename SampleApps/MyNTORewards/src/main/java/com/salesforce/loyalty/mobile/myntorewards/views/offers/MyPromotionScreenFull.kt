@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -35,8 +37,10 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
@@ -60,6 +64,7 @@ fun MyPromotionScreen(
     val context: Context = LocalContext.current
     val promoViewState by promotionViewModel.promotionViewState.observeAsState()
     val promoViewValue by promotionViewModel.membershipPromotionLiveData.observeAsState()
+    var blurBG by remember { mutableStateOf(0.dp) }
 
     LaunchedEffect(true) {
         promotionViewModel.loadPromotions(context)
@@ -98,7 +103,7 @@ fun MyPromotionScreen(
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .background(LightPurple)
-                    .pullRefresh(state)
+                    .pullRefresh(state).blur(blurBG)
             ) {
                 Spacer(
                     modifier = Modifier
@@ -172,16 +177,22 @@ fun MyPromotionScreen(
 
                             when (selectedTab) {
                                 0 -> {
-                                    PromotionItem(it, navCheckOutFlowController, promotionViewModel)
+                                    PromotionItem(it, navCheckOutFlowController, promotionViewModel){
+                                        blurBG= it
+                                    }
                                 }
                                 1 -> {
                                     if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE) {
-                                        PromotionItem(it, navCheckOutFlowController, promotionViewModel)
+                                        PromotionItem(it, navCheckOutFlowController, promotionViewModel){
+                                            blurBG= it
+                                        }
                                     }
                                 }
                                 2 -> {
                                     if (it.memberEligibilityCategory == MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED) {
-                                        PromotionItem(it, navCheckOutFlowController, promotionViewModel)
+                                        PromotionItem(it, navCheckOutFlowController, promotionViewModel){
+
+                                        }
                                     }
                                 }
                             }
@@ -268,19 +279,20 @@ fun MyPromotionScreenHeader() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  promotionViewModel: MyPromotionViewModelInterface) {
+fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  promotionViewModel: MyPromotionViewModelInterface,  blurBG: (Dp) -> Unit ) {
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
 
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
-    if (currentPromotionDetailPopupState) {
 
+    if (currentPromotionDetailPopupState) {
         PromotionEnrollPopup(
             results,
             closePopup = {
                 currentPromotionDetailPopupState = false
+                blurBG(NO_BLUR_BG)
             },
             navCheckOutFlowController,
             promotionViewModel
@@ -295,7 +307,7 @@ fun PromotionItem(results: Results, navCheckOutFlowController: NavController,  p
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-
+                blurBG(BLUR_BG)
                 currentPromotionDetailPopupState = true
             }
             .background(Color.White, shape = RoundedCornerShape(8.dp))
