@@ -27,10 +27,11 @@ import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingVi
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreOptionsScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ReceiptsList
 
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(
@@ -158,5 +159,28 @@ fun RedeemScreen() {
             textAlign = TextAlign.Center,
             fontSize = 20.sp
         )
+    }
+}
+
+@Composable
+fun MoreScreenNavigation(
+    onboardingModel: OnBoardingViewModelAbstractInterface,
+    showBottomBar: (bottomBarVisible: Boolean) -> Unit
+) {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = MoreScreens.MoreScreenOptions.route
+    )
+    {
+
+        composable(route = MoreScreens.MoreScreenOptions.route) {
+            showBottomBar(true)
+            MoreOptions(onboardingModel, navController)
+        }
+        composable(route = MoreScreens.ReceiptListScreen.route) {
+            showBottomBar(true)
+            ReceiptsList(navController)
+        }
     }
 }

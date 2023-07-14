@@ -131,4 +131,7 @@
     <string name="text_voucher_copy_copied">"Voucher Code Copied"</string>
     <string name="login_error_message">The username or password you entered is incorrect. Please try again.</string>
     <string name="receipt_scanning">Receipt Scanning</string>
+    <string name="header_label_receipt">Receipts</string>
+    <string name="receipt_search_text">Search for Receipt number</string>
+    <string name="label_new_receipt">New</string>
 </resources>

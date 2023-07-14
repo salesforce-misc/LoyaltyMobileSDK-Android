@@ -8,6 +8,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_ORDER_CONFIRMATION_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_ORDER_DETAIL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_PROFILE_LANDING_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_RECEIPT_LIST_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_START_CHECKOUT_FLOW_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_TRANSACTION_FULL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_VOUCHER_FULL_SCREEN
@@ -31,7 +32,7 @@ sealed class ProfileViewScreen(val route: String) {
     object TransactionFullScreen : ProfileViewScreen(ROUTE_TRANSACTION_FULL_SCREEN)
 }
 
-sealed class MoreOptionsScreen(val route: String) {
-    object MoreOptions : MoreOptionsScreen(ROUTE_MORE_SCREEN)
-    object PostLogout : MoreOptionsScreen(ROUTE_LANDING_SCREEN)
+sealed class MoreScreens(val route: String) {
+    object MoreScreenOptions : MoreScreens(ROUTE_MORE_SCREEN)
+    object ReceiptListScreen : MoreScreens(ROUTE_RECEIPT_LIST_SCREEN)
 }

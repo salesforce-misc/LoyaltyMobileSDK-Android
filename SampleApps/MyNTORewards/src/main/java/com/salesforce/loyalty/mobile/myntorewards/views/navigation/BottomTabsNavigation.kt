@@ -82,7 +82,9 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreOptions( onboardingModel)
+            MoreScreenNavigation( onboardingModel){
+                showBottomBar(it)
+            }
         }
     }
 }

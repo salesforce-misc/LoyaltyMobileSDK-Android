@@ -35,6 +35,10 @@ class AppConstants {
         const val ROUTE_BENEFIT_FULL_SCREEN = "route_benefit_screen"
         const val ROUTE_TRANSACTION_FULL_SCREEN = "route_transaction_screen"
 
+        //Receipt screens
+        const val ROUTE_MORE_LIST_SCREEN = "more_list_screen"
+        const val ROUTE_RECEIPT_LIST_SCREEN = "receipt_list_screen"
+
         //benefit icon based on strings
         const val BENEFIT_TYPE_FREE_SHIPPING = "Free Shipping"
         const val BENEFIT_TYPE_EXTENDED_RETURN = "Extended Return"

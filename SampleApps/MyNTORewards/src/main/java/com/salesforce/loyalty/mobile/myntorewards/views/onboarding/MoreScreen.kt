@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -30,11 +31,15 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 
 
 @Composable
-fun MoreOptions(onBoardingModel: OnBoardingViewModelAbstractInterface) {
+fun MoreOptions(
+    onBoardingModel: OnBoardingViewModelAbstractInterface,
+    navHostController: NavHostController
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,13 +74,14 @@ fun MoreOptions(onBoardingModel: OnBoardingViewModelAbstractInterface) {
             modifier = Modifier.padding(top = 4.dp)
         )
 
-        MoreOptionList(onBoardingModel)
+        MoreOptionList(onBoardingModel, navHostController)
     }
 }
 
 @Composable
 fun MoreOptionList(
-    onBoardingModel: OnBoardingViewModelAbstractInterface
+    onBoardingModel: OnBoardingViewModelAbstractInterface,
+    navHostController: NavHostController
 ) {
 
     val logoutState by onBoardingModel.logoutStateLiveData.observeAsState(LogoutState.LOGOUT_DEFAULT_EMPTY) // collecting livedata as state
@@ -123,10 +129,7 @@ fun MoreOptionList(
                 imageRes = R.drawable.ic_notification,
                 textRes = R.string.header_label_orders
             )
-            AddMoreOption(
-                imageRes = R.drawable.ic_quote,
-                textRes = R.string.header_label_support
-            )
+            ReceiptOption(navHostController)
             AddMoreOption(
                 imageRes = R.drawable.ic_favorite,
                 textRes = R.string.header_label_favourite
@@ -181,6 +184,44 @@ fun AddMoreOption(imageRes: Int, textRes: Int){
         )
         Text(
             text = stringResource(id = textRes),
+            fontFamily = font_sf_pro,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black,
+            modifier = Modifier.padding(start = 16.dp),
+            fontSize = 18.sp
+        )
+    }
+
+    Divider(color = VibrantPurple90, thickness = Dp.Hairline)
+}
+
+@Composable
+fun ReceiptOption(navHostController: NavHostController) {
+    Divider(color = VibrantPurple90, thickness = Dp.Hairline)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(top = 24.dp, bottom = 24.dp)
+            .background(Color.White)
+            .clickable {
+                navHostController.navigate(MoreScreens.ReceiptListScreen.route)
+            },
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.receipt_menu),
+            contentDescription = stringResource(R.string.header_label_receipt),
+            modifier = Modifier
+                .width(30.dp)
+                .height(30.dp)
+                .padding(4.dp),
+            contentScale = ContentScale.Inside
+        )
+        Text(
+            text = stringResource(id = R.string.header_label_receipt),
             fontFamily = font_sf_pro,
             fontWeight = FontWeight.Normal,
             color = Color.Black,
