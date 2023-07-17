@@ -134,4 +134,5 @@
     <string name="header_label_receipt">Receipts</string>
     <string name="receipt_search_text">Search for Receipt number</string>
     <string name="label_new_receipt">New</string>
+    <string name="download_option">Download</string>
 </resources>

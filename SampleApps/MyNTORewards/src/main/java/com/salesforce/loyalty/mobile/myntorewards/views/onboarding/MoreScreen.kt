@@ -131,6 +131,10 @@ fun MoreOptionList(
             )
             ReceiptOption(navHostController)
             AddMoreOption(
+                imageRes = R.drawable.ic_quote,
+                textRes = R.string.header_label_support
+            )
+            AddMoreOption(
                 imageRes = R.drawable.ic_favorite,
                 textRes = R.string.header_label_favourite
             )

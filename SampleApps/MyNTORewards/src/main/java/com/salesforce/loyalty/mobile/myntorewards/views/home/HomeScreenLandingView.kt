@@ -92,7 +92,7 @@ fun HomeScreenLandingView(
 
             Column {
 
-                AppLogoAndSearchRow()
+                AppLogoAndSearchRow(navCheckOutFlowController)
                 UserNameAndRewardRow(profileModel)
 
                 PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)

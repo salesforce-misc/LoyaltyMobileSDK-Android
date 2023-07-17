@@ -106,6 +106,7 @@ fun ReceiptsList(navController: NavHostController) {
 
 @Composable
 fun ReceiptItem(){
+    var openReceiptDetail by remember { mutableStateOf(false) }
     Spacer(modifier = Modifier.height(12.dp))
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -114,6 +115,9 @@ fun ReceiptItem(){
             .fillMaxWidth()
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
+            .clickable {
+                openReceiptDetail = true
+            }
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
@@ -149,6 +153,11 @@ fun ReceiptItem(){
                 modifier = Modifier
             )
         }
+    }
+    if (openReceiptDetail) {
+        ReceiptDetail(closePopup = {
+            openReceiptDetail = false
+        })
     }
 }
 

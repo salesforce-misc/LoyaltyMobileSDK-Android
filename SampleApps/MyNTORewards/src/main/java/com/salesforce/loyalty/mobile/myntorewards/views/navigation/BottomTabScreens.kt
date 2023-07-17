@@ -72,6 +72,10 @@ fun HomeScreenAndCheckOutFlowNavigation(
             showBottomBar(true)
             VoucherFullScreen(navCheckOutFlowController, voucherModel)
         }
+        composable(route = MoreScreens.ReceiptListScreen.route) {
+            showBottomBar(true)
+            ReceiptsList(navCheckOutFlowController)
+        }
     }
 }
 
