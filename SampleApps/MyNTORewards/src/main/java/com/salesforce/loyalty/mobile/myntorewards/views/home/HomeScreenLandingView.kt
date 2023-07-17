@@ -64,6 +64,7 @@ fun HomeScreenLandingView(
         profileModel.loadProfile(context, true)
         voucherModel.loadVoucher(context, true)
     }
+
     val state = rememberPullRefreshState(refreshing, ::refresh)
     var blurBG by remember { mutableStateOf(0.dp) }
 
@@ -75,7 +76,8 @@ fun HomeScreenLandingView(
             .background(MyProfileScreenBG)
             .pullRefresh(state)
             .testTag(TEST_TAG_HOME_SCREEN_CONTAINER)
-            .verticalScroll(rememberScrollState()).blur(blurBG)
+            .verticalScroll(rememberScrollState())
+            .blur(blurBG)
     )
     {
 
@@ -95,11 +97,11 @@ fun HomeScreenLandingView(
 
                 PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)
                 {
-                    blurBG= it
+                    blurBG = it
                 }
                 VoucherRow(navCheckOutFlowController, voucherModel)
                 {
-                    blurBG= it
+                    blurBG = it
                 }
             }
 
@@ -126,7 +128,8 @@ fun PromotionCardRow(
             .wrapContentSize(Alignment.Center)
             .height(450.dp)
             .background(PromotionCardBG)
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp).testTag(TEST_TAG_PROMOTION_CARD),
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .testTag(TEST_TAG_PROMOTION_CARD),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
         HomeSubViewHeader(R.string.text_promotions, bottomTabsNavController)
@@ -142,7 +145,8 @@ fun PromotionCardRow(
             is PromotionViewState.PromotionsFetchSuccess -> {
                 isInProgress = false
                 val membershipPromo = promoViewValue?.outputParameters?.outputParameters?.results
-                val activePromotions = membershipPromo?.filter { !Common.isEndDateExpired(it.endDate) }
+                val activePromotions =
+                    membershipPromo?.filter { !Common.isEndDateExpired(it.endDate) }
 
                 val promListListSize = membershipPromo?.size ?: 0
                 val pagerState = rememberPagerState()
@@ -158,7 +162,12 @@ fun PromotionCardRow(
                 }
                 activePromotions?.let {
                     HorizontalPager(count = pageCount, state = pagerState) { page ->
-                        PromotionCard(page, activePromotions, navCheckOutFlowController, promotionModel){
+                        PromotionCard(
+                            page,
+                            activePromotions,
+                            navCheckOutFlowController,
+                            promotionModel
+                        ) {
                             blurBG(it)
                         }
                     }
@@ -174,14 +183,17 @@ fun PromotionCardRow(
                 )
 
             }
+
             is PromotionViewState.PromotionsFetchFailure -> {
                 isInProgress = false
                 PromotionEmptyView(R.string.description_empty_promotions)
                 // TODO Show Empty Promotions view
             }
+
             PromotionViewState.PromotionFetchInProgress -> {
                 isInProgress = true
             }
+
             else -> {}
         }
         if (isInProgress) {
@@ -211,7 +223,8 @@ fun VoucherRow(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .wrapContentSize(Alignment.Center)
-            .background(PromotionCardBG).testTag(TEST_TAG_VOUCHER_ROW)
+            .background(PromotionCardBG)
+            .testTag(TEST_TAG_VOUCHER_ROW)
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
     ) {
 
@@ -257,6 +270,7 @@ fun VoucherRow(
                 isInProgress = false
 
             }
+
             VoucherViewState.VoucherFetchFailure -> {
                 isInProgress = false
             }
@@ -264,6 +278,7 @@ fun VoucherRow(
             VoucherViewState.VoucherFetchInProgress -> {
                 isInProgress = true
             }
+
             else -> {}
         }
         Box(
@@ -282,16 +297,15 @@ fun VoucherRow(
 
                 vouchers?.let {
                     LazyRow(modifier = Modifier.fillMaxWidth()) {
-                        var items= it.filter { it.status !=  VOUCHER_EXPIRED}
-                        if(items.size> 2)
-                        {
-                            items= items.subList(0,2)
+                        var items = it.filter { it.status != VOUCHER_EXPIRED }
+                        if (items.size > 2) {
+                            items = items.subList(0, 2)
                         }
                         items(items) { voucherItem ->
                             Spacer(modifier = Modifier.width(12.dp))
-                                VoucherView(voucherItem){
-                                    blurBG(it)
-                                }
+                            VoucherView(voucherItem) {
+                                blurBG(it)
+                            }
                         }
                     }
                 }

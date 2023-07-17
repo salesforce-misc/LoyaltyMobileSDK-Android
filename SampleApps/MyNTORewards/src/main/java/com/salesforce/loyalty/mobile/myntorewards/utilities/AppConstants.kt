@@ -8,7 +8,8 @@ class AppConstants {
 
         //preferences
         const val PREF_NAME = "com.salesforce.loyalty.mobile.sources.SHARED_PREF"
-        const val CONNECTED_APP_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.CONNECTED_APP_PREF"
+        const val CONNECTED_APP_PREF_NAME =
+            "com.salesforce.loyalty.mobile.myntorewards.CONNECTED_APP_PREF"
         const val AUTH_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.AUTH_PREF"
         const val KEY_SELECTED_INSTANCE_URL = "selected_instance_url"
         const val KEY_OPEN_CONNECTED_APP_INSTANCE = "open_connected_app_instance"
@@ -96,8 +97,8 @@ class AppConstants {
 
         const val REDEEMED_VOUCHERS_FILTER_DAYS = 90
 
-        val POPUP_ROUNDED_CORNER_SIZE= 22.dp
-        val BLUR_BG= 3.dp
-        val NO_BLUR_BG= 0.dp
+        val POPUP_ROUNDED_CORNER_SIZE = 22.dp
+        val BLUR_BG = 3.dp
+        val NO_BLUR_BG = 0.dp
     }
 }
