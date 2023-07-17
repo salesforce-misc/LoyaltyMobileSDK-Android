@@ -12,6 +12,7 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -42,6 +43,7 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
     val context: Context = LocalContext.current //fetching reference of viewmodel
+    var blurBG by remember { mutableStateOf(0.dp) }
 
     fun refresh() = refreshScope.launch {
         profileModel.loadProfile(context, true)
@@ -57,7 +59,7 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                 .fillMaxWidth(1f)
                 .background(Color.White)
                 .pullRefresh(state)
-                .verticalScroll(rememberScrollState()).testTag(TEST_TAG_PROFILE_ELEMENT_CONTAINER),
+                .verticalScroll(rememberScrollState()).testTag(TEST_TAG_PROFILE_ELEMENT_CONTAINER).blur(blurBG),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         )
@@ -86,6 +88,9 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                             .background(Color.White)
                     )
                     ProfileCard(profileModel)
+                    {
+                        blurBG= it
+                    }
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)
@@ -99,7 +104,9 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                             .fillMaxWidth()
                             .background(MyProfileScreenBG)
                     )
-                    VoucherRow(navProfileViewController, voucherModel)
+                    VoucherRow(navProfileViewController, voucherModel){
+                        blurBG= it
+                    }
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)

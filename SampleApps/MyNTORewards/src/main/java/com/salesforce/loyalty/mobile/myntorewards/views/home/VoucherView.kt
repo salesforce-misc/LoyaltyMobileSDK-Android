@@ -24,6 +24,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -31,6 +32,8 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BLUR_BG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
@@ -39,7 +42,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun VoucherView(voucher: VoucherResponse) {
+fun VoucherView(voucher: VoucherResponse, blurBG: (Dp) -> Unit) {
 
     var voucherPopupState by remember { mutableStateOf(false) }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
@@ -52,6 +55,7 @@ fun VoucherView(voucher: VoucherResponse) {
             .padding(bottom = 16.dp)
             .clickable {
                 voucherPopupState = true
+                blurBG(BLUR_BG)
             }
     )
 
@@ -246,6 +250,7 @@ fun VoucherView(voucher: VoucherResponse) {
             voucher,
             closePopup = {
                 voucherPopupState = false
+                blurBG(NO_BLUR_BG)
             }
         )
     }

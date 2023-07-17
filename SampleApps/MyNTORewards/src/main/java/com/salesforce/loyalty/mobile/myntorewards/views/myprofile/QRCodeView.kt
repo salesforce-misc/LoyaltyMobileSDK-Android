@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.POPUP_ROUNDED_CORNER_SIZE
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 
 
@@ -38,7 +39,7 @@ fun QRCodePopup(membershipProfile: MemberProfileResponse?, closePopup: () -> Uni
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.85f)
-            .background(MyProfileScreenBG, shape = RoundedCornerShape(16.dp)),
+            .background(MyProfileScreenBG, shape = RoundedCornerShape(POPUP_ROUNDED_CORNER_SIZE)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 

@@ -21,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -46,16 +47,20 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: VoucherViewModelInterface) {
+fun VoucherFullScreen(
+    navCheckOutFlowController: NavController,
+    voucherModel: VoucherViewModelInterface
+) {
 
     var refreshing by remember { mutableStateOf(false) }
+    var blurBG by remember { mutableStateOf(0.dp) }
     val refreshScope = rememberCoroutineScope()
 
     val context: Context = LocalContext.current
 
     fun refresh() = refreshScope.launch {
 
-        voucherModel.loadVoucher(context,true )
+        voucherModel.loadVoucher(context, true)
 
     }
 
@@ -68,6 +73,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
             modifier = Modifier
                 .background(Color.White)
                 .pullRefresh(state)
+                .blur(blurBG)
         )
         {
             var isInProgress by remember { mutableStateOf(true) }
@@ -151,6 +157,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                     isInProgress = false
 
                 }
+
                 VoucherViewState.VoucherFetchFailure -> {
                     isInProgress = false
                 }
@@ -158,6 +165,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                 VoucherViewState.VoucherFetchInProgress -> {
                     isInProgress = true
                 }
+
                 else -> {}
             }
 
@@ -173,7 +181,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
             }
 
             // Redeemed tab
-            if(selectedTab == 1){
+            if (selectedTab == 1) {
                 filteredVouchers = filteredVouchers?.filter {
                     it.useDate?.let { date ->
                         Common.isWithinMentionedDay(
@@ -227,8 +235,10 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                items(filteredVouchers.size) {
-                                    VoucherView(filteredVouchers[it])
+                                items(filteredVouchers.size) { filteredVoucherItem ->
+                                    VoucherView(filteredVouchers[filteredVoucherItem]) {
+                                        blurBG = it
+                                    }
                                 }
                             }
                         }

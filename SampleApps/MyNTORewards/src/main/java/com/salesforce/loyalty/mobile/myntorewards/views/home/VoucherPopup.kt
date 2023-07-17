@@ -35,6 +35,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.POPUP_ROUNDED_CORNER_SIZE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.QRCode
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
@@ -71,8 +72,8 @@ fun VoucherPopupUI(
 
     Column(
             modifier = Modifier
-                .fillMaxHeight(0.98f)
-                .background(Color.White, RoundedCornerShape(16.dp))
+                .fillMaxHeight(0.90f)
+                .background(Color.White, RoundedCornerShape(POPUP_ROUNDED_CORNER_SIZE))
                 .verticalScroll(
                     rememberScrollState()
                 ),
@@ -92,7 +93,7 @@ fun VoucherPopupUI(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(180.dp)
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                .clip(RoundedCornerShape(topStart = POPUP_ROUNDED_CORNER_SIZE, topEnd = POPUP_ROUNDED_CORNER_SIZE)),
                             contentScale = ContentScale.Crop
                         )
 
@@ -102,7 +103,7 @@ fun VoucherPopupUI(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(180.dp)
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                .clip(RoundedCornerShape(topStart = POPUP_ROUNDED_CORNER_SIZE, topEnd = POPUP_ROUNDED_CORNER_SIZE)),
 
                             contentScale = ContentScale.Crop
                         ) {
