@@ -47,7 +47,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: VoucherViewModelInterface) {
+fun VoucherFullScreen(
+    navCheckOutFlowController: NavController,
+    voucherModel: VoucherViewModelInterface
+) {
 
     var refreshing by remember { mutableStateOf(false) }
     var blurBG by remember { mutableStateOf(0.dp) }
@@ -57,7 +60,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
 
     fun refresh() = refreshScope.launch {
 
-        voucherModel.loadVoucher(context,true )
+        voucherModel.loadVoucher(context, true)
 
     }
 
@@ -69,7 +72,8 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .background(Color.White)
-                .pullRefresh(state).blur(blurBG)
+                .pullRefresh(state)
+                .blur(blurBG)
         )
         {
             var isInProgress by remember { mutableStateOf(true) }
@@ -153,6 +157,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                     isInProgress = false
 
                 }
+
                 VoucherViewState.VoucherFetchFailure -> {
                     isInProgress = false
                 }
@@ -160,6 +165,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                 VoucherViewState.VoucherFetchInProgress -> {
                     isInProgress = true
                 }
+
                 else -> {}
             }
 
@@ -175,7 +181,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
             }
 
             // Redeemed tab
-            if(selectedTab == 1){
+            if (selectedTab == 1) {
                 filteredVouchers = filteredVouchers?.filter {
                     it.useDate?.let { date ->
                         Common.isWithinMentionedDay(
@@ -230,8 +236,8 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 items(filteredVouchers.size) { filteredVoucherItem ->
-                                    VoucherView(filteredVouchers[filteredVoucherItem]){
-                                        blurBG= it
+                                    VoucherView(filteredVouchers[filteredVoucherItem]) {
+                                        blurBG = it
                                     }
                                 }
                             }
