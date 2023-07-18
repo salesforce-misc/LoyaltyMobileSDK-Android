@@ -135,4 +135,7 @@
     <string name="receipt_search_text">Search for Receipt number</string>
     <string name="label_new_receipt">New</string>
     <string name="download_option">Download</string>
+    <string name="label_receipt_number">Receipt Number:</string>
+    <string name="button_submit_receipt">Submit Receipt</string>
+    <string name="button_try_again">Try Again</string>
 </resources>
