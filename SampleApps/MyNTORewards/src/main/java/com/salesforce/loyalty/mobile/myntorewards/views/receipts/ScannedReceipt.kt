@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,29 +23,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
-fun ShowScannedReceiptPopup() {
-    Popup(
-        alignment = Alignment.Center,
-        offset = IntOffset(0, 800),
-        onDismissRequest = {/*closePopup() */ },
-        properties = PopupProperties(
-            focusable = true,
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false
-        ),
-    ) {
-        Box() {
+fun ShowScannedReceiptPopup(navHostController: NavHostController) {
+
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(0.9f)
-                    .background(MyProfileScreenBG, RoundedCornerShape(22.dp))
+                    .fillMaxSize()
+                    .background(MyProfileScreenBG/*, RoundedCornerShape(22.dp)*/)
                     .padding(16.dp)
                     /*.verticalScroll(
                         rememberScrollState()
@@ -53,6 +45,7 @@ fun ShowScannedReceiptPopup() {
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                Spacer(modifier = Modifier.height(50.dp))
                 Text(
                     text = stringResource(R.string.label_receipt_number) + " " + "2323",
                     style = TextStyle(
@@ -91,10 +84,14 @@ fun ShowScannedReceiptPopup() {
 
                 Column(modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxHeight(), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
+                    .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(), onClick = {
+                            navHostController.navigate(MoreScreens.ScannedCongratsScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
                         shape = RoundedCornerShape(100.dp)
@@ -125,12 +122,10 @@ fun ShowScannedReceiptPopup() {
                     )
                 }
             }
-        }
-    }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun ScannedPreview(){
     ShowScannedReceiptPopup()
-}
+}*/

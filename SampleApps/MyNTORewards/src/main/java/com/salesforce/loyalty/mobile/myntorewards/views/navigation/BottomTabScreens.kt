@@ -31,7 +31,9 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.CongratulationsPopup
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ReceiptsList
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ShowScannedReceiptPopup
 
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(
@@ -185,6 +187,14 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.ReceiptListScreen.route) {
             showBottomBar(true)
             ReceiptsList(navController)
+        }
+        composable(route = MoreScreens.ScannedReceiptScreen.route) {
+            showBottomBar(false)
+            ShowScannedReceiptPopup(navController)
+        }
+        composable(route = MoreScreens.ScannedCongratsScreen.route) {
+            showBottomBar(false)
+            CongratulationsPopup(navController)
         }
     }
 }

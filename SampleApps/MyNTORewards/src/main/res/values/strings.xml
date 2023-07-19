@@ -138,4 +138,8 @@
     <string name="label_receipt_number">Receipt Number:</string>
     <string name="button_submit_receipt">Submit Receipt</string>
     <string name="button_try_again">Try Again</string>
+    <string name="scanning_congrats">Congratulations!!!</string>
+    <string name="scanning_congrats_subtitle">We’ve credited {count} points for the scanned receipt</string>
+    <string name="scanning_done">Done</string>
+    <string name="scan_another_receipt">Scan Another Receipt</string>
 </resources>

@@ -53,6 +53,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -98,7 +99,7 @@ fun ReceiptsList(navController: NavHostController) {
             .padding(start = 16.dp, end = 16.dp)
             .background(TextPurpleLightBG),
 
-        horizontalAlignment = Alignment.CenterHorizontally
+//        horizontalAlignment = Alignment.CenterHorizontally
     )  {
 
         Spacer(modifier = Modifier.height(50.dp))
@@ -113,7 +114,7 @@ fun ReceiptsList(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(30.dp))
 
-            ProcessButton()
+            ProcessButton(navController)
         }
         else
         {
@@ -298,12 +299,12 @@ fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier) {
 
 
 @Composable
-fun ProcessButton() {
+fun ProcessButton(navController: NavHostController) {
 
     Button(
         modifier = Modifier
             .width(288.dp), onClick = {
-
+            navController.navigate(MoreScreens.ScannedReceiptScreen.route)
         },
         colors = androidx.compose.material3.ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)
