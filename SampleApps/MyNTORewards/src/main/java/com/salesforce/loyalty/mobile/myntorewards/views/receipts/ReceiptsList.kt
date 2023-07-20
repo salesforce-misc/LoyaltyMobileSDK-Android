@@ -304,7 +304,11 @@ fun ProcessButton(navController: NavHostController) {
     Button(
         modifier = Modifier
             .width(288.dp), onClick = {
-            navController.navigate(MoreScreens.ScannedReceiptScreen.route)
+            navController.navigate(MoreScreens.ScannedReceiptScreen.route){
+                popUpTo(MoreScreens.ReceiptListScreen.route) {
+                    inclusive = false
+                }
+            }
         },
         colors = androidx.compose.material3.ButtonDefaults.buttonColors(VibrantPurple40),
         shape = RoundedCornerShape(100.dp)

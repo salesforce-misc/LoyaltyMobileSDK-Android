@@ -91,7 +91,11 @@ fun ShowScannedReceiptPopup(navHostController: NavHostController) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(), onClick = {
-                            navHostController.navigate(MoreScreens.ScannedCongratsScreen.route)
+                            navHostController.navigate(MoreScreens.ScannedCongratsScreen.route){
+                                popUpTo(MoreScreens.ReceiptListScreen.route){
+                                    inclusive = false
+                                }
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
                         shape = RoundedCornerShape(100.dp)

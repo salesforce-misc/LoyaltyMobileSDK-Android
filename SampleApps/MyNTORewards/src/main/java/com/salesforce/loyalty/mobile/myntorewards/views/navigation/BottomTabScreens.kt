@@ -78,6 +78,14 @@ fun HomeScreenAndCheckOutFlowNavigation(
             showBottomBar(true)
             ReceiptsList(navCheckOutFlowController)
         }
+        composable(route = MoreScreens.ScannedReceiptScreen.route) {
+            showBottomBar(false)
+            ShowScannedReceiptPopup(navCheckOutFlowController)
+        }
+        composable(route = MoreScreens.ScannedCongratsScreen.route) {
+            showBottomBar(false)
+            CongratulationsPopup(navCheckOutFlowController)
+        }
     }
 }
 

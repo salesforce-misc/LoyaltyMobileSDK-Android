@@ -92,9 +92,11 @@ fun CongratulationsPopup(navController: NavHostController){
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(), onClick = {
-                                                       navController.navigate(MoreScreens.ReceiptListScreen.route){
-                                                           popUpTo(MoreScreens.MoreScreenOptions.route)
-                                                       }
+                            navController.navigate(MoreScreens.ReceiptListScreen.route) {
+                                popUpTo(MoreScreens.ReceiptListScreen.route) {
+                                    inclusive = false
+                                }
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
                         shape = RoundedCornerShape(100.dp)
