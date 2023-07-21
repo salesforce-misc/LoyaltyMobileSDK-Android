@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,7 +26,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -45,19 +43,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Objects
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -304,7 +297,12 @@ fun ProcessButton(navController: NavHostController) {
     Button(
         modifier = Modifier
             .width(288.dp), onClick = {
-            navController.navigate(MoreScreens.ScannedReceiptScreen.route){
+            /*navController.navigate(MoreScreens.ScannedReceiptScreen.route){
+                popUpTo(MoreScreens.ReceiptListScreen.route) {
+                    inclusive = false
+                }
+            }*/
+            navController.navigate(MoreScreens.ScanningProgressScreen.route){
                 popUpTo(MoreScreens.ReceiptListScreen.route) {
                     inclusive = false
                 }
