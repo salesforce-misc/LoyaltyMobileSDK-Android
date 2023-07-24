@@ -57,6 +57,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -124,7 +125,7 @@ fun ReceiptsList(navController: NavHostController) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
                 })
-            }
+            },
 
         horizontalAlignment = Alignment.CenterHorizontally
     )  {
