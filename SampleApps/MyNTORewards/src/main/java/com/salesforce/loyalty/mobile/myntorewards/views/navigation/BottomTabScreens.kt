@@ -33,7 +33,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.CongratulationsPopup
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ReceiptsList
-import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ShowScannedReceiptPopup
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ScanningProgress
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ShowScannedReceiptScreen
 
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(
@@ -80,11 +81,15 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
-            ShowScannedReceiptPopup(navCheckOutFlowController)
+            ShowScannedReceiptScreen(navCheckOutFlowController)
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
             CongratulationsPopup(navCheckOutFlowController)
+        }
+        composable(route = MoreScreens.ScanningProgressScreen.route) {
+            showBottomBar(false)
+            ScanningProgress(navCheckOutFlowController)
         }
     }
 }
@@ -198,11 +203,15 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
-            ShowScannedReceiptPopup(navController)
+            ShowScannedReceiptScreen(navController)
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
             CongratulationsPopup(navController)
+        }
+        composable(route = MoreScreens.ScanningProgressScreen.route) {
+            showBottomBar(false)
+            ScanningProgress(navController)
         }
     }
 }

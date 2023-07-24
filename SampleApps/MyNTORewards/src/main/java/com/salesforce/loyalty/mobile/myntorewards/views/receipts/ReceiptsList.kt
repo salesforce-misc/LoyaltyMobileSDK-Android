@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,8 +35,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -51,29 +53,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Objects
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReceiptsList(navController: NavHostController) {
 
-    var text by rememberSaveable { mutableStateOf("") }
+    var searchText by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
+    val scanViewModel: ScanningViewModel = viewModel()
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
@@ -117,7 +119,12 @@ fun ReceiptsList(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp)
-            .background(TextPurpleLightBG),
+            .background(TextPurpleLightBG)
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            }
 
         horizontalAlignment = Alignment.CenterHorizontally
     )  {
@@ -172,6 +179,7 @@ fun ReceiptsList(navController: NavHostController) {
                 }
         )
         Column(modifier = Modifier.fillMaxSize()) {
+            var receiptLists = scanViewModel.getReceiptLists()
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -179,7 +187,9 @@ fun ReceiptsList(navController: NavHostController) {
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {
-                SearchBar(onSearch = {}, Modifier.weight(0.8f))
+                SearchBar(onSearch = {
+                    searchText = it
+                }, Modifier.weight(0.8f), focusManager)
 
                 var expanded by remember { mutableStateOf(false) }
                 Button(
@@ -237,12 +247,24 @@ fun ReceiptsList(navController: NavHostController) {
                 contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(20) {
-                    ReceiptItem()
+                receiptLists?.let{
+                    val filteredList = receiptLists.filter {
+                        if (searchText.isNotEmpty()) {
+                            it.receiptNumber.contains(
+                                searchText,
+                                ignoreCase = true
+                            )
+                        } else {
+                            true
+                        }
+                    }
+                    items(filteredList.size) {
+                        ReceiptItem(filteredList[it])
+                    }
+
                 }
             }
         }
-
         }
     }
 
@@ -270,7 +292,7 @@ fun Context.createImageFile(): File {
 
 
 @Composable
-fun ReceiptItem(){
+fun ReceiptItem(receipt: ScanningViewModel.Receipt){
     var openReceiptDetail by remember { mutableStateOf(false) }
     Spacer(modifier = Modifier.height(12.dp))
     Row(
@@ -286,14 +308,14 @@ fun ReceiptItem(){
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = "Receipt Number",
+                text = receipt.receiptNumber,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
             )
             Text(
-                text = "13-07-2023",
+                text = receipt.date,
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
@@ -303,7 +325,7 @@ fun ReceiptItem(){
         }
         Column(modifier = Modifier.weight(0.3f), verticalArrangement = Arrangement.spacedBy(4.dp), horizontalAlignment = Alignment.End) {
             Text(
-                text = "INR 32392",
+                text = receipt.price,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.End,
@@ -311,7 +333,7 @@ fun ReceiptItem(){
                 modifier = Modifier
             )
             Text(
-                text = "434 Points",
+                text = receipt.points + " Points",
                 color = Color.Black,
                 textAlign = TextAlign.End,
                 fontSize = 13.sp,
@@ -328,16 +350,17 @@ fun ReceiptItem(){
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier) {
+fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: FocusManager) {
     var text by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
 
     TextField(
         value = text,
-        onValueChange = { text = it },
-        label = { Text(stringResource(id = R.string.receipt_search_text), color = TextDarkGray) },
+        onValueChange = {
+            text = it
+            onSearch(it)
+        },
+        placeholder = { Text(stringResource(id = R.string.receipt_search_text), color = TextDarkGray) },
         leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = SearchIconColor) },
         modifier = modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -368,7 +391,12 @@ fun ProcessButton(navController: NavHostController) {
     Button(
         modifier = Modifier
             .width(288.dp), onClick = {
-            navController.navigate(MoreScreens.ScannedReceiptScreen.route){
+            /*navController.navigate(MoreScreens.ScannedReceiptScreen.route){
+                popUpTo(MoreScreens.ReceiptListScreen.route) {
+                    inclusive = false
+                }
+            }*/
+            navController.navigate(MoreScreens.ScanningProgressScreen.route){
                 popUpTo(MoreScreens.ReceiptListScreen.route) {
                     inclusive = false
                 }

@@ -142,4 +142,7 @@
     <string name="scanning_congrats_subtitle">We’ve credited {count} points for the scanned receipt</string>
     <string name="scanning_done">Done</string>
     <string name="scan_another_receipt">Scan Another Receipt</string>
+    <string name="scan_progress_indicator">Scanning receipt…</string>
+    <string name="scan_progress_subheader">Hang in there! This may take a minute.</string>
+    <string name="btn_cancel">Cancel</string>
 </resources>

@@ -14,30 +14,28 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_ibm_plex_mono_regular
 
-data class Invoice(val itemName: String, val qty: String, val price: String, val total: String)
+data class Item(val itemName: String, val qty: String, val price: String, val total: String)
 
 @Composable
 fun ReceiptDetailTable() {
 
-    val invoiceList = listOf(
-        Invoice("Converse Shoes", "1", "\$599", "\$599"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199"),
-        Invoice("Converse Socks", "1", "\$199", "\$199")
+    val itemLists = listOf(
+        Item("Converse Shoes", "1", "\$599", "\$599"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199"),
+        Item("Converse Socks", "1", "\$199", "\$199")
     )
 
     val column1Weight = 0.4f
@@ -84,7 +82,7 @@ fun ReceiptDetailTable() {
             DrawDashLine()
             Spacer(modifier = Modifier.height(4.dp))
         }
-        itemsIndexed(invoiceList) { index, invoice ->
+        itemsIndexed(itemLists) { index, invoice ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 TableCell(
                     text = invoice.itemName,
@@ -107,7 +105,7 @@ fun ReceiptDetailTable() {
                     alignment = TextAlign.Right
                 )
             }
-            if (index == invoiceList.size - 1) {
+            if (index == itemLists.size - 1) {
                 Spacer(modifier = Modifier.height(8.dp))
                 DrawDashLine()
                 Spacer(modifier = Modifier.height(150.dp))
