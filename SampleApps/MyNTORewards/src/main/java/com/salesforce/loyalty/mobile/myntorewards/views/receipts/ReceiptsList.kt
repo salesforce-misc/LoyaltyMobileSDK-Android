@@ -3,7 +3,11 @@ package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,6 +24,9 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BrowseGallery
+import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,6 +36,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -72,6 +80,18 @@ fun ReceiptsList(navController: NavHostController) {
         BuildConfig.APPLICATION_ID + ".provider", file
     )
 
+    var imageUri by remember {
+        mutableStateOf<Uri?>(Uri.EMPTY)
+    }
+    val bitmap =  remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+
+    val launcher = rememberLauncherForActivityResult(contract =
+    ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+    }
+
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
     }
@@ -99,17 +119,40 @@ fun ReceiptsList(navController: NavHostController) {
             .padding(start = 16.dp, end = 16.dp)
             .background(TextPurpleLightBG),
 
-//        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally
     )  {
 
         Spacer(modifier = Modifier.height(50.dp))
-        //AppContent()
 
-        if (capturedImageUri.path?.isNotEmpty() == true) {
+        if(imageUri?.path?.isNotEmpty() == true)
+        {
+            if (Build.VERSION.SDK_INT < 28) {
+                bitmap.value = MediaStore.Images
+                    .Media.getBitmap(context.contentResolver,imageUri)
+
+            } else {
+                imageUri?.let {
+                    val source = ImageDecoder
+                        .createSource(context.contentResolver,it)
+                    bitmap.value = ImageDecoder.decodeBitmap(source)
+                }
+
+            }
+
+            bitmap.value?.let {  btm ->
+                Image(bitmap = btm.asImageBitmap(),
+                    contentDescription =null,
+                    modifier = Modifier.size(500.dp))
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+
+            ProcessButton(navController)
+        }
+        else if (capturedImageUri.path?.isNotEmpty() == true) {
             Image(
                 modifier = Modifier
                     .padding(16.dp, 8.dp),
-                painter = rememberImagePainter(capturedImageUri),
+                painter = rememberAsyncImagePainter(capturedImageUri),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.height(30.dp))
@@ -118,7 +161,6 @@ fun ReceiptsList(navController: NavHostController) {
         }
         else
         {
-
        Image(
             painter = painterResource(id = R.drawable.back_arrow),
             contentDescription = "receipt_back_button",
@@ -139,19 +181,11 @@ fun ReceiptsList(navController: NavHostController) {
             ) {
                 SearchBar(onSearch = {}, Modifier.weight(0.8f))
 
+                var expanded by remember { mutableStateOf(false) }
                 Button(
                     modifier = Modifier
                         .weight(0.25f), onClick = {
-
-                        val permissionCheckResult =
-                            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-                        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                            cameraLauncher.launch(uri)
-                        } else {
-                            // Request a permission
-                            permissionLauncher.launch(Manifest.permission.CAMERA)
-                        }
-
+                        expanded= true
                     },
                     colors = ButtonDefaults.buttonColors(VibrantPurple40),
                     shape = RoundedCornerShape(100.dp)
@@ -166,6 +200,36 @@ fun ReceiptsList(navController: NavHostController) {
                         modifier = Modifier
                             .padding(top = 3.dp, bottom = 3.dp)
                     )
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = {  Text("Camera") },
+                            trailingIcon ={
+                                Icon(imageVector = Icons.Default.Camera, contentDescription = "New Item")
+                            },
+                            onClick = {
+                                val permissionCheckResult =
+                                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                                if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                                    cameraLauncher.launch(uri)
+                                } else {
+                                    // Request a permission
+                                    permissionLauncher.launch(Manifest.permission.CAMERA)
+                                }
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Gallery") },
+                            trailingIcon ={
+                                Icon(imageVector = Icons.Default.Image, contentDescription = "New Item")
+                            },
+
+                            onClick = {     launcher.launch("image/*") }
+                        )
+                    }
                 }
             }
             LazyColumn(
@@ -325,6 +389,10 @@ fun ProcessButton(navController: NavHostController) {
                 .padding(top = 3.dp, bottom = 3.dp)
         )
     }
+}
+@Composable
+fun RequestContentPermission() {
+
 }
 
 @Preview
