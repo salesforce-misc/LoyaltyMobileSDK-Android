@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -76,7 +77,10 @@ fun ScanningProgress(navHostController: NavHostController) {
                 text = stringResource(id = R.string.btn_cancel),
                 fontFamily = font_sf_pro,
                 modifier = Modifier
-                    .padding(top = 12.dp, bottom = 3.dp),
+                    .padding(top = 12.dp, bottom = 3.dp)
+                    .clickable {
+                        navHostController.popBackStack(MoreScreens.CaptureImageScreen.route, false)
+                    },
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
                 color = Color(0xFF181818),

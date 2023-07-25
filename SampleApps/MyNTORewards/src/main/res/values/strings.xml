@@ -137,6 +137,7 @@
     <string name="download_option">Download</string>
     <string name="label_receipt_number">Receipt Number:</string>
     <string name="button_submit_receipt">Submit Receipt</string>
+    <string name="button_process">Process</string>
     <string name="button_try_again">Try Again</string>
     <string name="scanning_congrats">Congratulations!!!</string>
     <string name="scanning_congrats_subtitle">We’ve credited {count} points for the scanned receipt</string>
@@ -145,4 +146,6 @@
     <string name="scan_progress_indicator">Scanning receipt…</string>
     <string name="scan_progress_subheader">Hang in there! This may take a minute.</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="request_permission">Request permission</string>
+    <string name="permission_message">The camera is important for this app. Please grant the permission.</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.navigation
 
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_BENEFIT_FULL_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_CAPTURE_IMAGE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_LANDING_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_MORE_LIST_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_MORE_SCREEN
@@ -40,9 +41,11 @@ sealed class MoreScreens(val route: String) {
     object MoreScreenOptions : MoreScreens(ROUTE_MORE_LIST_SCREEN)
     object ReceiptListScreen : MoreScreens(ROUTE_RECEIPT_LIST_SCREEN)
 
-    object ScannedReceiptScreen: MoreScreens(ROUTE_SCANNED_RECEIPT_SCREEN)
+    object CaptureImageScreen : MoreScreens(ROUTE_CAPTURE_IMAGE_SCREEN)
 
-    object ScannedCongratsScreen: MoreScreens(ROUTE_SCANNED_CONG_SCREEN)
+    object ScannedReceiptScreen : MoreScreens(ROUTE_SCANNED_RECEIPT_SCREEN)
 
-    object ScanningProgressScreen: MoreScreens(ROUTE_SCAN_PROGRESS_SCREEN)
+    object ScannedCongratsScreen : MoreScreens(ROUTE_SCANNED_CONG_SCREEN)
+
+    object ScanningProgressScreen : MoreScreens(ROUTE_SCAN_PROGRESS_SCREEN)
 }
