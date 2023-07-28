@@ -13,6 +13,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -209,7 +210,20 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
 fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: FocusManager) {
     var text by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-
+    val trailingIconView = @Composable {
+        IconButton(
+            onClick = {
+                text = ""
+                onSearch(text)
+            },
+        ) {
+            Icon(
+                Icons.Filled.Clear,
+                contentDescription = null,
+                tint = SearchIconColor
+            )
+        }
+    }
     TextField(
         value = text,
         onValueChange = {
@@ -229,6 +243,7 @@ fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: Focu
                 tint = SearchIconColor
             )
         },
+        trailingIcon = if (text.isNotBlank()) trailingIconView else null,
         modifier = modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
