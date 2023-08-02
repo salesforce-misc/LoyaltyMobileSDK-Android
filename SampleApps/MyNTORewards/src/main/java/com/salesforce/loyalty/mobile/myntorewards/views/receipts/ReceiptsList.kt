@@ -13,6 +13,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,6 +42,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
@@ -48,13 +52,14 @@ fun ReceiptsList(navController: NavHostController) {
     var searchText by rememberSaveable { mutableStateOf("") }
     val scanViewModel: ScanningViewModel = viewModel()
     val focusManager = LocalFocusManager.current
-
+    var blurBG by remember { mutableStateOf(0.dp) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp)
             .background(TextPurpleLightBG)
+            .blur(blurBG)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
@@ -125,7 +130,9 @@ fun ReceiptsList(navController: NavHostController) {
                         }
                     }
                     items(filteredList.size) {
-                        ReceiptItem(filteredList[it])
+                        ReceiptItem(filteredList[it]) {
+                            blurBG = it
+                        }
                     }
 
                 }
@@ -136,7 +143,7 @@ fun ReceiptsList(navController: NavHostController) {
 
 
 @Composable
-fun ReceiptItem(receipt: ScanningViewModel.Receipt) {
+fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
     var openReceiptDetail by remember { mutableStateOf(false) }
     Spacer(modifier = Modifier.height(12.dp))
     Row(
@@ -147,6 +154,7 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt) {
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
             .clickable {
+                blurBG(AppConstants.BLUR_BG)
                 openReceiptDetail = true
             }
     ) {
@@ -192,6 +200,7 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt) {
     if (openReceiptDetail) {
         ReceiptDetail(closePopup = {
             openReceiptDetail = false
+            blurBG(AppConstants.NO_BLUR_BG)
         })
     }
 }
@@ -201,7 +210,20 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt) {
 fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: FocusManager) {
     var text by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-
+    val trailingIconView = @Composable {
+        IconButton(
+            onClick = {
+                text = ""
+                onSearch(text)
+            },
+        ) {
+            Icon(
+                Icons.Filled.Clear,
+                contentDescription = null,
+                tint = SearchIconColor
+            )
+        }
+    }
     TextField(
         value = text,
         onValueChange = {
@@ -221,6 +243,7 @@ fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: Focu
                 tint = SearchIconColor
             )
         },
+        trailingIcon = if (text.isNotBlank()) trailingIconView else null,
         modifier = modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {

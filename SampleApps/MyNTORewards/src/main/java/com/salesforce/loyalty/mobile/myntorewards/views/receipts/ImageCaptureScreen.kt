@@ -37,11 +37,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -67,6 +63,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -145,6 +142,9 @@ fun ImageCaptureScreen(navController: NavHostController) {
             .fillMaxSize()
             .background(Color.Black)) {
 
+            var progressPopupState by remember { mutableStateOf(false) }
+            var scannedReceiptPopupState by remember { mutableStateOf(false) }
+
             Spacer(modifier = Modifier.height(50.dp))
             Image(
                 painter = painterResource(id = R.drawable.white_back_button),
@@ -185,7 +185,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth(), onClick = {
-                        navController.navigate(MoreScreens.ScanningProgressScreen.route)
+                        progressPopupState = true
                     },
                     colors = ButtonDefaults.buttonColors(TextPurpleLightBG),
                     shape = RoundedCornerShape(100.dp)
@@ -217,6 +217,20 @@ fun ImageCaptureScreen(navController: NavHostController) {
                     fontWeight = FontWeight(400),
                 )
 
+            }
+            if (progressPopupState) {
+                ScanningProgress(navController, closePopup = {
+                    progressPopupState = false
+                    imageClicked = false
+                }, openScannedReceiptPopup = {
+                    scannedReceiptPopupState = true
+                })
+            }
+            if (scannedReceiptPopupState) {
+                ShowScannedReceiptScreen(navController, closePopup = {
+                    scannedReceiptPopupState = false
+                    imageClicked = false
+                })
             }
         }
     }

@@ -100,7 +100,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
-            ShowScannedReceiptScreen(navCheckOutFlowController)
+//            ShowScannedReceiptScreen(navCheckOutFlowController)
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
@@ -108,7 +108,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.ScanningProgressScreen.route) {
             showBottomBar(false)
-            ScanningProgress(navCheckOutFlowController)
+//            ScanningProgress(navCheckOutFlowController)
         }
     }
 }
@@ -242,7 +242,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
-            ShowScannedReceiptScreen(navController)
+//            ShowScannedReceiptScreen(navController)
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
@@ -250,7 +250,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.ScanningProgressScreen.route) {
             showBottomBar(false)
-            ScanningProgress(navController)
+//            ScanningProgress(navController)
         }
     }
 }
