@@ -88,7 +88,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
             // If the camera permission is granted, then show screen with the feature enabled
             PermissionStatus.Granted -> {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    CameraContent {
+                    CameraContent(navController) {
                         imageClicked = true
                         capturedImageBitmap = it.asImageBitmap()
                     }
@@ -144,6 +144,18 @@ fun ImageCaptureScreen(navController: NavHostController) {
         Column(modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)) {
+
+            Spacer(modifier = Modifier.height(50.dp))
+            Image(
+                painter = painterResource(id = R.drawable.white_back_button),
+                contentDescription = "transaction_back_button",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .padding(start=10.dp, top = 10.dp, bottom = 10.dp).width(32.dp).height(32.dp)
+                    .clickable {
+                        imageClicked = false
+                    }
+            )
 
             Column(
                 modifier = Modifier
@@ -214,7 +226,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
 @RequiresApi(Build.VERSION_CODES.P)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun CameraContent(
+private fun CameraContent(navController: NavHostController,
     onPhotoCaptured: (Bitmap) -> Unit
 ) {
 
@@ -282,7 +294,6 @@ private fun CameraContent(
             }
 
             if (imageUri?.path?.isNotEmpty() == true) {
-                Log.d("Akash", imageUri?.path.toString())
                 imageUri?.let {
                     val source = ImageDecoder
                         .createSource(context.contentResolver, it)
@@ -310,6 +321,17 @@ private fun CameraContent(
                         cameraController.bindToLifecycle(lifecycleOwner)
                     }
                 }
+            )
+            Image(
+                painter = painterResource(id = R.drawable.white_back_button),
+                contentDescription = "transaction_back_button",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .padding(start=10.dp, top = 50.dp, bottom = 10.dp).width(32.dp).height(32.dp)
+                    .align(Alignment.TopStart)
+                    .clickable {
+                        navController.popBackStack()
+                    }
             )
 
             Image(
