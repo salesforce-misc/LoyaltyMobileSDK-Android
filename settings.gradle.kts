@@ -3,7 +3,8 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven { url 'https://jitpack.io' }
+        maven { url = uri("https://jitpack.io") }
+        maven(url="https://dl.bintray.com/kotlin/dokka")
     }
 }
 dependencyResolutionManagement {
@@ -12,9 +13,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven {
-            url 'https://jitpack.io'
+            url = uri("https://jitpack.io")
         }
     }
 }
-include 'SampleApps:MyNTORewards'
-include ':Sources'
+include("SampleApps:MyNTORewards")
+include(":Sources")
