@@ -30,6 +30,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatTransactionDateTime
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_OLD_TRANSACTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECENT_TRANSACTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.TransactionViewModelInterface
@@ -62,7 +63,7 @@ fun TransactionCard(
 
 @Composable
 fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionViewModelInterface) {
- //fetching reference of viewmodel
+    //fetching reference of viewmodel
     val transactions by transactionViewModel.transactionsLiveData.observeAsState() // collecting livedata as state
     val transactionViewState by transactionViewModel.transactionViewState.observeAsState()
     val context: Context = LocalContext.current
@@ -91,7 +92,11 @@ fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionVie
                     }
                     var index = 0
                     var previewTransactionCount = 0
-                    Column(modifier = Modifier.wrapContentHeight().testTag(TEST_TAG_TRANSACTION_LIST)) {
+                    Column(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .testTag(TEST_TAG_TRANSACTION_LIST)
+                    ) {
                         Spacer(modifier = Modifier.height(12.dp))
                         while (previewTransactionCount < pageCount && index < count) {
                             transactions?.transactionJournals?.get(index)?.apply {
@@ -114,12 +119,15 @@ fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionVie
                 }
                 isInProgress = false
             }
+
             is TransactionViewState.TransactionFetchFailure -> {
                 isInProgress = false
             }
+
             TransactionViewState.TransactionFetchInProgress -> {
                 isInProgress = true
             }
+
             else -> {}
         }
         if (transactions?.transactionJournals?.isEmpty() == true) {
@@ -152,12 +160,15 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
         is TransactionViewState.TransactionFetchSuccess -> {
             isInProgress = false
         }
+
         is TransactionViewState.TransactionFetchFailure -> {
             isInProgress = false
         }
+
         TransactionViewState.TransactionFetchInProgress -> {
             isInProgress = true
         }
+
         else -> {}
     }
     if (isInProgress) {
@@ -192,7 +203,11 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
 
         recentTransactions?.let { transactionsJournals ->
             if (transactionsJournals.isNotEmpty()) {
-                Column(modifier = Modifier.wrapContentHeight().testTag(TEST_TAG_RECENT_TRANSACTION)) {
+                Column(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .testTag(TEST_TAG_RECENT_TRANSACTION)
+                ) {
                     Text(
                         text = stringResource(id = R.string.label_transactions_recent),
                         color = Color.Black,
@@ -217,7 +232,9 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
         oldTransactions?.let { transactionsJournals ->
             if (transactionsJournals.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(12.dp))
-                Column(modifier = Modifier.wrapContentHeight()) {
+                Column(modifier = Modifier
+                    .wrapContentHeight()
+                    .testTag(TEST_TAG_OLD_TRANSACTION)) {
                     Text(
                         text = stringResource(id = R.string.label_transactions_one_month_ago),
                         color = Color.Black,

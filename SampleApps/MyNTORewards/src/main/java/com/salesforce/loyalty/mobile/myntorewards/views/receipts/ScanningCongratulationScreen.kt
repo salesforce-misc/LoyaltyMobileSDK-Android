@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +24,7 @@ import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONGRATULATIONS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
@@ -32,7 +34,8 @@ fun CongratulationsPopup(navController: NavHostController) {
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.White)
+            .testTag(TEST_TAG_CONGRATULATIONS_SCREEN),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -45,14 +48,14 @@ fun CongratulationsPopup(navController: NavHostController) {
 
             Image(
                 painter = painterResource(id = R.drawable.congratulations),
-                contentDescription = stringResource(R.string.scanning_congrats),
+                contentDescription = stringResource(R.string.scanning_congrats_background),
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth,
             )
             Spacer(modifier = Modifier.height(25.dp))
             Image(
                 painter = painterResource(id = R.drawable.gift),
-                contentDescription = stringResource(R.string.scanning_congrats),
+                contentDescription = stringResource(R.string.scanning_congrats_gift_icon),
                 modifier = Modifier.width(135.dp),
                 contentScale = ContentScale.FillWidth,
 

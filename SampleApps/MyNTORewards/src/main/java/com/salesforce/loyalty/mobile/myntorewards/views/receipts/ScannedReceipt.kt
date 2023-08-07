@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,9 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ROW_STORE_DETAILS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
@@ -32,15 +36,20 @@ fun ShowScannedReceiptScreen(navHostController: NavHostController, closePopup: (
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
-        onDismissRequest = {closePopup() },
-        properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = false),
+        onDismissRequest = { closePopup() },
+        properties = PopupProperties(
+            focusable = true,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false
+        ),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxHeight(0.95f)
                 .fillMaxWidth()
                 .background(MyProfileScreenBG, RoundedCornerShape(22.dp))
-                .padding(16.dp),
+                .padding(16.dp)
+                .testTag(TEST_TAG_RECEIPT_TABLE_SCREEN),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -60,6 +69,7 @@ fun ShowScannedReceiptScreen(navHostController: NavHostController, closePopup: (
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .testTag(TEST_TAG_ROW_STORE_DETAILS)
 //                        .padding(16.dp)
             ) {
 
@@ -114,6 +124,9 @@ fun ShowScannedReceiptScreen(navHostController: NavHostController, closePopup: (
                     fontFamily = font_sf_pro,
                     modifier = Modifier
                         .padding(top = 12.dp, bottom = 3.dp)
+                        .testTag(
+                            TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
+                        )
                         .clickable {
                             closePopup()
                             navHostController.popBackStack(

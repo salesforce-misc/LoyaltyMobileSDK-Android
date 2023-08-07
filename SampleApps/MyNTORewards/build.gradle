@@ -33,12 +33,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             enableUnitTestCoverage true
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testCoverageEnabled true
             enableUnitTestCoverage true
@@ -58,10 +58,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.0'
-    }
-    lintOptions {
-        abortOnError = false
-        lintConfig = file("$rootDir/lint-baseline.xml")
     }
 }
 
@@ -144,7 +140,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 
-    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
 
 
     testImplementation 'org.mockito:mockito-core:5.3.1'

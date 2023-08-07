@@ -13,12 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_ibm_plex_mono_regular
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE
 
 data class Item(val itemName: String, val qty: String, val price: String, val total: String)
 
@@ -47,7 +49,9 @@ fun ReceiptDetailTable() {
         Modifier
             .padding(top = 16.dp)
             .background(color = Color.White, shape = RectangleShape)
-            .padding(8.dp)) {
+            .padding(8.dp)
+            .testTag(TEST_TAG_RECEIPT_TABLE)
+    ) {
         item {
             Spacer(modifier = Modifier.height(8.dp))
             DrawDashLine()
@@ -127,7 +131,9 @@ fun RowScope.TableCell(
         text = text,
         modifier = if (title) Modifier
             .weight(weight)
-            .padding(5.dp) else Modifier.weight(weight).padding(start = 5.dp, end = 5.dp),
+            .padding(5.dp) else Modifier
+            .weight(weight)
+            .padding(start = 5.dp, end = 5.dp),
         fontWeight = if (title) FontWeight.Bold else FontWeight.Normal,
         style = TextStyle(
             fontSize = 10.sp,

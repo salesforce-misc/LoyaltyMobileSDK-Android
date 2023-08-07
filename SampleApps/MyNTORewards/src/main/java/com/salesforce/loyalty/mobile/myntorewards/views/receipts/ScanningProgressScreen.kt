@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_PROCESS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.delay
 
@@ -36,8 +38,12 @@ fun ScanningProgress(
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
-        onDismissRequest = {closePopup() },
-        properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = false),
+        onDismissRequest = { closePopup() },
+        properties = PopupProperties(
+            focusable = true,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false
+        ),
     ) {
         var detailsPopupState by remember { mutableStateOf(false) }
         Column(
@@ -54,7 +60,8 @@ fun ScanningProgress(
                 modifier = Modifier
                     .weight(0.9f)
                     .background(MyProfileScreenBG)
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .testTag(TEST_TAG_RECEIPT_PROCESS_SCREEN),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -116,7 +123,7 @@ fun ScanningProgress(
                 detailsPopupState = true
             }
         }
-        if(detailsPopupState){
+        if (detailsPopupState) {
             openScannedReceiptPopup()
         }
     }

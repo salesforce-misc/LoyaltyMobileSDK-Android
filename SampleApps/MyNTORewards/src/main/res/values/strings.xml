@@ -140,6 +140,8 @@
     <string name="button_process">Process</string>
     <string name="button_try_again">Try Again</string>
     <string name="scanning_congrats">Congratulations!!!</string>
+    <string name="scanning_congrats_background">Congratulations Screen Background</string>
+    <string name="scanning_congrats_gift_icon">Congrats Gift Icon</string>
     <string name="scanning_congrats_subtitle">We’ve credited {count} points for the scanned receipt</string>
     <string name="scanning_done">Done</string>
     <string name="scan_another_receipt">Scan Another Receipt</string>
