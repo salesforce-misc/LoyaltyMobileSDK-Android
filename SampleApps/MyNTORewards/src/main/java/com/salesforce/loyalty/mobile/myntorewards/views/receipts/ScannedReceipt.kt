@@ -60,7 +60,7 @@ fun ShowScannedReceiptScreen(navHostController: NavHostController, closePopup: (
                     fontSize = 16.sp,
                     lineHeight = 20.sp,
                     fontFamily = font_sf_pro,
-                    fontWeight = FontWeight(600),
+                    fontWeight = FontWeight.SemiBold,
                     color = LighterBlack,
                 )
             )
@@ -136,8 +136,8 @@ fun ShowScannedReceiptScreen(navHostController: NavHostController, closePopup: (
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
-                    color = Color(0xFF181818),
-                    fontWeight = FontWeight(400),
+                    color = LighterBlack,
+                    fontWeight = FontWeight.Normal,
 
                     )
             }

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONGRATULATIONS_SCREEN
@@ -128,8 +129,8 @@ fun CongratulationsPopup(navController: NavHostController) {
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
-                    color = Color(0xFF181818),
-                    fontWeight = FontWeight(400),
+                    color = LighterBlack,
+                    fontWeight = FontWeight.Normal,
 
                     )
             }

@@ -61,10 +61,13 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_IMAGE_PREVIEW_SCREEN
@@ -147,7 +150,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(MyProfileScreenBG)
                 .testTag(TEST_TAG_IMAGE_PREVIEW_SCREEN)
         ) {
 
@@ -156,7 +159,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(50.dp))
             Image(
-                painter = painterResource(id = R.drawable.white_back_button),
+                painter = painterResource(id = R.drawable.back_arrow),
                 contentDescription = "image preview back button",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
@@ -184,6 +187,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
                 )
             }
 
+
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -192,22 +196,23 @@ fun ImageCaptureScreen(navController: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-
                 Button(
                     modifier = Modifier
                         .fillMaxWidth(), onClick = {
                         progressPopupState = true
                     },
-                    colors = ButtonDefaults.buttonColors(TextPurpleLightBG),
+                    colors = ButtonDefaults.buttonColors(VibrantPurple40),
                     shape = RoundedCornerShape(100.dp)
 
                 ) {
+
+
                     Text(
                         text = stringResource(id = R.string.button_process),
                         fontFamily = font_sf_pro,
                         textAlign = TextAlign.Center,
                         fontSize = 16.sp,
-                        color = VibrantPurple40,
+                        color = Color.White,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(top = 3.dp, bottom = 3.dp)
@@ -224,11 +229,12 @@ fun ImageCaptureScreen(navController: NavHostController) {
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight(400),
-                )
+                    color = LighterBlack,
+                    fontWeight = FontWeight.Normal,
 
+                    )
             }
+
             if (progressPopupState) {
                 ScanningProgress(navController, closePopup = {
                     progressPopupState = false

@@ -107,7 +107,7 @@ fun ReceiptDetail( closePopup: () -> Unit) {
                         fontSize = 16.sp,
                         lineHeight = 22.4.sp,
                         fontFamily = font_sf_pro,
-                        fontWeight = FontWeight(400),
+                        fontWeight = FontWeight.Normal,
                         color = LighterBlack,
                         textAlign = TextAlign.Center,
                         textDecoration = TextDecoration.Underline,
