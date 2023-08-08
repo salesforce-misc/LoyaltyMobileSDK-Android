@@ -207,10 +207,15 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
         }
     }
     if (openReceiptDetail) {
-        ReceiptDetail(closePopup = {
+        //this will move to new screen.
+        ManualReview(closePopup = {
             openReceiptDetail = false
             blurBG(AppConstants.NO_BLUR_BG)
         })
+      /*  ReceiptDetail(closePopup = {
+            openReceiptDetail = false
+            blurBG(AppConstants.NO_BLUR_BG)
+        })*/
     }
 }
 
