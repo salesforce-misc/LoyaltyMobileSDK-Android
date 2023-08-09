@@ -88,14 +88,15 @@ fun ReceiptDetail( closePopup: () -> Unit) {
                             contentScale = ContentScale.FillWidth,
                             modifier = Modifier
                                 .background(Color.White, CircleShape)
-                                .padding(3.dp).clickable{
+                                .padding(3.dp)
+                                .clickable {
                                     closePopup()
                                 })
                     }
                 }
                 Image(
                     painter = painterResource(id = R.drawable.receipt_dummy),
-                    contentDescription = "image description",
+                    contentDescription = stringResource(id = R.string.cd_receipt_dummy),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(340.dp)
