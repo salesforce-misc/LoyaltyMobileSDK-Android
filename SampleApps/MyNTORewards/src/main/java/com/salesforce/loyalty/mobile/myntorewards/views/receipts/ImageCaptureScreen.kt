@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,6 +65,9 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_IMAGE_PREVIEW_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -84,7 +88,9 @@ fun ImageCaptureScreen(navController: NavHostController) {
         when (cameraPermissionState.status) {
             // If the camera permission is granted, then show screen with the feature enabled
             PermissionStatus.Granted -> {
-                Column(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(TEST_TAG_CAMERA_SCREEN)) {
                     CameraContent(navController) {
                         imageClicked = true
                         capturedImageBitmap = it.asImageBitmap()
@@ -138,9 +144,12 @@ fun ImageCaptureScreen(navController: NavHostController) {
             }
         }
     } else {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .testTag(TEST_TAG_IMAGE_PREVIEW_SCREEN)
+        ) {
 
             var progressPopupState by remember { mutableStateOf(false) }
             var scannedReceiptPopupState by remember { mutableStateOf(false) }
@@ -148,10 +157,12 @@ fun ImageCaptureScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(50.dp))
             Image(
                 painter = painterResource(id = R.drawable.white_back_button),
-                contentDescription = "transaction_back_button",
+                contentDescription = stringResource(id = R.string.cd_white_back_button),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(start=10.dp, top = 10.dp, bottom = 10.dp).width(32.dp).height(32.dp)
+                    .padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
+                    .width(32.dp)
+                    .height(32.dp)
                     .clickable {
                         imageClicked = false
                     }
@@ -167,7 +178,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
             {
                 Image(
                     bitmap = capturedImageBitmap,
-                    contentDescription = "Captured photo",
+                    contentDescription = stringResource(id = R.string.cd_captured_photo),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -240,7 +251,8 @@ fun ImageCaptureScreen(navController: NavHostController) {
 @RequiresApi(Build.VERSION_CODES.P)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun CameraContent(navController: NavHostController,
+private fun CameraContent(
+    navController: NavHostController,
     onPhotoCaptured: (Bitmap) -> Unit
 ) {
 
@@ -260,7 +272,7 @@ private fun CameraContent(navController: NavHostController,
                 Image(
                     painter = painterResource(R.drawable.shutter),
                     alignment = Alignment.BottomCenter,
-                    contentDescription = "search_icon",
+                    contentDescription = stringResource(id = R.string.cd_shutter_button),
                     modifier = Modifier.clickable {
                         val mainExecutor = ContextCompat.getMainExecutor(context)
 
@@ -320,7 +332,8 @@ private fun CameraContent(navController: NavHostController,
             AndroidView(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .testTag(TEST_TAG_CAMERA),
                 factory = { context ->
                     PreviewView(context).apply {
                         layoutParams = LinearLayout.LayoutParams(
@@ -338,10 +351,12 @@ private fun CameraContent(navController: NavHostController,
             )
             Image(
                 painter = painterResource(id = R.drawable.white_back_button),
-                contentDescription = "transaction_back_button",
+                contentDescription = stringResource(id = R.string.cd_camera_back_button),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .padding(start=10.dp, top = 50.dp, bottom = 10.dp).width(32.dp).height(32.dp)
+                    .padding(start = 10.dp, top = 50.dp, bottom = 10.dp)
+                    .width(32.dp)
+                    .height(32.dp)
                     .align(Alignment.TopStart)
                     .clickable {
                         navController.popBackStack()
@@ -350,7 +365,7 @@ private fun CameraContent(navController: NavHostController,
 
             Image(
                 painter = painterResource(R.drawable.image_gallery),
-                contentDescription = "search_icon",
+                contentDescription = stringResource(id = R.string.cd_gallery_icon),
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                     .align(Alignment.BottomStart)

@@ -28,6 +28,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +44,10 @@ import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SEARCH_FIELD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
@@ -60,6 +65,7 @@ fun ReceiptsList(navController: NavHostController) {
             .padding(start = 16.dp, end = 16.dp)
             .background(TextPurpleLightBG)
             .blur(blurBG)
+            .testTag(TEST_TAG_RECEIPT_LIST_SCREEN)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
@@ -72,7 +78,7 @@ fun ReceiptsList(navController: NavHostController) {
 
         Image(
             painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = "receipt_back_button",
+            contentDescription = stringResource(id = R.string.cd_receipt_back_button),
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp)
@@ -114,7 +120,9 @@ fun ReceiptsList(navController: NavHostController) {
                 }
             }
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(TEST_TAG_RECEIPT_LIST),
                 contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -153,6 +161,7 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
             .fillMaxWidth()
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
+            .testTag(TEST_TAG_RECEIPT_LIST_ITEM)
             .clickable {
                 blurBG(AppConstants.BLUR_BG)
                 openReceiptDetail = true
@@ -244,7 +253,9 @@ fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: Focu
             )
         },
         trailingIcon = if (text.isNotBlank()) trailingIconView else null,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag(TEST_TAG_SEARCH_FIELD),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             onSearch(text)

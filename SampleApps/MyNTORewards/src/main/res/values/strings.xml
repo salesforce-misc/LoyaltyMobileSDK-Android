@@ -140,6 +140,8 @@
     <string name="button_process">Process</string>
     <string name="button_try_again">Try Again</string>
     <string name="scanning_congrats">Congratulations!!!</string>
+    <string name="scanning_congrats_background">Congratulations Screen Background</string>
+    <string name="scanning_congrats_gift_icon">Congrats Gift Icon</string>
     <string name="scanning_congrats_subtitle">We’ve credited {count} points for the scanned receipt</string>
     <string name="scanning_done">Done</string>
     <string name="scan_another_receipt">Scan Another Receipt</string>
@@ -148,5 +150,18 @@
     <string name="btn_cancel">Cancel</string>
     <string name="request_permission">Request permission</string>
     <string name="permission_message">The camera is important for this app. Please grant the permission.</string>
+
+
+<!-- ******************Content Description needed for images************************-->
+    <string name="cd_receipt_dummy">image description</string>
+    <string name="cd_white_back_button">image preview back button</string>
+    <string name="cd_captured_photo">Captured photo</string>
+    <string name="cd_shutter_button">shutter button</string>
+    <string name="cd_camera_back_button">camera back button</string>
+    <string name="cd_gallery_icon">gallery icon</string>
+    <string name="cd_receipt_back_button">receipt_back_button</string>
+
+
     <string name="manual_review_option">Request a Manual Review</string>
+
 </resources>
