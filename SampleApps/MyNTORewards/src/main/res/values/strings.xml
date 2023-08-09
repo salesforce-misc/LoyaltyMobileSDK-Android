@@ -150,4 +150,18 @@
     <string name="btn_cancel">Cancel</string>
     <string name="request_permission">Request permission</string>
     <string name="permission_message">The camera is important for this app. Please grant the permission.</string>
+
+
+<!-- ******************Content Description needed for images************************-->
+    <string name="cd_receipt_dummy">image description</string>
+    <string name="cd_white_back_button">image preview back button</string>
+    <string name="cd_captured_photo">Captured photo</string>
+    <string name="cd_shutter_button">shutter button</string>
+    <string name="cd_camera_back_button">camera back button</string>
+    <string name="cd_gallery_icon">gallery icon</string>
+    <string name="cd_receipt_back_button">receipt_back_button</string>
+
+
+    <string name="manual_review_option">Request a Manual Review</string>
+
 </resources>

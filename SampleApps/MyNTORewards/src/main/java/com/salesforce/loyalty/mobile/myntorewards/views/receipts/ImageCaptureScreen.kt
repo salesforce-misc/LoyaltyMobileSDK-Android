@@ -159,8 +159,10 @@ fun ImageCaptureScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(50.dp))
             Image(
-                painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = "image preview back button",
+
+                painter = painterResource(id = R.drawable.white_back_button),
+                contentDescription = stringResource(id = R.string.cd_white_back_button),
+
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
@@ -181,7 +183,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
             {
                 Image(
                     bitmap = capturedImageBitmap,
-                    contentDescription = "Captured photo",
+                    contentDescription = stringResource(id = R.string.cd_captured_photo),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -278,7 +280,7 @@ private fun CameraContent(
                 Image(
                     painter = painterResource(R.drawable.shutter),
                     alignment = Alignment.BottomCenter,
-                    contentDescription = "shutter button",
+                    contentDescription = stringResource(id = R.string.cd_shutter_button),
                     modifier = Modifier.clickable {
                         val mainExecutor = ContextCompat.getMainExecutor(context)
 
@@ -357,7 +359,7 @@ private fun CameraContent(
             )
             Image(
                 painter = painterResource(id = R.drawable.white_back_button),
-                contentDescription = "camera back button",
+                contentDescription = stringResource(id = R.string.cd_camera_back_button),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .padding(start = 10.dp, top = 50.dp, bottom = 10.dp)
@@ -371,7 +373,7 @@ private fun CameraContent(
 
             Image(
                 painter = painterResource(R.drawable.image_gallery),
-                contentDescription = "gallery icon",
+                contentDescription = stringResource(id = R.string.cd_gallery_icon),
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                     .align(Alignment.BottomStart)

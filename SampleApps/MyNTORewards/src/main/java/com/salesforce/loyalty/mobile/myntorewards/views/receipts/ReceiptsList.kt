@@ -78,7 +78,7 @@ fun ReceiptsList(navController: NavHostController) {
 
         Image(
             painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = "receipt_back_button",
+            contentDescription = stringResource(id = R.string.cd_receipt_back_button),
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp)
