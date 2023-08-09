@@ -41,24 +41,35 @@ fun ReceiptDetail( closePopup: () -> Unit) {
         Box() {
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(0.6f)
-                    .background(MyProfileScreenBG, RoundedCornerShape(22.dp))
+                    .fillMaxHeight(0.65f)
+                    .background(MyProfileScreenBG, RoundedCornerShape(25.dp))
                     .padding(16.dp)
-                    .verticalScroll(
+                    /*.verticalScroll(
                         rememberScrollState()
-                    ),
+                    )*/,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.Top
             ) {
+                Image(
+                    painter = painterResource(id = R.drawable.close_popup_icon),
+                    contentDescription = stringResource(R.string.cd_close_popup),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(end = 3.dp, bottom = 8.dp)
+                        .align(Alignment.End)
+                        .clickable {
+                            closePopup()
+                        })
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.Top,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                 ) {
                     Column(
-                        modifier = Modifier.weight(0.7f),
+                        modifier = Modifier.weight(0.6f),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
@@ -82,36 +93,53 @@ fun ReceiptDetail( closePopup: () -> Unit) {
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.close_popup_icon),
-                            contentDescription = stringResource(R.string.cd_close_popup),
-                            contentScale = ContentScale.FillWidth,
-                            modifier = Modifier
-                                .background(Color.White, CircleShape)
-                                .padding(3.dp)
-                                .clickable {
-                                    closePopup()
-                                })
-                    }
+                            Text(
+                                text = "INR 32392",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                textAlign = TextAlign.End,
+                                fontSize = 13.sp,
+                                modifier = Modifier
+                            )
+                            Text(
+                                text = "434" + " Points",
+                                color = Color.Black,
+                                textAlign = TextAlign.End,
+                                fontSize = 13.sp,
+                                modifier = Modifier
+                            )
+                        }
                 }
-                Image(
-                    painter = painterResource(id = R.drawable.receipt_dummy),
-                    contentDescription = stringResource(id = R.string.cd_receipt_dummy),
-                    contentScale = ContentScale.Crop,
+                Column(
                     modifier = Modifier
-                        .height(340.dp)
+                        .height(280.dp)
                         .fillMaxWidth()
-                )
+                        .padding(start = 8.dp, end = 8.dp)
+                ) {
+                    ReceiptDetailTable()
+                }
                 Text(
-                    text = stringResource(id = R.string.download_option),
+                    text = stringResource(id = R.string.manual_review_option),
+                    modifier = Modifier.padding(top = 24.dp),
                     style = TextStyle(
                         fontSize = 16.sp,
                         lineHeight = 22.4.sp,
                         fontFamily = font_sf_pro,
                         fontWeight = FontWeight(400),
                         color = LighterBlack,
-                        textAlign = TextAlign.Center,
-                        textDecoration = TextDecoration.Underline,
+                        textAlign = TextAlign.Center
+                    )
+                )
+                Text(
+                    text = stringResource(id = R.string.download_option),
+                    modifier = Modifier.padding(top = 16.dp),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 22.4.sp,
+                        fontFamily = font_sf_pro,
+                        fontWeight = FontWeight(400),
+                        color = LighterBlack,
+                        textAlign = TextAlign.Center
                     )
                 )
             }
