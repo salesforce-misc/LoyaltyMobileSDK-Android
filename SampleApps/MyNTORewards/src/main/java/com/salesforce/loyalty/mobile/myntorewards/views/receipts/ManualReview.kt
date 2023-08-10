@@ -62,7 +62,7 @@ fun ManualReview( closePopup: (ReceiptListScreenPopupState) -> Unit) {
         Box() {
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(0.8f)
+                    .fillMaxHeight(0.65f)
                     .background(MyProfileScreenBG, RoundedCornerShape(22.dp))
                     .padding(start = 20.dp, end = 18.dp, top = 16.dp, bottom = 16.dp)
                     .verticalScroll(
