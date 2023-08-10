@@ -27,26 +27,30 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 @Composable
-fun ReceiptDetail( closePopup: () -> Unit) {
+fun ReceiptDetail(closePopup: () -> Unit) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
-        onDismissRequest = {closePopup()  },
+        onDismissRequest = { closePopup() },
         properties = PopupProperties(
             focusable = true,
             dismissOnBackPress = true,
             dismissOnClickOutside = false
         ),
     ) {
-        Box() {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight(0.9f)
+                .background(MyProfileScreenBG, RoundedCornerShape(25.dp))
+                .padding(16.dp),
+            contentAlignment = Alignment.TopStart
+        ) {
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(0.65f)
-                    .background(MyProfileScreenBG, RoundedCornerShape(25.dp))
-                    .padding(16.dp)
-                    /*.verticalScroll(
-                        rememberScrollState()
-                    )*/,
+                    .wrapContentHeight()
+                /*.verticalScroll(
+                    rememberScrollState()
+                )*/,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -93,34 +97,43 @@ fun ReceiptDetail( closePopup: () -> Unit) {
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                            Text(
-                                text = "INR 32392",
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                textAlign = TextAlign.End,
-                                fontSize = 13.sp,
-                                modifier = Modifier
-                            )
-                            Text(
-                                text = "434" + " Points",
-                                color = Color.Black,
-                                textAlign = TextAlign.End,
-                                fontSize = 13.sp,
-                                modifier = Modifier
-                            )
-                        }
+                        Text(
+                            text = "INR 32392",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            textAlign = TextAlign.End,
+                            fontSize = 13.sp,
+                            modifier = Modifier
+                        )
+                        Text(
+                            text = "434" + " Points",
+                            color = Color.Black,
+                            textAlign = TextAlign.End,
+                            fontSize = 13.sp,
+                            modifier = Modifier
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier
-                        .height(280.dp)
+                        .wrapContentHeight()
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp)
                 ) {
                     ReceiptDetailTable()
                 }
+            }
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(top = 24.dp)
+                    .align(Alignment.BottomCenter),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = stringResource(id = R.string.manual_review_option),
-                    modifier = Modifier.padding(top = 24.dp),
                     style = TextStyle(
                         fontSize = 16.sp,
                         lineHeight = 22.4.sp,
