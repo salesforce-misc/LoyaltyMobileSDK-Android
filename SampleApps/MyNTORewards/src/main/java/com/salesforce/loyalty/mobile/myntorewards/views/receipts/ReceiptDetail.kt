@@ -77,14 +77,14 @@ fun ReceiptDetail(closePopup: () -> Unit) {
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "Receipt Number",
+                            text = stringResource(R.string.field_receipt_number) + " " + "12345",
                             fontWeight = FontWeight.Bold,
                             color = Color.Black,
                             textAlign = TextAlign.Start,
                             fontSize = 13.sp,
                         )
                         Text(
-                            text = "13-07-2023",
+                            text = stringResource(R.string.field_date) + " " + "13-07-2023",
                             fontFamily = font_sf_pro,
                             color = Color.Black,
                             textAlign = TextAlign.Start,

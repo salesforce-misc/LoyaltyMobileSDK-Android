@@ -49,7 +49,7 @@ fun ShowScannedReceiptScreen(
     ) {
         Spacer(modifier = Modifier.height(50.dp))
         Text(
-            text = stringResource(R.string.label_receipt_number) + " " + "2323",
+            text = stringResource(R.string.field_receipt_number) + " " + "2323",
             style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 20.sp,
@@ -68,7 +68,7 @@ fun ShowScannedReceiptScreen(
         ) {
 
             Text(
-                text = "Store: Store Name",
+                text = stringResource(R.string.field_store) + " " + "Store Name",
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
@@ -76,7 +76,7 @@ fun ShowScannedReceiptScreen(
             )
 
             Text(
-                text = "Receipt Date: 13-07-2023",
+                text = stringResource(R.string.field_date_colon) + " " +"13-07-2023",
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,

@@ -97,10 +97,10 @@ fun ReceiptsList(navController: NavHostController) {
             ) {
                 SearchBar(onSearch = {
                     searchText = it
-                }, Modifier.weight(0.8f), focusManager)
+                }, Modifier.weight(0.5f), focusManager)
                 Button(
                     modifier = Modifier
-                        .weight(0.25f), onClick = {
+                        .weight(0.5f), onClick = {
                         navController.navigate(MoreScreens.CaptureImageScreen.route)
                     },
                     colors = ButtonDefaults.buttonColors(VibrantPurple40),
@@ -169,14 +169,14 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = receipt.receiptNumber,
+                text = stringResource(R.string.field_receipt_number) + " " + receipt.receiptNumber,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
             )
             Text(
-                text = receipt.date,
+                text = stringResource(R.string.field_date) + " " + receipt.date,
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,

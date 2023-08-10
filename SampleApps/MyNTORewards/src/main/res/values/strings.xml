@@ -132,20 +132,20 @@
     <string name="login_error_message">The username or password you entered is incorrect. Please try again.</string>
     <string name="receipt_scanning">Receipt Scanning</string>
     <string name="header_label_receipt">Receipts</string>
-    <string name="receipt_search_text">Search for Receipt number</string>
-    <string name="label_new_receipt">New</string>
+    <string name="receipt_search_text">Search receipts…</string>
+    <string name="label_new_receipt">Upload Receipt</string>
     <string name="download_option">Download</string>
     <string name="label_receipt_number">Receipt Number:</string>
-    <string name="button_submit_receipt">Submit Receipt</string>
-    <string name="button_process">Process</string>
+    <string name="button_submit_receipt">Submit</string>
+    <string name="button_process">Upload</string>
     <string name="button_try_again">Try Again</string>
-    <string name="scanning_congrats">Congratulations!!!</string>
+    <string name="scanning_congrats">Your receipt is uploaded!</string>
     <string name="scanning_congrats_background">Congratulations Screen Background</string>
     <string name="scanning_congrats_gift_icon">Congrats Gift Icon</string>
-    <string name="scanning_congrats_subtitle">We’ve credited {count} points for the scanned receipt</string>
+    <string name="scanning_congrats_subtitle">We’ve credited {count} points for the uploaded receipt.</string>
     <string name="scanning_done">Done</string>
-    <string name="scan_another_receipt">Scan Another Receipt</string>
-    <string name="scan_progress_indicator">Scanning receipt…</string>
+    <string name="scan_another_receipt">Upload Another Receipt</string>
+    <string name="scan_progress_indicator">Generating preview…</string>
     <string name="scan_progress_subheader">Hang in there! This may take a minute.</string>
     <string name="btn_cancel">Cancel</string>
     <string name="request_permission">Request permission</string>
@@ -163,5 +163,13 @@
 
 
     <string name="manual_review_option">Request a Manual Review</string>
+    <string name="field_receipt_number">Receipt </string>
+    <string name="field_date">Date </string>
+    <string name="field_store">Store:</string>
+    <string name="field_date_colon">Date: </string>
+    <string name="field_item">Item</string>
+    <string name="field_qty">Quantity</string>
+    <string name="field_unit_price">Unit Price</string>
+    <string name="field_total">Total</string>
 
 </resources>

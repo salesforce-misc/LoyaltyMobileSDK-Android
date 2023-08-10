@@ -14,11 +14,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_ibm_plex_mono_regular
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE
 
@@ -40,9 +42,9 @@ fun ReceiptDetailTable() {
         Item("Converse Socks", "1", "\$199", "\$199")
     )
 
-    val column1Weight = 0.4f
-    val column2Weight = 0.15f
-    val column3Weight = 0.2f
+    val column1Weight = 0.35f
+    val column2Weight = 0.2f
+    val column3Weight = 0.25f
     val column4Weight = 0.2f
 
     LazyColumn(
@@ -58,25 +60,25 @@ fun ReceiptDetailTable() {
             Spacer(modifier = Modifier.height(4.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 TableCell(
-                    text = "Item Name",
+                    text = stringResource(id = R.string.field_item),
                     weight = column1Weight,
                     alignment = TextAlign.Left,
                     title = true
                 )
                 TableCell(
-                    text = "Qty",
+                    text = stringResource(id = R.string.field_qty),
                     weight = column2Weight,
                     alignment = TextAlign.Left,
                     title = true
                 )
                 TableCell(
-                    text = "Price",
+                    text = stringResource(id = R.string.field_unit_price),
                     weight = column3Weight,
                     alignment = TextAlign.Left,
                     title = true
                 )
                 TableCell(
-                    text = "Total",
+                    text = stringResource(id = R.string.field_total),
                     weight = column4Weight,
                     alignment = TextAlign.Right,
                     title = true
