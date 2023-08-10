@@ -22,6 +22,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -75,7 +76,7 @@ fun ScanningProgress(
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontFamily = font_sf_pro,
-                        fontWeight = FontWeight(600),
+                        fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF000000),
                         textAlign = TextAlign.Center,
                         letterSpacing = 0.32.sp,
@@ -112,8 +113,8 @@ fun ScanningProgress(
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
-                    color = Color(0xFF181818),
-                    fontWeight = FontWeight(400),
+                    color = LighterBlack,
+                    fontWeight = FontWeight.Normal,
 
                     )
             }

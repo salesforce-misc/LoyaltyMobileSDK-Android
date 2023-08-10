@@ -139,7 +139,7 @@ fun RowScope.TableCell(
             fontSize = 10.sp,
             lineHeight = 14.sp,
             fontFamily = font_ibm_plex_mono_regular,
-            fontWeight = FontWeight(400),
+            fontWeight = FontWeight.Normal,
             color = Color(0xFF000000),
         ),
         textAlign = alignment
