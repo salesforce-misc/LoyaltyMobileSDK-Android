@@ -21,22 +21,9 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,14 +54,16 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_IMAGE_PREVIEW_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.P)
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ImageCaptureScreen(navController: NavHostController) {
     var capturedImageBitmap by remember { mutableStateOf(ImageBitmap(60, 60)) }
@@ -147,113 +136,153 @@ fun ImageCaptureScreen(navController: NavHostController) {
             }
         }
     } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MyProfileScreenBG)
-                .testTag(TEST_TAG_IMAGE_PREVIEW_SCREEN)
-        ) {
 
-            var progressPopupState by remember { mutableStateOf(false) }
-            var scannedReceiptPopupState by remember { mutableStateOf(false) }
+        var currentPopupState: ReceiptScanningBottomSheetType? by remember { mutableStateOf(null) }
+        val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
+                confirmValueChange = {
+                    // Prevent collapsing by swipe down gesture
+                    it != BottomSheetValue.Collapsed
+                })
+        )
 
-            Spacer(modifier = Modifier.height(50.dp))
-            Image(
+        // Declaring Coroutine scope
+        val coroutineScope = rememberCoroutineScope()
 
-                painter = painterResource(id = R.drawable.white_back_button),
-                contentDescription = stringResource(id = R.string.cd_white_back_button),
-
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
-                    .width(32.dp)
-                    .height(32.dp)
-                    .clickable {
-                        imageClicked = false
-                    }
-            )
-
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxHeight(0.8f),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                Image(
-                    bitmap = capturedImageBitmap,
-                    contentDescription = stringResource(id = R.string.cd_captured_photo),
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxWidth()
-                )
+        val openBottomSheet = {
+            coroutineScope.launch {
+                if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                    bottomSheetScaffoldState.bottomSheetState.expand()
+                }
             }
+        }
 
+        val closeBottomSheet = {
+            coroutineScope.launch {
+                if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
+                    bottomSheetScaffoldState.bottomSheetState.collapse()
+                }
+            }
+            imageClicked = false
+        }
+        BottomSheetScaffold(
+            scaffoldState = bottomSheetScaffoldState,
 
+            sheetContent = {
+                Spacer(modifier = Modifier.height(1.dp))
+                currentPopupState?.let { bottomSheetType ->
+                    OpenReceiptBottomSheetContent(
+                        bottomSheetType = bottomSheetType,
+                        navController = navController,
+                        setBottomSheetState = {
+                            currentPopupState = it
+                        },
+                        closeSheet = { closeBottomSheet() },
+                    )
+                }
+            },
+            sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE),
+            sheetPeekHeight = 0.dp,
+            sheetGesturesEnabled = false
+        ) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .testTag(TEST_TAG_IMAGE_PREVIEW_SCREEN)
             ) {
 
-                Button(
+                var progressPopupState by remember { mutableStateOf(false) }
+                var scannedReceiptPopupState by remember { mutableStateOf(false) }
+
+                Spacer(modifier = Modifier.height(50.dp))
+                Image(
+
+                    painter = painterResource(id = R.drawable.white_back_button),
+                    contentDescription = stringResource(id = R.string.cd_white_back_button),
+
+                    contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .fillMaxWidth(), onClick = {
-                        progressPopupState = true
-                    },
-                    colors = ButtonDefaults.buttonColors(VibrantPurple40),
-                    shape = RoundedCornerShape(100.dp)
+                        .padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
+                        .width(32.dp)
+                        .height(32.dp)
+                        .clickable {
+                            imageClicked = false
+                        }
+                )
 
-                ) {
-
-
-                    Text(
-                        text = stringResource(id = R.string.button_process),
-                        fontFamily = font_sf_pro,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(top = 3.dp, bottom = 3.dp)
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxHeight(0.8f),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                )
+                {
+                    Image(
+                        bitmap = capturedImageBitmap,
+                        contentDescription = stringResource(id = R.string.cd_captured_photo),
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
 
-                Text(
-                    text = stringResource(id = R.string.button_try_again),
-                    fontFamily = font_sf_pro,
+
+                Column(
                     modifier = Modifier
-                        .padding(top = 12.dp, bottom = 3.dp)
-                        .clickable {
-                            imageClicked = false
+                        .padding(16.dp)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth(), onClick = {
+                            progressPopupState = true
                         },
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    color = LighterBlack,
-                    fontWeight = FontWeight.Normal,
+                        colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                        shape = RoundedCornerShape(100.dp)
 
-                    )
-            }
+                    ) {
 
-            if (progressPopupState) {
-                ScanningProgress(navController, closePopup = {
+
+                        Text(
+                            text = stringResource(id = R.string.button_process),
+                            fontFamily = font_sf_pro,
+                            textAlign = TextAlign.Center,
+                            fontSize = 16.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(top = 3.dp, bottom = 3.dp)
+                        )
+                    }
+
+                    Text(
+                        text = stringResource(id = R.string.button_try_again),
+                        fontFamily = font_sf_pro,
+                        modifier = Modifier
+                            .padding(top = 12.dp, bottom = 3.dp)
+                            .clickable {
+                                imageClicked = false
+                            },
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        color = LighterBlack,
+                        fontWeight = FontWeight.Normal,
+
+                        )
+                }
+
+                if (progressPopupState) {
+                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                    openBottomSheet()
                     progressPopupState = false
-                    imageClicked = false
-                }, openScannedReceiptPopup = {
-                    scannedReceiptPopupState = true
-                })
-            }
-            if (scannedReceiptPopupState) {
-                ShowScannedReceiptScreen(navController, closePopup = {
-                    scannedReceiptPopupState = false
-                    imageClicked = false
-                })
+                }
             }
         }
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -399,4 +428,35 @@ fun Bitmap.rotateBitmap(rotationDegrees: Int): Bitmap {
     }
 
     return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
+}
+
+@Composable
+fun OpenReceiptBottomSheetContent(
+    bottomSheetType: ReceiptScanningBottomSheetType,
+    navController: NavHostController,
+    setBottomSheetState: (bottomSheetState: ReceiptScanningBottomSheetType) -> Unit,
+    closeSheet: () -> Unit,
+) {
+    when (bottomSheetType) {
+        ReceiptScanningBottomSheetType.POPUP_PROGRESS -> {
+            ScanningProgress(
+                navHostController = navController,
+                closePopup = { closeSheet() }) {
+                setBottomSheetState(it)
+            }
+        }
+        ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT -> {
+            ShowScannedReceiptScreen(navController, closePopup = {
+                closeSheet()
+            }, openCongratsPopup = {
+                setBottomSheetState(it)
+            })
+        }
+        ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS -> {
+            CongratulationsPopup(navController, closePopup = {
+                closeSheet()
+                navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
+            }, scanAnotherReceipt = { closeSheet() })
+        }
+    }
 }

@@ -104,7 +104,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
-            CongratulationsPopup(navCheckOutFlowController)
+//            CongratulationsPopup(navCheckOutFlowController)
         }
         composable(route = MoreScreens.ScanningProgressScreen.route) {
             showBottomBar(false)
@@ -246,7 +246,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
-            CongratulationsPopup(navController)
+//            CongratulationsPopup(navController)
         }
         composable(route = MoreScreens.ScanningProgressScreen.route) {
             showBottomBar(false)

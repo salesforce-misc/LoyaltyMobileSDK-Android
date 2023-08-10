@@ -29,13 +29,18 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
-fun CongratulationsPopup(navController: NavHostController) {
+fun CongratulationsPopup(
+    navController: NavHostController,
+    closePopup: () -> Unit,
+    scanAnotherReceipt: () -> Unit
+) {
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+            .fillMaxHeight(0.92f)
+            .fillMaxWidth()
+            .background(Color.White, RoundedCornerShape(22.dp))
             .testTag(TEST_TAG_CONGRATULATIONS_SCREEN),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -87,8 +92,6 @@ fun CongratulationsPopup(navController: NavHostController) {
                 modifier = Modifier.padding(start = 32.dp, end = 32.dp),
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(77.dp))
-
 
             Spacer(modifier = Modifier.height(92.dp))
             Column(
@@ -101,7 +104,8 @@ fun CongratulationsPopup(navController: NavHostController) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth(), onClick = {
-                        navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
+                        closePopup()
+//                        navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
                     },
                     colors = ButtonDefaults.buttonColors(VibrantPurple40),
                     shape = RoundedCornerShape(100.dp)
@@ -125,7 +129,8 @@ fun CongratulationsPopup(navController: NavHostController) {
                     modifier = Modifier
                         .padding(top = 12.dp, bottom = 3.dp)
                         .clickable {
-                            navController.popBackStack(MoreScreens.CaptureImageScreen.route, false)
+                            scanAnotherReceipt()
+//                            navController.popBackStack(MoreScreens.CaptureImageScreen.route, false)
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
