@@ -42,14 +42,15 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
-fun ManualReview( closePopup: () -> Unit) {
+fun ManualReview( closePopup: (ReceiptListScreenPopupState) -> Unit) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
-        onDismissRequest = {closePopup()  },
+        onDismissRequest = {closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) },
         properties = PopupProperties(
             focusable = true,
             dismissOnBackPress = true,
@@ -80,7 +81,7 @@ fun ManualReview( closePopup: () -> Unit) {
                         modifier = Modifier
                             .background(Color.White, CircleShape)
                             .padding(3.dp).clickable{
-                                closePopup()
+                                closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)
                             }.align(Alignment.End))
                 }
 
@@ -189,7 +190,7 @@ fun ManualReview( closePopup: () -> Unit) {
                             .fillMaxWidth(), onClick = {
 
 
-                            closePopup()// temporary. API call will be triggered.
+                            closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)// temporary. API call will be triggered.
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
                         shape = RoundedCornerShape(100.dp)
@@ -216,7 +217,7 @@ fun ManualReview( closePopup: () -> Unit) {
                                 TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
                             )
                             .clickable {
-                                closePopup()
+                                closePopup(ReceiptListScreenPopupState.RECEIPT_DETAIL)
 
                             },
                         textAlign = TextAlign.Center,

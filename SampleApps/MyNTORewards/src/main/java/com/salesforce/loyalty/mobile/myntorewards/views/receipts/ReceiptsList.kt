@@ -48,6 +48,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SEARCH_FIELD
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
@@ -152,7 +153,7 @@ fun ReceiptsList(navController: NavHostController) {
 
 @Composable
 fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
-    var openReceiptDetail by remember { mutableStateOf(false) }
+    var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
     Spacer(modifier = Modifier.height(12.dp))
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -164,7 +165,7 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
             .testTag(TEST_TAG_RECEIPT_LIST_ITEM)
             .clickable {
                 blurBG(AppConstants.BLUR_BG)
-                openReceiptDetail = true
+                openReceiptDetail = ReceiptListScreenPopupState.RECEIPT_DETAIL
             }
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -206,16 +207,20 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
             )
         }
     }
-    if (openReceiptDetail) {
-        //this will move to new screen.
-        /*ManualReview(closePopup = {
-            openReceiptDetail = false
-            blurBG(AppConstants.NO_BLUR_BG)
-        })*/
-        ReceiptDetail(closePopup = {
-            openReceiptDetail = false
+
+    when (openReceiptDetail) {
+        ReceiptListScreenPopupState.RECEIPT_DETAIL -> ReceiptDetail(closePopup = {
+            openReceiptDetail = it
+            if(it!=ReceiptListScreenPopupState.MANUAL_REVIEW)
             blurBG(AppConstants.NO_BLUR_BG)
         })
+        ReceiptListScreenPopupState.MANUAL_REVIEW -> ManualReview(closePopup = {
+            openReceiptDetail =it
+            if(it!=ReceiptListScreenPopupState.RECEIPT_DETAIL)
+            blurBG(AppConstants.NO_BLUR_BG)
+        })
+
+        else -> {}
     }
 }
 

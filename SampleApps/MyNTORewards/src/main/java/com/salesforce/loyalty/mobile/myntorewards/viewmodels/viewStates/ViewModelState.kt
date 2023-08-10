@@ -7,6 +7,12 @@ enum class EnrollmentState {
     ENROLLMENT_IN_PROGRESS
 }
 
+enum class ReceiptListScreenPopupState {
+    MANUAL_REVIEW,
+    RECEIPT_DETAIL,
+    RECEIPT_LIST_SCREEN,
+}
+
 enum class LoginState {
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
