@@ -83,7 +83,6 @@ fun ManualReview( closePopup: (ReceiptListScreenPopupState) -> Unit) {
                         contentDescription = stringResource(R.string.cd_close_popup),
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
-                            .background(Color.White, CircleShape)
                             .clickable {
                                 closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)
                             }

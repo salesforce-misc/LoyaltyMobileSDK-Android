@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -188,22 +189,21 @@ fun ImageCaptureScreen(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black)
+                    .background(MyProfileScreenBG)
                     .testTag(TEST_TAG_IMAGE_PREVIEW_SCREEN)
             ) {
-
                 var progressPopupState by remember { mutableStateOf(false) }
                 var scannedReceiptPopupState by remember { mutableStateOf(false) }
 
                 Spacer(modifier = Modifier.height(50.dp))
                 Image(
 
-                    painter = painterResource(id = R.drawable.white_back_button),
+                    painter = painterResource(id = R.drawable.back_arrow),
                     contentDescription = stringResource(id = R.string.cd_white_back_button),
 
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
-                        .padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
+                        .padding(start = 8.dp, top = 10.dp, bottom = 10.dp)
                         .width(32.dp)
                         .height(32.dp)
                         .clickable {
@@ -399,6 +399,24 @@ private fun CameraContent(
                         navController.popBackStack()
                     }
             )
+
+            Column(modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .align(Alignment.BottomCenter)) {
+                Text(
+                    text = stringResource(id = R.string.camera_take_photo_text),
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        lineHeight = 25.2.sp,
+                        fontFamily = font_sf_pro,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.White,
+                    )
+                )
+                Spacer(modifier = Modifier.height(100.dp))
+
+            }
+
 
             Image(
                 painter = painterResource(R.drawable.image_gallery),
