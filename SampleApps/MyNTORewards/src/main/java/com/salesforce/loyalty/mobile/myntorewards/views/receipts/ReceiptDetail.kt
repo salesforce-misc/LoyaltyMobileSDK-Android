@@ -25,13 +25,14 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 
 @Composable
-fun ReceiptDetail(closePopup: () -> Unit) {
+fun ReceiptDetail(closePopup: (ReceiptListScreenPopupState) -> Unit) {
     Popup(
         alignment = Alignment.Center,
         offset = IntOffset(0, 800),
-        onDismissRequest = { closePopup() },
+        onDismissRequest = { closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) },
         properties = PopupProperties(
             focusable = true,
             dismissOnBackPress = true,
@@ -62,7 +63,7 @@ fun ReceiptDetail(closePopup: () -> Unit) {
                         .padding(end = 3.dp, bottom = 8.dp)
                         .align(Alignment.End)
                         .clickable {
-                            closePopup()
+                            closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)
                         })
 
                 Row(
@@ -141,7 +142,10 @@ fun ReceiptDetail(closePopup: () -> Unit) {
                         fontWeight = FontWeight.Normal,
                         color = LighterBlack,
                         textAlign = TextAlign.Center
-                    )
+                    ),
+                    modifier = Modifier.clickable {
+                        closePopup(ReceiptListScreenPopupState.MANUAL_REVIEW)
+                    }
                 )
                 Text(
                     text = stringResource(id = R.string.download_option),

@@ -172,4 +172,14 @@
     <string name="field_unit_price">Unit Price</string>
     <string name="field_total">Total</string>
 
+    <!-- ******************Manual Review Screen Strings************************-->
+
+    <string name="back_text">Back</string>
+    <string name="text_submit_manual_review">Submit for Manual Review</string>
+    <string name="comment_text">Comments</string>
+    <string name="receipt_number_text">Receipt Number</string>
+    <string name="review_screen_placeholder_text">Text…</string>
+    <string name="camera_take_photo_text">Click or Upload the Receipt</string>
+
+
 </resources>
