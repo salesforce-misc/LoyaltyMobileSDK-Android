@@ -58,7 +58,6 @@ fun CongratulationsPopup(
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth,
             )
-            Spacer(modifier = Modifier.height(25.dp))
             Image(
                 painter = painterResource(id = R.drawable.gift),
                 contentDescription = stringResource(R.string.scanning_congrats_gift_icon),
@@ -74,7 +73,6 @@ fun CongratulationsPopup(
 
             ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(id = R.string.scanning_congrats),
                 fontFamily = font_sf_pro,
@@ -93,7 +91,7 @@ fun CongratulationsPopup(
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(92.dp))
+//            Spacer(modifier = Modifier.height(92.dp))
             Column(
                 modifier = Modifier
                     .padding(16.dp)

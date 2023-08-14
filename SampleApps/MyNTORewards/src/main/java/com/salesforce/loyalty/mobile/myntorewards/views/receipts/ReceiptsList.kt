@@ -98,10 +98,10 @@ fun ReceiptsList(navController: NavHostController) {
             ) {
                 SearchBar(onSearch = {
                     searchText = it
-                }, Modifier.weight(0.5f), focusManager)
+                }, Modifier.weight(0.55f), focusManager)
                 Button(
                     modifier = Modifier
-                        .weight(0.5f), onClick = {
+                        .weight(0.45f), onClick = {
                         navController.navigate(MoreScreens.CaptureImageScreen.route)
                     },
                     colors = ButtonDefaults.buttonColors(VibrantPurple40),

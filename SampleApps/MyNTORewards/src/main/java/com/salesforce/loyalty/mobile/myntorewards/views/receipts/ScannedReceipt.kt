@@ -47,7 +47,7 @@ fun ShowScannedReceiptScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.field_receipt_number) + " " + "2323",
             style = TextStyle(
