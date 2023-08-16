@@ -50,6 +50,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     benefitViewModel: BenefitViewModelInterface,
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    scanningViewModel: ScanningViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -92,11 +93,11 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.ReceiptListScreen.route) {
             showBottomBar(true)
-            ReceiptsList(navCheckOutFlowController)
+            ReceiptsList(navCheckOutFlowController, scanningViewModel)
         }
         composable(route = MoreScreens.CaptureImageScreen.route) {
             showBottomBar(false)
-            ImageCaptureScreen(navCheckOutFlowController)
+            ImageCaptureScreen(navCheckOutFlowController, scanningViewModel)
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
@@ -219,6 +220,7 @@ fun RedeemScreen() {
 @Composable
 fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
+    scanningViewModel: ScanningViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -234,11 +236,11 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.ReceiptListScreen.route) {
             showBottomBar(true)
-            ReceiptsList(navController)
+            ReceiptsList(navController, scanningViewModel)
         }
         composable(route = MoreScreens.CaptureImageScreen.route) {
             showBottomBar(false)
-            ImageCaptureScreen(navController)
+            ImageCaptureScreen(navController, scanningViewModel)
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)

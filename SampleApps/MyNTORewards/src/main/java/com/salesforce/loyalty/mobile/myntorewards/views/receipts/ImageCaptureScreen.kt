@@ -7,6 +7,7 @@ import android.graphics.ImageDecoder
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
+import android.util.Base64
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -60,13 +61,15 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_IMAGE_PREVIEW_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun ImageCaptureScreen(navController: NavHostController) {
+fun ImageCaptureScreen(navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
     var capturedImageBitmap by remember { mutableStateOf(ImageBitmap(60, 60)) }
     var imageClicked by remember { mutableStateOf(false) }
 
@@ -84,7 +87,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
                 Column(modifier = Modifier
                     .fillMaxSize()
                     .testTag(TEST_TAG_CAMERA_SCREEN)) {
-                    CameraContent(navController) {
+                    CameraContent(navController, scanningViewModel) {
                         imageClicked = true
                         capturedImageBitmap = it.asImageBitmap()
                     }
@@ -290,6 +293,7 @@ fun ImageCaptureScreen(navController: NavHostController) {
 @Composable
 private fun CameraContent(
     navController: NavHostController,
+    scanningViewModel: ScanningViewModelInterface,
     onPhotoCaptured: (Bitmap) -> Unit
 ) {
 
@@ -322,6 +326,12 @@ private fun CameraContent(
                                         .toBitmap()
                                         .rotateBitmap(image.imageInfo.rotationDegrees)
 
+                                    val baos = ByteArrayOutputStream()
+                                    correctedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                                    val b: ByteArray = baos.toByteArray()
+                                    val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
+                                    Log.d("ImageCaptureScreen", "Encoded image: $encImage")
+                                    scanningViewModel.analyzeExpense(encImage)
                                     onPhotoCaptured(correctedBitmap)
 
                                     image.close()

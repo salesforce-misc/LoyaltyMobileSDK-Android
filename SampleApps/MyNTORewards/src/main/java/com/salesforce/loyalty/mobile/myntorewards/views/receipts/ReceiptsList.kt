@@ -50,13 +50,14 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SEARCH_FIELD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
-fun ReceiptsList(navController: NavHostController) {
+fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
 
     var searchText by rememberSaveable { mutableStateOf("") }
-    val scanViewModel: ScanningViewModel = viewModel()
+//    val scanViewModel: ScanningViewModel = viewModel()
     val focusManager = LocalFocusManager.current
     var blurBG by remember { mutableStateOf(0.dp) }
 
@@ -88,7 +89,7 @@ fun ReceiptsList(navController: NavHostController) {
                 }
         )
         Column(modifier = Modifier.fillMaxSize()) {
-            var receiptLists = scanViewModel.getReceiptLists()
+            var receiptLists = scanningViewModel.getReceiptLists()
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -287,9 +288,10 @@ fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: Focu
     )
 }
 
+/*
 @Preview
 @Composable
 fun PreviewReceiptScreen() {
     val navController = rememberNavController()
     ReceiptsList(navController)
-}
+}*/

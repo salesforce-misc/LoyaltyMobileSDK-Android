@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScanningManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
@@ -78,6 +79,15 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                 CheckOutFlowViewModel::class.java
             )
 
+        val receiptManager: ReceiptScanningManager = ReceiptScanningManager(
+            forceAuthManager,
+            forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        )
+        val scanningViewModel: ScanningViewModel =
+            ViewModelProvider(this, ScanningViewModelFactory(receiptManager)).get(
+                ScanningViewModel::class.java
+            )
+
         setContent {
             if (loginSuccess == true) {
                 HomeTabScreen(
@@ -87,7 +97,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     onboardingModel,
                     benefitModel,
                     transactionModel,
-                    checkoutFlowModel
+                    checkoutFlowModel,
+                    scanningViewModel
                 )
             } else {
                 MainScreenStart(
@@ -97,7 +108,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     onboardingModel,
                     benefitModel,
                     transactionModel,
-                    checkoutFlowModel
+                    checkoutFlowModel,
+                    scanningViewModel
                 )
             }
         }
@@ -109,7 +121,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             onboardingModel,
             benefitModel,
             transactionModel,
-            checkoutFlowModel
+            checkoutFlowModel,
+            scanningViewModel
         )
 
     }
@@ -129,7 +142,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                                    onboardingModel: OnBoardingViewModelAbstractInterface,
                                    benefitModel: BenefitViewModelInterface,
                                    transactionModel: TransactionViewModelInterface,
-                                   checkoutFlowModel: CheckOutFlowViewModelInterface
+                                   checkoutFlowModel: CheckOutFlowViewModelInterface,
+                                   scanningViewModel: ScanningViewModelInterface
     ) {
         onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
             run {
@@ -144,7 +158,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                             onboardingModel,
                             benefitModel,
                             transactionModel,
-                            checkoutFlowModel
+                            checkoutFlowModel,
+                            scanningViewModel
                         )
                     }
                 }

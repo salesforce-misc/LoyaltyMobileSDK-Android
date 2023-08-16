@@ -42,7 +42,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
             membershipNumber = "24345671"
         )
 
-        return checkoutClient.authApi.createOrder(
+        return checkoutClient.checkoutApi.createOrder(
             getOrderCreationUrl(),
             body
         )
@@ -52,7 +52,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
     ): Result<List<ShippingMethod>> {
         Logger.d(TAG, "getShippingMethods()")
 
-        return checkoutClient.authApi.getShippingMethods(
+        return checkoutClient.checkoutApi.getShippingMethods(
             getShippingMethodsUrl()
         )
     }
@@ -62,7 +62,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
     ): Result<OrderDetailsResponse> {
         Logger.d(TAG, "getOrderDetails()")
 
-        return checkoutClient.authApi.getOrderDetails(
+        return checkoutClient.checkoutApi.getOrderDetails(
             getOrderCreationUrl(), orderId = orderId
         )
     }
@@ -71,7 +71,7 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
     ): ShippingBillingAddressRecord? {
         Logger.d(TAG, "getShippingBillingAddressSOQL()")
 
-        val result = checkoutClient.authApi.getShippingBillingAddressSOQL(
+        val result = checkoutClient.checkoutApi.getShippingBillingAddressSOQL(
             getShippingBillingSOQLUrl(), getShippingBillingAddressSOQLQuery()
         )
         result.onSuccess { queryResult: QueryResult<ShippingBillingAddressRecord> ->

@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutNetworkInterface
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningNetworkInterface
 import com.salesforce.loyalty.mobile.sources.BuildConfig
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceResponseCallAdapterFactory
@@ -33,7 +34,11 @@ class NetworkClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
         .client(getOkHttpClientBuilder().build())
         .build()
 
-    val authApi: CheckoutNetworkInterface by lazy {
+    val checkoutApi: CheckoutNetworkInterface by lazy {
         authRetrofit.create(CheckoutNetworkInterface::class.java)
+    }
+
+    val receiptApi: ReceiptScanningNetworkInterface by lazy {
+        authRetrofit.create(ReceiptScanningNetworkInterface::class.java)
     }
 }

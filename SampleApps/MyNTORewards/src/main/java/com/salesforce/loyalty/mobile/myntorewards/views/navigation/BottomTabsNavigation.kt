@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
@@ -26,7 +27,8 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                   onboardingModel: OnBoardingViewModelAbstractInterface,
                   benefitViewModel: BenefitViewModelInterface,
                   transactionViewModel: TransactionViewModelInterface,
-                  checkOutFlowViewModel: CheckOutFlowViewModelInterface
+                  checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+                  scanningViewModel: ScanningViewModelInterface
 ) {
     val bottomTabsNavController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -41,7 +43,7 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                 .padding(padding)
                 .background(TextPurpleLightBG).testTag(TEST_TAG_HOME_SCREEN)
         ) {
-            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel) {
+            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel) {
                 bottomBarState.value = it
             }
         }
@@ -58,6 +60,7 @@ fun TabNavigation(
     benefitViewModel: BenefitViewModelInterface,
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    scanningViewModel: ScanningViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
 
@@ -65,7 +68,7 @@ fun TabNavigation(
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel) {
+            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel) {
                 showBottomBar(it)
             }
         }
@@ -82,7 +85,7 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreenNavigation( onboardingModel){
+            MoreScreenNavigation( onboardingModel, scanningViewModel){
                 showBottomBar(it)
             }
         }
