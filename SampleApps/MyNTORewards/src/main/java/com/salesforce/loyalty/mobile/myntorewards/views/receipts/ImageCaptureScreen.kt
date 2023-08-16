@@ -90,6 +90,15 @@ fun ImageCaptureScreen(navController: NavHostController, scanningViewModel: Scan
                     CameraContent(navController, scanningViewModel) {
                         imageClicked = true
                         capturedImageBitmap = it.asImageBitmap()
+
+                        // Encoding the image to Base 64 and sending it to Analyze API.
+                        // TODO Call this API when user clicks on Upload button
+                        val baos = ByteArrayOutputStream()
+                        it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        val b: ByteArray = baos.toByteArray()
+                        val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
+                        Log.d("ImageCaptureScreen", "Encoded image: $encImage")
+                        scanningViewModel.analyzeExpense(encImage)
                     }
                 }
             }
@@ -326,12 +335,6 @@ private fun CameraContent(
                                         .toBitmap()
                                         .rotateBitmap(image.imageInfo.rotationDegrees)
 
-                                    val baos = ByteArrayOutputStream()
-                                    correctedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                                    val b: ByteArray = baos.toByteArray()
-                                    val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
-                                    Log.d("ImageCaptureScreen", "Encoded image: $encImage")
-                                    scanningViewModel.analyzeExpense(encImage)
                                     onPhotoCaptured(correctedBitmap)
 
                                     image.close()
