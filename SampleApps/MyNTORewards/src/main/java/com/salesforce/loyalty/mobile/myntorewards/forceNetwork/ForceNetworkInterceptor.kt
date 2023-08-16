@@ -1,5 +1,6 @@
-package com.salesforce.loyalty.mobile.myntorewards.checkout.api
+package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -8,9 +9,9 @@ import okhttp3.Response
 import java.net.HttpURLConnection
 
 /**
- * CheckoutNetworkInterceptor class to handle access token refresh in case of unauthorized errors.
+ * ForceNetworkInterceptor class to handle access token refresh in case of unauthorized errors.
  */
-class CheckoutNetworkInterceptor(auth: ForceAuthenticator) : Interceptor {
+class ForceNetworkInterceptor(auth: ForceAuthenticator) : Interceptor {
 
     val authenticator = auth
 

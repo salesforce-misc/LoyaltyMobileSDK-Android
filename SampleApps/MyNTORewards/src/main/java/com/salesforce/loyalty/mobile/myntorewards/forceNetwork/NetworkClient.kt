@@ -1,5 +1,6 @@
-package com.salesforce.loyalty.mobile.myntorewards.checkout.api
+package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutNetworkInterface
 import com.salesforce.loyalty.mobile.sources.BuildConfig
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceResponseCallAdapterFactory
@@ -10,9 +11,9 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class CheckoutNetworkClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
+class NetworkClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
 
-    private val unauthorizedInterceptor: CheckoutNetworkInterceptor = CheckoutNetworkInterceptor(auth)
+    private val unauthorizedInterceptor: ForceNetworkInterceptor = ForceNetworkInterceptor(auth)
     private fun getOkHttpClientBuilder(): OkHttpClient.Builder {
         var mAuthOkHttpClient: OkHttpClient.Builder = OkHttpClient.Builder()
         mAuthOkHttpClient.addInterceptor(unauthorizedInterceptor)

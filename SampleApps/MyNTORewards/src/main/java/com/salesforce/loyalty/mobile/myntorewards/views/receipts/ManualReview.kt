@@ -1,51 +1,38 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
-import android.widget.Toast
+import android.graphics.Bitmap
+import android.util.Base64
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import java.io.ByteArrayOutputStream
+
 
 @Composable
 fun ManualReview( closePopup: (ReceiptListScreenPopupState) -> Unit) {

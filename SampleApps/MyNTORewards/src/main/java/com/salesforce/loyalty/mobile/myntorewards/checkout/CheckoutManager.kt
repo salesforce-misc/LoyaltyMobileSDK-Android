@@ -1,7 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.checkout
 
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
-import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutNetworkClient
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.*
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -15,14 +15,14 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
 
     private val authenticator: ForceAuthenticator
 
-    private val checkoutClient: CheckoutNetworkClient
+    private val checkoutClient: NetworkClient
 
     private val mInstanceUrl: String
 
     init {
         authenticator = auth
         mInstanceUrl = instanceUrl
-        checkoutClient = CheckoutNetworkClient(auth, instanceUrl)
+        checkoutClient = NetworkClient(auth, instanceUrl)
     }
 
     suspend fun createOrder(
