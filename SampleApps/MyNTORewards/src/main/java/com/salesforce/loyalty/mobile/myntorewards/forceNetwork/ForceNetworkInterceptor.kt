@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import android.util.Log
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import kotlinx.coroutines.runBlocking
@@ -23,6 +24,7 @@ class ForceNetworkInterceptor(auth: ForceAuthenticator) : Interceptor {
         var response: Response
 
         val accessToken = authenticator.getAccessToken()
+        Log.d("Akash", "Token: "+accessToken)
         if (accessToken != null) {
             response = chain.proceed(newRequestWithAccessToken(accessToken, request))
         } else {
