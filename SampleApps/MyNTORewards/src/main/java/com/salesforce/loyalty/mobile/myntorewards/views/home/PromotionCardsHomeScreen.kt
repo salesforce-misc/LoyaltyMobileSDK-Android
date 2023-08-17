@@ -205,7 +205,7 @@ fun PromotionEmptyView(descriptionResourceId: Int) {
         )
         Spacer(modifier = Modifier.padding(4.dp))
         Text(
-            text = stringResource(id = R.string.description_empty_promotions),
+            text = stringResource(id = descriptionResourceId),
             fontWeight = FontWeight.Normal,
             fontFamily = font_sf_pro,
             color = Color.Black,

@@ -39,6 +39,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.voucherEmptyViewMsg
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
@@ -177,7 +178,7 @@ fun VoucherFullScreen(
                 else -> VOUCHER_ISSUED
             }
             var filteredVouchers = vouchers?.filter {
-                it.status == filterType
+                it.status == "check"
             }
 
             // Redeemed tab
@@ -217,7 +218,7 @@ fun VoucherFullScreen(
 
             } else {
                 if (filteredVouchers?.isEmpty() == true) {
-                    VoucherEmptyView()
+                    VoucherEmptyView(voucherEmptyViewMsg(selectedTab))
                 } else {
                     Column(
                         modifier = Modifier
@@ -254,7 +255,7 @@ fun VoucherFullScreen(
 }
 
 @Composable
-fun VoucherEmptyView() {
+fun VoucherEmptyView(emptyMsg:Int) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -265,11 +266,11 @@ fun VoucherEmptyView() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_empty_view),
-            contentDescription = stringResource(id = R.string.label_empty_vouchers)
+            contentDescription = stringResource(id = emptyMsg)
         )
         Spacer(modifier = Modifier.padding(10.dp))
         androidx.compose.material3.Text(
-            text = stringResource(id = R.string.label_empty_vouchers),
+            text = stringResource(id = emptyMsg),
             fontWeight = FontWeight.Bold,
             fontFamily = font_sf_pro,
             color = Color.Black,
