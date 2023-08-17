@@ -82,8 +82,10 @@ fun OrderPlacedUI(
             )
             Spacer(modifier = Modifier.height(11.dp))
             Text(
-                text = stringResource(id = R.string.text_order_placed) + " " + (orderDetails?.orderNumber
-                    ?: ""),
+                text = stringResource(
+                    id = R.string.text_order_placed, orderDetails?.orderNumber
+                        ?: ""
+                ),
                 fontFamily = font_sf_pro,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
