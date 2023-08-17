@@ -63,11 +63,16 @@
     <string name="label_transactions_recent">Recent</string>
     <string name="label_transactions_one_month_ago">One month ago</string>
 
-    <string name="label_empty_promotions">No Promotions, yet.</string>
-    <string name="label_empty_vouchers">You have no Vouchers Available.</string>
-    <string name="description_empty_promotions">You do not have any eligible promotions to enroll. Please come back later.</string>
-    <string name="description_empty_active_promotions">You do not have any active promotion. Please come back later.</string>
-    <string name="label_empty_transaction">You have no Transactions.</string>
+    <string name="label_empty_promotions">No promotions yet</string>
+<!--    <string name="label_empty_vouchers">You have no Vouchers Available.</string>-->
+    <string name="label_empty_vouchers">No vouchers yet \nWhen you have vouchers available for redemption, you’ll see them here.</string>
+    <string name="label_empty_vouchers_redeem_tab">Nothing to report \nAfter you redeem a voucher, you’ll find it here.</string>
+    <string name="label_empty_vouchers_expired_tab">No expired vouchers \nWhen your vouchers expire, you’ll see them here.</string>
+    <string name="description_empty_promotions">When you opt for promotions or have eligible promotions to opt for, you’ll see them here.</string>
+    <string name="description_empty_active_promotions">After you opt for promotions, you’ll see them here.</string>
+    <string name="description_empty_unenrolled_promotions">When you have eligible promotions to opt for, you’ll see them here.</string>
+    <string name="label_empty_transaction">No recent transactions \n After you complete a transaction, you’ll see it here for the next 30 days.
+</string>
     <string name="label_empty_benefits">You have no Benefits.</string>
 
     <string name="tab_details">"Details"</string>

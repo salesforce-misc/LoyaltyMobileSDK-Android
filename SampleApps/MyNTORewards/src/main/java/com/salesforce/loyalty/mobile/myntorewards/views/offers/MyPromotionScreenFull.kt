@@ -202,7 +202,7 @@ fun MyPromotionScreen(
                     if (unenrolledPromotions?.isEmpty() == true) {
                         when (selectedTab) {
                             2 -> {
-                                PromotionEmptyView(R.string.description_empty_promotions)
+                                PromotionEmptyView(R.string.description_empty_unenrolled_promotions)
                             }
                         }
                     }
@@ -217,11 +217,14 @@ fun MyPromotionScreen(
 
                 if (membershipPromo == null || membershipPromo?.isEmpty() == true || activePromotions?.isEmpty() == true) {
                     when (selectedTab) {
-                        0, 2 -> {
+                        0-> {
                             PromotionEmptyView(R.string.description_empty_promotions)
                         }
                         1 -> {
                             PromotionEmptyView(R.string.description_empty_active_promotions)
+                        }
+                        2 -> {
+                            PromotionEmptyView(R.string.description_empty_unenrolled_promotions)
                         }
                     }
                 }
