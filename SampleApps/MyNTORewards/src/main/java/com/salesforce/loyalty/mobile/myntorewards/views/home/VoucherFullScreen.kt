@@ -178,7 +178,7 @@ fun VoucherFullScreen(
                 else -> VOUCHER_ISSUED
             }
             var filteredVouchers = vouchers?.filter {
-                it.status == "check"
+                it.status == filterType
             }
 
             // Redeemed tab
