@@ -24,7 +24,6 @@ class ForceNetworkInterceptor(auth: ForceAuthenticator) : Interceptor {
         var response: Response
 
         val accessToken = authenticator.getAccessToken()
-        Log.d("Akash", "Token: "+accessToken)
         if (accessToken != null) {
             response = chain.proceed(newRequestWithAccessToken(accessToken, request))
         } else {
