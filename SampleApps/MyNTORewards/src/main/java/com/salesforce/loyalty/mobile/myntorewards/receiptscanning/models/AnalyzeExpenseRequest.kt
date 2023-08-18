@@ -6,6 +6,7 @@ data class AnalyzeExpenseRequest(
     @SerializedName("base64image")
     val base64image: String
 )
+
 data class ReceiptListResponse(
     val done: Boolean,
     val records: List<Record>,

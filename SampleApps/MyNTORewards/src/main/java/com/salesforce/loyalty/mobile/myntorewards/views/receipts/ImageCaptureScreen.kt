@@ -98,8 +98,7 @@ fun ImageCaptureScreen(navController: NavHostController, scanningViewModel: Scan
                         val b: ByteArray = baos.toByteArray()
                         val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
                         Log.d("ImageCaptureScreen", "Encoded image: $encImage")
-                        //scanningViewModel.analyzeExpense(encImage)
-                        scanningViewModel.getReceiptLists()
+                        scanningViewModel.analyzeExpense(encImage)
 
                     }
                 }

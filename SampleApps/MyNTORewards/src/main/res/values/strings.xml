@@ -181,5 +181,6 @@
     <string name="review_screen_placeholder_text">Text…</string>
     <string name="camera_take_photo_text">Click or Upload the Receipt</string>
 
+    <string name="label_empty_receipt">You have no Receipt Available.</string>
 
 </resources>

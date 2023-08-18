@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -42,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Record
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
@@ -51,15 +53,24 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
+import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
 fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
 
     var searchText by rememberSaveable { mutableStateOf("") }
-//    val scanViewModel: ScanningViewModel = viewModel()
+    val receiptListLiveData by scanningViewModel.receiptListLiveData.observeAsState()
+    val receiptListViewState by scanningViewModel.receiptListViewState.observeAsState()
+
+    val receiptRecords = receiptListLiveData?.records
     val focusManager = LocalFocusManager.current
     var blurBG by remember { mutableStateOf(0.dp) }
+    var isInProgress by remember { mutableStateOf(true) }
+    LaunchedEffect(key1 = true) {
+        scanningViewModel.getReceiptLists()
+    }
 
     Column(
         modifier = Modifier
@@ -89,7 +100,6 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                 }
         )
         Column(modifier = Modifier.fillMaxSize()) {
-            var receiptLists = scanningViewModel.getReceiptLists()
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -121,39 +131,75 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 
                 }
             }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(TEST_TAG_RECEIPT_LIST),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                receiptLists?.let {
-                    val filteredList = receiptLists.filter {
-                        if (searchText.isNotEmpty()) {
-                            it.receiptNumber.contains(
-                                searchText,
-                                ignoreCase = true
-                            )
-                        } else {
-                            true
-                        }
-                    }
-                    items(filteredList.size) {
-                        ReceiptItem(filteredList[it]) {
-                            blurBG = it
-                        }
-                    }
-
+            when (receiptListViewState) {
+                is ReceiptScanState.ReceiptListFetchSuccess -> {
+                    isInProgress = false
                 }
+
+                is ReceiptScanState.ReceiptListFetchInProgress -> {
+                    isInProgress = true
+                }
+
+                is ReceiptScanState.ReceiptListFetchFailure -> {
+                    isInProgress = false
+                }
+
+                else -> {}
             }
+            if (isInProgress) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxSize(0.1f)
+                    )
+                }
+
+            } else {
+
+                if (receiptRecords?.isNotEmpty() == true) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(TEST_TAG_RECEIPT_LIST),
+                        contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        receiptRecords.let {
+                            val filteredList = receiptRecords.filter {
+                                if (searchText.isNotEmpty()) {
+                                    it.ReceiptId__c.contains(
+                                        searchText,
+                                        ignoreCase = true
+                                    )
+                                } else {
+                                    true
+                                }
+                            }
+                            items(filteredList.size) {
+                                ReceiptItem(filteredList[it]) {
+                                    blurBG = it
+                                }
+                            }
+
+                        }
+                    }
+                } else {
+                    ReceiptEmptyView()
+                }
+
+            }
+
+
         }
     }
 }
 
 
 @Composable
-fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
+fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
     Spacer(modifier = Modifier.height(12.dp))
     Row(
@@ -171,14 +217,14 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = stringResource(R.string.field_receipt_number) + " " + receipt.receiptNumber,
+                text = stringResource(R.string.field_receipt_number) + " " + receipt.ReceiptId__c,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
             )
             Text(
-                text = stringResource(R.string.field_date) + " " + receipt.date,
+                text = stringResource(R.string.field_date) + " " + receipt.Purchase_Date__c,
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
@@ -192,33 +238,40 @@ fun ReceiptItem(receipt: ScanningViewModel.Receipt, blurBG: (Dp) -> Unit) {
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = receipt.price,
+                text = "" + receipt.TotalAmount__c,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.End,
                 fontSize = 13.sp,
                 modifier = Modifier
             )
-            Text(
-                text = receipt.points + " Points",
-                color = Color.Black,
-                textAlign = TextAlign.End,
-                fontSize = 13.sp,
-                modifier = Modifier
-            )
+
+            //this if block is needed. Kotlin giving false suggestion to remove.
+            if (receipt.Total_Points__c != null) {
+                Text(
+                    text = "" + receipt.Total_Points__c + " Points",
+                    color = Color.Black,
+                    textAlign = TextAlign.End,
+                    fontSize = 13.sp,
+                    modifier = Modifier
+                )
+            }
+
+
         }
     }
 
     when (openReceiptDetail) {
         ReceiptListScreenPopupState.RECEIPT_DETAIL -> ReceiptDetail(closePopup = {
             openReceiptDetail = it
-            if(it!=ReceiptListScreenPopupState.MANUAL_REVIEW)
-            blurBG(AppConstants.NO_BLUR_BG)
+            if (it != ReceiptListScreenPopupState.MANUAL_REVIEW)
+                blurBG(AppConstants.NO_BLUR_BG)
         })
+
         ReceiptListScreenPopupState.MANUAL_REVIEW -> ManualReview(closePopup = {
-            openReceiptDetail =it
-            if(it!=ReceiptListScreenPopupState.RECEIPT_DETAIL)
-            blurBG(AppConstants.NO_BLUR_BG)
+            openReceiptDetail = it
+            if (it != ReceiptListScreenPopupState.RECEIPT_DETAIL)
+                blurBG(AppConstants.NO_BLUR_BG)
         })
 
         else -> {}
@@ -288,6 +341,31 @@ fun SearchBar(onSearch: (String) -> Unit, modifier: Modifier, focusManager: Focu
     )
 }
 
+@Composable
+fun ReceiptEmptyView() {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_empty_view),
+            contentDescription = stringResource(id = R.string.label_empty_receipt)
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+        androidx.compose.material3.Text(
+            text = stringResource(id = R.string.label_empty_receipt),
+            fontWeight = FontWeight.Bold,
+            fontFamily = font_sf_pro,
+            color = Color.Black,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
 /*
 @Preview
 @Composable
