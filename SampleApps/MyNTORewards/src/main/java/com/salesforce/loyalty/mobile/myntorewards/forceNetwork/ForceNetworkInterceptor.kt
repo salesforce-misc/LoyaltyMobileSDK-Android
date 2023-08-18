@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
-import android.util.Log
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutConfig
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import kotlinx.coroutines.runBlocking

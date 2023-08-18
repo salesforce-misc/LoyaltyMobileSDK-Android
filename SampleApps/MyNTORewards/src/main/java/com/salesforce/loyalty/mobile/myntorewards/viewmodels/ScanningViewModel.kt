@@ -7,11 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScanningManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BenefitViewStates
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import kotlinx.coroutines.launch
 
 class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManager) : ViewModel(),

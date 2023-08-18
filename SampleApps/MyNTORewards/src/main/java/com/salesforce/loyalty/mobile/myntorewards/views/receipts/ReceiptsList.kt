@@ -35,13 +35,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Record
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
@@ -51,10 +48,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SEARCH_FIELD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
-import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
