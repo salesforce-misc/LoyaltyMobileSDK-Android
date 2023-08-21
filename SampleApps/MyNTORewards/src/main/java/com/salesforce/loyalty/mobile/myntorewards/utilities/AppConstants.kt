@@ -108,5 +108,13 @@ class AppConstants {
         val POPUP_ROUNDED_CORNER_SIZE = 22.dp
         val BLUR_BG = 3.dp
         val NO_BLUR_BG = 0.dp
+
+        //Receipt_Point_Status
+        val RECEIPT_POINT_STATUS_PENDING = "Pending"
+        val RECEIPT_POINT_STATUS_PROCESSING = "Processing"
+        val RECEIPT_POINT_STATUS_PROCESSED = "Processed"
+        val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
+
+
     }
 }

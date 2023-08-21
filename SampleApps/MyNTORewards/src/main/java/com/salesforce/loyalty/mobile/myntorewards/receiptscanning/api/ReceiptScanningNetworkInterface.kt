@@ -5,6 +5,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Receipt
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 interface ReceiptScanningNetworkInterface {
@@ -18,5 +19,7 @@ interface ReceiptScanningNetworkInterface {
     @GET()
     suspend fun receiptList(
         @Url url: String,
+        @Query("q") query: String?
     ): Result<ReceiptListResponse>
+
 }

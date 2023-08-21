@@ -165,7 +165,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                         receiptRecords.let {
                             val filteredList = receiptRecords.filter {
                                 if (searchText.isNotEmpty()) {
-                                    it.ReceiptId__c.contains(
+                                    it.receipt_id.contains(
                                         searchText,
                                         ignoreCase = true
                                     )
@@ -212,14 +212,14 @@ fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = stringResource(R.string.field_receipt_number) + " " + receipt.ReceiptId__c,
+                text = stringResource(R.string.field_receipt_number) + " " + receipt.receipt_id,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
             )
             Text(
-                text = stringResource(R.string.field_date) + " " + receipt.Purchase_Date__c,
+                text = stringResource(R.string.field_date) + " " + receipt.purchase_date,
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
@@ -233,19 +233,48 @@ fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = "" + receipt.TotalAmount__c,
+                text = "" + receipt.total_amount,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.End,
                 fontSize = 13.sp,
                 modifier = Modifier
             )
+            var receiptPoints = ""
+            var textColour = Color.Black
+            when (receipt.receipt_status) {
+                AppConstants.RECEIPT_POINT_STATUS_PENDING -> {
+                    receiptPoints = stringResource(id = R.string.receipt_status_pending)
+                    textColour = ReceiptPointColourWarning
+                }
+
+                AppConstants.RECEIPT_POINT_STATUS_PROCESSING -> {
+                    receiptPoints = stringResource(R.string.receipt_status_processing)
+                    textColour = ReceiptPointColourWarning
+                }
+
+                AppConstants.RECEIPT_POINT_STATUS_PROCESSED -> {
+                    receiptPoints =
+                        "" + receipt.total_points + " " + stringResource(R.string.receipt_points)
+                    textColour = Color.Black
+                }
+
+                AppConstants.RECEIPT_POINT_STATUS_REJECTED -> {
+                    receiptPoints = stringResource(R.string.receipt_status_rejected)
+                    textColour = ReceiptPointColourError
+                }
+
+                else -> {
+
+                }
+            }
+
 
             //this if block is needed. Kotlin giving false suggestion to remove.
-            if (receipt.Total_Points__c != null) {
+            if (!(receipt.receipt_status == AppConstants.RECEIPT_POINT_STATUS_PROCESSED && receipt.total_points == null)) {
                 Text(
-                    text = "" + receipt.Total_Points__c + " Points",
-                    color = Color.Black,
+                    text = "" + receiptPoints,
+                    color = textColour,
                     textAlign = TextAlign.End,
                     fontSize = 13.sp,
                     modifier = Modifier

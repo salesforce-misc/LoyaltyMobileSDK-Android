@@ -152,7 +152,7 @@
     <string name="permission_message">The camera is important for this app. Please grant the permission.</string>
 
 
-<!-- ******************Content Description needed for images************************-->
+    <!-- ******************Content Description needed for images************************-->
     <string name="cd_receipt_dummy">image description</string>
     <string name="cd_white_back_button">image preview back button</string>
     <string name="cd_captured_photo">Captured photo</string>
@@ -180,7 +180,13 @@
     <string name="receipt_number_text">Receipt Number</string>
     <string name="review_screen_placeholder_text">Text…</string>
     <string name="camera_take_photo_text">Click or Upload the Receipt</string>
-
     <string name="label_empty_receipt">You have no Receipt Available.</string>
+
+
+    <string name="receipt_status_pending">Submitted for Manual Review</string>
+    <string name="receipt_status_processing">Processing</string>
+    <string name="receipt_status_rejected">Rejected</string>
+    <string name="receipt_points">Points</string>
+
 
 </resources>
