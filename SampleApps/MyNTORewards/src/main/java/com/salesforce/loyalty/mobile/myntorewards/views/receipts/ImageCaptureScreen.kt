@@ -99,6 +99,7 @@ fun ImageCaptureScreen(navController: NavHostController, scanningViewModel: Scan
                         val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
                         Log.d("ImageCaptureScreen", "Encoded image: $encImage")
                         scanningViewModel.analyzeExpense(encImage)
+
                     }
                 }
             }

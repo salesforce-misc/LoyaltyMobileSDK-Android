@@ -1,7 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
-import android.graphics.Bitmap
-import android.util.Base64
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +29,6 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
-import java.io.ByteArrayOutputStream
 
 
 @Composable

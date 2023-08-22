@@ -48,3 +48,6 @@ val DropDownMenuBG = Color(0xFFF4F6F9)
 val CardFieldText = Color(0xFF747B84)
 val SearchFieldColor = Color(0xFFE9E1F3)
 val SearchIconColor = Color(0xFFAEAEAE)
+
+val ReceiptPointColourWarning = Color(0xFFDD7A01)
+val ReceiptPointColourError = Color(0xFFBA0517)
