@@ -218,6 +218,7 @@ fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
             )
+            // ToDo purchase date should be formatted
             Text(
                 text = stringResource(R.string.field_date) + " " + receipt.purchase_date,
                 fontFamily = font_sf_pro,
@@ -232,6 +233,7 @@ fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.End
         ) {
+            // ToDo currency type should be added.
             Text(
                 text = "" + receipt.total_amount,
                 fontWeight = FontWeight.Bold,
