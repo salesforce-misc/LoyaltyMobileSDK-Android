@@ -61,7 +61,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 
     val receiptRecords = receiptListLiveData?.records
     val focusManager = LocalFocusManager.current
-    var blurBG by remember { mutableStateOf(0.dp) }
+//    var blurBG by remember { mutableStateOf(0.dp) }
     var isInProgress by remember { mutableStateOf(true) }
     LaunchedEffect(key1 = true) {
         scanningViewModel.getReceiptLists()
@@ -72,7 +72,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp)
             .background(TextPurpleLightBG)
-            .blur(blurBG)
+//            .blur(blurBG)
             .testTag(TEST_TAG_RECEIPT_LIST_SCREEN)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
@@ -174,9 +174,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                                 }
                             }
                             items(filteredList.size) {
-                                ReceiptItem(filteredList[it]) {
-                                    blurBG = it
-                                }
+                                ReceiptItem(filteredList[it], navController)
                             }
 
                         }
@@ -194,7 +192,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 
 
 @Composable
-fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
+fun ReceiptItem(receipt: Record, navController: NavHostController) {
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
     Spacer(modifier = Modifier.height(12.dp))
     Row(
@@ -206,8 +204,8 @@ fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
             .padding(16.dp)
             .testTag(TEST_TAG_RECEIPT_LIST_ITEM)
             .clickable {
-                blurBG(AppConstants.BLUR_BG)
-                openReceiptDetail = ReceiptListScreenPopupState.RECEIPT_DETAIL
+                navController.navigate(MoreScreens.ReceiptDetailScreen.route)
+//                openReceiptDetail = ReceiptListScreenPopupState.RECEIPT_DETAIL
             }
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -288,16 +286,17 @@ fun ReceiptItem(receipt: Record, blurBG: (Dp) -> Unit) {
     }
 
     when (openReceiptDetail) {
-        ReceiptListScreenPopupState.RECEIPT_DETAIL -> ReceiptDetail(closePopup = {
+        ReceiptListScreenPopupState.RECEIPT_DETAIL ->
+        {
+            navController.navigate(MoreScreens.ReceiptDetailScreen.route)
+        }/*ReceiptDetail(navController*//*closePopup = {
             openReceiptDetail = it
             if (it != ReceiptListScreenPopupState.MANUAL_REVIEW)
                 blurBG(AppConstants.NO_BLUR_BG)
-        })
+        }*//*)*/
 
         ReceiptListScreenPopupState.MANUAL_REVIEW -> ManualReview(closePopup = {
             openReceiptDetail = it
-            if (it != ReceiptListScreenPopupState.RECEIPT_DETAIL)
-                blurBG(AppConstants.NO_BLUR_BG)
         })
 
         else -> {}

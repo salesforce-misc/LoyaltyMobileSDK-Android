@@ -50,8 +50,8 @@ fun ReceiptDetailTable() {
     LazyColumn(
         Modifier
             .padding(top = 16.dp)
-            .background(color = Color.White, shape = RectangleShape)
             .padding(8.dp)
+            .background(color = Color.White, shape = RectangleShape)
             .testTag(TEST_TAG_RECEIPT_TABLE)
     ) {
         item {
