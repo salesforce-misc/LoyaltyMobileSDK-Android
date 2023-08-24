@@ -65,11 +65,15 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningV
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import androidx.compose.ui.graphics.ColorFilter
 
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun ImageCaptureScreen(navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
+fun ImageCaptureScreen(
+    navController: NavHostController,
+    scanningViewModel: ScanningViewModelInterface
+) {
     var capturedImageBitmap by remember { mutableStateOf(ImageBitmap(60, 60)) }
     var imageClicked by remember { mutableStateOf(false) }
 
@@ -84,9 +88,11 @@ fun ImageCaptureScreen(navController: NavHostController, scanningViewModel: Scan
         when (cameraPermissionState.status) {
             // If the camera permission is granted, then show screen with the feature enabled
             PermissionStatus.Granted -> {
-                Column(modifier = Modifier
-                    .fillMaxSize()
-                    .testTag(TEST_TAG_CAMERA_SCREEN)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag(TEST_TAG_CAMERA_SCREEN)
+                ) {
                     CameraContent(navController, scanningViewModel) {
                         imageClicked = true
                         capturedImageBitmap = it.asImageBitmap()
@@ -310,6 +316,12 @@ private fun CameraContent(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraController = remember { LifecycleCameraController(context) }
+    val mainExecutor = ContextCompat.getMainExecutor(context)
+    var isFlashEnabled by remember { mutableStateOf(false) }
+    if (isFlashEnabled) {
+        //cameraController.enableTorch(true)//incase the auto flash does not work after testing
+        cameraController.imageCaptureFlashMode = ImageCapture.FLASH_MODE_AUTO
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -325,8 +337,11 @@ private fun CameraContent(
                     alignment = Alignment.BottomCenter,
                     contentDescription = stringResource(id = R.string.cd_shutter_button),
                     modifier = Modifier.clickable {
-                        val mainExecutor = ContextCompat.getMainExecutor(context)
 
+                        //kept it for testing purpose of future.
+                        /*  Log.d("Torch", ""+cameraController.cameraInfo?.hasFlashUnit())
+                        cameraController.imageCaptureFlashMode = ImageCapture.FLASH_MODE_AUTO
+                          cameraController.enableTorch(true)*/
                         cameraController.takePicture(
                             mainExecutor,
                             object : ImageCapture.OnImageCapturedCallback() {
@@ -359,7 +374,7 @@ private fun CameraContent(
             var imageUri by remember {
                 mutableStateOf<Uri?>(Uri.EMPTY)
             }
-
+            var flashColour by remember { mutableStateOf(Color.White) }
             val launcher = rememberLauncherForActivityResult(
                 contract =
                 ActivityResultContracts.GetContent()
@@ -413,10 +428,35 @@ private fun CameraContent(
                         navController.popBackStack()
                     }
             )
+            Image(
+                painter = painterResource(id = R.drawable.flash_icon),
+                contentDescription = stringResource(id = R.string.cd_camera_flash_icon),
+                colorFilter = ColorFilter.tint(flashColour),
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 50.dp, bottom = 10.dp, end = 22.dp)
+                    .width(32.dp)
+                    .height(32.dp)
+                    .align(Alignment.TopEnd)
+                    .clickable {
 
-            Column(modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .align(Alignment.BottomCenter)) {
+                        if (isFlashEnabled) {
+                            flashColour = Color.White
+                            isFlashEnabled = false
+                        } else {
+                            flashColour = Color.Green
+                            isFlashEnabled = true
+                        }
+
+                    }
+            )
+
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                    .align(Alignment.BottomCenter)
+            ) {
                 Text(
                     text = stringResource(id = R.string.camera_take_photo_text),
                     style = TextStyle(
@@ -477,6 +517,7 @@ fun OpenReceiptBottomSheetContent(
                 setBottomSheetState(it)
             }
         }
+
         ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT -> {
             ShowScannedReceiptScreen(navController, closePopup = {
                 closeSheet()
@@ -484,6 +525,7 @@ fun OpenReceiptBottomSheetContent(
                 setBottomSheetState(it)
             })
         }
+
         ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS -> {
             CongratulationsPopup(navController, closePopup = {
                 closeSheet()
