@@ -103,7 +103,8 @@ fun ImageCaptureScreen(
                         val b: ByteArray = baos.toByteArray()
                         val length= (b.size/1024)
                         imageMoreThan5MB = length>(5*1024)
-                        val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
+                        val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
+                        Log.d("ImageCaptureScreen", "Encoded image: $encImage")
                         scanningViewModel.analyzeExpense(encImage)
 
                     }

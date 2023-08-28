@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScanningManager
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
@@ -40,9 +41,9 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         }
     }
 
-    override fun analyzeExpense(encodedImage: String): String? {
+    override fun analyzeExpense(encodedImage: String): AnalyzeExpenseResponse? {
         Logger.d(TAG, "analyzeExpense")
-        var result: String? = null
+        var result: AnalyzeExpenseResponse? = null
         viewModelScope.launch {
 
             receiptScanningManager.analyzeExpense(encodedImage).onSuccess {

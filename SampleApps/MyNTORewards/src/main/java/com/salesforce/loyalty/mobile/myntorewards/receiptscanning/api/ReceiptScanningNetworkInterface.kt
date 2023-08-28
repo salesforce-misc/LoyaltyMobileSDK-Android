@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api
 
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseRequest
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -14,7 +15,7 @@ interface ReceiptScanningNetworkInterface {
     suspend fun analyzeExpense(
         @Url url: String,
         @Body json: AnalyzeExpenseRequest
-    ): Result<String>
+    ): Result<AnalyzeExpenseResponse>
 
     @GET()
     suspend fun receiptList(
