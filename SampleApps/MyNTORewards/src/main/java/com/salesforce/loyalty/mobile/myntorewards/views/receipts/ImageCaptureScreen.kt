@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
+import androidx.camera.core.Logger
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
@@ -29,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -52,12 +54,10 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_IMAGE_PREVIEW_SCREEN
@@ -65,7 +65,6 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningV
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
-import androidx.compose.ui.graphics.ColorFilter
 
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterialApi::class)
@@ -76,6 +75,7 @@ fun ImageCaptureScreen(
 ) {
     var capturedImageBitmap by remember { mutableStateOf(ImageBitmap(60, 60)) }
     var imageClicked by remember { mutableStateOf(false) }
+    var imageMoreThan5MB by remember { mutableStateOf(false) }
 
     // Camera permission state
     val cameraPermissionState = rememberPermissionState(
@@ -96,14 +96,16 @@ fun ImageCaptureScreen(
                     CameraContent(navController, scanningViewModel) {
                         imageClicked = true
                         capturedImageBitmap = it.asImageBitmap()
-
                         // Encoding the image to Base 64 and sending it to Analyze API.
                         // TODO Call this API when user clicks on Upload button
                         val baos = ByteArrayOutputStream()
                         it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         val b: ByteArray = baos.toByteArray()
+                        val length= (b.size/1024)
+                        Log.d("Akash", ""+length)
+                        imageMoreThan5MB = length>(5*1024)
+                        Log.d("Akash", ""+imageMoreThan5MB)
                         val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
-                        Log.d("ImageCaptureScreen", "Encoded image: $encImage")
                         scanningViewModel.analyzeExpense(encImage)
 
                     }
@@ -233,11 +235,13 @@ fun ImageCaptureScreen(
                 Column(
                     modifier = Modifier
                         .padding(16.dp)
-                        .fillMaxHeight(0.8f),
+                        .fillMaxHeight(0.7f),
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
+
+
                     Image(
                         bitmap = capturedImageBitmap,
                         contentDescription = stringResource(id = R.string.cd_captured_photo),
@@ -246,6 +250,20 @@ fun ImageCaptureScreen(
                     )
                 }
 
+                if(imageMoreThan5MB){
+
+                    Text(
+                        text = stringResource(id = R.string.image_more_than_5mb_msg),
+                        fontFamily = font_sf_pro,
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        color = Color.Red,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(top = 3.dp, bottom = 3.dp)
+                            .fillMaxWidth()
+                    )
+                }
 
                 Column(
                     modifier = Modifier
@@ -261,7 +279,8 @@ fun ImageCaptureScreen(
                             progressPopupState = true
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
-                        shape = RoundedCornerShape(100.dp)
+                        shape = RoundedCornerShape(100.dp),
+                        enabled = !imageMoreThan5MB
 
                     ) {
 
