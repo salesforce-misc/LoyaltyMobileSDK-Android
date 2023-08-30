@@ -188,5 +188,9 @@
     <string name="receipt_status_rejected">Rejected</string>
     <string name="receipt_points">Points</string>
 
+    <string name="receipt_tab_eligible_items">Eligible Items</string>
+    <string name="receipt_tab_receipt_image">Receipt Image</string>
+    <string name="header_receipt_detail">Receipt Details</string>
+    <string name="cd_camera_flash_icon">camera flash icon</string>
 
 </resources>

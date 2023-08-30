@@ -10,6 +10,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_ORDER_CONFIRMATION_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_ORDER_DETAIL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_PROFILE_LANDING_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_RECEIPT_DETAIL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_RECEIPT_LIST_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_SCANNED_CONG_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_SCANNED_RECEIPT_SCREEN
@@ -48,4 +49,6 @@ sealed class MoreScreens(val route: String) {
     object ScannedCongratsScreen : MoreScreens(ROUTE_SCANNED_CONG_SCREEN)
 
     object ScanningProgressScreen : MoreScreens(ROUTE_SCAN_PROGRESS_SCREEN)
+
+    object ReceiptDetailScreen : MoreScreens(ROUTE_RECEIPT_DETAIL_SCREEN)
 }

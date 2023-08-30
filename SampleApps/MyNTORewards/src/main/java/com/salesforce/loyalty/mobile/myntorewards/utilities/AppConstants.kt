@@ -42,6 +42,7 @@ class AppConstants {
         const val ROUTE_SCANNED_RECEIPT_SCREEN = "scanned_receipt_screen"
         const val ROUTE_SCANNED_CONG_SCREEN = "scanned_cong_screen"
         const val ROUTE_SCAN_PROGRESS_SCREEN = "scanned_progress_screen"
+        const val ROUTE_RECEIPT_DETAIL_SCREEN = "receipt_detail_screen"
 
         //benefit icon based on strings
         const val BENEFIT_TYPE_FREE_SHIPPING = "Free Shipping"
