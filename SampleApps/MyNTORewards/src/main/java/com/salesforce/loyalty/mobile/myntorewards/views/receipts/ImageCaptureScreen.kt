@@ -102,9 +102,7 @@ fun ImageCaptureScreen(
                         it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         val b: ByteArray = baos.toByteArray()
                         val length= (b.size/1024)
-                        Log.d("Akash", ""+length)
                         imageMoreThan5MB = length>(5*1024)
-                        Log.d("Akash", ""+imageMoreThan5MB)
                         val encImage: String = Base64.encodeToString(b, Base64.DEFAULT)
                         scanningViewModel.analyzeExpense(encImage)
 
