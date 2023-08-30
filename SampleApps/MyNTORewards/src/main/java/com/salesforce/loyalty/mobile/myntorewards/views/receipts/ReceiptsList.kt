@@ -232,8 +232,9 @@ fun ReceiptItem(receipt: Record, navController: NavHostController) {
             horizontalAlignment = Alignment.End
         ) {
             // ToDo currency type should be added.
+            val amount = receipt.total_amount ?: "0.0"
             Text(
-                text = "" + receipt.total_amount,
+                text = "" + amount,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.End,
