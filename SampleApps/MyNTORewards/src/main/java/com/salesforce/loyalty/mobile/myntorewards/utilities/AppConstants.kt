@@ -35,6 +35,15 @@ class AppConstants {
         const val ROUTE_BENEFIT_FULL_SCREEN = "route_benefit_screen"
         const val ROUTE_TRANSACTION_FULL_SCREEN = "route_transaction_screen"
 
+        //Receipt screens
+        const val ROUTE_MORE_LIST_SCREEN = "more_list_screen"
+        const val ROUTE_RECEIPT_LIST_SCREEN = "receipt_list_screen"
+        const val ROUTE_CAPTURE_IMAGE_SCREEN = "capture_image_screen"
+        const val ROUTE_SCANNED_RECEIPT_SCREEN = "scanned_receipt_screen"
+        const val ROUTE_SCANNED_CONG_SCREEN = "scanned_cong_screen"
+        const val ROUTE_SCAN_PROGRESS_SCREEN = "scanned_progress_screen"
+        const val ROUTE_RECEIPT_DETAIL_SCREEN = "receipt_detail_screen"
+
         //benefit icon based on strings
         const val BENEFIT_TYPE_FREE_SHIPPING = "Free Shipping"
         const val BENEFIT_TYPE_EXTENDED_RETURN = "Extended Return"
@@ -100,5 +109,13 @@ class AppConstants {
         val POPUP_ROUNDED_CORNER_SIZE = 22.dp
         val BLUR_BG = 3.dp
         val NO_BLUR_BG = 0.dp
+
+        //Receipt_Point_Status
+        val RECEIPT_POINT_STATUS_PENDING = "Pending"
+        val RECEIPT_POINT_STATUS_PROCESSING = "Processing"
+        val RECEIPT_POINT_STATUS_PROCESSED = "Processed"
+        val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
+
+
     }
 }

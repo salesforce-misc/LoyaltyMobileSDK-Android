@@ -1,5 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,11 +29,13 @@ import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingVi
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreOptionsScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.*
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun HomeScreenAndCheckOutFlowNavigation(
     bottomTabsNavController: NavController,
@@ -42,6 +46,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     benefitViewModel: BenefitViewModelInterface,
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    scanningViewModel: ScanningViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -53,7 +58,13 @@ fun HomeScreenAndCheckOutFlowNavigation(
 
         composable(route = CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
             showBottomBar(true)
-            HomeScreenLandingView(bottomTabsNavController, navCheckOutFlowController, profileModel,promotionModel,voucherModel)
+            HomeScreenLandingView(
+                bottomTabsNavController,
+                navCheckOutFlowController,
+                profileModel,
+                promotionModel,
+                voucherModel
+            )
         }
         composable(route = CheckOutFlowScreen.OrderDetailScreen.route) {
             showBottomBar(false)
@@ -61,7 +72,12 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = CheckOutFlowScreen.OrderAddressAndPaymentScreen.route) {
             showBottomBar(false)
-            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel, profileModel)
+            OrderDetails(
+                navCheckOutFlowController,
+                voucherModel,
+                checkOutFlowViewModel,
+                profileModel
+            )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
@@ -71,16 +87,42 @@ fun HomeScreenAndCheckOutFlowNavigation(
             showBottomBar(true)
             VoucherFullScreen(navCheckOutFlowController, voucherModel)
         }
+        composable(route = MoreScreens.ReceiptListScreen.route) {
+            showBottomBar(true)
+            ReceiptsList(navCheckOutFlowController, scanningViewModel)
+        }
+        composable(route = MoreScreens.CaptureImageScreen.route) {
+            showBottomBar(false)
+            ImageCaptureScreen(navCheckOutFlowController, scanningViewModel)
+        }
+        composable(route = MoreScreens.ReceiptDetailScreen.route) {
+            showBottomBar(true)
+            ReceiptDetail(navCheckOutFlowController)
+        }
+        composable(route = MoreScreens.ScannedReceiptScreen.route) {
+            showBottomBar(false)
+//            ShowScannedReceiptScreen(navCheckOutFlowController)
+        }
+        composable(route = MoreScreens.ScannedCongratsScreen.route) {
+            showBottomBar(false)
+//            CongratulationsPopup(navCheckOutFlowController)
+        }
+        composable(route = MoreScreens.ScanningProgressScreen.route) {
+            showBottomBar(false)
+//            ScanningProgress(navCheckOutFlowController)
+        }
     }
 }
 
 
 @Composable
-fun PromotionScreenAndCheckOutFlowNavigation(promotionViewModel: MyPromotionViewModelInterface,
-                                             voucherModel: VoucherViewModelInterface,
-                                             checkOutFlowViewModel: CheckOutFlowViewModelInterface,
-                                             profileModel: MembershipProfileViewModelInterface,
-                                             showBottomBar: (bottomBarVisible: Boolean) -> Unit) {
+fun PromotionScreenAndCheckOutFlowNavigation(
+    promotionViewModel: MyPromotionViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    profileModel: MembershipProfileViewModelInterface,
+    showBottomBar: (bottomBarVisible: Boolean) -> Unit
+) {
     val navCheckOutFlowController = rememberNavController()
     NavHost(
         navController = navCheckOutFlowController,
@@ -102,7 +144,12 @@ fun PromotionScreenAndCheckOutFlowNavigation(promotionViewModel: MyPromotionView
         }
         composable(route = CheckOutFlowScreen.OrderAddressAndPaymentScreen.route) {
             showBottomBar(false)
-            OrderDetails(navCheckOutFlowController, voucherModel, checkOutFlowViewModel, profileModel)
+            OrderDetails(
+                navCheckOutFlowController,
+                voucherModel,
+                checkOutFlowViewModel,
+                profileModel
+            )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
@@ -113,10 +160,12 @@ fun PromotionScreenAndCheckOutFlowNavigation(promotionViewModel: MyPromotionView
 }
 
 @Composable
-fun MyProfileScreen( profileModel: MembershipProfileViewModelInterface,
-                     voucherModel: VoucherViewModelInterface,
-                     benefitViewModel: BenefitViewModelInterface,
-                     transactionViewModel: TransactionViewModelInterface) {
+fun MyProfileScreen(
+    profileModel: MembershipProfileViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
+    benefitViewModel: BenefitViewModelInterface,
+    transactionViewModel: TransactionViewModelInterface
+) {
     val navProfileViewController = rememberNavController()
     NavHost(
         navController = navProfileViewController,
@@ -125,7 +174,13 @@ fun MyProfileScreen( profileModel: MembershipProfileViewModelInterface,
     {
 
         composable(route = ProfileViewScreen.LandingProfileViewScreen.route) {
-            MyProfileLandingView(navProfileViewController, profileModel,voucherModel, benefitViewModel, transactionViewModel)
+            MyProfileLandingView(
+                navProfileViewController,
+                profileModel,
+                voucherModel,
+                benefitViewModel,
+                transactionViewModel
+            )
         }
         composable(route = ProfileViewScreen.BenefitFullScreen.route) {
             MyProfileBenefitFullScreenView(navProfileViewController, benefitViewModel)
@@ -158,5 +213,50 @@ fun RedeemScreen() {
             textAlign = TextAlign.Center,
             fontSize = 20.sp
         )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.P)
+@Composable
+fun MoreScreenNavigation(
+    onboardingModel: OnBoardingViewModelAbstractInterface,
+    scanningViewModel: ScanningViewModelInterface,
+    showBottomBar: (bottomBarVisible: Boolean) -> Unit
+) {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = MoreScreens.MoreScreenOptions.route
+    )
+    {
+
+        composable(route = MoreScreens.MoreScreenOptions.route) {
+            showBottomBar(true)
+            MoreOptions(onboardingModel, navController)
+        }
+        composable(route = MoreScreens.ReceiptListScreen.route) {
+            showBottomBar(true)
+            ReceiptsList(navController, scanningViewModel)
+        }
+        composable(route = MoreScreens.CaptureImageScreen.route) {
+            showBottomBar(false)
+            ImageCaptureScreen(navController, scanningViewModel)
+        }
+        composable(route = MoreScreens.ReceiptDetailScreen.route) {
+            showBottomBar(true)
+            ReceiptDetail(navController)
+        }
+        composable(route = MoreScreens.ScannedReceiptScreen.route) {
+            showBottomBar(false)
+//            ShowScannedReceiptScreen(navController)
+        }
+        composable(route = MoreScreens.ScannedCongratsScreen.route) {
+            showBottomBar(false)
+//            CongratulationsPopup(navController)
+        }
+        composable(route = MoreScreens.ScanningProgressScreen.route) {
+            showBottomBar(false)
+//            ScanningProgress(navController)
+        }
     }
 }

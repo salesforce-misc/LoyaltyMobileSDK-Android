@@ -119,6 +119,7 @@ dependencies {
 
     //glide library to load image
     implementation("com.github.bumptech.glide:compose:1.0.0-alpha.1")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     //Serialize and de-serialize objects to JSON and vice-versa
     implementation("com.google.code.gson:gson:2.8.5")
@@ -148,7 +149,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 
-    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
 
 
     testImplementation("org.mockito:mockito-core:5.3.1")
@@ -159,5 +160,11 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
+    implementation("androidx.camera:camera-camera2:1.3.0-beta01")
+    implementation("androidx.camera:camera-lifecycle:1.3.0-beta01")
+    implementation("androidx.camera:camera-view:1.3.0-beta01")
+    implementation("androidx.camera:camera-extensions:1.3.0-beta01")
+    implementation("com.google.accompanist:accompanist-permissions:0.31.3-beta")
 
 }

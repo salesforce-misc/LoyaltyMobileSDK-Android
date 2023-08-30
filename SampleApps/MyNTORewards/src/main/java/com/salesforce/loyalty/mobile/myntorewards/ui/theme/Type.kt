@@ -39,3 +39,5 @@ val font_archivo_bold = FontFamily(
 val font_archivo = FontFamily(
     Font(R.font.archivo_regular)
 )
+
+val font_ibm_plex_mono_regular = FontFamily(Font(R.font.ibm_plex_mono_regular))
