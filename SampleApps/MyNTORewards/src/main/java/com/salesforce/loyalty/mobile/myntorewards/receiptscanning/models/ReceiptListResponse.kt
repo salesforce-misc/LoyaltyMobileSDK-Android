@@ -29,7 +29,7 @@ data class Record(
     val store_name: String,
 
     @SerializedName("TotalAmount__c")
-    val total_amount: Double,
+    val total_amount: String?,
 
     @SerializedName("Total_Points__c")
     val total_points: Any,
