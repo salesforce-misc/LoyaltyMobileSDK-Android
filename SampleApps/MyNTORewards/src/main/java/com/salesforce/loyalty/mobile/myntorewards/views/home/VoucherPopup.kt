@@ -181,7 +181,7 @@ fun VoucherPopupUI(
                         withStyle(
                             style = SpanStyle()
                         ) {
-                            append("Expiring on: ")
+                            append("Expiring on ")
                         }
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)

@@ -292,7 +292,7 @@ fun VoucherRow(
                 )
             } else {
                 if (vouchers?.isEmpty() == true) {
-                    VoucherEmptyView()
+                    VoucherEmptyView(Common.voucherEmptyViewMsg(0))
                 }
 
                 vouchers?.let {

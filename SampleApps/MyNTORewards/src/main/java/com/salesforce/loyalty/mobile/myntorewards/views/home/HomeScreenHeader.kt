@@ -81,7 +81,7 @@ fun UserNameAndRewardRow(profileModel: MembershipProfileViewModelInterface) {
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
     val userNameWelcomeText =
-        stringResource(id = R.string.home_screen_welcome_start_text) + " $firstName $lastName " + stringResource(
+        stringResource(id = R.string.home_screen_welcome_start_text) + " $firstName " + stringResource(
             id = R.string.home_screen_welcome_end_text
         )
 

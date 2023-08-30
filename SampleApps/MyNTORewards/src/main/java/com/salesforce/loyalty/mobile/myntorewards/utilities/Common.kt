@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_APP_DATE_FORMAT
@@ -81,6 +82,15 @@ class Common {
                 return false
             }
             return true
+        }
+
+        fun voucherEmptyViewMsg(selectedTab: Int): Int {
+          return when (selectedTab) {
+                0 -> R.string.label_empty_vouchers
+                1 -> R.string.label_empty_vouchers_redeem_tab
+                2 -> R.string.label_empty_vouchers_expired_tab
+                else -> R.string.label_empty_vouchers
+            }
         }
     }
 
