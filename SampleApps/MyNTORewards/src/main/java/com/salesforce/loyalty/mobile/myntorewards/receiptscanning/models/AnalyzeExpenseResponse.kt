@@ -14,7 +14,7 @@ data class AnalyzeExpenseResponse(
     @SerializedName("receiptDate")
     val receiptDate: String?,
     @SerializedName("lineItem")
-    val memberBenefits: List<LineItem> = mutableListOf()
+    val lineItems: List<LineItem> = mutableListOf()
 )
 
 data class LineItem(
@@ -25,5 +25,5 @@ data class LineItem(
     @SerializedName("price")
     val price: Double?,
     @SerializedName("lineItemPrice")
-    val lineItemPrice: Double?,
+    val lineItemPrice: Double?
 )

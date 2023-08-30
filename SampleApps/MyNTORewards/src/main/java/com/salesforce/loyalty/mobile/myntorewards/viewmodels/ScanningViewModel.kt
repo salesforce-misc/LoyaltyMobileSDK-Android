@@ -8,7 +8,8 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScannin
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
@@ -21,22 +22,30 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
 
     private val receiptList = MutableLiveData<ReceiptListResponse>()
 
-    override val receiptListViewState: LiveData<ReceiptScanState>
+    override val receiptListViewState: LiveData<ReceiptViewState>
         get() = viewState
 
-    private val viewState = MutableLiveData<ReceiptScanState>()
+    private val viewState = MutableLiveData<ReceiptViewState>()
 
+    override val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
+        get() = scannedReceipt
 
+    private val scannedReceipt = MutableLiveData<AnalyzeExpenseResponse>()
+
+    override val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
+        get() = receiptScanningViewState
+
+    private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
 
     override fun getReceiptLists() {
         viewModelScope.launch {
-            viewState.postValue(ReceiptScanState.ReceiptListFetchInProgress)
+            viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)
             receiptScanningManager.receiptList().onSuccess {
                 receiptList.value= it
-                viewState.postValue(ReceiptScanState.ReceiptListFetchSuccess)
+                viewState.postValue(ReceiptViewState.ReceiptListFetchSuccessView)
             }.onFailure {
                     Logger.d(TAG, "receipt call failed: ${it.message}")
-                    viewState.postValue(ReceiptScanState.ReceiptListFetchFailure)
+                    viewState.postValue(ReceiptViewState.ReceiptListFetchFailureView)
                 }
         }
     }
@@ -45,18 +54,20 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         Logger.d(TAG, "analyzeExpense")
         var result: AnalyzeExpenseResponse? = null
         viewModelScope.launch {
-
+            receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
             receiptScanningManager.analyzeExpense(encodedImage).onSuccess {
                 Logger.d(TAG, "analyzeExpense Success : $it")
+                scannedReceipt.value= it
                 result = it
+                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
             }
                 .onFailure {
                     Logger.d(TAG, "analyzeExpense failed: ${it.message}")
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure)
                 }
 
         }
         return result
     }
-
 
 }

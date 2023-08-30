@@ -49,7 +49,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SEARCH_FIELD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
@@ -127,15 +127,15 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                 }
             }
             when (receiptListViewState) {
-                is ReceiptScanState.ReceiptListFetchSuccess -> {
+                is ReceiptViewState.ReceiptListFetchSuccessView -> {
                     isInProgress = false
                 }
 
-                is ReceiptScanState.ReceiptListFetchInProgress -> {
+                is ReceiptViewState.ReceiptListFetchInProgressView -> {
                     isInProgress = true
                 }
 
-                is ReceiptScanState.ReceiptListFetchFailure -> {
+                is ReceiptViewState.ReceiptListFetchFailureView -> {
                     isInProgress = false
                 }
 

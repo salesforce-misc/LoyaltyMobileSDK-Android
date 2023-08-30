@@ -27,11 +27,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -77,6 +79,9 @@ fun ImageCaptureScreen(
     var imageClicked by remember { mutableStateOf(false) }
     var imageMoreThan5MB by remember { mutableStateOf(false) }
 
+    val scannedReceiptLiveData by scanningViewModel.scannedReceiptLiveData.observeAsState()
+    val scannedReceiptViewState by scanningViewModel.receiptScanningViewStateLiveData.observeAsState()
+
     // Camera permission state
     val cameraPermissionState = rememberPermissionState(
         Manifest.permission.CAMERA
@@ -97,16 +102,11 @@ fun ImageCaptureScreen(
                         imageClicked = true
                         capturedImageBitmap = it.asImageBitmap()
                         // Encoding the image to Base 64 and sending it to Analyze API.
-                        // TODO Call this API when user clicks on Upload button
                         val baos = ByteArrayOutputStream()
                         it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         val b: ByteArray = baos.toByteArray()
                         val length= (b.size/1024)
                         imageMoreThan5MB = length>(5*1024)
-                        val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
-                        Log.d("ImageCaptureScreen", "Encoded image: $encImage")
-                        scanningViewModel.analyzeExpense(encImage)
-
                     }
                 }
             }
@@ -316,6 +316,16 @@ fun ImageCaptureScreen(
                     currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
                     openBottomSheet()
                     progressPopupState = false
+
+                    // Encoding the image to Base 64 and sending it to Analyze API.
+                    val baos = ByteArrayOutputStream()
+                    capturedImageBitmap?.asAndroidBitmap()?.let {
+                        it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        val b: ByteArray = baos.toByteArray()
+                        val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
+                        Log.d("ImageCaptureScreen", "Encoded image: $encImage")
+                        scanningViewModel.analyzeExpense(encImage)
+                    }
                 }
             }
         }
