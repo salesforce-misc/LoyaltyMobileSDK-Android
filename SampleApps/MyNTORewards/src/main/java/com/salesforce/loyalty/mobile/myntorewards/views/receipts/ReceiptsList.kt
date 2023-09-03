@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,10 +12,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -22,11 +27,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
@@ -51,142 +56,155 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPo
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
 
     var searchText by rememberSaveable { mutableStateOf("") }
     val receiptListLiveData by scanningViewModel.receiptListLiveData.observeAsState()
     val receiptListViewState by scanningViewModel.receiptListViewState.observeAsState()
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
+
 
     val receiptRecords = receiptListLiveData?.records
     val focusManager = LocalFocusManager.current
+    val context: Context = LocalContext.current
+    fun refresh() = refreshScope.launch {
+        scanningViewModel.getReceiptLists(context, true)
+    }
+
 //    var blurBG by remember { mutableStateOf(0.dp) }
     var isInProgress by remember { mutableStateOf(true) }
     LaunchedEffect(key1 = true) {
-        scanningViewModel.getReceiptLists()
+        scanningViewModel.getReceiptLists(context)
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp)
-            .background(TextPurpleLightBG)
-//            .blur(blurBG)
-            .testTag(TEST_TAG_RECEIPT_LIST_SCREEN)
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-                })
-            },
-
-        ) {
-
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Image(
-            painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = stringResource(id = R.string.cd_receipt_back_button),
-            contentScale = ContentScale.FillWidth,
+    val state = rememberPullRefreshState(refreshing, ::refresh)
+    Box(contentAlignment = Alignment.TopCenter) {
+        Column(
             modifier = Modifier
-                .padding(top = 10.dp, bottom = 10.dp)
-                .clickable {
-                    navController.popBackStack()
-                }
-        )
-        Column(modifier = Modifier.fillMaxSize()) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp)
+                .background(TextPurpleLightBG)
+                .pullRefresh(state)
+                .testTag(TEST_TAG_RECEIPT_LIST_SCREEN)
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                },
+
             ) {
-                SearchBar(onSearch = {
-                    searchText = it
-                }, Modifier.weight(0.55f), focusManager)
-                Button(
-                    modifier = Modifier
-                        .weight(0.45f), onClick = {
-                        navController.navigate(MoreScreens.CaptureImageScreen.route)
-                    },
-                    colors = ButtonDefaults.buttonColors(VibrantPurple40),
-                    shape = RoundedCornerShape(100.dp)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.label_new_receipt),
-                        fontFamily = font_sf_pro,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(top = 3.dp, bottom = 3.dp)
-                    )
 
-                }
-            }
-            when (receiptListViewState) {
-                is ReceiptScanState.ReceiptListFetchSuccess -> {
-                    isInProgress = false
-                }
+            Spacer(modifier = Modifier.height(50.dp))
 
-                is ReceiptScanState.ReceiptListFetchInProgress -> {
-                    isInProgress = true
-                }
-
-                is ReceiptScanState.ReceiptListFetchFailure -> {
-                    isInProgress = false
-                }
-
-                else -> {}
-            }
-            if (isInProgress) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .fillMaxSize(0.1f)
-                    )
-                }
-
-            } else {
-
-                if (receiptRecords?.isNotEmpty() == true) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag(TEST_TAG_RECEIPT_LIST),
-                        contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        receiptRecords.let {
-                            val filteredList = receiptRecords.filter {
-                                if (searchText.isNotEmpty()) {
-                                    it.receipt_id.contains(
-                                        searchText,
-                                        ignoreCase = true
-                                    )
-                                } else {
-                                    true
-                                }
-                            }
-                            items(filteredList.size) {
-                                ReceiptItem(filteredList[it], navController)
-                            }
-
-                        }
+            Image(
+                painter = painterResource(id = R.drawable.back_arrow),
+                contentDescription = stringResource(id = R.string.cd_receipt_back_button),
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    .clickable {
+                        navController.popBackStack()
                     }
+            )
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    SearchBar(onSearch = {
+                        searchText = it
+                    }, Modifier.weight(0.55f), focusManager)
+                    Button(
+                        modifier = Modifier
+                            .weight(0.45f), onClick = {
+                            navController.navigate(MoreScreens.CaptureImageScreen.route)
+                        },
+                        colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                        shape = RoundedCornerShape(100.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.label_new_receipt),
+                            fontFamily = font_sf_pro,
+                            textAlign = TextAlign.Center,
+                            fontSize = 16.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(top = 3.dp, bottom = 3.dp)
+                        )
+
+                    }
+                }
+                when (receiptListViewState) {
+                    is ReceiptScanState.ReceiptListFetchSuccess -> {
+                        isInProgress = false
+                    }
+
+                    is ReceiptScanState.ReceiptListFetchInProgress -> {
+                        isInProgress = true
+                    }
+
+                    is ReceiptScanState.ReceiptListFetchFailure -> {
+                        isInProgress = false
+                    }
+
+                    else -> {}
+                }
+                if (isInProgress) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxSize(0.1f)
+                        )
+                    }
+
                 } else {
-                    ReceiptEmptyView()
+
+                    if (receiptRecords?.isNotEmpty() == true) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(TEST_TAG_RECEIPT_LIST),
+                            contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            receiptRecords.let {
+                                val filteredList = receiptRecords.filter {
+                                    if (searchText.isNotEmpty()) {
+                                        it.receipt_id.contains(
+                                            searchText,
+                                            ignoreCase = true
+                                        )
+                                    } else {
+                                        true
+                                    }
+                                }
+                                items(filteredList.size) {
+                                    ReceiptItem(filteredList[it], navController)
+                                }
+
+                            }
+                        }
+                    } else {
+                        ReceiptEmptyView()
+                    }
+
                 }
 
+
             }
-
-
         }
+        PullRefreshIndicator(refreshing, state)
     }
 }
 
@@ -287,8 +305,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController) {
     }
 
     when (openReceiptDetail) {
-        ReceiptListScreenPopupState.RECEIPT_DETAIL ->
-        {
+        ReceiptListScreenPopupState.RECEIPT_DETAIL -> {
             navController.navigate(MoreScreens.ReceiptDetailScreen.route)
         }/*ReceiptDetail(navController*//*closePopup = {
             openReceiptDetail = it

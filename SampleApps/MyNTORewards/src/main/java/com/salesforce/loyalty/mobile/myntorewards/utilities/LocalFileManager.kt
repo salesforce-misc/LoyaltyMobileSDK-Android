@@ -13,6 +13,7 @@ object LocalFileManager {
     const val DIRECTORY_TRANSACTIONS = "Transactions"
     const val DIRECTORY_PROMOTIONS = "Promotions"
     const val DIRECTORY_VOUCHERS = "Vouchers"
+    const val DIRECTORY_RECEIPT_LIST = "ReceiptList"
 
     /**
      * Utility method to save data to internal storage
@@ -102,6 +103,7 @@ object LocalFileManager {
         clearFolder(context, DIRECTORY_PROFILE)
         clearFolder(context, DIRECTORY_VOUCHERS)
         clearFolder(context, DIRECTORY_TRANSACTIONS)
+        clearFolder(context, DIRECTORY_RECEIPT_LIST)
     }
 
     private fun clearFolder(context: Context, folderName: String) {
