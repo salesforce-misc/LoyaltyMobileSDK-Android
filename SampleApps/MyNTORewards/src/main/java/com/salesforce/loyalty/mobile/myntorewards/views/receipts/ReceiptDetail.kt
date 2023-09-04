@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.LineItem
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
@@ -94,7 +95,8 @@ fun ReceiptDetail(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White).blur(blurBG),
+                .background(Color.White)
+                .blur(blurBG),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -252,7 +254,21 @@ fun ReceiptDetail(navController: NavHostController) {
 
                 when (selectedTab) {
 
-                    0 -> ReceiptDetailTable()
+                    0 -> {
+                        // TODO The values should be fetched from Receipt List API. Will be done in a seperate task.
+                        val itemLists = listOf(
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                            LineItem(1, "Converse Shoes", 599.0, 599.0),
+                        )
+                        ReceiptDetailTable(itemLists = itemLists)}
                     1 -> {
                         Image(
                             painter = painterResource(id = R.drawable.receipt_dummy),

@@ -17,7 +17,6 @@ import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
-import androidx.camera.core.Logger
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
@@ -30,11 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -52,8 +47,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -64,6 +59,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_IMAGE_PREVIEW_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -195,6 +191,7 @@ fun ImageCaptureScreen(
                     OpenReceiptBottomSheetContent(
                         bottomSheetType = bottomSheetType,
                         navController = navController,
+                        scannedReceiptLiveData = scannedReceiptLiveData,
                         setBottomSheetState = {
                             currentPopupState = it
                         },
@@ -213,6 +210,7 @@ fun ImageCaptureScreen(
                     .testTag(TEST_TAG_IMAGE_PREVIEW_SCREEN)
             ) {
                 var progressPopupState by remember { mutableStateOf(false) }
+                var processClicked by remember { mutableStateOf(false) }
                 var scannedReceiptPopupState by remember { mutableStateOf(false) }
 
                 Spacer(modifier = Modifier.height(50.dp))
@@ -275,7 +273,8 @@ fun ImageCaptureScreen(
                     Button(
                         modifier = Modifier
                             .fillMaxWidth(), onClick = {
-                            progressPopupState = true
+                            processClicked = true
+
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
                         shape = RoundedCornerShape(100.dp),
@@ -312,11 +311,7 @@ fun ImageCaptureScreen(
                         )
                 }
 
-                if (progressPopupState) {
-                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
-                    openBottomSheet()
-                    progressPopupState = false
-
+                if (processClicked) {
                     // Encoding the image to Base 64 and sending it to Analyze API.
                     val baos = ByteArrayOutputStream()
                     capturedImageBitmap?.asAndroidBitmap()?.let {
@@ -324,8 +319,29 @@ fun ImageCaptureScreen(
                         val b: ByteArray = baos.toByteArray()
                         val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
                         Log.d("ImageCaptureScreen", "Encoded image: $encImage")
-                        scanningViewModel.analyzeExpense(encImage)
+                        LaunchedEffect(key1 = true ) {
+                            scanningViewModel.analyzeExpense(encImage)
+                        }
                     }
+                    processClicked = false
+                }
+                when (scannedReceiptViewState) {
+                    is ReceiptScanningViewState.ReceiptScanningSuccess -> {
+                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
+                        openBottomSheet()
+                    }
+
+                    is ReceiptScanningViewState.ReceiptScanningInProgress -> {
+                        progressPopupState = true
+                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                        openBottomSheet()
+                    }
+
+                    is ReceiptScanningViewState.ReceiptScanningFailure -> {
+                        // TODO Handle failure scenario.
+                    }
+
+                    else -> {}
                 }
             }
         }
@@ -534,6 +550,7 @@ fun Bitmap.rotateBitmap(rotationDegrees: Int): Bitmap {
 fun OpenReceiptBottomSheetContent(
     bottomSheetType: ReceiptScanningBottomSheetType,
     navController: NavHostController,
+    scannedReceiptLiveData: AnalyzeExpenseResponse?,
     setBottomSheetState: (bottomSheetState: ReceiptScanningBottomSheetType) -> Unit,
     closeSheet: () -> Unit,
 ) {
@@ -547,7 +564,7 @@ fun OpenReceiptBottomSheetContent(
         }
 
         ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT -> {
-            ShowScannedReceiptScreen(navController, closePopup = {
+            ShowScannedReceiptScreen(navController, scannedReceiptLiveData, closePopup = {
                 closeSheet()
             }, openCongratsPopup = {
                 setBottomSheetState(it)

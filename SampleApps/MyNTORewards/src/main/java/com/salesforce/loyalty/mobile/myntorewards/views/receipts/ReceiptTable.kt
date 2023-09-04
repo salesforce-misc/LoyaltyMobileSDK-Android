@@ -21,26 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.LineItem
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_ibm_plex_mono_regular
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE
 
-data class Item(val itemName: String, val qty: String, val price: String, val total: String)
-
 @Composable
-fun ReceiptDetailTable() {
-
-    val itemLists = listOf(
-        Item("Converse Shoes", "1", "\$599", "\$599"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199"),
-        Item("Converse Socks", "1", "\$199", "\$199")
-    )
+fun ReceiptDetailTable(itemLists: List<LineItem>?) {
 
     val column1Weight = 0.35f
     val column2Weight = 0.2f
@@ -88,36 +74,39 @@ fun ReceiptDetailTable() {
             DrawDashLine()
             Spacer(modifier = Modifier.height(4.dp))
         }
-        itemsIndexed(itemLists) { index, invoice ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                TableCell(
-                    text = invoice.itemName,
-                    weight = column1Weight,
-                    alignment = TextAlign.Left
-                )
-                TableCell(
-                    text = invoice.qty,
-                    weight = column2Weight,
-                    alignment = TextAlign.Left
-                )
-                TableCell(
-                    text = invoice.price,
-                    weight = column3Weight,
-                    alignment = TextAlign.Left
-                )
-                TableCell(
-                    text = invoice.total,
-                    weight = column4Weight,
-                    alignment = TextAlign.Right
-                )
-            }
-            if (index == itemLists.size - 1) {
-                Spacer(modifier = Modifier.height(8.dp))
-                DrawDashLine()
-                Spacer(modifier = Modifier.height(150.dp))
+        itemLists?.let {
+            itemsIndexed(itemLists) { index, invoice ->
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    invoice.productName?.let {
+                        TableCell(
+                            text = it,
+                            weight = column1Weight,
+                            alignment = TextAlign.Left
+                        )
+                    }
+                    TableCell(
+                        text = invoice.quantity.toString(),
+                        weight = column2Weight,
+                        alignment = TextAlign.Left
+                    )
+                    TableCell(
+                        text = invoice.price.toString(),
+                        weight = column3Weight,
+                        alignment = TextAlign.Left
+                    )
+                    TableCell(
+                        text = invoice.lineItemPrice.toString(),
+                        weight = column4Weight,
+                        alignment = TextAlign.Right
+                    )
+                }
+                if (index == itemLists?.size?.minus(1)) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    DrawDashLine()
+                    Spacer(modifier = Modifier.height(150.dp))
+                }
             }
         }
-
 
     }
 }
