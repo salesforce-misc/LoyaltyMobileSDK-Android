@@ -107,11 +107,11 @@ fun ScanningProgress(
 
                 )
         }
-        LaunchedEffect(true) {
+        /*LaunchedEffect(true) {
             // Added delay for testing purpose. Need to remove it once we call the API to scan the receipt.
             delay(5000)
             detailsPopupState = true
-        }
+        }*/
     }
     if (detailsPopupState) {
         openScannedReceiptPopup(ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT)

@@ -7,12 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScanningManager
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
@@ -26,15 +28,24 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
 
     private val receiptList = MutableLiveData<ReceiptListResponse>()
 
-    override val receiptListViewState: LiveData<ReceiptScanState>
+    override val receiptListViewState: LiveData<ReceiptViewState>
         get() = viewState
 
-    private val viewState = MutableLiveData<ReceiptScanState>()
+    private val viewState = MutableLiveData<ReceiptViewState>()
 
+    override val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
+        get() = scannedReceipt
+
+    private val scannedReceipt = MutableLiveData<AnalyzeExpenseResponse>()
+
+    override val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
+        get() = receiptScanningViewState
+
+    private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
 
     override fun getReceiptLists(context: Context, refreshRequired: Boolean) {
         viewModelScope.launch {
-            viewState.postValue(ReceiptScanState.ReceiptListFetchInProgress)
+            viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)
 
             val memberJson =
                 PrefHelper.customPrefs(context)
@@ -61,7 +72,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 } else {
                     receiptList.value =
                         receiptListCache!!   // this not null is assertion is needed else android studio gives compile error.
-                    viewState.postValue(ReceiptScanState.ReceiptListFetchSuccess)
+                    viewState.postValue(ReceiptViewState.ReceiptListFetchSuccessView)
                 }
             }
 
@@ -79,30 +90,32 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                     membershipKey,
                     LocalFileManager.DIRECTORY_RECEIPT_LIST
                 )
-                viewState.postValue(ReceiptScanState.ReceiptListFetchSuccess)
+                viewState.postValue(ReceiptViewState.ReceiptListFetchSuccessView)
             }.onFailure {
                 Logger.d(TAG, "receipt call failed: ${it.message}")
-                viewState.postValue(ReceiptScanState.ReceiptListFetchFailure)
+                viewState.postValue(ReceiptViewState.ReceiptListFetchFailureView)
             }
         }
     }
 
-    override fun analyzeExpense(encodedImage: String): String? {
+    override fun analyzeExpense(encodedImage: String): AnalyzeExpenseResponse? {
         Logger.d(TAG, "analyzeExpense")
-        var result: String? = null
+        var result: AnalyzeExpenseResponse? = null
         viewModelScope.launch {
-
+            receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
             receiptScanningManager.analyzeExpense(encodedImage).onSuccess {
                 Logger.d(TAG, "analyzeExpense Success : $it")
+                scannedReceipt.value= it
                 result = it
+                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
             }
                 .onFailure {
                     Logger.d(TAG, "analyzeExpense failed: ${it.message}")
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure)
                 }
 
         }
         return result
     }
-
 
 }

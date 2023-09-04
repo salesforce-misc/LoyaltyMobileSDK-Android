@@ -54,7 +54,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SEARCH_FIELD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
 
@@ -120,10 +120,10 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                 ) {
                     SearchBar(onSearch = {
                         searchText = it
-                    }, Modifier.weight(0.55f), focusManager)
+                    }, Modifier.weight(0.7f), focusManager)
                     Button(
                         modifier = Modifier
-                            .weight(0.45f), onClick = {
+                            .weight(0.3f), onClick = {
                             navController.navigate(MoreScreens.CaptureImageScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
@@ -142,18 +142,18 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 
                     }
                 }
-                when (receiptListViewState) {
-                    is ReceiptScanState.ReceiptListFetchSuccess -> {
-                        isInProgress = false
-                    }
+            when (receiptListViewState) {
+                is ReceiptViewState.ReceiptListFetchSuccessView -> {
+                    isInProgress = false
+                }
 
-                    is ReceiptScanState.ReceiptListFetchInProgress -> {
-                        isInProgress = true
-                    }
+                is ReceiptViewState.ReceiptListFetchInProgressView -> {
+                    isInProgress = true
+                }
 
-                    is ReceiptScanState.ReceiptListFetchFailure -> {
-                        isInProgress = false
-                    }
+                is ReceiptViewState.ReceiptListFetchFailureView -> {
+                    isInProgress = false
+                }
 
                     else -> {}
                 }

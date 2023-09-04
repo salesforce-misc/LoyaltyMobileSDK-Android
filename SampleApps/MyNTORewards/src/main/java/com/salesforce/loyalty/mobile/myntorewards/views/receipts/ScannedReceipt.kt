@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.LineItem
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -33,10 +35,12 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 @Composable
 fun ShowScannedReceiptScreen(
     navHostController: NavHostController,
+    analyzeExpenseResponse: AnalyzeExpenseResponse?,
     closePopup: () -> Unit,
     openCongratsPopup: (popupStatus: ReceiptScanningBottomSheetType) -> Unit
 ) {
     var congPopupState by remember { mutableStateOf(false) }
+    val itemLists = analyzeExpenseResponse?.lineItems
     Column(
         modifier = Modifier
             .fillMaxHeight(0.92f)
@@ -49,7 +53,7 @@ fun ShowScannedReceiptScreen(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(R.string.field_receipt_number) + " " + "2323",
+            text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse?.receiptNumber,
             style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 20.sp,
@@ -68,7 +72,7 @@ fun ShowScannedReceiptScreen(
         ) {
 
             Text(
-                text = stringResource(R.string.field_store) + " " + "Store Name",
+                text = stringResource(R.string.field_store) + " " + analyzeExpenseResponse?.storeName,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
@@ -76,14 +80,14 @@ fun ShowScannedReceiptScreen(
             )
 
             Text(
-                text = stringResource(R.string.field_date_colon) + " " +"13-07-2023",
+                text = stringResource(R.string.field_date_colon) + " " + analyzeExpenseResponse?.receiptDate,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
                 modifier = Modifier.weight(0.5f)
             )
         }
-        ReceiptDetailTable()
+        ReceiptDetailTable(itemLists)
 
         Column(
             modifier = Modifier
