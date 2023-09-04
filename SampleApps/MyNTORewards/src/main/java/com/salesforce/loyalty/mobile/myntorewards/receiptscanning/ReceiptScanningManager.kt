@@ -59,7 +59,7 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     private fun fetchReceiptListSOQLQuery(): String {
-        return "select Id,Purchase_Date__c,ReceiptId__c,Name,Status__c,StoreName__c,Total_Points__c,TotalAmount__c from Receipts__c Order by CreatedDate DESC"
+        return "select Id,Purchase_Date__c,ReceiptId__c,Name,Status__c,StoreName__c,Total_Points__c,TotalAmount__c,Processed_AWS_Response__c from Receipts__c Order by CreatedDate DESC"
     }
 
 }

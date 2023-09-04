@@ -11,7 +11,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -30,12 +29,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.LineItem
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReceiptTabs
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -46,6 +49,17 @@ fun ReceiptDetail(navController: NavHostController) {
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
     var blurBG by remember { mutableStateOf(0.dp) }
 
+    val processedAWSReponse =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE)
+    var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
+    processedAWSReponse?.let {
+        val gson = Gson()
+        analyzeExpenseResponse = gson.fromJson<AnalyzeExpenseResponse>(
+            it,
+            AnalyzeExpenseResponse::class.java
+        )
+    }
+    Logger.d("ReceiptListArgs","analyzeExpenseResponse 1 : ${analyzeExpenseResponse}")
     val bottomSheetScaffoldState = androidx.compose.material.rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
             confirmValueChange = {
@@ -148,14 +162,14 @@ fun ReceiptDetail(navController: NavHostController) {
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.field_receipt_number) + " " + "12345",
+                            text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse?.receiptNumber,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black,
                             textAlign = TextAlign.Start,
                             fontSize = 13.sp,
                         )
                         Text(
-                            text = stringResource(R.string.field_date) + " " + "13-07-2023",
+                            text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate,
                             fontFamily = font_sf_pro,
                             color = Color.Black,
                             textAlign = TextAlign.Start,
@@ -169,7 +183,7 @@ fun ReceiptDetail(navController: NavHostController) {
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(
-                            text = "INR 32392",
+                            text = analyzeExpenseResponse?.totalAmount ?: "",
                             fontWeight = FontWeight.Bold,
                             color = Color.Black,
                             textAlign = TextAlign.End,
@@ -254,22 +268,11 @@ fun ReceiptDetail(navController: NavHostController) {
 
                 when (selectedTab) {
 
-                    0 -> {
-                        // TODO The values should be fetched from Receipt List API. Will be done in a seperate task.
-                        val itemLists = listOf(
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                            LineItem(1, "Converse Shoes", 599.0, 599.0),
-                        )
-                        ReceiptDetailTable(itemLists = itemLists)}
-                    1 -> {
+                    TAB_ELIGIBLE_ITEM -> {
+                        val itemLists = analyzeExpenseResponse?.lineItems
+                        ReceiptDetailTable(itemLists = itemLists)
+                    }
+                    TAB_ORIGINAL_RECEIPT_IMAGE -> {
                         Image(
                             painter = painterResource(id = R.drawable.receipt_dummy),
                             contentDescription = "image description",
