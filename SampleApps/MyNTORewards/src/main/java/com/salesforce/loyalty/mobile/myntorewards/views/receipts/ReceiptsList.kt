@@ -120,10 +120,10 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                 ) {
                     SearchBar(onSearch = {
                         searchText = it
-                    }, Modifier.weight(0.55f), focusManager)
+                    }, Modifier.weight(0.7f), focusManager)
                     Button(
                         modifier = Modifier
-                            .weight(0.45f), onClick = {
+                            .weight(0.3f), onClick = {
                             navController.navigate(MoreScreens.CaptureImageScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(VibrantPurple40),
@@ -142,7 +142,6 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 
                     }
                 }
-            }
             when (receiptListViewState) {
                 is ReceiptViewState.ReceiptListFetchSuccessView -> {
                     isInProgress = false

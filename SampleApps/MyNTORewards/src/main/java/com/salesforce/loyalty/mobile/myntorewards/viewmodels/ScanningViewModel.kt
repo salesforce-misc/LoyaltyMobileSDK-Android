@@ -45,7 +45,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
 
     override fun getReceiptLists(context: Context, refreshRequired: Boolean) {
         viewModelScope.launch {
-            viewState.postValue(ReceiptScanState.ReceiptListFetchInProgress)
+            viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)
 
             val memberJson =
                 PrefHelper.customPrefs(context)
@@ -72,7 +72,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 } else {
                     receiptList.value =
                         receiptListCache!!   // this not null is assertion is needed else android studio gives compile error.
-                    viewState.postValue(ReceiptScanState.ReceiptListFetchSuccess)
+                    viewState.postValue(ReceiptViewState.ReceiptListFetchSuccessView)
                 }
             }
 
@@ -90,10 +90,10 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                     membershipKey,
                     LocalFileManager.DIRECTORY_RECEIPT_LIST
                 )
-                viewState.postValue(ReceiptScanState.ReceiptListFetchSuccess)
+                viewState.postValue(ReceiptViewState.ReceiptListFetchSuccessView)
             }.onFailure {
                 Logger.d(TAG, "receipt call failed: ${it.message}")
-                viewState.postValue(ReceiptScanState.ReceiptListFetchFailure)
+                viewState.postValue(ReceiptViewState.ReceiptListFetchFailureView)
             }
         }
     }
