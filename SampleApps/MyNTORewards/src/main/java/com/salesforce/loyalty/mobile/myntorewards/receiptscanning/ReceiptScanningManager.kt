@@ -52,6 +52,20 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
+    suspend fun createTransactionJournal(
+        membershipNumber: String,
+        encodedImage: String
+    ): Result<AnalyzeExpenseResponse> {
+        Logger.d(TAG, "createTransactionJournal()")
+
+
+        val requestBody =
+            AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)
+        return receiptClient.receiptApi.analyzeExpense(
+            getAnalyzeExpenseUrl(),
+            requestBody
+        )
+    }
     private fun getAnalyzeExpenseUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_ANALYZE_EXPENSE
     }
@@ -64,4 +78,7 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         return "select Id,Purchase_Date__c,ReceiptId__c,Name,Status__c,StoreName__c,Total_Points__c,TotalAmount__c,Processed_AWS_Response__c from Receipts__c Order by CreatedDate DESC"
     }
 
+    private fun getCreateTransactionUrl(): String {
+        return mInstanceUrl + ReceiptScanningConfig.RECEIPT_CREATE_TRANSACTION_PATH
+    }
 }
