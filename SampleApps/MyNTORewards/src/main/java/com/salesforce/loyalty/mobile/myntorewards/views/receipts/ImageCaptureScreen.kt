@@ -319,8 +319,9 @@ fun ImageCaptureScreen(
                         val b: ByteArray = baos.toByteArray()
                         val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
                         Log.d("ImageCaptureScreen", "Encoded image: $encImage")
+                        val context = LocalContext.current
                         LaunchedEffect(key1 = true ) {
-                            scanningViewModel.analyzeExpense(encImage)
+                            scanningViewModel.analyzeExpense(context, encImage)
                         }
                     }
                     processClicked = false
