@@ -23,7 +23,7 @@ data class LineItem(
     @SerializedName("productName")
     val productName: String?,
     @SerializedName("price")
-    val price: Double?,
+    val price: String?,
     @SerializedName("lineItemPrice")
-    val lineItemPrice: Double?
+    val lineItemPrice: String?
 )

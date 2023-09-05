@@ -116,6 +116,9 @@ class AppConstants {
         val RECEIPT_POINT_STATUS_PROCESSED = "Processed"
         val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
 
+        const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
+        const val TAB_ELIGIBLE_ITEM = 0
+        const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
 
     }
 }
