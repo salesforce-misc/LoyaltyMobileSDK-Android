@@ -9,7 +9,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptV
 
 interface ScanningViewModelInterface {
 
-    fun analyzeExpense(encodedImage: String): AnalyzeExpenseResponse?
+    fun analyzeExpense(context: Context, encodedImage: String): AnalyzeExpenseResponse?
 
     val receiptListLiveData: LiveData<ReceiptListResponse>
     val receiptListViewState: LiveData<ReceiptViewState>

@@ -29,12 +29,14 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     suspend fun analyzeExpense(
+        membershipNumber: String,
         encodedImage: String
     ): Result<AnalyzeExpenseResponse> {
         Logger.d(TAG, "analyzeExpense()")
 
 
-        val requestBody = AnalyzeExpenseRequest(encodedImage)
+        val requestBody =
+            AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)
         return receiptClient.receiptApi.analyzeExpense(
             getAnalyzeExpenseUrl(),
             requestBody
