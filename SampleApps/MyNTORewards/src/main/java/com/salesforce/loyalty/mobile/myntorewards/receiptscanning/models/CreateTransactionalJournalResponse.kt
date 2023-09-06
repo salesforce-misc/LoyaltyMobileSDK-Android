@@ -2,10 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models
 
 import com.google.gson.annotations.SerializedName
 
-/*data class CreateTransactionalJournalResponse(
-//    val transactions: List<Transactions> = mutableListOf()
-)*/
-
 data class CreateTransactionalJournalResponse(
     @SerializedName("attributes")
     val attributes: TransactionAttributes?,
