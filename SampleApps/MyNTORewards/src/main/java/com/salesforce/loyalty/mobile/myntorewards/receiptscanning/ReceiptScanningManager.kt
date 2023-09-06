@@ -7,6 +7,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptSca
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_VERSION
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseRequest
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.CreateTransactionalJournalResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -53,19 +54,16 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     suspend fun createTransactionJournal(
-        membershipNumber: String,
-        encodedImage: String
-    ): Result<AnalyzeExpenseResponse> {
+        analyzeExpenseResponse: AnalyzeExpenseResponse
+    ): Result<List<CreateTransactionalJournalResponse>> {
         Logger.d(TAG, "createTransactionJournal()")
 
-
-        val requestBody =
-            AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)
-        return receiptClient.receiptApi.analyzeExpense(
-            getAnalyzeExpenseUrl(),
-            requestBody
+        return receiptClient.receiptApi.createTransactionalJournal(
+            getCreateTransactionUrl(),
+            analyzeExpenseResponse
         )
     }
+
     private fun getAnalyzeExpenseUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_ANALYZE_EXPENSE
     }

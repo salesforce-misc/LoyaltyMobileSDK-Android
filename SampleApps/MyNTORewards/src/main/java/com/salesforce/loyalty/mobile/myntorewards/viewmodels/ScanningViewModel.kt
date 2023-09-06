@@ -13,6 +13,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.CreateTransactionJournalViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
@@ -42,6 +43,11 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         get() = receiptScanningViewState
 
     private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
+
+    override val createTransactionJournalViewStateLiveData: LiveData<CreateTransactionJournalViewState>
+        get() = createTransactionJournalViewState
+
+    private val createTransactionJournalViewState = MutableLiveData<CreateTransactionJournalViewState>()
 
     override fun getReceiptLists(context: Context, refreshRequired: Boolean) {
         viewModelScope.launch {
@@ -127,4 +133,19 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         return result
     }
 
+    override fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse) {
+        Logger.d(TAG, "analyzeExpense")
+        viewModelScope.launch {
+            createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalInProgress)
+
+            receiptScanningManager.createTransactionJournal(analyzeExpenseResponse).onSuccess {
+                Logger.d(TAG, "createTransactionalJournal Success : $it")
+                createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalSuccess)
+            }
+                .onFailure {
+                    Logger.d(TAG, "createTransactionalJournal failed: ${it.message}")
+                    createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalFailure)
+                }
+        }
+    }
 }

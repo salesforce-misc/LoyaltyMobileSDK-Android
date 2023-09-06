@@ -3,6 +3,8 @@ package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models
 import com.google.gson.annotations.SerializedName
 
 data class AnalyzeExpenseResponse(
+    @SerializedName("memberShipNumber")
+    val membershipNumber: String,
     @SerializedName("totalAmount")
     val totalAmount: String?,
     @SerializedName("storeName")
