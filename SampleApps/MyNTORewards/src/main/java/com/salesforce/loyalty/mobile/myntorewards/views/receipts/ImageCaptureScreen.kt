@@ -180,6 +180,7 @@ fun ImageCaptureScreen(
                     bottomSheetScaffoldState.bottomSheetState.collapse()
                 }
             }
+            currentPopupState = null
             imageClicked = false
         }
         BottomSheetScaffold(
@@ -192,6 +193,7 @@ fun ImageCaptureScreen(
                         bottomSheetType = bottomSheetType,
                         navController = navController,
                         scannedReceiptLiveData = scannedReceiptLiveData,
+                        scanningViewModel = scanningViewModel,
                         setBottomSheetState = {
                             currentPopupState = it
                         },
@@ -328,8 +330,11 @@ fun ImageCaptureScreen(
                 }
                 when (scannedReceiptViewState) {
                     is ReceiptScanningViewState.ReceiptScanningSuccess -> {
-                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
-                        openBottomSheet()
+                        if(progressPopupState) {
+                            progressPopupState = false
+                            currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
+                            openBottomSheet()
+                        }
                     }
 
                     is ReceiptScanningViewState.ReceiptScanningInProgress -> {
@@ -339,6 +344,9 @@ fun ImageCaptureScreen(
                     }
 
                     is ReceiptScanningViewState.ReceiptScanningFailure -> {
+                        if (progressPopupState) {
+                            progressPopupState = false
+                        }
                         // TODO Handle failure scenario.
                     }
 
@@ -552,6 +560,7 @@ fun OpenReceiptBottomSheetContent(
     bottomSheetType: ReceiptScanningBottomSheetType,
     navController: NavHostController,
     scannedReceiptLiveData: AnalyzeExpenseResponse?,
+    scanningViewModel: ScanningViewModelInterface,
     setBottomSheetState: (bottomSheetState: ReceiptScanningBottomSheetType) -> Unit,
     closeSheet: () -> Unit,
 ) {
@@ -559,13 +568,11 @@ fun OpenReceiptBottomSheetContent(
         ReceiptScanningBottomSheetType.POPUP_PROGRESS -> {
             ScanningProgress(
                 navHostController = navController,
-                closePopup = { closeSheet() }) {
-                setBottomSheetState(it)
-            }
+                closePopup = { closeSheet() })
         }
 
         ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT -> {
-            ShowScannedReceiptScreen(navController, scannedReceiptLiveData, closePopup = {
+            ShowScannedReceiptScreen(navController, scanningViewModel, scannedReceiptLiveData, closePopup = {
                 closeSheet()
             }, openCongratsPopup = {
                 setBottomSheetState(it)

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.CreateTransactionJournalViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 
@@ -15,6 +16,8 @@ interface ScanningViewModelInterface {
     val receiptListViewState: LiveData<ReceiptViewState>
     val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
     val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
+    val createTransactionJournalViewStateLiveData: LiveData<CreateTransactionJournalViewState>
     fun getReceiptListsAPI(context: Context, membershipKey: String)
     fun getReceiptLists(context: Context, refreshRequired: Boolean = false)
+    fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse)
 }

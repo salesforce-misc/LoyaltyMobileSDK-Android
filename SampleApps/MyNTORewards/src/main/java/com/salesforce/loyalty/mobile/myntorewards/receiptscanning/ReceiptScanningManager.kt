@@ -7,6 +7,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptSca
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_VERSION
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseRequest
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.CreateTransactionalJournalResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -52,6 +53,17 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
+    suspend fun createTransactionJournal(
+        analyzeExpenseResponse: AnalyzeExpenseResponse
+    ): Result<List<CreateTransactionalJournalResponse>> {
+        Logger.d(TAG, "createTransactionJournal()")
+
+        return receiptClient.receiptApi.createTransactionalJournal(
+            getCreateTransactionUrl(),
+            analyzeExpenseResponse
+        )
+    }
+
     private fun getAnalyzeExpenseUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_ANALYZE_EXPENSE
     }
@@ -64,4 +76,7 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         return "select Id,Purchase_Date__c,ReceiptId__c,Name,Status__c,StoreName__c,Total_Points__c,TotalAmount__c,Processed_AWS_Response__c from Receipts__c Order by CreatedDate DESC"
     }
 
+    private fun getCreateTransactionUrl(): String {
+        return mInstanceUrl + ReceiptScanningConfig.RECEIPT_CREATE_TRANSACTION_PATH
+    }
 }

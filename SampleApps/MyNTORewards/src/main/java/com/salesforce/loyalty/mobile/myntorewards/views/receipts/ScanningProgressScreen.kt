@@ -26,16 +26,13 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_PROCESS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
-import kotlinx.coroutines.delay
 
 @Composable
 fun ScanningProgress(
     navHostController: NavHostController,
-    closePopup: () -> Unit,
-    openScannedReceiptPopup: (popupStatus: ReceiptScanningBottomSheetType) -> Unit
+    closePopup: () -> Unit
 ) {
 
-    var detailsPopupState by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxHeight(0.92f)
@@ -107,13 +104,5 @@ fun ScanningProgress(
 
                 )
         }
-        /*LaunchedEffect(true) {
-            // Added delay for testing purpose. Need to remove it once we call the API to scan the receipt.
-            delay(5000)
-            detailsPopupState = true
-        }*/
-    }
-    if (detailsPopupState) {
-        openScannedReceiptPopup(ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT)
     }
 }
