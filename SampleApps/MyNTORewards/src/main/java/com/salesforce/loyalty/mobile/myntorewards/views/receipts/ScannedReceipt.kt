@@ -150,6 +150,7 @@ fun ShowScannedReceiptScreen(
             }
         }
         if (congPopupState) {
+            congPopupState = false
             LaunchedEffect(key1 = true) {
                 analyzeExpenseResponse?.let {
                     scanningViewModel.createTransactionalJournal(it)
@@ -158,14 +159,18 @@ fun ShowScannedReceiptScreen(
         }
         when (createTransactionJournalViewState) {
             CreateTransactionJournalViewState.CreateTransactionJournalSuccess -> {
-                inProgress = false
-                openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
+                if (inProgress) {
+                    inProgress = false
+                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
+                }
             }
             CreateTransactionJournalViewState.CreateTransactionJournalInProgress -> {
                 inProgress = true
             }
             CreateTransactionJournalViewState.CreateTransactionJournalFailure -> {
-                inProgress = false
+                if (inProgress) {
+                    inProgress = false
+                }
             }
             else -> {}
         }
