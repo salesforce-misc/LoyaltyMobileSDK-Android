@@ -63,8 +63,6 @@ class AppConstants {
         const val MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED = "EligibleButNotEnrolled"
         const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
         const val MAX_PAGE_COUNT_PROMOTION = 4
-        const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
-        const val PROMOTION_DATE_SAMPLE_APP_FORMAT = "dd/MM/yyyy"
 
         //Transaction types
         const val TRANSACTION_PURCHASE = "Purchase"
@@ -76,8 +74,7 @@ class AppConstants {
         const val MAX_TRANSACTION_COUNT = 3
         const val TRANSACTION_REWARD_POINTS = "Points"
         const val REWARD_CURRENCY_NAME = "Reward Points"
-        const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        const val TRANSACTION_HISTORY_APP_DATE_FORMAT = "dd LLLL yyyy"
+
 
         //tabs vouchers
         const val VOUCHER_ISSUED = "Issued"
@@ -119,6 +116,22 @@ class AppConstants {
         const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
         const val TAB_ELIGIBLE_ITEM = 0
         const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
+
+        //Different Date Formats incoming from server
+        const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
+        const val RECEIPT_DATE_API_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.sZ"
+        const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        const val RECEIPT_DETAILS_API_DATETIME_FORMAT = "dd/MM/yyyy"
+
+
+        //Date Format 02 Nov 2019
+        const val DEFAULT_SAMPLE_APP_FORMAT = "dd MMM yyyy"
+
+        //Date Format 24 August 2023
+        const val TRANSACTION_HISTORY_APP_DATE_FORMAT = "dd LLLL yyyy"
+
+        //Date Format 30/09/2023
+        const val PROMOTION_DATE_SAMPLE_APP_FORMAT = "dd/MM/yyyy"
 
     }
 }

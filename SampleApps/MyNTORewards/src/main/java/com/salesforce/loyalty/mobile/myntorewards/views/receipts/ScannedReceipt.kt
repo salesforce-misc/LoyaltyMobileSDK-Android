@@ -28,6 +28,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ROW_STORE_DETAILS
@@ -88,7 +89,11 @@ fun ShowScannedReceiptScreen(
                 )
 
                 Text(
-                    text = stringResource(R.string.field_date_colon) + " " + analyzeExpenseResponse?.receiptDate,
+                    text = stringResource(R.string.field_date_colon) + " " + analyzeExpenseResponse?.receiptDate?.let {
+                        Common.formatReceiptDetailDate(
+                            it
+                        )
+                    },
                     color = Color.Black,
                     textAlign = TextAlign.Start,
                     fontSize = 13.sp,

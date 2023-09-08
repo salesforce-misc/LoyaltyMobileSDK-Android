@@ -18,8 +18,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
@@ -28,9 +31,12 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple90
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.BottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.Dateformatepopup
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.QRCodePopup
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 
@@ -84,6 +90,22 @@ fun MoreOptionList(
     navHostController: NavHostController
 ) {
 
+    var popupControlQRCOde by remember { mutableStateOf(false) }
+    if (popupControlQRCOde) {
+        Popup(
+            alignment = Alignment.Center,
+            offset = IntOffset(0, 700),
+            onDismissRequest = {
+                popupControlQRCOde = false
+               },
+            properties = PopupProperties(focusable = true)
+        ) {
+            Dateformatepopup() {
+                popupControlQRCOde = false
+                //blurBG(AppConstants.NO_BLUR_BG)
+            }
+        }
+    }
     val logoutState by onBoardingModel.logoutStateLiveData.observeAsState(LogoutState.LOGOUT_DEFAULT_EMPTY) // collecting livedata as state
     var isInProgress by remember { mutableStateOf(false) }
     when (logoutState) {
@@ -116,28 +138,32 @@ fun MoreOptionList(
             AddMoreOption(
                 imageRes = R.drawable.ic_user_account,
                 textRes = R.string.header_label_account
-            )
+            ){}
             AddMoreOption(
                 imageRes = R.drawable.ic_addresses,
                 textRes = R.string.header_label_addresses
-            )
+            ){}
             AddMoreOption(
                 imageRes = R.drawable.ic_preference,
                 textRes = R.string.header_label_payment_methods
-            )
+            ){}
             AddMoreOption(
                 imageRes = R.drawable.ic_notification,
                 textRes = R.string.header_label_orders
-            )
+            ){}
             ReceiptOption(navHostController)
             AddMoreOption(
                 imageRes = R.drawable.ic_quote,
                 textRes = R.string.header_label_support
-            )
+            ){}
+            AddMoreOption(
+                imageRes = R.drawable.ic_quote,
+                textRes = R.string.header_label_dates
+            ){popupControlQRCOde=true}
             AddMoreOption(
                 imageRes = R.drawable.ic_favorite,
                 textRes = R.string.header_label_favourite
-            )
+            ){}
             LogoutOption(onBoardingModel)
             AppVersionHolder()
         }
@@ -165,7 +191,7 @@ fun AppVersionHolder() {
 }
 
 @Composable
-fun AddMoreOption(imageRes: Int, textRes: Int){
+fun AddMoreOption(imageRes: Int, textRes: Int, optionClicked: () -> Unit){
     Divider(color = VibrantPurple90, thickness = Dp.Hairline)
 
     Row(
@@ -173,7 +199,9 @@ fun AddMoreOption(imageRes: Int, textRes: Int){
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(top = 24.dp, bottom = 24.dp)
-            .background(Color.White),
+            .background(Color.White).clickable {
+                optionClicked()
+            },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {

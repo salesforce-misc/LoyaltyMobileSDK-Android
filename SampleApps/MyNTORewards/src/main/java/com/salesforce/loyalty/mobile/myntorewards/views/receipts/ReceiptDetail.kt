@@ -36,6 +36,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptDetailDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReceiptTabs
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -169,7 +170,11 @@ fun ReceiptDetail(navController: NavHostController) {
                             fontSize = 13.sp,
                         )
                         Text(
-                            text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate,
+                            text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate?.let { receiptAPIDate ->
+                                formatReceiptDetailDate(
+                                    receiptAPIDate
+                                )
+                            },
                             fontFamily = font_sf_pro,
                             color = Color.Black,
                             textAlign = TextAlign.Start,

@@ -1,8 +1,11 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_SAMPLE_APP_FORMAT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DATE_API_FORMAT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_APP_DATE_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
@@ -17,7 +20,19 @@ class Common {
         fun formatPromotionDate(apiDate: String): String {
             val apiDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_API_FORMAT)
             val date = LocalDate.parse(apiDate, apiDateFormat)
-            val promotionDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_SAMPLE_APP_FORMAT)
+            val promotionDateFormat = DateTimeFormatter.ofPattern(DEFAULT_SAMPLE_APP_FORMAT)
+            return date.format(promotionDateFormat)
+        }
+        fun formatReceiptListDate(apiDate: String): String {
+            val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_DATE_API_FORMAT)
+            val date = LocalDate.parse(apiDate, apiDateFormat)
+            val promotionDateFormat = DateTimeFormatter.ofPattern(DEFAULT_SAMPLE_APP_FORMAT)
+            return date.format(promotionDateFormat)
+        }
+        fun formatReceiptDetailDate(apiDate: String): String {
+            val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_DETAILS_API_DATETIME_FORMAT)
+            val date = LocalDate.parse(apiDate, apiDateFormat)
+            val promotionDateFormat = DateTimeFormatter.ofPattern(DEFAULT_SAMPLE_APP_FORMAT)
             return date.format(promotionDateFormat)
         }
 
@@ -26,7 +41,7 @@ class Common {
             val date = LocalDate.parse(apiDateTime, apiDateFormat)
 
             val promotionDateFormat =
-                DateTimeFormatter.ofPattern(TRANSACTION_HISTORY_APP_DATE_FORMAT)
+                DateTimeFormatter.ofPattern(DEFAULT_SAMPLE_APP_FORMAT)
             return date.format(promotionDateFormat)
         }
 
