@@ -11,5 +11,6 @@ enum class BottomSheetType {
 enum class ReceiptScanningBottomSheetType {
     POPUP_PROGRESS,
     POPUP_SCANNED_RECEIPT,
-    POPUP_CONGRATULATIONS
+    POPUP_CONGRATULATIONS,
+    POPUP_ERROR
 }

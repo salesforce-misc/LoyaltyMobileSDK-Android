@@ -346,6 +346,8 @@ fun ImageCaptureScreen(
                     is ReceiptScanningViewState.ReceiptScanningFailure -> {
                         if (progressPopupState) {
                             progressPopupState = false
+                            currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
+                            openBottomSheet()
                         }
                         // TODO Handle failure scenario.
                     }
@@ -581,6 +583,13 @@ fun OpenReceiptBottomSheetContent(
 
         ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS -> {
             CongratulationsPopup(navController, closePopup = {
+                closeSheet()
+                navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
+            }, scanAnotherReceipt = { closeSheet() })
+        }
+
+        ReceiptScanningBottomSheetType.POPUP_ERROR -> {
+            ScanningErrorPopup(closePopup = {
                 closeSheet()
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
             }, scanAnotherReceipt = { closeSheet() })
