@@ -88,7 +88,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
     override fun getReceiptListsAPI(context: Context, membershipKey: String) {
         viewModelScope.launch {
 
-            receiptScanningManager.receiptList().onSuccess {
+            receiptScanningManager.receiptList(membershipKey).onSuccess {
                 receiptList.value = it
                 LocalFileManager.saveData(
                     context,
