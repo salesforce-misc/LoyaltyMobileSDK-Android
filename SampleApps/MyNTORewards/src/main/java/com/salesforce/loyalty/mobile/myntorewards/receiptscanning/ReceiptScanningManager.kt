@@ -44,12 +44,12 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
-    suspend fun receiptList(
+    suspend fun receiptList(membershipKey: String
     ): Result<ReceiptListResponse> {
         Logger.d(TAG, "fetchReceiptList")
 
         return receiptClient.receiptApi.receiptList(
-            getReceiptListURLSOQLUrl(), fetchReceiptListSOQLQuery()
+            getReceiptListURLSOQLUrl(), fetchReceiptListSOQLQuery(membershipKey)
         )
     }
 
@@ -72,8 +72,8 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         return mInstanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY
     }
 
-    private fun fetchReceiptListSOQLQuery(): String {
-        return "select Id,Purchase_Date__c,ReceiptId__c,Name,Status__c,StoreName__c,Total_Points__c,TotalAmount__c,Processed_AWS_Response__c from Receipts__c Order by CreatedDate DESC"
+    private fun fetchReceiptListSOQLQuery(membershipKey: String): String {
+        return "select Id,Purchase_Date__c,ReceiptId__c,Name,Status__c,StoreName__c,Total_Points__c,TotalAmount__c,Processed_AWS_Response__c from Receipts__c WHERE Loyalty_Program_Member__r.MembershipNumber = '${membershipKey}' Order by CreatedDate DESC"
     }
 
     private fun getCreateTransactionUrl(): String {
