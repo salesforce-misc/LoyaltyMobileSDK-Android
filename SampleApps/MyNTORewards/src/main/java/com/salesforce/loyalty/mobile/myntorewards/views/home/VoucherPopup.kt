@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -69,6 +70,7 @@ fun VoucherPopupUI(
 ) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     var clippedText by remember { mutableStateOf("") }
+    val context: Context = LocalContext.current
 
     Column(
             modifier = Modifier
@@ -186,7 +188,7 @@ fun VoucherPopupUI(
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(voucher.expirationDate?.let { Common.formatPromotionDate(it) })
+                            append(voucher.expirationDate?.let { Common.formatPromotionDate(it,context) })
                         }
                     },
                     fontFamily = font_sf_pro,

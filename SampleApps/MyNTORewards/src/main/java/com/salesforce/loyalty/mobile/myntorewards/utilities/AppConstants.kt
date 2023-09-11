@@ -128,10 +128,13 @@ class AppConstants {
         const val DEFAULT_SAMPLE_APP_FORMAT = "dd MMM yyyy"
 
         //Date Format 24 August 2023
-        const val TRANSACTION_HISTORY_APP_DATE_FORMAT = "dd LLLL yyyy"
+        const val SAMPLE_APP_DATE_FORMAT_DDLLLYYY  = "dd LLLL yyyy"
 
         //Date Format 30/09/2023
-        const val PROMOTION_DATE_SAMPLE_APP_FORMAT = "dd/MM/yyyy"
+        const val SAMPLE_APP_DATE_FORMAT_DDMMYYYY = "dd/MM/yyyy"
+        const val PREF_MY_DATE = "MyDatePrefs"
+        const val KEY_APP_DATE = "appDate"
+
 
     }
 }

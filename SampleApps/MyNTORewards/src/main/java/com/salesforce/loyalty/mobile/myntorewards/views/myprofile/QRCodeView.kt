@@ -199,43 +199,7 @@ fun QRPopupCloseButton(closePopup: () -> Unit) {
     }
 }
 
-@Composable
-fun Dateformatepopup(closePopup: () -> Unit) {
-    // openPopup(true)
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.85f)
-            .background(MyProfileScreenBG, shape = RoundedCornerShape(POPUP_ROUNDED_CORNER_SIZE)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
 
-        QRPopupHeader()
-        {
-            closePopup()
-        }
-        Text(
-            text = "Your Date will be applicable for app",
-            fontFamily = font_sf_pro,
-            color = LightBlack,
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Normal,
-            modifier = Modifier
-                .padding(start = 24.dp, end = 24.dp)
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        SaveButton {
-            closePopup()
-        }
-
-        Spacer(modifier = Modifier.height(55.dp))
-
-    }
-}
 
 @Composable
 fun SaveButton(closePopup: () -> Unit) {

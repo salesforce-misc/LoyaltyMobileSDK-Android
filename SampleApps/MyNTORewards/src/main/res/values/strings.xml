@@ -200,4 +200,7 @@
     <string name="cd_camera_flash_icon">camera flash icon</string>
     <string name="image_more_than_5mb_msg">Image is more than 5 MB please try again.</string>
 
+    <string name="date_format">Date Format</string>
+
+
 </resources>

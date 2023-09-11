@@ -213,6 +213,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 @Composable
 fun ReceiptItem(receipt: Record, navController: NavHostController) {
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
+    val context: Context = LocalContext.current
     Spacer(modifier = Modifier.height(12.dp))
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -240,7 +241,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController) {
             )
             // ToDo purchase date should be formatted
             Text(
-                text = stringResource(R.string.field_date) + " " + formatReceiptListDate(receipt.purchase_date),
+                text = stringResource(R.string.field_date) + " " + formatReceiptListDate(receipt.purchase_date, context),
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,

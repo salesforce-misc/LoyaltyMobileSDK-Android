@@ -311,7 +311,7 @@ fun PromotionItem(
 
     val description = results.description ?: ""
     var endDate = results.endDate ?: ""
-
+    val context: Context = LocalContext.current
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
 
@@ -439,7 +439,7 @@ fun PromotionItem(
                 if (endDate.isNotEmpty()) {
                     Text(
                         text = stringResource(id = R.string.prom_full_screen_expiration_text) + " " + formatPromotionDate(
-                            endDate
+                            endDate, context
                         ),
                         fontWeight = FontWeight.Bold,
                         fontFamily = font_sf_pro,

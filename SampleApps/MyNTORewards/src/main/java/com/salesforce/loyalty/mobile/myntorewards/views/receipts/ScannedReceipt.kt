@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -49,6 +51,7 @@ fun ShowScannedReceiptScreen(
     val createTransactionJournalViewState by scanningViewModel.createTransactionJournalViewStateLiveData.observeAsState()
     var inProgress by remember { mutableStateOf(false) }
     val itemLists = analyzeExpenseResponse?.lineItems
+    val context: Context = LocalContext.current
     Box() {
         Column(
             modifier = Modifier
@@ -91,7 +94,7 @@ fun ShowScannedReceiptScreen(
                 Text(
                     text = stringResource(R.string.field_date_colon) + " " + analyzeExpenseResponse?.receiptDate?.let {
                         Common.formatReceiptDetailDate(
-                            it
+                            it, context
                         )
                     },
                     color = Color.Black,

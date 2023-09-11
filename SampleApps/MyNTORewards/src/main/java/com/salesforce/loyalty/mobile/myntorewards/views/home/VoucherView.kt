@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,6 +48,7 @@ fun VoucherView(voucher: VoucherResponse, blurBG: (Dp) -> Unit) {
     var voucherPopupState by remember { mutableStateOf(false) }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     var clippedText by remember { mutableStateOf("") }
+    val context: Context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -153,7 +155,7 @@ fun VoucherView(voucher: VoucherResponse, blurBG: (Dp) -> Unit) {
                     withStyle(
                         style = SpanStyle(fontWeight = FontWeight.Bold)
                     ) {
-                        append(voucher.expirationDate?.let { Common.formatPromotionDate(it) })
+                        append(voucher.expirationDate?.let { Common.formatPromotionDate(it, context) })
                     }
                 },
                 fontWeight = FontWeight.Normal,
