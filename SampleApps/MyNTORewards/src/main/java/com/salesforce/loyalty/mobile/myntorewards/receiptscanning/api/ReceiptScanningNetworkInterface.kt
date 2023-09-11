@@ -1,14 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api
 
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseRequest
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.CreateTransactionalJournalResponse
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
-import retrofit2.http.Url
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.*
+import retrofit2.http.*
 
 interface ReceiptScanningNetworkInterface {
 
@@ -29,4 +22,10 @@ interface ReceiptScanningNetworkInterface {
         @Url url: String,
         @Body json: AnalyzeExpenseResponse
     ): Result<List<CreateTransactionalJournalResponse>>
+
+    @PUT()
+    suspend fun receiptStatusUpdate(
+        @Url url: String,
+        @Body json: ReceiptStatusUpdateRequest
+    ): Result<ReceiptStatusUpdateResponse>
 }
