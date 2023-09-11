@@ -379,6 +379,7 @@ fun OptInText()
 @Composable
 fun EndDateText(endDate:String)
 {
+    val context: Context = LocalContext.current
     if (endDate.isNotEmpty()) {
         Text(
             buildAnnotatedString {
@@ -390,7 +391,7 @@ fun EndDateText(endDate:String)
                 withStyle(
                     style = SpanStyle(fontWeight = FontWeight.Bold)
                 ) {
-                    append(formatPromotionDate(endDate))
+                    append(formatPromotionDate(endDate, context))
                 }
             },
             fontFamily = font_sf_pro,

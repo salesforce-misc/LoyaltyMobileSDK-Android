@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +38,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptDetailDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReceiptTabs
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -48,6 +51,7 @@ fun ReceiptDetail(navController: NavHostController) {
     var openBottomsheet by remember { mutableStateOf(false) }
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
     var blurBG by remember { mutableStateOf(0.dp) }
+    val context: Context = LocalContext.current
 
     val processedAWSReponse =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE)
@@ -169,7 +173,11 @@ fun ReceiptDetail(navController: NavHostController) {
                             fontSize = 13.sp,
                         )
                         Text(
-                            text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate,
+                            text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate?.let { receiptAPIDate ->
+                                formatReceiptDetailDate(
+                                    receiptAPIDate, context
+                                )
+                            },
                             fontFamily = font_sf_pro,
                             color = Color.Black,
                             textAlign = TextAlign.Start,

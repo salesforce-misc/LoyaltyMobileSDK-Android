@@ -130,6 +130,7 @@
     <string name="header_label_payment_methods">Payment Methods</string>
     <string name="header_label_orders">Orders</string>
     <string name="header_label_support">Support</string>
+    <string name="header_label_dates">Date Format</string>
     <string name="header_label_favourite">Favorites</string>
     <string name="label_opt_in">"Opt In"</string>
     <string name="label_opt_out">"Opt Out"</string>
@@ -201,5 +202,8 @@
     <string name="error_cd">Error while scanning</string>
     <string name="receipt_scanning_error_desc">Oops! Something went wrong while processing the request. Try again.</string>
     <string name="button_home">Home</string>
+
+    <string name="date_format">Date Format</string>
+
 
 </resources>

@@ -48,6 +48,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Record
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROCESSED_AWS_RESPONSE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
@@ -212,6 +213,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 @Composable
 fun ReceiptItem(receipt: Record, navController: NavHostController) {
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
+    val context: Context = LocalContext.current
     Spacer(modifier = Modifier.height(12.dp))
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -239,7 +241,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController) {
             )
             // ToDo purchase date should be formatted
             Text(
-                text = stringResource(R.string.field_date) + " " + receipt.purchase_date,
+                text = stringResource(R.string.field_date) + " " + formatReceiptListDate(receipt.purchase_date, context),
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,

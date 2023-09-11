@@ -103,7 +103,7 @@ fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionVie
                                 val transactionName = this.journalTypeName
                                 val points = getCurrencyPoints(this.pointsChange)
                                 val date = this.activityDate?.let { activityDate ->
-                                    formatTransactionDateTime(activityDate)
+                                    formatTransactionDateTime(activityDate, context)
                                 }
                                 if (transactionName != null && points != null && date != null) {
                                     ListItemTransaction(transactionName, points, date)
@@ -219,7 +219,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
                             val transactionName = it.journalTypeName
                             val points = getCurrencyPoints(it.pointsChange)
                             val date = it.activityDate?.let { activityDate ->
-                                formatTransactionDateTime(activityDate)
+                                formatTransactionDateTime(activityDate, context)
                             }
                             if (transactionName != null && points != null && date != null) {
                                 ListItemTransaction(transactionName, points, date)
@@ -246,7 +246,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
                             val transactionName = it.journalTypeName
                             val points = getCurrencyPoints(it.pointsChange)
                             val date = it.activityDate?.let { activityDate ->
-                                formatTransactionDateTime(activityDate)
+                                formatTransactionDateTime(activityDate, context)
                             }
                             if (transactionName != null && points != null && date != null) {
                                 ListItemTransaction(transactionName, points, date)

@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +54,7 @@ fun PromotionCard(
     var endDate = membershipPromo?.get(page)?.endDate ?: ""
     var promotionEnrollmentRqr = membershipPromo?.get(page)?.promotionEnrollmentRqr ?: false
     var memberEligibilityCategory = membershipPromo?.get(page)?.memberEligibilityCategory ?: ""
+    val context: Context = LocalContext.current
 
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
     Card(
@@ -136,7 +139,7 @@ fun PromotionCard(
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(formatPromotionDate(endDate))
+                            append(formatPromotionDate(endDate, context))
                         }
                     },
                     fontFamily = font_sf_pro,
