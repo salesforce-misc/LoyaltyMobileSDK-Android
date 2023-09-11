@@ -199,30 +199,3 @@ fun QRPopupCloseButton(closePopup: () -> Unit) {
     }
 }
 
-
-
-@Composable
-fun SaveButton(closePopup: () -> Unit) {
-
-    Column(modifier = Modifier.padding(start = 32.dp, end = 32.dp)) {
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(), onClick = {
-                closePopup()
-            },
-            colors = ButtonDefaults.buttonColors(VibrantPurple40),
-            shape = RoundedCornerShape(100.dp)
-        ) {
-            Text(
-                text = "Save",
-                fontFamily = font_sf_pro,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(top = 3.dp, bottom = 3.dp)
-            )
-        }
-    }
-}

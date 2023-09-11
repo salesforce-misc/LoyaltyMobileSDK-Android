@@ -108,7 +108,12 @@ fun MoreOptions(
                 //blurBG(AppConstants.NO_BLUR_BG)
             }
         },
-        sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE, AppConstants.POPUP_ROUNDED_CORNER_SIZE, 0.dp, 0.dp),
+        sheetShape = RoundedCornerShape(
+            AppConstants.POPUP_ROUNDED_CORNER_SIZE,
+            AppConstants.POPUP_ROUNDED_CORNER_SIZE,
+            0.dp,
+            0.dp
+        ),
         sheetPeekHeight = 0.dp,
         sheetGesturesEnabled = false
     ) {
@@ -147,8 +152,8 @@ fun MoreOptions(
                 modifier = Modifier.padding(top = 4.dp)
             )
 
-            MoreOptionList(onBoardingModel, navHostController){
-                openBottomsheet=true
+            MoreOptionList(onBoardingModel, navHostController) {
+                openBottomsheet = true
             }
         }
     }
@@ -159,7 +164,7 @@ fun MoreOptions(
 fun MoreOptionList(
     onBoardingModel: OnBoardingViewModelAbstractInterface,
     navHostController: NavHostController,
-    openBottomSheet: (bottomsheetType:String) -> Unit
+    openBottomSheet: (bottomsheetType: String) -> Unit
 ) {
     val logoutState by onBoardingModel.logoutStateLiveData.observeAsState(LogoutState.LOGOUT_DEFAULT_EMPTY) // collecting livedata as state
     var isInProgress by remember { mutableStateOf(false) }
@@ -170,9 +175,11 @@ fun MoreOptionList(
             activity.finish();
             activity.startActivity(activity.getIntent());
         }
+
         LogoutState.LOGOUT_IN_PROGRESS -> {
             isInProgress = true
         }
+
         else -> {}
     }
     Spacer(modifier = Modifier.height(24.dp))
@@ -193,24 +200,24 @@ fun MoreOptionList(
             AddMoreOption(
                 imageRes = R.drawable.ic_user_account,
                 textRes = R.string.header_label_account
-            ){}
+            ) {}
             AddMoreOption(
                 imageRes = R.drawable.ic_addresses,
                 textRes = R.string.header_label_addresses
-            ){}
+            ) {}
             AddMoreOption(
                 imageRes = R.drawable.ic_preference,
                 textRes = R.string.header_label_payment_methods
-            ){}
+            ) {}
             AddMoreOption(
                 imageRes = R.drawable.ic_notification,
                 textRes = R.string.header_label_orders
-            ){}
+            ) {}
             ReceiptOption(navHostController)
             AddMoreOption(
                 imageRes = R.drawable.ic_quote,
                 textRes = R.string.header_label_support
-            ){}
+            ) {}
             AddMoreOption(
                 imageRes = R.drawable.ic_quote,
                 textRes = R.string.header_label_dates
@@ -220,7 +227,7 @@ fun MoreOptionList(
             AddMoreOption(
                 imageRes = R.drawable.ic_favorite,
                 textRes = R.string.header_label_favourite
-            ){}
+            ) {}
             LogoutOption(onBoardingModel)
             AppVersionHolder()
         }
@@ -236,7 +243,8 @@ fun MoreOptionList(
 
 @Composable
 fun AppVersionHolder() {
-    val appVersionValue = stringResource(id = R.string.label_app_version) + " " + BuildConfig.VERSION_NAME
+    val appVersionValue =
+        stringResource(id = R.string.label_app_version) + " " + BuildConfig.VERSION_NAME
     Text(
         text = appVersionValue,
         fontFamily = font_sf_pro,
@@ -248,7 +256,7 @@ fun AppVersionHolder() {
 }
 
 @Composable
-fun AddMoreOption(imageRes: Int, textRes: Int, optionClicked: () -> Unit){
+fun AddMoreOption(imageRes: Int, textRes: Int, optionClicked: () -> Unit) {
     Divider(color = VibrantPurple90, thickness = Dp.Hairline)
 
     Row(
@@ -324,7 +332,7 @@ fun ReceiptOption(navHostController: NavHostController) {
 }
 
 @Composable
-fun LogoutOption(onBoardingModel: OnBoardingViewModelAbstractInterface){
+fun LogoutOption(onBoardingModel: OnBoardingViewModelAbstractInterface) {
     val context = LocalContext.current
     Divider(color = VibrantPurple90, thickness = Dp.Hairline)
 
@@ -417,17 +425,20 @@ fun Dateformatepopup(closePopup: () -> Unit) {
 }
 
 
-
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DateFormatDropDownBox() {
-    val options = listOf(DEFAULT_SAMPLE_APP_FORMAT, SAMPLE_APP_DATE_FORMAT_DDLLLYYY, SAMPLE_APP_DATE_FORMAT_DDMMYYYY)
+    val options = listOf(
+        DEFAULT_SAMPLE_APP_FORMAT,
+        SAMPLE_APP_DATE_FORMAT_DDLLLYYY,
+        SAMPLE_APP_DATE_FORMAT_DDMMYYYY
+    )
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
     val context: Context = LocalContext.current
     val preferencesManager = remember { DatePreferencesManager(context) }
     val data = preferencesManager.getData(KEY_APP_DATE, DEFAULT_SAMPLE_APP_FORMAT)
-    selectedOptionText= data
+    selectedOptionText = data
 
 
     ExposedDropdownMenuBox(
@@ -486,7 +497,11 @@ fun DateFormatDropDownBox() {
                         selectedOptionText = selectionOption
                         preferencesManager.saveData(KEY_APP_DATE, selectedOptionText)
                         Toast
-                            .makeText(context, "date format: "+ selectedOptionText+" applied succesfully across the app.", Toast.LENGTH_SHORT)
+                            .makeText(
+                                context,
+                                "date format: " + selectedOptionText + " applied succesfully across the app.",
+                                Toast.LENGTH_SHORT
+                            )
                             .show()
                         expanded = false
                     }
@@ -497,10 +512,9 @@ fun DateFormatDropDownBox() {
         }
 
 
-
-
     }
 }
+
 @Composable
 fun DateFormatHeader(closePopup: () -> Unit) {
     Row(
