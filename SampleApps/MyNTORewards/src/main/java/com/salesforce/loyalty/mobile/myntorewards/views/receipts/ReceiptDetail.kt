@@ -40,13 +40,14 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptDetailDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReceiptTabs
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun ReceiptDetail(navController: NavHostController) {
+fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
 
     var openBottomsheet by remember { mutableStateOf(false) }
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
@@ -55,6 +56,8 @@ fun ReceiptDetail(navController: NavHostController) {
 
     val processedAWSReponse =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE)
+    val receiptId =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_ID)
     var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
     processedAWSReponse?.let {
         val gson = Gson()
@@ -99,12 +102,14 @@ fun ReceiptDetail(navController: NavHostController) {
 
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
-                ManualReview(closePopup = {
+            receiptId?.let {
+                ManualReview(scanningViewModel, it, closePopup = {
                     openBottomsheet = false
                     closeBottomSheet()
                     openReceiptDetail = it
 
                 })
+            }
         },
         sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE, AppConstants.POPUP_ROUNDED_CORNER_SIZE, 0.dp, 0.dp),
         sheetPeekHeight = 0.dp,

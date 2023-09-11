@@ -109,11 +109,13 @@ class AppConstants {
 
         //Receipt_Point_Status
         val RECEIPT_POINT_STATUS_PENDING = "Pending"
+        val RECEIPT_POINT_STATUS_MANUAL_REVIEW = "Manual Review"
         val RECEIPT_POINT_STATUS_PROCESSING = "Processing"
         val RECEIPT_POINT_STATUS_PROCESSED = "Processed"
         val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
 
         const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
+        const val KEY_RECEIPT_ID = "key_receipt_id"
         const val TAB_ELIGIBLE_ITEM = 0
         const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
 

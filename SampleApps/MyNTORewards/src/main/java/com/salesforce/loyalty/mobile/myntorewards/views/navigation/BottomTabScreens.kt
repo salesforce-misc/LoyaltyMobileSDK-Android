@@ -97,7 +97,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.ReceiptDetailScreen.route) {
             showBottomBar(true)
-            ReceiptDetail(navCheckOutFlowController)
+            ReceiptDetail(navCheckOutFlowController, scanningViewModel)
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
@@ -244,7 +244,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.ReceiptDetailScreen.route) {
             showBottomBar(true)
-            ReceiptDetail(navController)
+            ReceiptDetail(navController, scanningViewModel)
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)

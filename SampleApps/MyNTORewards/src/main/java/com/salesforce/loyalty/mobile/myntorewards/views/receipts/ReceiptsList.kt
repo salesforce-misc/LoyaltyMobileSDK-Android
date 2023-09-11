@@ -48,6 +48,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Record
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROCESSED_AWS_RESPONSE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
@@ -191,7 +192,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                                     }
                                 }
                                 items(filteredList.size) {
-                                    ReceiptItem(filteredList[it], navController)
+                                    ReceiptItem(filteredList[it], navController, scanningViewModel)
                                 }
 
                             }
@@ -211,7 +212,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 
 
 @Composable
-fun ReceiptItem(receipt: Record, navController: NavHostController) {
+fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
     val context: Context = LocalContext.current
     Spacer(modifier = Modifier.height(12.dp))
@@ -227,6 +228,10 @@ fun ReceiptItem(receipt: Record, navController: NavHostController) {
                 navController.currentBackStackEntry?.arguments?.putString(
                     KEY_PROCESSED_AWS_RESPONSE,
                     receipt.processedAWSResponse
+                )
+                navController.currentBackStackEntry?.arguments?.putString(
+                    KEY_RECEIPT_ID,
+                    receipt.id
                 )
                 navController.navigate(MoreScreens.ReceiptDetailScreen.route)
             }
@@ -267,7 +272,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController) {
             var receiptPoints = ""
             var textColour = Color.Black
             when (receipt.receipt_status) {
-                AppConstants.RECEIPT_POINT_STATUS_PENDING -> {
+                AppConstants.RECEIPT_POINT_STATUS_PENDING, AppConstants.RECEIPT_POINT_STATUS_MANUAL_REVIEW -> {
                     receiptPoints = stringResource(id = R.string.receipt_status_pending)
                     textColour = ReceiptPointColourWarning
                 }
@@ -318,9 +323,12 @@ fun ReceiptItem(receipt: Record, navController: NavHostController) {
                 blurBG(AppConstants.NO_BLUR_BG)
         }*//*)*/
 
-        ReceiptListScreenPopupState.MANUAL_REVIEW -> ManualReview(closePopup = {
-            openReceiptDetail = it
-        })
+        ReceiptListScreenPopupState.MANUAL_REVIEW -> ManualReview(
+            scanningViewModel,
+            receipt.id,
+            closePopup = {
+                openReceiptDetail = it
+            })
 
         else -> {}
     }

@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,10 +10,12 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,11 +32,19 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
 
 
 @Composable
-fun ManualReview(closePopup: (ReceiptListScreenPopupState) -> Unit) {
-
+fun ManualReview(
+    scanningViewModel: ScanningViewModelInterface,
+    receiptId: String,
+    closePopup: (ReceiptListScreenPopupState) -> Unit
+) {
+    var statusUpdateInProgress by remember {
+        mutableStateOf(false)
+    }
     Column(
         modifier = Modifier
             .background(MyProfileScreenBG, RoundedCornerShape(22.dp, 22.dp, 0.dp, 0.dp))
@@ -149,6 +160,10 @@ fun ManualReview(closePopup: (ReceiptListScreenPopupState) -> Unit) {
         Spacer(modifier = Modifier.height(8.dp))
 
         var reviewText by remember { mutableStateOf(TextFieldValue("")) }
+        var manualReviewSubmitted by remember {
+            mutableStateOf(false)
+        }
+        val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
         OutlinedTextField(
             modifier = Modifier
                 .border(
@@ -198,9 +213,7 @@ fun ManualReview(closePopup: (ReceiptListScreenPopupState) -> Unit) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
-
-                    reviewText = TextFieldValue("")
-                    closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)// temporary. API call will be triggered.
+                    manualReviewSubmitted = true
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)
@@ -237,6 +250,40 @@ fun ManualReview(closePopup: (ReceiptListScreenPopupState) -> Unit) {
 
                 )
         }
+        if (manualReviewSubmitted) {
+            LaunchedEffect(key1 = true) {
+                scanningViewModel.submitForManualReview(receiptId, reviewText.text)
+            }
+        }
+        when (receiptStatusUpdateViewState) {
+            ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess -> {
+                if (statusUpdateInProgress) {
+                    Toast.makeText(
+                        LocalContext.current,
+                        "Submitted for Manual Review successfully!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    reviewText = TextFieldValue("")
+                    closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)
+                    statusUpdateInProgress = false
+                }
+            }
+            ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure -> {
+                if(statusUpdateInProgress) {
+                    Toast.makeText(
+                        LocalContext.current,
+                        "Failed to Submit for Manual Review. Try again later.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    statusUpdateInProgress = false
+                }
+            }
+            ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress -> {
+                statusUpdateInProgress = true
+            }
+            else -> {}
+        }
+
 
     }
 }
