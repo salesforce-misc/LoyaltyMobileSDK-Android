@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.RECEIPT_STATUS_MANUAL_REVIEW
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -58,6 +59,15 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE)
     val receiptId =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_ID)
+    val receiptStatus =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_STATUS)
+    var isSubmittedForManualReview by remember {
+        mutableStateOf(
+            receiptStatus.equals(
+                RECEIPT_STATUS_MANUAL_REVIEW
+            )
+        )
+    }
     var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
     processedAWSReponse?.let {
         val gson = Gson()
@@ -109,7 +119,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                         closeBottomSheet()
                         openReceiptDetail = it
 
-                    })
+                    }, isSubmittedForManualReview = {isSubmittedForManualReview = true})
                 }
             }
         },
@@ -311,7 +321,13 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(id = R.string.manual_review_option),
+                    text = if (isSubmittedForManualReview) {
+                        stringResource(id = R.string.submitted_for_manual_review)
+                    } else {
+                        stringResource(
+                            id = R.string.manual_review_option
+                        )
+                    },
                     style = TextStyle(
                         fontSize = 16.sp,
                         lineHeight = 22.4.sp,
@@ -321,8 +337,10 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                         textAlign = TextAlign.Center
                     ),
                     modifier = Modifier.clickable {
-                        blurBG = AppConstants.BLUR_BG
-                        openBottomsheet = true
+                        if (!isSubmittedForManualReview) {
+                            blurBG = AppConstants.BLUR_BG
+                            openBottomsheet = true
+                        }
 //                        closePopup(ReceiptListScreenPopupState.MANUAL_REVIEW)
                     }
                 )

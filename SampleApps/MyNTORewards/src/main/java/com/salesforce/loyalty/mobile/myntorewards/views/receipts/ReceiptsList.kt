@@ -49,6 +49,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROCESSED_AWS_RESPONSE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
@@ -233,6 +234,10 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                     KEY_RECEIPT_ID,
                     receipt.id
                 )
+                navController.currentBackStackEntry?.arguments?.putString(
+                    KEY_RECEIPT_STATUS,
+                    receipt.receipt_status
+                )
                 navController.navigate(MoreScreens.ReceiptDetailScreen.route)
             }
     ) {
@@ -324,13 +329,13 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                 blurBG(AppConstants.NO_BLUR_BG)
         }*//*)*/
 
-        ReceiptListScreenPopupState.MANUAL_REVIEW -> ManualReview(
+        ReceiptListScreenPopupState.MANUAL_REVIEW -> {}/*ManualReview(
             scanningViewModel,
             receipt.id,
             receipt.processedAWSResponse,
             closePopup = {
                 openReceiptDetail = it
-            })
+            })*/
 
         else -> {}
     }

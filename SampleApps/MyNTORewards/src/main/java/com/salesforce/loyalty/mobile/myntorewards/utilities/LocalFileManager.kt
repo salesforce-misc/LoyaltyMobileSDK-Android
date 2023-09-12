@@ -106,7 +106,7 @@ object LocalFileManager {
         clearFolder(context, DIRECTORY_RECEIPT_LIST)
     }
 
-    private fun clearFolder(context: Context, folderName: String) {
+    fun clearFolder(context: Context, folderName: String) {
         val internalDir: File = context.filesDir
         val folderDir = File(internalDir, folderName)
 

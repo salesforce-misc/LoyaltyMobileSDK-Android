@@ -116,6 +116,7 @@ class AppConstants {
 
         const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
         const val KEY_RECEIPT_ID = "key_receipt_id"
+        const val KEY_RECEIPT_STATUS = "key_receipt_status"
         const val TAB_ELIGIBLE_ITEM = 0
         const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
 
