@@ -13,6 +13,8 @@ data class AnalyzeExpenseResponse(
     val storeAddress: String?,
     @SerializedName("receiptNumber")
     val receiptNumber: String?,
+    @SerializedName("receiptSFDCId")
+    val receiptId: String?,
     @SerializedName("receiptDate")
     val receiptDate: String?,
     @SerializedName("lineItem")
