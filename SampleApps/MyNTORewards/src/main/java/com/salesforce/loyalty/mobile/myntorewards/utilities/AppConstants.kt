@@ -122,6 +122,7 @@ class AppConstants {
         const val RECEIPT_DATE_API_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.sZ"
         const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val RECEIPT_DETAILS_API_DATETIME_FORMAT = "dd/MM/yyyy"
+        const val RECEIPT_DETAILS_API_DATETIME_FORMAT2 = "dd/MM/yyyy"
 
 
         //Date Format 02 Nov 2019
