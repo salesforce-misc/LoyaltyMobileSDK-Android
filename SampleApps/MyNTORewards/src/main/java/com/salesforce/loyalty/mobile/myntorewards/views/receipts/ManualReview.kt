@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -28,8 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
@@ -40,10 +44,20 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptS
 fun ManualReview(
     scanningViewModel: ScanningViewModelInterface,
     receiptId: String,
+    processedAWSReponse: String?,
     closePopup: (ReceiptListScreenPopupState) -> Unit
 ) {
     var statusUpdateInProgress by remember {
         mutableStateOf(false)
+    }
+    val context: Context = LocalContext.current
+    var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
+    processedAWSReponse?.let {
+        val gson = Gson()
+        analyzeExpenseResponse = gson.fromJson<AnalyzeExpenseResponse>(
+            it,
+            AnalyzeExpenseResponse::class.java
+        )
     }
     Column(
         modifier = Modifier
@@ -103,7 +117,7 @@ fun ManualReview(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.receipt_number_text),
+                    text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse?.receiptNumber,
                     fontWeight = FontWeight.SemiBold,
                     color = LighterBlack,
                     fontFamily = font_sf_pro,
@@ -112,7 +126,11 @@ fun ManualReview(
                 )
 
                 Text(
-                    text = "13-07-2023",
+                    text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate?.let { receiptAPIDate ->
+                        Common.formatReceiptDetailDate(
+                            receiptAPIDate, context
+                        )
+                    },
                     fontFamily = font_sf_pro,
                     color = LighterBlack,
                     textAlign = TextAlign.Start,
@@ -126,7 +144,7 @@ fun ManualReview(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "INR 32392",
+                    text = analyzeExpenseResponse?.totalAmount ?: "",
                     fontWeight = FontWeight.SemiBold,
                     color = LighterBlack,
                     fontFamily = font_sf_pro,

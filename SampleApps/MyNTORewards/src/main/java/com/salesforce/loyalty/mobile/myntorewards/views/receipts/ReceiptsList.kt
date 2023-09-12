@@ -294,7 +294,8 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                 }
 
                 else -> {
-
+                    receiptPoints = receipt.receipt_status
+                    textColour = ReceiptPointColourWarning
                 }
             }
 
@@ -326,6 +327,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
         ReceiptListScreenPopupState.MANUAL_REVIEW -> ManualReview(
             scanningViewModel,
             receipt.id,
+            receipt.processedAWSResponse,
             closePopup = {
                 openReceiptDetail = it
             })

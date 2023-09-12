@@ -103,12 +103,14 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
             receiptId?.let {
-                ManualReview(scanningViewModel, it, closePopup = {
-                    openBottomsheet = false
-                    closeBottomSheet()
-                    openReceiptDetail = it
+                processedAWSReponse?.let { it1 ->
+                    ManualReview(scanningViewModel, it, it1, closePopup = {
+                        openBottomsheet = false
+                        closeBottomSheet()
+                        openReceiptDetail = it
 
-                })
+                    })
+                }
             }
         },
         sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE, AppConstants.POPUP_ROUNDED_CORNER_SIZE, 0.dp, 0.dp),

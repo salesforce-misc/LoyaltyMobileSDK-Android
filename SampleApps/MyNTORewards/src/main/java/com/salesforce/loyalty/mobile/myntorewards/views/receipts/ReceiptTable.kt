@@ -72,11 +72,11 @@ fun ReceiptDetailTable(itemLists: List<LineItem>?) {
             }
             Spacer(modifier = Modifier.height(4.dp))
             DrawDashLine()
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
         itemLists?.let {
             itemsIndexed(itemLists) { index, invoice ->
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                     invoice.productName?.let {
                         TableCell(
                             text = it,

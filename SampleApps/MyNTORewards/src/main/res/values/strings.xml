@@ -181,7 +181,7 @@
     <!-- ******************Manual Review Screen Strings************************-->
 
     <string name="back_text">Back</string>
-    <string name="text_submit_manual_review">Submit for Manual Review</string>
+    <string name="text_submit_manual_review">Manual Review</string>
     <string name="comment_text">Comments</string>
     <string name="receipt_number_text">Receipt Number</string>
     <string name="review_screen_placeholder_text">Text…</string>
