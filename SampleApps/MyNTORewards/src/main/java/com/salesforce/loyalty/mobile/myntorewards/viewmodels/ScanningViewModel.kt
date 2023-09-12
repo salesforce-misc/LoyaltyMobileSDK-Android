@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScanningManager
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -15,6 +16,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.CreateTransactionJournalViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -48,6 +50,11 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         get() = createTransactionJournalViewState
 
     private val createTransactionJournalViewState = MutableLiveData<CreateTransactionJournalViewState>()
+
+    override val receiptStatusUpdateViewStateLiveData: LiveData<ReceiptStatusUpdateViewState>
+        get() = receiptStatusUpdateViewState
+
+    private val receiptStatusUpdateViewState = MutableLiveData<ReceiptStatusUpdateViewState>()
 
     override fun getReceiptLists(context: Context, refreshRequired: Boolean) {
         viewModelScope.launch {
@@ -146,6 +153,25 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                     Logger.d(TAG, "createTransactionalJournal failed: ${it.message}")
                     createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalFailure)
                 }
+        }
+    }
+
+    override fun submitForManualReview(receiptId: String, comments: String?) {
+        Logger.d(TAG, "submitForManualReview")
+        viewModelScope.launch {
+            receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
+
+            receiptScanningManager.receiptStatusUpdate(
+                receiptId = receiptId,
+                status = ReceiptScanningConfig.RECEIPT_STATUS_MANUAL_REVIEW,
+                comments = comments
+            ).onSuccess {
+                Logger.d(TAG, "submitForManualReview Success : $it")
+                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess)
+            }.onFailure {
+                Logger.d(TAG, "submitForManualReview failed: ${it.message}")
+                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)
+            }
         }
     }
 }

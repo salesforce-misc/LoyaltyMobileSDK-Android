@@ -3,12 +3,10 @@ package com.salesforce.loyalty.mobile.myntorewards.receiptscanning
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.QUERY
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.RECEIPT_STATUS_MANUAL_REVIEW
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_PATH
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_VERSION
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseRequest
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.CreateTransactionalJournalResponse
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.*
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
@@ -64,6 +62,21 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
+    suspend fun receiptStatusUpdate(
+        receiptId: String,
+        status: String,
+        comments: String?
+    ): Result<ReceiptStatusUpdateResponse> {
+        Logger.d(TAG, "receiptStatusUpdate()")
+
+        val body =
+            ReceiptStatusUpdateRequest(receiptId = receiptId, status = status, comments = comments)
+        return receiptClient.receiptApi.receiptStatusUpdate(
+            getStatusUpdateUrl(),
+            body
+        )
+    }
+
     private fun getAnalyzeExpenseUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_ANALYZE_EXPENSE
     }
@@ -78,5 +91,9 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
 
     private fun getCreateTransactionUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_CREATE_TRANSACTION_PATH
+    }
+
+    private fun getStatusUpdateUrl(): String {
+        return mInstanceUrl + ReceiptScanningConfig.RECEIPT_STATUS_UPDATE_URL
     }
 }
