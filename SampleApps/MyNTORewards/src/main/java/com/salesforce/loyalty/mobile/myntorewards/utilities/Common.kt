@@ -7,11 +7,13 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT2
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 class Common {
@@ -30,10 +32,28 @@ class Common {
             return date.format(promotionDateFormat)
         }
         fun formatReceiptDetailDate(apiDate: String, context: Context): String {
-            val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_DETAILS_API_DATETIME_FORMAT)
-            val date = LocalDate.parse(apiDate, apiDateFormat)
-            val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
-            return date.format(promotionDateFormat)
+
+            try{
+                val apiDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_API_FORMAT)
+                val date = LocalDate.parse(apiDate, apiDateFormat)
+                val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
+                return date.format(promotionDateFormat)
+            }
+            catch (ee: DateTimeParseException)
+            {
+                try {
+                    val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_DETAILS_API_DATETIME_FORMAT2)
+                    val date = LocalDate.parse(apiDate, apiDateFormat)
+                    val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
+                    return date.format(promotionDateFormat)
+                }
+                catch (ee:Exception)
+                {
+                    return apiDate
+                }
+
+            }
+
         }
 
         fun getApplicationDateFormat(context: Context): String {
