@@ -161,7 +161,8 @@ fun ShowScannedReceiptScreen(
             congPopupState = false
             LaunchedEffect(key1 = true) {
                 analyzeExpenseResponse?.let {
-                    scanningViewModel.createTransactionalJournal(it)
+//                    scanningViewModel.createTransactionalJournal(it)
+//                    scanningViewModel.submitForProcessing()
                 }
             }
         }

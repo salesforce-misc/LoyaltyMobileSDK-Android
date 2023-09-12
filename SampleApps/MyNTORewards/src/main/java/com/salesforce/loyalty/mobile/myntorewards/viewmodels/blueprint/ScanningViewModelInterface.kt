@@ -23,4 +23,5 @@ interface ScanningViewModelInterface {
     fun getReceiptLists(context: Context, refreshRequired: Boolean = false)
     fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse)
     fun submitForManualReview(receiptId: String, comments: String?)
+    fun submitForProcessing(receiptId: String)
 }

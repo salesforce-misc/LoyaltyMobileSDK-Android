@@ -10,6 +10,8 @@ object ReceiptScanningConfig {
 
     const val RECEIPT_STATUS_MANUAL_REVIEW = "Manual Review"
 
+    const val RECEIPT_STATUS_IN_PROGRESS = "In Progress"
+
     const val SOQL_QUERY_PATH = "/services/data/v"
     const val SOQL_QUERY_VERSION = "59.0"
     const val QUERY = "/query/"
