@@ -174,4 +174,23 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
             }
         }
     }
+
+    override fun submitForProcessing(receiptId: String) {
+        Logger.d(TAG, "submitForProcessing")
+        viewModelScope.launch {
+            createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalInProgress)
+
+            receiptScanningManager.receiptStatusUpdate(
+                receiptId = receiptId,
+                status = ReceiptScanningConfig.RECEIPT_STATUS_IN_PROGRESS,
+                comments = null
+            ).onSuccess {
+                Logger.d(TAG, "submitForProcessing Success : $it")
+                createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalSuccess)
+            }.onFailure {
+                Logger.d(TAG, "submitForProcessing failed: ${it.message}")
+                createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalFailure)
+            }
+        }
+    }
 }

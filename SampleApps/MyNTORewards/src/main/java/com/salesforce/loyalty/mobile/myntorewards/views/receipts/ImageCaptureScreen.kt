@@ -54,6 +54,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
@@ -566,6 +567,7 @@ fun OpenReceiptBottomSheetContent(
     setBottomSheetState: (bottomSheetState: ReceiptScanningBottomSheetType) -> Unit,
     closeSheet: () -> Unit,
 ) {
+    val context = LocalContext.current
     when (bottomSheetType) {
         ReceiptScanningBottomSheetType.POPUP_PROGRESS -> {
             ScanningProgress(
@@ -584,8 +586,14 @@ fun OpenReceiptBottomSheetContent(
         ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS -> {
             CongratulationsPopup(navController, closePopup = {
                 closeSheet()
+
+                //Invalidate receipt list cache
+                LocalFileManager.clearFolder(context, LocalFileManager.DIRECTORY_RECEIPT_LIST)
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
-            }, scanAnotherReceipt = { closeSheet() })
+            }, scanAnotherReceipt = { closeSheet()
+                //Invalidate receipt list cache
+                LocalFileManager.clearFolder(context, LocalFileManager.DIRECTORY_RECEIPT_LIST)
+            })
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR -> {

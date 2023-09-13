@@ -34,6 +34,8 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager.DIRECTORY_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
@@ -45,7 +47,8 @@ fun ManualReview(
     scanningViewModel: ScanningViewModelInterface,
     receiptId: String,
     processedAWSReponse: String?,
-    closePopup: (ReceiptListScreenPopupState) -> Unit
+    closePopup: (ReceiptListScreenPopupState) -> Unit,
+    isSubmittedForManualReview: (Boolean) -> Unit
 ) {
     var statusUpdateInProgress by remember {
         mutableStateOf(false)
@@ -284,6 +287,10 @@ fun ManualReview(
                     reviewText = TextFieldValue("")
                     closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)
                     statusUpdateInProgress = false
+
+                    isSubmittedForManualReview(true)
+                    // Invalidate the receipt list cache
+                    LocalFileManager.clearFolder(context, DIRECTORY_RECEIPT_LIST)
                 }
             }
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure -> {

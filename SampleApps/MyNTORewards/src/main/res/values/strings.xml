@@ -204,6 +204,7 @@
     <string name="button_home">Home</string>
 
     <string name="date_format">Date Format</string>
+    <string name="submitted_for_manual_review">Submitted for Manual Review</string>
 
 
 </resources>
