@@ -76,29 +76,36 @@ fun ReceiptDetailTable(itemLists: List<LineItem>?) {
         }
         itemLists?.let {
             itemsIndexed(itemLists) { index, invoice ->
-                Row(modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                    invoice.productName?.let {
+                if (invoice.isEligible == true) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp, bottom = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        invoice.productName?.let {
+                            TableCell(
+                                text = it,
+                                weight = column1Weight,
+                                alignment = TextAlign.Left
+                            )
+                        }
                         TableCell(
-                            text = it,
-                            weight = column1Weight,
+                            text = invoice.quantity.toString(),
+                            weight = column2Weight,
                             alignment = TextAlign.Left
                         )
+                        TableCell(
+                            text = invoice.price.toString(),
+                            weight = column3Weight,
+                            alignment = TextAlign.Left
+                        )
+                        TableCell(
+                            text = invoice.lineItemPrice.toString(),
+                            weight = column4Weight,
+                            alignment = TextAlign.Right
+                        )
                     }
-                    TableCell(
-                        text = invoice.quantity.toString(),
-                        weight = column2Weight,
-                        alignment = TextAlign.Left
-                    )
-                    TableCell(
-                        text = invoice.price.toString(),
-                        weight = column3Weight,
-                        alignment = TextAlign.Left
-                    )
-                    TableCell(
-                        text = invoice.lineItemPrice.toString(),
-                        weight = column4Weight,
-                        alignment = TextAlign.Right
-                    )
                 }
                 if (index == itemLists?.size?.minus(1)) {
                     Spacer(modifier = Modifier.height(8.dp))

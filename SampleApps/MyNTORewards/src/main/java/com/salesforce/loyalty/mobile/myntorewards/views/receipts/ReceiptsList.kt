@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -50,6 +51,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROCESSED_AWS_RESPONSE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_STATUS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_TOTAL_POINTS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
@@ -216,6 +218,7 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewModel: ScanningViewModelInterface) {
     var openReceiptDetail by remember { mutableStateOf(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN) }
     val context: Context = LocalContext.current
+    val interactionSource = remember { MutableInteractionSource() }
     Spacer(modifier = Modifier.height(12.dp))
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -225,10 +228,15 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
             .testTag(TEST_TAG_RECEIPT_LIST_ITEM)
-            .clickable {
+            .clickable(interactionSource = interactionSource,
+                indication = null) {
                 navController.currentBackStackEntry?.arguments?.putString(
                     KEY_PROCESSED_AWS_RESPONSE,
                     receipt.processedAWSResponse
+                )
+                navController.currentBackStackEntry?.arguments?.putString(
+                    KEY_RECEIPT_TOTAL_POINTS,
+                    receipt.total_points?.toString()
                 )
                 navController.currentBackStackEntry?.arguments?.putString(
                     KEY_RECEIPT_ID,
@@ -288,9 +296,10 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                 }
 
                 AppConstants.RECEIPT_POINT_STATUS_PROCESSED -> {
+                    val points = receipt.total_points ?: "0"
                     receiptPoints =
-                        "" + receipt.total_points + " " + stringResource(R.string.receipt_points)
-                    textColour = Color.Black
+                        "" + points + " " + stringResource(R.string.receipt_points)
+                    textColour = TextGreen
                 }
 
                 AppConstants.RECEIPT_POINT_STATUS_REJECTED -> {
@@ -306,7 +315,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
 
 
             //this if block is needed. Kotlin giving false suggestion to remove.
-            if (!(receipt.receipt_status == AppConstants.RECEIPT_POINT_STATUS_PROCESSED && receipt.total_points == null)) {
+//            if (!(receipt.receipt_status == AppConstants.RECEIPT_POINT_STATUS_PROCESSED && receipt.total_points == null)) {
                 Text(
                     text = "" + receiptPoints,
                     color = textColour,
@@ -314,7 +323,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                     fontSize = 13.sp,
                     modifier = Modifier
                 )
-            }
+//            }
 
 
         }

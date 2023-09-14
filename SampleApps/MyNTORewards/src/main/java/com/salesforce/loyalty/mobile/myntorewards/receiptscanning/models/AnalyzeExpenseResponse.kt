@@ -29,5 +29,7 @@ data class LineItem(
     @SerializedName("price")
     val price: String?,
     @SerializedName("lineItemPrice")
-    val lineItemPrice: String?
+    val lineItemPrice: String?,
+    @SerializedName("isEligible")
+    val isEligible: Boolean?
 )

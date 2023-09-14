@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetState
@@ -61,6 +62,8 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_ID)
     val receiptStatus =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_STATUS)
+    val totalPoints =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_TOTAL_POINTS)
     var isSubmittedForManualReview by remember {
         mutableStateOf(
             receiptStatus.equals(
@@ -114,7 +117,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
             Spacer(modifier = Modifier.height(1.dp))
             receiptId?.let {
                 processedAWSReponse?.let { it1 ->
-                    ManualReview(scanningViewModel, it, it1, closePopup = {
+                    ManualReview(scanningViewModel, it, it1, totalPoints, closePopup = {
                         openBottomsheet = false
                         closeBottomSheet()
                         openReceiptDetail = it
@@ -216,7 +219,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             modifier = Modifier
                         )
                         Text(
-                            text = "434" + " Points",
+                            text = totalPoints + " " + stringResource(R.string.receipt_points),
                             color = Color.Black,
                             textAlign = TextAlign.End,
                             fontSize = 13.sp,
@@ -309,7 +312,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                     }
                 }
             }
-
+            val interactionSource = remember { MutableInteractionSource() }
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -336,7 +339,10 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                         color = LighterBlack,
                         textAlign = TextAlign.Center
                     ),
-                    modifier = Modifier.clickable {
+                    modifier = Modifier.clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) {
                         if (!isSubmittedForManualReview) {
                             blurBG = AppConstants.BLUR_BG
                             openBottomsheet = true
