@@ -47,6 +47,7 @@ fun ManualReview(
     scanningViewModel: ScanningViewModelInterface,
     receiptId: String,
     processedAWSReponse: String?,
+    totalPoints: String?,
     closePopup: (ReceiptListScreenPopupState) -> Unit,
     isSubmittedForManualReview: (Boolean) -> Unit
 ) {
@@ -155,7 +156,7 @@ fun ManualReview(
                     fontSize = 13.sp,
                 )
                 Text(
-                    text = "434 Points",
+                    text = totalPoints + " " + stringResource(R.string.receipt_points),
                     fontFamily = font_sf_pro,
                     color = LighterBlack,
                     textAlign = TextAlign.Start,
