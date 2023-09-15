@@ -11,6 +11,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -442,13 +443,33 @@ private fun CameraContent(
             }
 
             if (imageUri?.path?.isNotEmpty() == true) {
-                imageUri?.let {
-                    val source = ImageDecoder
-                        .createSource(context.contentResolver, it)
-                    bitmap.value = ImageDecoder.decodeBitmap(source)
+               try {
+                    imageUri?.let {
+                        val source = ImageDecoder
+                            .createSource(context.contentResolver, it)
+                        bitmap.value = ImageDecoder.decodeBitmap(source)
+                    }
+                    bitmap.value?.let { onPhotoCaptured(it) }
                 }
-                bitmap.value?.let { onPhotoCaptured(it) }
-
+                catch (imageDecodeException: ImageDecoder.DecodeException){
+                    val errorMsg= stringResource(id = R.string.not_supported_image_msg)
+                    imageDecodeException.message?.let { Log.d("ImageCaptureScreen: ", it) }
+                    Toast.makeText(
+                        LocalContext.current,
+                        errorMsg,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                catch (exception: Exception)
+                {
+                    val errorMsg= stringResource(id = R.string.not_supported_image_msg)
+                    exception.message?.let { Log.d("ImageCaptureScreen: ", it) }
+                    Toast.makeText(
+                        LocalContext.current,
+                        errorMsg,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
 
             AndroidView(
