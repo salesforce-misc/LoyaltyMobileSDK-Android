@@ -97,6 +97,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
     if (openBottomsheet) {
         openBottomSheet()
     }
+    keyboardController?.hide()
     val closeBottomSheet = {
         //showBottomBar(true)
         keyboardController?.hide()

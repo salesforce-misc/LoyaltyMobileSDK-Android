@@ -206,5 +206,9 @@
     <string name="date_format">Date Format</string>
     <string name="submitted_for_manual_review">Submitted for Manual Review</string>
 
+    <string name="not_supported_image_msg">Image is not supported please try with different receipt.</string>
+
+
+
 
 </resources>
