@@ -324,45 +324,48 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = if (isSubmittedForManualReview) {
-                        stringResource(id = R.string.submitted_for_manual_review)
-                    } else {
-                        stringResource(
-                            id = R.string.manual_review_option
-                        )
-                    },
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 22.4.sp,
-                        fontFamily = font_sf_pro,
-                        fontWeight = FontWeight.Normal,
-                        color = LighterBlack,
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.clickable(
-                        interactionSource = interactionSource,
-                        indication = null
-                    ) {
-                        if (!isSubmittedForManualReview) {
-                            blurBG = AppConstants.BLUR_BG
-                            openBottomsheet = true
-                        }
+                if(selectedTab == TAB_ELIGIBLE_ITEM) {
+                    Text(
+                        text = if (isSubmittedForManualReview) {
+                            stringResource(id = R.string.submitted_for_manual_review)
+                        } else {
+                            stringResource(
+                                id = R.string.manual_review_option
+                            )
+                        },
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 22.4.sp,
+                            fontFamily = font_sf_pro,
+                            fontWeight = FontWeight.Normal,
+                            color = LighterBlack,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            if (!isSubmittedForManualReview) {
+                                blurBG = AppConstants.BLUR_BG
+                                openBottomsheet = true
+                            }
 //                        closePopup(ReceiptListScreenPopupState.MANUAL_REVIEW)
-                    }
-                )
-                Text(
-                    text = stringResource(id = R.string.download_option),
-                    modifier = Modifier.padding(top = 16.dp),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 22.4.sp,
-                        fontFamily = font_sf_pro,
-                        fontWeight = FontWeight(400),
-                        color = LighterBlack,
-                        textAlign = TextAlign.Center
+                        }
                     )
-                )
+                }
+                if(selectedTab == TAB_ORIGINAL_RECEIPT_IMAGE) {
+                    Text(
+                        text = stringResource(id = R.string.download_option),
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 22.4.sp,
+                            fontFamily = font_sf_pro,
+                            fontWeight = FontWeight(400),
+                            color = LighterBlack,
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
             }
         }
     }
