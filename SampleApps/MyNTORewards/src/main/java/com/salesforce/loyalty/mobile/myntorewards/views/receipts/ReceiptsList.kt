@@ -52,7 +52,6 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_TOTAL_POINTS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
@@ -228,8 +227,10 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
             .testTag(TEST_TAG_RECEIPT_LIST_ITEM)
-            .clickable(interactionSource = interactionSource,
-                indication = null) {
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
                 navController.currentBackStackEntry?.arguments?.putString(
                     KEY_PROCESSED_AWS_RESPONSE,
                     receipt.processedAWSResponse
@@ -282,49 +283,8 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                 fontSize = 13.sp,
                 modifier = Modifier
             )
-            var receiptPoints = ""
-            var textColour = Color.Black
-            when (receipt.receipt_status) {
-                AppConstants.RECEIPT_POINT_STATUS_PENDING, AppConstants.RECEIPT_POINT_STATUS_MANUAL_REVIEW -> {
-                    receiptPoints = stringResource(id = R.string.receipt_status_pending)
-                    textColour = ReceiptPointColourWarning
-                }
 
-                AppConstants.RECEIPT_POINT_STATUS_PROCESSING -> {
-                    receiptPoints = stringResource(R.string.receipt_status_processing)
-                    textColour = ReceiptPointColourWarning
-                }
-
-                AppConstants.RECEIPT_POINT_STATUS_PROCESSED -> {
-                    val points = receipt.total_points ?: "0"
-                    receiptPoints =
-                        "" + points + " " + stringResource(R.string.receipt_points)
-                    textColour = TextGreen
-                }
-
-                AppConstants.RECEIPT_POINT_STATUS_REJECTED -> {
-                    receiptPoints = stringResource(R.string.receipt_status_rejected)
-                    textColour = ReceiptPointColourError
-                }
-
-                else -> {
-                    receiptPoints = receipt.receipt_status
-                    textColour = ReceiptPointColourWarning
-                }
-            }
-
-
-            //this if block is needed. Kotlin giving false suggestion to remove.
-//            if (!(receipt.receipt_status == AppConstants.RECEIPT_POINT_STATUS_PROCESSED && receipt.total_points == null)) {
-                Text(
-                    text = "" + receiptPoints,
-                    color = textColour,
-                    textAlign = TextAlign.End,
-                    fontSize = 13.sp,
-                    modifier = Modifier
-                )
-//            }
-
+            ReceiptStatusText(receipt.total_points?.toString(), receipt.receipt_status)
 
         }
     }
@@ -437,6 +397,47 @@ fun ReceiptEmptyView() {
             textAlign = TextAlign.Center
         )
     }
+}
+
+@Composable
+fun ReceiptStatusText(totalPoints: String?, status: String) {
+    var receiptPoints = ""
+    var textColour = Color.Black
+    when (status) {
+        AppConstants.RECEIPT_POINT_STATUS_PENDING, AppConstants.RECEIPT_POINT_STATUS_MANUAL_REVIEW -> {
+            receiptPoints = stringResource(id = R.string.receipt_status_pending)
+            textColour = ReceiptPointColourWarning
+        }
+
+        AppConstants.RECEIPT_POINT_STATUS_PROCESSING -> {
+            receiptPoints = stringResource(R.string.receipt_status_processing)
+            textColour = ReceiptPointColourWarning
+        }
+
+        AppConstants.RECEIPT_POINT_STATUS_PROCESSED -> {
+            val points = totalPoints ?: "0"
+            receiptPoints =
+                "" + points + " " + stringResource(R.string.receipt_points)
+            textColour = TextGreen
+        }
+
+        AppConstants.RECEIPT_POINT_STATUS_REJECTED -> {
+            receiptPoints = stringResource(R.string.receipt_status_rejected)
+            textColour = ReceiptPointColourError
+        }
+
+        else -> {
+            receiptPoints = status
+            textColour = ReceiptPointColourWarning
+        }
+    }
+    Text(
+        text = "" + receiptPoints,
+        color = textColour,
+        textAlign = TextAlign.End,
+        fontSize = 13.sp,
+        modifier = Modifier
+    )
 }
 /*
 @Preview

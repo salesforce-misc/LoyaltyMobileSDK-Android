@@ -183,7 +183,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
 
                 ) {
                     Column(
-                        modifier = Modifier.weight(0.6f),
+                        modifier = Modifier.weight(0.5f),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
@@ -207,7 +207,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
 
                     }
                     Column(
-                        modifier = Modifier.weight(0.3f),
+                        modifier = Modifier.weight(0.5f),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
@@ -219,13 +219,9 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             fontSize = 13.sp,
                             modifier = Modifier
                         )
-                        Text(
-                            text = totalPoints + " " + stringResource(R.string.receipt_points),
-                            color = Color.Black,
-                            textAlign = TextAlign.End,
-                            fontSize = 13.sp,
-                            modifier = Modifier
-                        )
+                        if (receiptStatus != null) {
+                            ReceiptStatusText(totalPoints, receiptStatus)
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -324,45 +320,43 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = if (isSubmittedForManualReview) {
-                        stringResource(id = R.string.submitted_for_manual_review)
-                    } else {
-                        stringResource(
-                            id = R.string.manual_review_option
+                if(selectedTab == TAB_ELIGIBLE_ITEM) {
+                    if (!isSubmittedForManualReview) {
+                        Text(
+                            text = stringResource(
+                                id = R.string.manual_review_option
+                            ),
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                lineHeight = 22.4.sp,
+                                fontFamily = font_sf_pro,
+                                fontWeight = FontWeight.Normal,
+                                color = LighterBlack,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = Modifier.clickable(
+                                interactionSource = interactionSource,
+                                indication = null
+                            ) {
+                                blurBG = AppConstants.BLUR_BG
+                                openBottomsheet = true
+                            }
                         )
-                    },
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 22.4.sp,
-                        fontFamily = font_sf_pro,
-                        fontWeight = FontWeight.Normal,
-                        color = LighterBlack,
-                        textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.clickable(
-                        interactionSource = interactionSource,
-                        indication = null
-                    ) {
-                        if (!isSubmittedForManualReview) {
-                            blurBG = AppConstants.BLUR_BG
-                            openBottomsheet = true
-                        }
-//                        closePopup(ReceiptListScreenPopupState.MANUAL_REVIEW)
                     }
-                )
-                Text(
-                    text = stringResource(id = R.string.download_option),
-                    modifier = Modifier.padding(top = 16.dp),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 22.4.sp,
-                        fontFamily = font_sf_pro,
-                        fontWeight = FontWeight(400),
-                        color = LighterBlack,
-                        textAlign = TextAlign.Center
+                }
+                if(selectedTab == TAB_ORIGINAL_RECEIPT_IMAGE) {
+                    Text(
+                        text = stringResource(id = R.string.download_option),
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 22.4.sp,
+                            fontFamily = font_sf_pro,
+                            fontWeight = FontWeight(400),
+                            color = LighterBlack,
+                            textAlign = TextAlign.Center
+                        )
                     )
-                )
+                }
             }
         }
     }
