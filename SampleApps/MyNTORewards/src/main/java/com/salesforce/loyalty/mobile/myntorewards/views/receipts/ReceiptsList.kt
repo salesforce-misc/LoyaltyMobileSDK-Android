@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -51,6 +50,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
@@ -103,15 +103,15 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = stringResource(id = R.string.cd_receipt_back_button),
-                contentScale = ContentScale.FillWidth,
+            Text(
+                text = stringResource(id = R.string.header_label_receipt),
+                fontFamily = font_sf_pro,
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    .clickable {
-                        navController.popBackStack()
-                    }
+                    .padding(top = 3.dp, bottom = 3.dp)
             )
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(
