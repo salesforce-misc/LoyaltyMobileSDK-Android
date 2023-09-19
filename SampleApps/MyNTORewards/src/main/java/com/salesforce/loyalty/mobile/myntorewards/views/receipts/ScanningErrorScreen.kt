@@ -28,6 +28,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 @Composable
 fun ScanningErrorPopup(
+    errorString: Int,
     closePopup: () -> Unit,
     scanAnotherReceipt: () -> Unit
 ) {
@@ -57,7 +58,7 @@ fun ScanningErrorPopup(
                 )
 
             Text(
-                text = stringResource(id = R.string.receipt_scanning_error_desc),
+                text = stringResource(id = errorString),
                 fontFamily = font_sf_pro,
                 color = TextDarkGray,
                 fontSize = 16.sp,

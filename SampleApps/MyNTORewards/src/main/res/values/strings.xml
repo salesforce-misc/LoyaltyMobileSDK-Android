@@ -201,6 +201,7 @@
     <string name="image_more_than_5mb_msg">Image is more than 5 MB please try again.</string>
     <string name="error_cd">Error while scanning</string>
     <string name="receipt_scanning_error_desc">Oops! Something went wrong while processing the request. Try again.</string>
+    <string name="receipt_scanning_error_desc_image">Oops! The image size is over 5MB. Try uploading an image of smaller file size or try lowering your device camera resolution.</string>
     <string name="button_home">Home</string>
 
     <string name="date_format">Date Format</string>

@@ -78,6 +78,7 @@ fun ImagePreviewScreen(
 
     imageMoreThan5MB = isImageMoreThan5MB(capturedImageBitmap)
 
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
             confirmValueChange = {
@@ -106,6 +107,13 @@ fun ImagePreviewScreen(
         currentPopupState = null
         imageClicked(false)
     }
+
+
+    if (imageMoreThan5MB) {
+        currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR_IMAGEMORETHAN5MB
+        openBottomSheet()
+    }
+
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
 
@@ -136,7 +144,6 @@ fun ImagePreviewScreen(
         ) {
             var progressPopupState by remember { mutableStateOf(false) }
             var processClicked by remember { mutableStateOf(false) }
-            var scannedReceiptPopupState by remember { mutableStateOf(false) }
 
             Spacer(modifier = Modifier.height(50.dp))
             Image(
@@ -169,21 +176,6 @@ fun ImagePreviewScreen(
                     contentDescription = stringResource(id = R.string.cd_captured_photo),
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            if (imageMoreThan5MB) {
-
-                Text(
-                    text = stringResource(id = R.string.image_more_than_5mb_msg),
-                    fontFamily = font_sf_pro,
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    color = Color.Red,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(top = 3.dp, bottom = 3.dp)
-                        .fillMaxWidth()
                 )
             }
 
