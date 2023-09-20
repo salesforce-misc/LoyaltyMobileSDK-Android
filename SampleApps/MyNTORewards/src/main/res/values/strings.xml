@@ -139,7 +139,7 @@
     <string name="receipt_scanning">Receipt Scanning</string>
     <string name="header_label_receipt">Receipts</string>
     <string name="receipt_search_text">Search receipts…</string>
-    <string name="label_new_receipt">Upload</string>
+    <string name="label_new_receipt">New</string>
     <string name="download_option">Download</string>
     <string name="label_receipt_number">Receipt Number:</string>
     <string name="button_submit_receipt">Submit</string>
