@@ -184,8 +184,8 @@ fun ReceiptsList(navController: NavHostController, scanningViewModel: ScanningVi
                         ) {
                             receiptRecords.let {
                                 val filteredList = receiptRecords.filter {
-                                    if (searchText.isNotEmpty()) {
-                                        it.receipt_id.contains(
+                                    if (searchText.isNotEmpty() && !it.processedAWSResponse.isNullOrEmpty()) {
+                                        it.processedAWSResponse.contains(
                                             searchText,
                                             ignoreCase = true
                                         )
