@@ -1,21 +1,15 @@
 package com.salesforce.loyalty.mobile.myntorewards.receiptscanning
 
-import androidx.compose.ui.res.stringResource
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.QUERY
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.RECEIPT_STATUS_MANUAL_REVIEW
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_PATH
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_VERSION
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.*
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 
 class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: String) {
     companion object {
@@ -49,7 +43,6 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
                 requestBody
             )
             return Result.success(success)
-            Logger.d(TAG, "Analyze Expense Success : $success")
         } catch (e: HttpException) {
             val responseBody = e.response()?.errorBody()?.string()
             Logger.d(TAG, "Analyze Expense exception : $responseBody")
@@ -57,7 +50,7 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
             errorMessageBody?.message?.let{
                 return Result.failure(Throwable(it))
             }
-            return Result.failure(Throwable("Oops! Something went wrong while processing the request. Try again."))
+            return Result.failure(Throwable(""))
         }
     }
 
