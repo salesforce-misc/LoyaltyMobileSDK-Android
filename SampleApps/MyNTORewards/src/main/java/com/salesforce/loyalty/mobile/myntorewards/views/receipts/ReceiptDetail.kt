@@ -1,9 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import android.content.Context
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +19,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -295,7 +294,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
 
                     TAB_ELIGIBLE_ITEM -> {
                         val itemLists = analyzeExpenseResponse?.lineItems
-                        ReceiptDetailTable(itemLists = itemLists)
+                            ReceiptDetailTable(itemLists = itemLists)
                     }
                     TAB_ORIGINAL_RECEIPT_IMAGE -> {
                         Image(

@@ -194,7 +194,7 @@
     <string name="receipt_status_rejected">Rejected</string>
     <string name="receipt_points">Points</string>
 
-    <string name="receipt_tab_eligible_items">Eligible Items</string>
+    <string name="receipt_tab_eligible_items">Items Detected</string>
     <string name="receipt_tab_receipt_image">Receipt Image</string>
     <string name="header_receipt_detail">Receipt Details</string>
     <string name="cd_camera_flash_icon">camera flash icon</string>
@@ -209,7 +209,8 @@
 
     <string name="not_supported_image_msg">Image is not supported please try with different receipt.</string>
 
-
+    <string name="label_eligible_items">Eligible Items detected in the Receipt</string>
+    <string name="label_ineligible_items">Non Eligible Items detected in the Receipt</string>
 
 
 </resources>

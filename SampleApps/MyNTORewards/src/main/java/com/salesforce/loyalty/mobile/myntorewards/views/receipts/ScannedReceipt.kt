@@ -103,7 +103,8 @@ fun ShowScannedReceiptScreen(
                     modifier = Modifier.weight(0.5f)
                 )
             }
-            ReceiptDetailTable(itemLists)
+            ReceiptDetailTable(itemLists = itemLists)
+
 
             Column(
                 modifier = Modifier
