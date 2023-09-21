@@ -114,6 +114,9 @@ fun ImagePreviewScreen(
         openBottomSheet()
     }
 
+    val errorMessageDesc = stringResource(id = R.string.receipt_scanning_error_desc)
+    var errorMessage by remember { mutableStateOf(errorMessageDesc) }
+
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
 
@@ -125,6 +128,7 @@ fun ImagePreviewScreen(
                     navController = navController,
                     scannedReceiptLiveData = scannedReceiptLiveData,
                     scanningViewModel = scanningViewModel,
+                    errorMessage = errorMessage,
                     setBottomSheetState = {
                         currentPopupState = it
                     },
@@ -262,6 +266,9 @@ fun ImagePreviewScreen(
                     if (progressPopupState) {
                         progressPopupState = false
                         currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
+                        (scannedReceiptViewState as ReceiptScanningViewState.ReceiptScanningFailure).message?.let {
+                            errorMessage = it
+                        }
                         openBottomSheet()
                     }
                     // TODO Handle failure scenario.

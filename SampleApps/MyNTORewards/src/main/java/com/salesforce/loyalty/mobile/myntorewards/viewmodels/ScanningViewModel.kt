@@ -133,7 +133,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
             }
                 .onFailure {
                     Logger.d(TAG, "analyzeExpense failed: ${it.message}")
-                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure)
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure(it.message))
                 }
 
         }

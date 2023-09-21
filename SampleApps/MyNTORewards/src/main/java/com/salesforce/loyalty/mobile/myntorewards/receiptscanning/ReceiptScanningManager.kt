@@ -1,14 +1,15 @@
 package com.salesforce.loyalty.mobile.myntorewards.receiptscanning
 
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.QUERY
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.RECEIPT_STATUS_MANUAL_REVIEW
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_PATH
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_VERSION
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.*
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import retrofit2.HttpException
 
 class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: String) {
     companion object {
@@ -36,10 +37,21 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
 
         val requestBody =
             AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)
-        return receiptClient.receiptApi.analyzeExpense(
-            getAnalyzeExpenseUrl(),
-            requestBody
-        )
+        try {
+            val success = receiptClient.receiptApi.analyzeExpense(
+                getAnalyzeExpenseUrl(),
+                requestBody
+            )
+            return Result.success(success)
+        } catch (e: HttpException) {
+            val responseBody = e.response()?.errorBody()?.string()
+            Logger.d(TAG, "Analyze Expense exception : $responseBody")
+            val errorMessageBody = Gson().fromJson(responseBody, AnalyzeExpenseErrorResponse::class.java)
+            errorMessageBody?.message?.let{
+                return Result.failure(Throwable(it))
+            }
+            return Result.failure(Throwable(""))
+        }
     }
 
     suspend fun receiptList(membershipKey: String

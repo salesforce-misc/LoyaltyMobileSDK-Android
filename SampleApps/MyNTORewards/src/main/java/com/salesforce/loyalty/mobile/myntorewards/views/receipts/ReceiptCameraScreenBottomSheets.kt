@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
@@ -16,6 +17,7 @@ fun OpenReceiptBottomSheetContent(
     navController: NavHostController,
     scannedReceiptLiveData: AnalyzeExpenseResponse?,
     scanningViewModel: ScanningViewModelInterface,
+    errorMessage: String,
     setBottomSheetState: (bottomSheetState: ReceiptScanningBottomSheetType) -> Unit,
     closeSheet: () -> Unit,
 ) {
@@ -55,14 +57,14 @@ fun OpenReceiptBottomSheetContent(
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR -> {
-            ScanningErrorPopup(R.string.receipt_scanning_error_desc, closePopup = {
+            ScanningErrorPopup(errorMessage, closePopup = {
                 closeSheet()
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
             }, scanAnotherReceipt = { closeSheet() })
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR_IMAGEMORETHAN5MB -> {
-            ScanningErrorPopup(R.string.receipt_scanning_error_desc_image, closePopup = {
+            ScanningErrorPopup(stringResource(id = R.string.receipt_scanning_error_desc), closePopup = {
                 closeSheet()
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
             }, scanAnotherReceipt = { closeSheet() })
