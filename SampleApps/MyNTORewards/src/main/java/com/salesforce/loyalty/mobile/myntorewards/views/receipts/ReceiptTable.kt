@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -238,10 +237,5 @@ private fun LazyListScope.itemList(itemList: List<LineItem>) {
                 alignment = TextAlign.Right
             )
         }
-        /*if (index == itemLists?.size?.minus(1)) {
-            Spacer(modifier = Modifier.height(8.dp))
-            DrawDashLine()
-            Spacer(modifier = Modifier.height(24.dp))
-        }*/
     }
 }
