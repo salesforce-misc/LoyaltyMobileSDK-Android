@@ -295,7 +295,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
 
                     TAB_ELIGIBLE_ITEM -> {
                         val itemLists = analyzeExpenseResponse?.lineItems
-                        ReceiptDetailTable(itemLists = itemLists)
+                            ReceiptDetailTable(itemLists = itemLists)
                     }
                     TAB_ORIGINAL_RECEIPT_IMAGE -> {
                         Image(
