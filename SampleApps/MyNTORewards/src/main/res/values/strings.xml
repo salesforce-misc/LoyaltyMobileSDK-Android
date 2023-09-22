@@ -184,7 +184,7 @@
     <string name="text_submit_manual_review">Manual Review</string>
     <string name="comment_text">Comments</string>
     <string name="receipt_number_text">Receipt Number</string>
-    <string name="review_screen_placeholder_text">Text…</string>
+    <string name="review_screen_placeholder_text">Enter the reason for manual request….</string>
     <string name="camera_take_photo_text">Click or Upload the Receipt</string>
     <string name="label_empty_receipt">You have no Receipt Available.</string>
 
