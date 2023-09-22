@@ -415,7 +415,7 @@ fun ZoomableImage(setImageBitmap: (Bitmap) -> Unit) {
         val max = 3f
         val imageBitmap = remember { mutableStateOf<Bitmap?>(null) }
         Glide.with(LocalContext.current).asBitmap()
-            .load("https://hpr.com/wp-content/uploads/2021/08/FI_receipt_restaurant.jpg").into(
+            .load("https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/Douglasville.jpg").into(
                 object : CustomTarget<Bitmap>() {
                     override fun onResourceReady(
                         resource: Bitmap,
