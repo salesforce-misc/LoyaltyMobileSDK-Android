@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.LineItem
@@ -30,14 +31,19 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ROW_STORE_DETAILS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.CreateTransactionJournalViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 @Composable
 fun ShowScannedReceiptScreen(
@@ -49,6 +55,7 @@ fun ShowScannedReceiptScreen(
 ) {
     var congPopupState by remember { mutableStateOf(false) }
     val createTransactionJournalViewState by scanningViewModel.createTransactionJournalViewStateLiveData.observeAsState()
+    val receiptStatusUpdate by scanningViewModel.createTransactionJournalViewStateLiveData.observeAsState()
     var inProgress by remember { mutableStateOf(false) }
     val itemLists = analyzeExpenseResponse?.lineItems
     val context: Context = LocalContext.current
@@ -166,11 +173,33 @@ fun ShowScannedReceiptScreen(
                 }
             }
         }
+        val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
+        when (receiptStatusUpdateViewState) {
+            is ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess -> {
+                if (inProgress) {
+                    inProgress = false
+                    Logger.d(
+                        "ScannedReceipt",
+                        "total points : ${(receiptStatusUpdateViewState as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points}"
+                    )
+                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
+                }
+            }
+            ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure -> {
+                if (inProgress) {
+                    inProgress = false
+                }
+            }
+            ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress -> {
+                inProgress = true
+            }
+            else -> {}
+        }
         when (createTransactionJournalViewState) {
             CreateTransactionJournalViewState.CreateTransactionJournalSuccess -> {
                 if (inProgress) {
                     inProgress = false
-                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
+                    analyzeExpenseResponse?.receiptId?.let { getUpdatedReceiptStatus(context, receiptId = it, scanningViewModel) }
                 }
             }
             CreateTransactionJournalViewState.CreateTransactionJournalInProgress -> {
@@ -183,6 +212,7 @@ fun ShowScannedReceiptScreen(
             }
             else -> {}
         }
+
         if (inProgress) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -198,3 +228,18 @@ fun ShowScannedReceiptScreen(
 fun ScannedPreview(){
     ShowScannedReceiptPopup()
 }*/
+
+private fun getUpdatedReceiptStatus(
+    context: Context,
+    receiptId: String,
+    scanningViewModel: ScanningViewModelInterface
+) {
+    val memberJson =
+        PrefHelper.customPrefs(context)
+            .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+    if (memberJson == null) {
+    }
+    val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+    val membershipKey = member.membershipNumber ?: ""
+    scanningViewModel.getReceiptStatus(receiptId = receiptId, membershipKey)
+}

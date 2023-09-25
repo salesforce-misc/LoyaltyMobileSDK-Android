@@ -168,7 +168,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 comments = comments
             ).onSuccess {
                 Logger.d(TAG, "submitForManualReview Success : $it")
-                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess)
+                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(null))
             }.onFailure {
                 Logger.d(TAG, "submitForManualReview failed: ${it.message}")
                 receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)
@@ -192,6 +192,44 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 Logger.d(TAG, "submitForProcessing failed: ${it.message}")
                 createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalFailure)
             }
+        }
+    }
+
+    override fun getReceiptStatus(receiptId: String, membershipNumber: String) {
+        Logger.d(TAG, "getReceiptStatus")
+        viewModelScope.launch {
+            receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
+            val MAX_RETRY_COUNT = 5
+            var retryCount = 1
+            var points: String? = null
+            do {
+                var status: String? = null
+                receiptScanningManager.getReceiptStatus(
+                    receiptId = receiptId, membershipNumber = membershipNumber
+                ).onSuccess {
+                    Logger.d(TAG, "getReceiptStatus Success : $it")
+                    val record = it.records.get(0)
+                    status = record.receipt_status
+                    points = record.total_points?.toString()
+                }.onFailure {
+                    Logger.d(TAG, "getReceiptStatus failed: ${it.message}")
+                    receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)
+                }
+                if (status?.equals("processed", ignoreCase = true) == true) {
+                    receiptStatusUpdateViewState.postValue(
+                        ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
+                            points
+                        )
+                    )
+                    return@launch
+                }
+                retryCount += 1
+            } while (retryCount <= MAX_RETRY_COUNT)
+            receiptStatusUpdateViewState.postValue(
+                ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
+                    points
+                )
+            )
         }
     }
 }

@@ -30,4 +30,10 @@ interface ReceiptScanningNetworkInterface {
         @Url url: String,
         @Body json: ReceiptStatusUpdateRequest
     ): Result<ReceiptStatusUpdateResponse>
+
+    @GET()
+    suspend fun getReceiptStatus(
+        @Url url: String,
+        @Query("q") query: String?
+    ): Result<ReceiptListResponse>
 }
