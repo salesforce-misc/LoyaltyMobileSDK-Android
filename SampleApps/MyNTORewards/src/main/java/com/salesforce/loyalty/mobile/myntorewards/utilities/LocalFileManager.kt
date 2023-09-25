@@ -1,6 +1,11 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import java.io.*
@@ -14,6 +19,7 @@ object LocalFileManager {
     const val DIRECTORY_PROMOTIONS = "Promotions"
     const val DIRECTORY_VOUCHERS = "Vouchers"
     const val DIRECTORY_RECEIPT_LIST = "ReceiptList"
+    const val DIRECTORY_RECEIPTS = "Receipts"
 
     /**
      * Utility method to save data to internal storage
@@ -118,5 +124,45 @@ object LocalFileManager {
             val folderDeleted = folderDir.delete()
             Logger.d(TAG, "folderDeleted: $folderDeleted")
         }
+    }
+
+    fun saveImage(context: Context, imageBitmap: Bitmap): Boolean {
+        // Create a media file name
+        val timeStamp: String = System.currentTimeMillis().toString()
+        val fileName = timeStamp
+        return saveImageToGallery(context, fileName, imageBitmap)
+    }
+
+    private fun saveImageToGallery(
+        context: Context, fileName: String, imageBitmap: Bitmap
+    ): Boolean {
+
+        val values = ContentValues()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+        }
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, fileName)
+        values.put(MediaStore.Images.ImageColumns.TITLE, fileName)
+
+        val uri: Uri? = context.contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            values
+        )
+        uri?.let {
+            context.contentResolver.openOutputStream(uri)?.let { stream ->
+                val oStream =
+                    BufferedOutputStream(stream)
+                try {
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, oStream)
+                    return true
+                } catch (e: Exception) {
+                    return false
+                } finally {
+                    oStream.close()
+                }
+            }
+        }
+        return false
     }
 }

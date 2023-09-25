@@ -1,9 +1,13 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -32,6 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.RECEIPT_STATUS_MANUAL_REVIEW
@@ -41,6 +53,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptDetailDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReceiptTabs
@@ -111,6 +124,8 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
             }
         }
     }
+
+    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     androidx.compose.material.BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
 
@@ -298,14 +313,9 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             ReceiptDetailTable(itemLists = itemLists)
                     }
                     TAB_ORIGINAL_RECEIPT_IMAGE -> {
-                        Image(
-                            painter = painterResource(id = R.drawable.receipt_dummy),
-                            contentDescription = "image description",
-                            contentScale = ContentScale.FillHeight,
-                            modifier = Modifier
-                                .height(280.dp)
-                                .align(Alignment.CenterHorizontally)
-                        )
+                        ZoomableImage {
+                            bitmap.value = it
+                        }
                     }
                 }
             }
@@ -354,7 +364,31 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             fontWeight = FontWeight(400),
                             color = LighterBlack,
                             textAlign = TextAlign.Center
-                        )
+                        ),
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            bitmap.value?.let { bitmapValue ->
+                                val success = LocalFileManager.saveImage(
+                                    context,
+                                    bitmapValue
+                                )
+                                if (success) {
+                                    Toast.makeText(
+                                        context,
+                                        "Downloaded image successfully!",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Download failed",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }
                     )
                 }
             }
@@ -363,4 +397,65 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
 
 
 
+}
+
+@Composable
+fun ZoomableImage(setImageBitmap: (Bitmap) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(RectangleShape)
+    ) {
+        var zoomBy by remember { mutableStateOf(1f) }
+        var x by remember { mutableStateOf(0f) }
+        var y by remember { mutableStateOf(0f) }
+        val min = 1f
+        val max = 3f
+        val imageBitmap = remember { mutableStateOf<Bitmap?>(null) }
+        Glide.with(LocalContext.current).asBitmap()
+            .load("https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/Douglasville.jpg").into(
+                object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        imageBitmap.value = resource
+                        setImageBitmap(resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                }
+            )
+
+        imageBitmap.value?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentScale = ContentScale.Fit,
+                contentDescription = stringResource(id = R.string.receipt_tab_receipt_image),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(
+                        scaleX = zoomBy,
+                        scaleY = zoomBy,
+                        translationX = x,
+                        translationY = y,
+                    )
+                    .pointerInput(Unit) {
+                        detectTransformGestures(
+                            onGesture = { _, pan, gestureZoom, _ ->
+                                zoomBy = (zoomBy * gestureZoom).coerceIn(min, max)
+                                if (zoomBy > 1) {
+                                    x += pan.x * zoomBy
+                                    y += pan.y * zoomBy
+                                } else {
+                                    x = 0f
+                                    y = 0f
+                                }
+
+                            })
+                    })
+        }
+    }
 }
