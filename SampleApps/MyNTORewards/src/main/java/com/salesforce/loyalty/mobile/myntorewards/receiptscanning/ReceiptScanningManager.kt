@@ -9,6 +9,9 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptSca
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.*
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 
 class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: String) {
@@ -30,17 +33,18 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
 
     suspend fun analyzeExpense(
         membershipNumber: String,
-        encodedImage: String
+        encodedImage: ByteArray
     ): Result<AnalyzeExpenseResponse> {
         Logger.d(TAG, "analyzeExpense()")
 
-
-        val requestBody =
-            AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)
+        /*val requestBody =
+            AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)*/
+        var requestBody: RequestBody =
+            encodedImage.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, encodedImage.size)
         try {
             val success = receiptClient.receiptApi.analyzeExpense(
                 getAnalyzeExpenseUrl(),
-                requestBody
+                requestBody, membershipNumber
             )
             return Result.success(success)
         } catch (e: HttpException) {

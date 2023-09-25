@@ -1,15 +1,16 @@
 package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api
 
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.*
-import retrofit2.Call
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface ReceiptScanningNetworkInterface {
 
-    @POST()
+    @PUT()
     suspend fun analyzeExpense(
         @Url url: String,
-        @Body json: AnalyzeExpenseRequest
+        @Body requestBody: RequestBody,
+        @Query("membershipnumber") membershipNumber: String
     ): AnalyzeExpenseResponse
 
     @GET()

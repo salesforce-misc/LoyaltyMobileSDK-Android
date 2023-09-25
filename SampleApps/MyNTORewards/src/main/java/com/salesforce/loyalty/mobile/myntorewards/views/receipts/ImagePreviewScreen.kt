@@ -2,7 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import android.graphics.Bitmap
 import android.util.Base64
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -238,11 +237,11 @@ fun ImagePreviewScreen(
                 capturedImageBitmap?.asAndroidBitmap()?.let {
                     it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                     val b: ByteArray = baos.toByteArray()
-                    val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
-                    Log.d("ImageCaptureScreen", "Encoded image: $encImage")
+//                    val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
+//                    Log.d("ImageCaptureScreen", "Encoded image: $encImage")
                     val context = LocalContext.current
                     LaunchedEffect(key1 = true) {
-                        scanningViewModel.analyzeExpense(context, encImage)
+                        scanningViewModel.analyzeExpense(context, b)
                     }
                 }
                 processClicked = false
