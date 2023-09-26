@@ -20,6 +20,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptS
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManager) : ViewModel(),
@@ -199,10 +200,11 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         Logger.d(TAG, "getReceiptStatus")
         viewModelScope.launch {
             receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
-            val MAX_RETRY_COUNT = 5
+            val MAX_RETRY_COUNT = 3
             var retryCount = 1
             var points: String? = null
             do {
+                delay(2000)
                 var status: String? = null
                 receiptScanningManager.getReceiptStatus(
                     receiptId = receiptId, membershipNumber = membershipNumber
@@ -215,7 +217,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                     Logger.d(TAG, "getReceiptStatus failed: ${it.message}")
                     receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)
                 }
-                if (status?.equals("processed", ignoreCase = true) == true) {
+                if (status?.equals("Processed", ignoreCase = true) == true) {
                     receiptStatusUpdateViewState.postValue(
                         ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
                             points

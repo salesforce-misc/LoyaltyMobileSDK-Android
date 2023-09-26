@@ -30,7 +30,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
 fun CongratulationsPopup(
-    navController: NavHostController,
+    totalPoints: String?,
     closePopup: () -> Unit,
     scanAnotherReceipt: () -> Unit
 ) {
@@ -83,7 +83,11 @@ fun CongratulationsPopup(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = stringResource(id = R.string.scanning_congrats_subtitle),
+                text = if (totalPoints != null) {
+                    stringResource(id = R.string.scanning_congrats_subtitle, totalPoints)
+                } else {
+                    stringResource(id = R.string.scanning_receipt_subtitle_no_points)
+                },
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 fontSize = 16.sp,

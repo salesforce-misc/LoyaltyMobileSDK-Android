@@ -51,12 +51,14 @@ fun ShowScannedReceiptScreen(
     scanningViewModel: ScanningViewModelInterface,
     analyzeExpenseResponse: AnalyzeExpenseResponse?,
     closePopup: () -> Unit,
-    openCongratsPopup: (popupStatus: ReceiptScanningBottomSheetType) -> Unit
+    openCongratsPopup: (popupStatus: ReceiptScanningBottomSheetType) -> Unit,
+    setTotalPoints: (totalPoints: String?) -> Unit
 ) {
     var congPopupState by remember { mutableStateOf(false) }
     val createTransactionJournalViewState by scanningViewModel.createTransactionJournalViewStateLiveData.observeAsState()
-    val receiptStatusUpdate by scanningViewModel.createTransactionJournalViewStateLiveData.observeAsState()
+    val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
     var inProgress by remember { mutableStateOf(false) }
+    var statusUpdateInProgress by remember { mutableStateOf(false) }
     val itemLists = analyzeExpenseResponse?.lineItems
     val context: Context = LocalContext.current
     Box() {
@@ -173,25 +175,26 @@ fun ShowScannedReceiptScreen(
                 }
             }
         }
-        val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
         when (receiptStatusUpdateViewState) {
             is ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess -> {
-                if (inProgress) {
-                    inProgress = false
+                if (statusUpdateInProgress) {
+                    statusUpdateInProgress = false
+                    val totalPoint = (receiptStatusUpdateViewState as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points
                     Logger.d(
                         "ScannedReceipt",
-                        "total points : ${(receiptStatusUpdateViewState as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points}"
+                        "total points : ${totalPoint}"
                     )
+                    setTotalPoints(totalPoint)
                     openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
                 }
             }
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure -> {
-                if (inProgress) {
-                    inProgress = false
+                if (statusUpdateInProgress) {
+                    statusUpdateInProgress = false
                 }
             }
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress -> {
-                inProgress = true
+                statusUpdateInProgress = true
             }
             else -> {}
         }
@@ -199,7 +202,15 @@ fun ShowScannedReceiptScreen(
             CreateTransactionJournalViewState.CreateTransactionJournalSuccess -> {
                 if (inProgress) {
                     inProgress = false
-                    analyzeExpenseResponse?.receiptId?.let { getUpdatedReceiptStatus(context, receiptId = it, scanningViewModel) }
+                    LaunchedEffect(key1 = true ) {
+                        analyzeExpenseResponse?.receiptId?.let {
+                            getUpdatedReceiptStatus(
+                                context,
+                                receiptId = it,
+                                scanningViewModel
+                            )
+                        }
+                    }
                 }
             }
             CreateTransactionJournalViewState.CreateTransactionJournalInProgress -> {
@@ -213,7 +224,7 @@ fun ShowScannedReceiptScreen(
             else -> {}
         }
 
-        if (inProgress) {
+        if (inProgress || statusUpdateInProgress) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .fillMaxSize(0.1f)
