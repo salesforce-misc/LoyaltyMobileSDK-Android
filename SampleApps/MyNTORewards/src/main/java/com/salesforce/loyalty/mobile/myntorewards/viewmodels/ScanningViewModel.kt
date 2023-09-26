@@ -11,6 +11,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptSca
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_POINT_STATUS_PROCESSED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
@@ -196,15 +197,19 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         }
     }
 
-    override fun getReceiptStatus(receiptId: String, membershipNumber: String) {
+    override fun getReceiptStatus(
+        receiptId: String,
+        membershipNumber: String,
+        maxRetryCount: Int,
+        delaySeconds: Long
+    ) {
         Logger.d(TAG, "getReceiptStatus")
         viewModelScope.launch {
             receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
-            val MAX_RETRY_COUNT = 3
             var retryCount = 1
             var points: String? = null
             do {
-                delay(2000)
+                delay(delaySeconds)
                 var status: String? = null
                 receiptScanningManager.getReceiptStatus(
                     receiptId = receiptId, membershipNumber = membershipNumber
@@ -217,7 +222,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                     Logger.d(TAG, "getReceiptStatus failed: ${it.message}")
                     receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)
                 }
-                if (status?.equals("Processed", ignoreCase = true) == true) {
+                if (status?.equals(RECEIPT_POINT_STATUS_PROCESSED, ignoreCase = true) == true) {
                     receiptStatusUpdateViewState.postValue(
                         ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
                             points
@@ -226,7 +231,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                     return@launch
                 }
                 retryCount += 1
-            } while (retryCount <= MAX_RETRY_COUNT)
+            } while (retryCount <= maxRetryCount)
             receiptStatusUpdateViewState.postValue(
                 ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
                     points

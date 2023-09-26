@@ -24,5 +24,10 @@ interface ScanningViewModelInterface {
     fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse)
     fun submitForManualReview(receiptId: String, comments: String?)
     fun submitForProcessing(receiptId: String)
-    fun getReceiptStatus(receiptId: String, membershipNumber: String)
+    fun getReceiptStatus(
+        receiptId: String,
+        membershipNumber: String,
+        maxRetryCount: Int,
+        delaySeconds: Long
+    )
 }

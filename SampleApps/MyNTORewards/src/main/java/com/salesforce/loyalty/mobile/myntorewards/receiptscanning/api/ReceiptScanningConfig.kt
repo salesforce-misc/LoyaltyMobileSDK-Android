@@ -16,4 +16,7 @@ object ReceiptScanningConfig {
     const val SOQL_QUERY_VERSION = "59.0"
     const val QUERY = "/query/"
 
+    const val RECEIPT_STATUS_MAX_RETRY_COUNT = 3
+    const val RECEIPT_STATUS_FETCH_DELAY = 2000 // 2 seconds
+
 }

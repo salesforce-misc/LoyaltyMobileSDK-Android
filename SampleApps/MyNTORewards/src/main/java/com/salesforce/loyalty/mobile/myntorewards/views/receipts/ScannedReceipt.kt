@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.LineItem
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
@@ -180,10 +181,6 @@ fun ShowScannedReceiptScreen(
                 if (statusUpdateInProgress) {
                     statusUpdateInProgress = false
                     val totalPoint = (receiptStatusUpdateViewState as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points
-                    Logger.d(
-                        "ScannedReceipt",
-                        "total points : ${totalPoint}"
-                    )
                     setTotalPoints(totalPoint)
                     openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
                 }
@@ -191,6 +188,7 @@ fun ShowScannedReceiptScreen(
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure -> {
                 if (statusUpdateInProgress) {
                     statusUpdateInProgress = false
+                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
                 }
             }
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress -> {
@@ -252,5 +250,10 @@ private fun getUpdatedReceiptStatus(
     }
     val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
     val membershipKey = member.membershipNumber ?: ""
-    scanningViewModel.getReceiptStatus(receiptId = receiptId, membershipKey)
+    scanningViewModel.getReceiptStatus(
+        receiptId = receiptId,
+        membershipKey,
+        maxRetryCount = ReceiptScanningConfig.RECEIPT_STATUS_MAX_RETRY_COUNT,
+        delaySeconds = ReceiptScanningConfig.RECEIPT_STATUS_FETCH_DELAY.toLong()
+    )
 }
