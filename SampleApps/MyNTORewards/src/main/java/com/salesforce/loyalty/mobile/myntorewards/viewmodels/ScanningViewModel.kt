@@ -111,7 +111,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         }
     }
 
-    override fun analyzeExpense(context: Context, encodedImage: String): AnalyzeExpenseResponse? {
+    override fun analyzeExpense(context: Context, encodedImage: ByteArray): AnalyzeExpenseResponse? {
         Logger.d(TAG, "analyzeExpense")
         var result: AnalyzeExpenseResponse? = null
         viewModelScope.launch {
@@ -125,6 +125,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
             var membershipKey = member.membershipNumber ?: ""
+
             receiptScanningManager.analyzeExpense(membershipKey, encodedImage).onSuccess {
                 Logger.d(TAG, "analyzeExpense Success : $it")
                 scannedReceipt.value= it
