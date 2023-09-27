@@ -19,6 +19,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.CreateTr
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.UploadRecieptCancelledViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.delay
@@ -52,6 +53,12 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         get() = createTransactionJournalViewState
 
     private val createTransactionJournalViewState = MutableLiveData<CreateTransactionJournalViewState>()
+
+
+    override val cancellingSubmissionLiveData: LiveData<UploadRecieptCancelledViewState>
+        get() = cancellingSubmissionViewState
+
+    private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
 
     override val receiptStatusUpdateViewStateLiveData: LiveData<ReceiptStatusUpdateViewState>
         get() = receiptStatusUpdateViewState
@@ -193,6 +200,25 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
             }.onFailure {
                 Logger.d(TAG, "submitForProcessing failed: ${it.message}")
                 createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalFailure)
+            }
+        }
+    }
+
+    override fun cancellingSubmission(receiptId: String) {
+        Logger.d(TAG, "submitForCancelling")
+        viewModelScope.launch {
+            cancellingSubmissionViewState.postValue(UploadRecieptCancelledViewState.UploadRecieptCancelledInProgress)
+
+            receiptScanningManager.receiptStatusUpdate(
+                receiptId = receiptId,
+                status = ReceiptScanningConfig.RECEIPT_STATUS_CANCELLED,
+                comments = null
+            ).onSuccess {
+                Logger.d(TAG, "cancelSubmission Success : $it")
+                cancellingSubmissionViewState.postValue(UploadRecieptCancelledViewState.UploadRecieptCancelledSuccess)
+            }.onFailure {
+                Logger.d(TAG, "cancelSubmission failed: ${it.message}")
+                cancellingSubmissionViewState.postValue(UploadRecieptCancelledViewState.UploadRecieptCancelledFailure)
             }
         }
     }

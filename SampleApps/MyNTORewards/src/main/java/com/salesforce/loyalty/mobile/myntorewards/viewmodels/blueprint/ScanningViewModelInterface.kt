@@ -8,6 +8,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.CreateTr
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.UploadRecieptCancelledViewState
 
 interface ScanningViewModelInterface {
 
@@ -30,4 +31,7 @@ interface ScanningViewModelInterface {
         maxRetryCount: Int,
         delaySeconds: Long
     )
+
+    fun cancellingSubmission(receiptId: String)
+    val cancellingSubmissionLiveData: LiveData<UploadRecieptCancelledViewState>
 }
