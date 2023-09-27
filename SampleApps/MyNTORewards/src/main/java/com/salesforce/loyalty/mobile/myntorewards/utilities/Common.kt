@@ -31,24 +31,43 @@ class Common {
             val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
             return date.format(promotionDateFormat)
         }
+
+        fun formatReceiptListDateAsPerAPIResponse(
+            apiDate: String,
+            receiptFormat: String,
+            context: Context
+        ): String {
+
+            //in store dateformate may not be recognize by java. for every store format we need mapping
+            //corresponding java understandable formate. for example store format MM/DD/YYYY needs java understandble "MM/dd/yyyy" format.
+            val receiptDateFormat = UserDateFormatToJavaDateFormat(receiptFormat)
+            if (receiptDateFormat != "DateFormatError") {
+                val apiDateFormat = DateTimeFormatter.ofPattern(receiptDateFormat)
+                val date = LocalDate.parse(apiDate, apiDateFormat)
+                val applicationDateFormat =
+                    DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
+                return date.format(applicationDateFormat)
+            } else return apiDate
+
+        }
+
         fun formatReceiptDetailDate(apiDate: String, context: Context): String {
 
-            try{
+            try {
                 val apiDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_API_FORMAT)
                 val date = LocalDate.parse(apiDate, apiDateFormat)
-                val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
+                val promotionDateFormat =
+                    DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
                 return date.format(promotionDateFormat)
-            }
-            catch (ee: DateTimeParseException)
-            {
+            } catch (ee: DateTimeParseException) {
                 try {
-                    val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_DETAILS_API_DATETIME_FORMAT2)
+                    val apiDateFormat =
+                        DateTimeFormatter.ofPattern(RECEIPT_DETAILS_API_DATETIME_FORMAT2)
                     val date = LocalDate.parse(apiDate, apiDateFormat)
-                    val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
+                    val promotionDateFormat =
+                        DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
                     return date.format(promotionDateFormat)
-                }
-                catch (ee:Exception)
-                {
+                } catch (ee: Exception) {
                     return apiDate
                 }
 
@@ -125,13 +144,23 @@ class Common {
         }
 
         fun voucherEmptyViewMsg(selectedTab: Int): Int {
-          return when (selectedTab) {
+            return when (selectedTab) {
                 0 -> R.string.label_empty_vouchers
                 1 -> R.string.label_empty_vouchers_redeem_tab
                 2 -> R.string.label_empty_vouchers_expired_tab
                 else -> R.string.label_empty_vouchers
             }
         }
-    }
 
+        fun UserDateFormatToJavaDateFormat(userDateFormat: String?): String {
+            if (userDateFormat != null) {
+                return when (userDateFormat.lowercase(Locale.ROOT)) {
+                    "mm/dd/YYYY" -> "MM/dd/yyyy"
+                    "dd/mm/YYYY" -> "dd/MM/yyyy"
+                    else -> "DateFormatError"
+                }
+            } else return "DateFormatError"
+        }
+
+    }
 }

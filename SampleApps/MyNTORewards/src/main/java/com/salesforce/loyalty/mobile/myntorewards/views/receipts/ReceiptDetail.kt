@@ -53,6 +53,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptDetailDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDateAsPerAPIResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
@@ -210,9 +211,11 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                         )
                         Text(
                             text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate?.let { receiptAPIDate ->
-                                formatReceiptDetailDate(
-                                    receiptAPIDate, context
-                                )
+                                analyzeExpenseResponse?.dateFormat?.let { dateFormat ->
+                                    formatReceiptListDateAsPerAPIResponse(
+                                        receiptAPIDate, dateFormat, context
+                                    )
+                                }
                             },
                             fontFamily = font_sf_pro,
                             color = Color.Black,

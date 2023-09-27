@@ -131,9 +131,10 @@ fun ManualReview(
 
                 Text(
                     text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate?.let { receiptAPIDate ->
-                        Common.formatReceiptDetailDate(
-                            receiptAPIDate, context
-                        )
+                        analyzeExpenseResponse?.dateFormat?.let {dateFormat->
+                            Common.formatReceiptListDateAsPerAPIResponse(
+                                receiptAPIDate, dateFormat, context)
+                        }
                     },
                     fontFamily = font_sf_pro,
                     color = LighterBlack,

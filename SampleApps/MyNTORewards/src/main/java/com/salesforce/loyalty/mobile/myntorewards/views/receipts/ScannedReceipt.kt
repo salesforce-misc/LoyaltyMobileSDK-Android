@@ -106,9 +106,11 @@ fun ShowScannedReceiptScreen(
 
                 Text(
                     text = stringResource(R.string.field_date_colon) + " " + analyzeExpenseResponse?.receiptDate?.let {
-                        Common.formatReceiptDetailDate(
-                            it, context
-                        )
+                        analyzeExpenseResponse.dateFormat?.let { dateFormat ->
+                            Common.formatReceiptListDateAsPerAPIResponse(
+                                it, dateFormat, context
+                            )
+                        }
                     },
                     color = Color.Black,
                     textAlign = TextAlign.Start,
