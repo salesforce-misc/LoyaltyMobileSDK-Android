@@ -118,6 +118,7 @@ class AppConstants {
         const val KEY_RECEIPT_ID = "key_receipt_id"
         const val KEY_RECEIPT_STATUS = "key_receipt_status"
         const val KEY_RECEIPT_TOTAL_POINTS = "key_receipt_total_points"
+        const val KEY_RECEIPT_IMAGE_URL = "key_receipt_image_url"
         const val TAB_ELIGIBLE_ITEM = 0
         const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
 
