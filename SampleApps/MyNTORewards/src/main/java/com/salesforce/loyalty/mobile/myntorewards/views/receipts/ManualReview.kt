@@ -278,7 +278,7 @@ fun ManualReview(
             }
         }
         when (receiptStatusUpdateViewState) {
-            ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess -> {
+            is ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess -> {
                 if (statusUpdateInProgress) {
                     Toast.makeText(
                         LocalContext.current,

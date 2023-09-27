@@ -1,6 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -22,6 +22,9 @@ fun OpenReceiptBottomSheetContent(
     closeSheet: () -> Unit,
 ) {
     val context = LocalContext.current
+    var totalPoints: String? by remember {
+        mutableStateOf(null)
+    }
     when (bottomSheetType) {
         ReceiptScanningBottomSheetType.POPUP_PROGRESS -> {
             ScanningProgress(
@@ -39,11 +42,14 @@ fun OpenReceiptBottomSheetContent(
                 },
                 openCongratsPopup = {
                     setBottomSheetState(it)
+                },
+                setTotalPoints = {
+                    totalPoints = it
                 })
         }
 
         ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS -> {
-            CongratulationsPopup(navController, closePopup = {
+            CongratulationsPopup(totalPoints = totalPoints, closePopup = {
                 closeSheet()
 
                 //Invalidate receipt list cache
@@ -64,7 +70,7 @@ fun OpenReceiptBottomSheetContent(
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR_IMAGEMORETHAN5MB -> {
-            ScanningErrorPopup(stringResource(id = R.string.receipt_scanning_error_desc), closePopup = {
+            ScanningErrorPopup(stringResource(id = R.string.receipt_scanning_error_desc_image), closePopup = {
                 closeSheet()
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
             }, scanAnotherReceipt = { closeSheet() })

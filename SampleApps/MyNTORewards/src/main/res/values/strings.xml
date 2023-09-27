@@ -148,7 +148,8 @@
     <string name="scanning_congrats">Your receipt is uploaded!</string>
     <string name="scanning_congrats_background">Congratulations Screen Background</string>
     <string name="scanning_congrats_gift_icon">Congrats Gift Icon</string>
-    <string name="scanning_congrats_subtitle">We’ve credited {count} points for the uploaded receipt.</string>
+    <string name="scanning_congrats_subtitle">We’ve credited %s points for the uploaded receipt.</string>
+    <string name="scanning_receipt_subtitle_no_points">Stay tuned as we update the Loyalty points for the eligible items of the receipt.</string>
     <string name="scanning_done">Done</string>
     <string name="scan_another_receipt">Upload Another Receipt</string>
     <string name="scan_progress_indicator">Generating preview…</string>

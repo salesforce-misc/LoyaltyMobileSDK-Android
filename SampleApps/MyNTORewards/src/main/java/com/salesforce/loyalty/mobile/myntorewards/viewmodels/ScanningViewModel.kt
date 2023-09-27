@@ -11,6 +11,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptSca
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_POINT_STATUS_PROCESSED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
@@ -20,6 +21,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptS
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManager) : ViewModel(),
@@ -168,7 +170,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 comments = comments
             ).onSuccess {
                 Logger.d(TAG, "submitForManualReview Success : $it")
-                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess)
+                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(null))
             }.onFailure {
                 Logger.d(TAG, "submitForManualReview failed: ${it.message}")
                 receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)
@@ -192,6 +194,49 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 Logger.d(TAG, "submitForProcessing failed: ${it.message}")
                 createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalFailure)
             }
+        }
+    }
+
+    override fun getReceiptStatus(
+        receiptId: String,
+        membershipNumber: String,
+        maxRetryCount: Int,
+        delaySeconds: Long
+    ) {
+        Logger.d(TAG, "getReceiptStatus")
+        viewModelScope.launch {
+            receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
+            var retryCount = 1
+            var points: String? = null
+            do {
+                delay(delaySeconds)
+                var status: String? = null
+                receiptScanningManager.getReceiptStatus(
+                    receiptId = receiptId, membershipNumber = membershipNumber
+                ).onSuccess {
+                    Logger.d(TAG, "getReceiptStatus Success : $it")
+                    val record = it.records.get(0)
+                    status = record.receipt_status
+                    points = record.total_points?.toString()
+                }.onFailure {
+                    Logger.d(TAG, "getReceiptStatus failed: ${it.message}")
+                    receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)
+                }
+                if (status?.equals(RECEIPT_POINT_STATUS_PROCESSED, ignoreCase = true) == true) {
+                    receiptStatusUpdateViewState.postValue(
+                        ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
+                            points
+                        )
+                    )
+                    return@launch
+                }
+                retryCount += 1
+            } while (retryCount <= maxRetryCount)
+            receiptStatusUpdateViewState.postValue(
+                ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
+                    points
+                )
+            )
         }
     }
 }

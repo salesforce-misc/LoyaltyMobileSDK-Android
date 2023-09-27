@@ -93,6 +93,18 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
+    suspend fun getReceiptStatus(
+        receiptId: String,
+        membershipNumber: String
+    ): Result<ReceiptListResponse> {
+        Logger.d(TAG, "receiptStatusUpdate()")
+
+
+        return receiptClient.receiptApi.getReceiptStatus(
+            getReceiptListURLSOQLUrl(), fetchReceiptStatusSOQLQuery(membershipNumber, receiptId)
+        )
+    }
+
     private fun getAnalyzeExpenseUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_ANALYZE_EXPENSE
     }
@@ -111,5 +123,9 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
 
     private fun getStatusUpdateUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_STATUS_UPDATE_URL
+    }
+
+    private fun fetchReceiptStatusSOQLQuery(membershipKey: String, receiptId: String): String {
+        return "select Id,Status__c,Total_Points__c from Receipts__c WHERE Loyalty_Program_Member__r.MembershipNumber = '${membershipKey}' AND Id = '${receiptId}'"
     }
 }
