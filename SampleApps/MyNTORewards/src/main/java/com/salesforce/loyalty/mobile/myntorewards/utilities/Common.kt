@@ -155,8 +155,12 @@ class Common {
         fun UserDateFormatToJavaDateFormat(userDateFormat: String?): String {
             if (userDateFormat != null) {
                 return when (userDateFormat.lowercase(Locale.ROOT)) {
-                    "mm/dd/YYYY" -> "MM/dd/yyyy"
-                    "dd/mm/YYYY" -> "dd/MM/yyyy"
+                    "mm/dd/yyyy" -> "MM/dd/yyyy"
+                    "dd/mm/yyyy" -> "dd/MM/yyyy"
+                    "yyyy/mm/dd" -> "yyyy/MM/dd"
+                    "dd-mm-yyyy" -> "dd-MM-yyyy"
+                    "mm-dd-yyyy" -> "MM-dd-yyyy"
+                    "yyyy-mm-dd" -> "yyyy-MM-dd"
                     else -> "DateFormatError"
                 }
             } else return "DateFormatError"
