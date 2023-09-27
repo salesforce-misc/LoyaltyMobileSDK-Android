@@ -167,4 +167,6 @@ dependencies {
     implementation("androidx.camera:camera-extensions:1.3.0-beta01")
     implementation("com.google.accompanist:accompanist-permissions:0.31.3-beta")
 
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
 }

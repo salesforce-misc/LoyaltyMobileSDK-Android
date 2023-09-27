@@ -31,6 +31,9 @@ data class Record(
     @SerializedName("TotalAmount__c")
     val total_amount: String?,
 
+    @SerializedName("ImageUrl__c")
+    val imageUrl: String?,
+
     @SerializedName("Processed_AWS_Response__c")
     val processedAWSResponse: String?,
 
