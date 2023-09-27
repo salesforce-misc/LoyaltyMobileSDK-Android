@@ -246,6 +246,11 @@ fun ShowScannedReceiptScreen(
             UploadRecieptCancelledViewState.UploadRecieptCancelledFailure -> {
                 if (inProgress) {
                     inProgress = false
+                    closePopup()
+                    navHostController.popBackStack(
+                        MoreScreens.CaptureImageScreen.route,
+                        false
+                    )
                 }
             }
             else -> {}
