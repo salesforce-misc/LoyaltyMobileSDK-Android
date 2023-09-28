@@ -42,6 +42,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.CreateTransactionJournalViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.UploadRecieptCancelledViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -56,7 +57,9 @@ fun ShowScannedReceiptScreen(
     setTotalPoints: (totalPoints: String?) -> Unit
 ) {
     var congPopupState by remember { mutableStateOf(false) }
+    var submissionTryAgainState by remember { mutableStateOf(false) }
     val createTransactionJournalViewState by scanningViewModel.createTransactionJournalViewStateLiveData.observeAsState()
+    val cancelSubmissionViewState by scanningViewModel.cancellingSubmissionLiveData.observeAsState()
     val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
     var inProgress by remember { mutableStateOf(false) }
     var statusUpdateInProgress by remember { mutableStateOf(false) }
@@ -154,11 +157,7 @@ fun ShowScannedReceiptScreen(
                             TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
                         )
                         .clickable {
-                            closePopup()
-                            navHostController.popBackStack(
-                                MoreScreens.CaptureImageScreen.route,
-                                false
-                            )
+                            submissionTryAgainState= true
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
@@ -173,6 +172,14 @@ fun ShowScannedReceiptScreen(
             LaunchedEffect(key1 = true) {
                 analyzeExpenseResponse?.let {
                     it.receiptId?.let { it1 -> scanningViewModel.submitForProcessing(it1) }
+                }
+            }
+        }
+        if (submissionTryAgainState) {
+            submissionTryAgainState = false
+            LaunchedEffect(key1 = true) {
+                analyzeExpenseResponse?.let {
+                    it.receiptId?.let { it1 -> scanningViewModel.cancellingSubmission(it1) }
                 }
             }
         }
@@ -217,6 +224,33 @@ fun ShowScannedReceiptScreen(
             CreateTransactionJournalViewState.CreateTransactionJournalFailure -> {
                 if (inProgress) {
                     inProgress = false
+                }
+            }
+            else -> {}
+        }
+
+        when (cancelSubmissionViewState) {
+            UploadRecieptCancelledViewState.UploadRecieptCancelledSuccess -> {
+                if (inProgress) {
+                    inProgress = false
+                       closePopup()
+                            navHostController.popBackStack(
+                                MoreScreens.CaptureImageScreen.route,
+                                false
+                            )
+                }
+            }
+            UploadRecieptCancelledViewState.UploadRecieptCancelledInProgress-> {
+                inProgress = true
+            }
+            UploadRecieptCancelledViewState.UploadRecieptCancelledFailure -> {
+                if (inProgress) {
+                    inProgress = false
+                    closePopup()
+                    navHostController.popBackStack(
+                        MoreScreens.CaptureImageScreen.route,
+                        false
+                    )
                 }
             }
             else -> {}
