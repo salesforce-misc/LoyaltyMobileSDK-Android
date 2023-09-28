@@ -247,7 +247,14 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             modifier = Modifier
                         )
                         if (receiptStatus != null) {
-                            ReceiptStatusText(totalPoints, receiptStatus)
+                            if (isSubmittedForManualReview) {
+                                ReceiptStatusText(
+                                    totalPoints = totalPoints,
+                                    status = RECEIPT_STATUS_MANUAL_REVIEW
+                                )
+                            } else {
+                                ReceiptStatusText(totalPoints, receiptStatus)
+                            }
                         }
                     }
                 }
@@ -481,6 +488,7 @@ fun ZoomableImage(imageUrl: String, setImageBitmap: (Bitmap) -> Unit) {
                         return false
                     }
                 })
+                .error(R.drawable.ic_astronaut)
         }
     }
 }
