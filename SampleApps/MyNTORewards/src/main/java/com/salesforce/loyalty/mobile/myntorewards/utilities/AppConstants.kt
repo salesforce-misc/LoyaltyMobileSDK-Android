@@ -115,6 +115,7 @@ class AppConstants {
         val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
 
         const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
+        const val KEY_PURCHASE_DATE= "key_purchase_date"
         const val KEY_RECEIPT_ID = "key_receipt_id"
         const val KEY_RECEIPT_STATUS = "key_receipt_status"
         const val KEY_RECEIPT_TOTAL_POINTS = "key_receipt_total_points"
@@ -123,11 +124,12 @@ class AppConstants {
 
         //Different Date Formats incoming from server
         const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
+
         const val RECEIPT_DATE_API_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.sZ"
         const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val RECEIPT_DETAILS_API_DATETIME_FORMAT = "dd/MM/yyyy"
         const val RECEIPT_DETAILS_API_DATETIME_FORMAT2 = "dd/MM/yyyy"
-
+        const val RECEIPT_API_FORMAT = "yyyy-MM-dd"
 
         //Date Format 02 Nov 2019
         const val DEFAULT_SAMPLE_APP_FORMAT = "dd MMM yyyy"

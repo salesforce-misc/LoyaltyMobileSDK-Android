@@ -24,11 +24,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
@@ -46,6 +43,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptS
 fun ManualReview(
     scanningViewModel: ScanningViewModelInterface,
     receiptId: String,
+    purchase_date: String?,
     processedAWSReponse: String?,
     totalPoints: String?,
     closePopup: (ReceiptListScreenPopupState) -> Unit,
@@ -130,11 +128,11 @@ fun ManualReview(
                 )
 
                 Text(
-                    text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate?.let { receiptAPIDate ->
-                        analyzeExpenseResponse?.dateFormat?.let {dateFormat->
-                            Common.formatReceiptListDateAsPerAPIResponse(
-                                receiptAPIDate, dateFormat, context)
-                        }
+                    text = stringResource(R.string.field_date) + " " + purchase_date?.let {
+                        Common.formatReceiptListAPIDate(
+                            it,
+                            context
+                        )
                     },
                     fontFamily = font_sf_pro,
                     color = LighterBlack,

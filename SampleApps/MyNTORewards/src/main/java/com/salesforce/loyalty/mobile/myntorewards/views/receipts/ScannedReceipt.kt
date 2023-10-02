@@ -106,11 +106,9 @@ fun ShowScannedReceiptScreen(
 
                 Text(
                     text = stringResource(R.string.field_date_colon) + " " + analyzeExpenseResponse?.receiptDate?.let {
-                        analyzeExpenseResponse.dateFormat?.let { dateFormat ->
-                            Common.formatReceiptListDateAsPerAPIResponse(
-                                it, dateFormat, context
-                            )
-                        }
+                        Common.formatReceiptListAPIDate(
+                            it, context
+                        )
                     },
                     color = Color.Black,
                     textAlign = TextAlign.Start,
@@ -159,7 +157,7 @@ fun ShowScannedReceiptScreen(
                             TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
                         )
                         .clickable {
-                            submissionTryAgainState= true
+                            submissionTryAgainState = true
                         },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
@@ -189,27 +187,31 @@ fun ShowScannedReceiptScreen(
             is ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess -> {
                 if (statusUpdateInProgress) {
                     statusUpdateInProgress = false
-                    val totalPoint = (receiptStatusUpdateViewState as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points
+                    val totalPoint =
+                        (receiptStatusUpdateViewState as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points
                     setTotalPoints(totalPoint)
                     openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
                 }
             }
+
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure -> {
                 if (statusUpdateInProgress) {
                     statusUpdateInProgress = false
                     openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
                 }
             }
+
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress -> {
                 statusUpdateInProgress = true
             }
+
             else -> {}
         }
         when (createTransactionJournalViewState) {
             CreateTransactionJournalViewState.CreateTransactionJournalSuccess -> {
                 if (inProgress) {
                     inProgress = false
-                    LaunchedEffect(key1 = true ) {
+                    LaunchedEffect(key1 = true) {
                         analyzeExpenseResponse?.receiptId?.let {
                             getUpdatedReceiptStatus(
                                 context,
@@ -220,14 +222,17 @@ fun ShowScannedReceiptScreen(
                     }
                 }
             }
+
             CreateTransactionJournalViewState.CreateTransactionJournalInProgress -> {
                 inProgress = true
             }
+
             CreateTransactionJournalViewState.CreateTransactionJournalFailure -> {
                 if (inProgress) {
                     inProgress = false
                 }
             }
+
             else -> {}
         }
 
@@ -235,14 +240,15 @@ fun ShowScannedReceiptScreen(
             UploadRecieptCancelledViewState.UploadRecieptCancelledSuccess -> {
                 if (inProgress) {
                     inProgress = false
-                       closePopup()
-                            navHostController.popBackStack(
-                                MoreScreens.CaptureImageScreen.route,
-                                false
-                            )
+                    closePopup()
+                    navHostController.popBackStack(
+                        MoreScreens.CaptureImageScreen.route,
+                        false
+                    )
                 }
             }
-            UploadRecieptCancelledViewState.UploadRecieptCancelledInProgress-> {
+
+            UploadRecieptCancelledViewState.UploadRecieptCancelledInProgress -> {
                 inProgress = true
             }
             UploadRecieptCancelledViewState.UploadRecieptCancelledFailure -> {

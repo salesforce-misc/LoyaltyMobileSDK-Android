@@ -50,9 +50,11 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Record
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROCESSED_AWS_RESPONSE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PURCHASE_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_TOTAL_POINTS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListAPIDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDateAsPerAPIResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
@@ -243,6 +245,10 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                     receipt.total_points?.toString()
                 )
                 navController.currentBackStackEntry?.arguments?.putString(
+                    KEY_PURCHASE_DATE,
+                    receipt.purchase_date
+                )
+                navController.currentBackStackEntry?.arguments?.putString(
                     KEY_RECEIPT_ID,
                     receipt.id
                 )
@@ -254,31 +260,13 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
             }
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-
-            receipt.processedAWSResponse?.let {
-                val gson = Gson()
-               val analyzeExpenseResponse = gson.fromJson<AnalyzeExpenseResponse>(
-                    it,
-                    AnalyzeExpenseResponse::class.java
-                )
-
-                Text(
-                    text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse.dateFormat?.let { dateformate ->
-                        analyzeExpenseResponse.receiptDate?.let { receiptDate ->
-                            formatReceiptListDateAsPerAPIResponse(
-                                receiptDate,
-                                dateformate,
-                                context)
-                        }
-                    },
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    textAlign = TextAlign.Start,
-                    fontSize = 13.sp,
-                )
-
-            }
-
+            Text(
+                text = stringResource(R.string.field_receipt_number) + " " + formatReceiptListAPIDate(receipt.purchase_date, context),
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                textAlign = TextAlign.Start,
+                fontSize = 13.sp,
+            )
         }
         Column(
             modifier = Modifier.weight(0.3f),

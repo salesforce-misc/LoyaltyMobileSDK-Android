@@ -52,8 +52,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptDetailDate
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDateAsPerAPIResponse
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListAPIDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
@@ -72,6 +71,9 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
 
     val processedAWSReponse =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE)
+
+    val purchaseDate =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PURCHASE_DATE)
     val receiptId =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_ID)
     val receiptStatus =
@@ -134,12 +136,12 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
             Spacer(modifier = Modifier.height(1.dp))
             receiptId?.let {
                 processedAWSReponse?.let { it1 ->
-                    ManualReview(scanningViewModel, it, it1, totalPoints, closePopup = {
+                    ManualReview(scanningViewModel, it, purchaseDate, it1, totalPoints, closePopup = {
                         openBottomsheet = false
                         closeBottomSheet()
                         openReceiptDetail = it
 
-                    }, isSubmittedForManualReview = {isSubmittedForManualReview = true})
+                    }) { isSubmittedForManualReview = true }
                 }
             }
         },
@@ -210,12 +212,9 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             fontSize = 13.sp,
                         )
                         Text(
-                            text = stringResource(R.string.field_date) + " " + analyzeExpenseResponse?.receiptDate?.let { receiptAPIDate ->
-                                analyzeExpenseResponse?.dateFormat?.let { dateFormat ->
-                                    formatReceiptListDateAsPerAPIResponse(
-                                        receiptAPIDate, dateFormat, context
-                                    )
-                                }
+                            text = stringResource(R.string.field_date) + " " + purchaseDate?.let { purchase_date ->
+                                formatReceiptListAPIDate(
+                                    purchase_date, context)
                             },
                             fontFamily = font_sf_pro,
                             color = Color.Black,

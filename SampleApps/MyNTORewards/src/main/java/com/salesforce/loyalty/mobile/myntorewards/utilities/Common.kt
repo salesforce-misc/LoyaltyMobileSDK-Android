@@ -5,6 +5,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_APP_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT2
@@ -27,6 +28,13 @@ class Common {
         }
         fun formatReceiptListDate(apiDate: String, context: Context): String {
             val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_DATE_API_FORMAT)
+            val date = LocalDate.parse(apiDate, apiDateFormat)
+            val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
+            return date.format(promotionDateFormat)
+        }
+
+        fun formatReceiptListAPIDate(apiDate: String, context: Context): String {
+            val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_API_FORMAT)
             val date = LocalDate.parse(apiDate, apiDateFormat)
             val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
             return date.format(promotionDateFormat)
