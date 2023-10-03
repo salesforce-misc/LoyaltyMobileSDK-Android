@@ -26,13 +26,6 @@ class Common {
             val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
             return date.format(promotionDateFormat)
         }
-        fun formatReceiptListDate(apiDate: String, context: Context): String {
-            val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_DATE_API_FORMAT)
-            val date = LocalDate.parse(apiDate, apiDateFormat)
-            val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
-            return date.format(promotionDateFormat)
-        }
-
         fun formatReceiptListAPIDate(apiDate: String, context: Context): String {
             val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_API_FORMAT)
             val date = LocalDate.parse(apiDate, apiDateFormat)
@@ -40,48 +33,6 @@ class Common {
             return date.format(promotionDateFormat)
         }
 
-        fun formatReceiptListDateAsPerAPIResponse(
-            apiDate: String,
-            receiptFormat: String,
-            context: Context
-        ): String {
-
-            //in store dateformate may not be recognize by java. for every store format we need mapping
-            //corresponding java understandable formate. for example store format MM/DD/YYYY needs java understandble "MM/dd/yyyy" format.
-            val receiptDateFormat = UserDateFormatToJavaDateFormat(receiptFormat)
-            if (receiptDateFormat != "DateFormatError") {
-                val apiDateFormat = DateTimeFormatter.ofPattern(receiptDateFormat)
-                val date = LocalDate.parse(apiDate, apiDateFormat)
-                val applicationDateFormat =
-                    DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
-                return date.format(applicationDateFormat)
-            } else return apiDate
-
-        }
-
-        fun formatReceiptDetailDate(apiDate: String, context: Context): String {
-
-            try {
-                val apiDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_API_FORMAT)
-                val date = LocalDate.parse(apiDate, apiDateFormat)
-                val promotionDateFormat =
-                    DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
-                return date.format(promotionDateFormat)
-            } catch (ee: DateTimeParseException) {
-                try {
-                    val apiDateFormat =
-                        DateTimeFormatter.ofPattern(RECEIPT_DETAILS_API_DATETIME_FORMAT2)
-                    val date = LocalDate.parse(apiDate, apiDateFormat)
-                    val promotionDateFormat =
-                        DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
-                    return date.format(promotionDateFormat)
-                } catch (ee: Exception) {
-                    return apiDate
-                }
-
-            }
-
-        }
 
         fun getApplicationDateFormat(context: Context): String {
             val preferencesManager = DatePreferencesManager(context)
@@ -158,20 +109,6 @@ class Common {
                 2 -> R.string.label_empty_vouchers_expired_tab
                 else -> R.string.label_empty_vouchers
             }
-        }
-
-        fun UserDateFormatToJavaDateFormat(userDateFormat: String?): String {
-            if (userDateFormat != null) {
-                return when (userDateFormat.lowercase(Locale.ROOT)) {
-                    "mm/dd/yyyy" -> "MM/dd/yyyy"
-                    "dd/mm/yyyy" -> "dd/MM/yyyy"
-                    "yyyy/mm/dd" -> "yyyy/MM/dd"
-                    "dd-mm-yyyy" -> "dd-MM-yyyy"
-                    "mm-dd-yyyy" -> "MM-dd-yyyy"
-                    "yyyy-mm-dd" -> "yyyy-MM-dd"
-                    else -> "DateFormatError"
-                }
-            } else return "DateFormatError"
         }
 
     }
