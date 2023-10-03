@@ -281,7 +281,7 @@ fun ManualReview(
                 if (statusUpdateInProgress) {
                     Toast.makeText(
                         LocalContext.current,
-                        "Submitted for Manual Review successfully!",
+                        "Receipt was submitted for manual review.",
                         Toast.LENGTH_LONG
                     ).show()
                     reviewText = TextFieldValue("")
