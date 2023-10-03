@@ -52,6 +52,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROCESSED_AWS_RESPONSE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PURCHASE_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_IMAGE_URL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_TOTAL_POINTS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListAPIDate
@@ -256,12 +257,16 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                     KEY_RECEIPT_STATUS,
                     receipt.receipt_status
                 )
+                navController.currentBackStackEntry?.arguments?.putString(
+                    KEY_RECEIPT_IMAGE_URL,
+                    receipt.imageUrl
+                )
                 navController.navigate(MoreScreens.ReceiptDetailScreen.route)
             }
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = stringResource(R.string.field_receipt_number) + " " + formatReceiptListAPIDate(receipt.purchase_date, context),
+                text = stringResource(R.string.field_date) + " " + formatReceiptListAPIDate(receipt.purchase_date, context),
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,

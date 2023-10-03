@@ -40,8 +40,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import coil.compose.AsyncImage
+import coil.memory.MemoryCache
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
@@ -80,6 +90,8 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_STATUS)
     val totalPoints =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_TOTAL_POINTS)
+    val imageUrl =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_IMAGE_URL)
     var isSubmittedForManualReview by remember {
         mutableStateOf(
             receiptStatus.equals(
@@ -237,7 +249,14 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             modifier = Modifier
                         )
                         if (receiptStatus != null) {
-                            ReceiptStatusText(totalPoints, receiptStatus)
+                            if (isSubmittedForManualReview) {
+                                ReceiptStatusText(
+                                    totalPoints = totalPoints,
+                                    status = RECEIPT_STATUS_MANUAL_REVIEW
+                                )
+                            } else {
+                                ReceiptStatusText(totalPoints, receiptStatus)
+                            }
                         }
                     }
                 }
@@ -315,8 +334,10 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             ReceiptDetailTable(itemLists = itemLists)
                     }
                     TAB_ORIGINAL_RECEIPT_IMAGE -> {
-                        ZoomableImage {
-                            bitmap.value = it
+                        if (imageUrl != null) {
+                            ZoomableImage(imageUrl) {
+                                bitmap.value = it
+                            }
                         }
                     }
                 }
@@ -401,8 +422,9 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
 
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ZoomableImage(setImageBitmap: (Bitmap) -> Unit) {
+fun ZoomableImage(imageUrl: String, setImageBitmap: (Bitmap) -> Unit) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -415,49 +437,60 @@ fun ZoomableImage(setImageBitmap: (Bitmap) -> Unit) {
         var y by remember { mutableStateOf(0f) }
         val min = 1f
         val max = 3f
-        val imageBitmap = remember { mutableStateOf<Bitmap?>(null) }
-        Glide.with(LocalContext.current).asBitmap()
-            .load("https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/Douglasville.jpg").into(
-                object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        imageBitmap.value = resource
-                        setImageBitmap(resource)
+        val circularProgressDrawable = CircularProgressDrawable(LocalContext.current)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.start()
+
+        GlideImage(
+            model = imageUrl,
+            contentScale = ContentScale.Fit,
+            contentDescription = stringResource(id = R.string.receipt_tab_receipt_image),
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer(
+                    scaleX = zoomBy,
+                    scaleY = zoomBy,
+                    translationX = x,
+                    translationY = y,
+                )
+                .pointerInput(Unit) {
+                    detectTransformGestures(
+                        onGesture = { _, pan, gestureZoom, _ ->
+                            zoomBy = (zoomBy * gestureZoom).coerceIn(min, max)
+                            if (zoomBy > 1) {
+                                x += pan.x * zoomBy
+                                y += pan.y * zoomBy
+                            } else {
+                                x = 0f
+                                y = 0f
+                            }
+
+                        })
+                }) {
+            it.placeholder(circularProgressDrawable)
+                .addListener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
                     }
 
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                }
-            )
-
-        imageBitmap.value?.let {
-            Image(
-                bitmap = it.asImageBitmap(),
-                contentScale = ContentScale.Fit,
-                contentDescription = stringResource(id = R.string.receipt_tab_receipt_image),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer(
-                        scaleX = zoomBy,
-                        scaleY = zoomBy,
-                        translationX = x,
-                        translationY = y,
-                    )
-                    .pointerInput(Unit) {
-                        detectTransformGestures(
-                            onGesture = { _, pan, gestureZoom, _ ->
-                                zoomBy = (zoomBy * gestureZoom).coerceIn(min, max)
-                                if (zoomBy > 1) {
-                                    x += pan.x * zoomBy
-                                    y += pan.y * zoomBy
-                                } else {
-                                    x = 0f
-                                    y = 0f
-                                }
-
-                            })
-                    })
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        resource?.toBitmap()?.let { bitmap -> setImageBitmap(bitmap) }
+                        return false
+                    }
+                })
+                .error(R.drawable.ic_astronaut)
         }
     }
 }
