@@ -43,16 +43,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Record
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PROCESSED_AWS_RESPONSE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_PURCHASE_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_IMAGE_URL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_RECEIPT_TOTAL_POINTS
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListAPIDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
@@ -241,6 +244,10 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                     receipt.total_points?.toString()
                 )
                 navController.currentBackStackEntry?.arguments?.putString(
+                    KEY_PURCHASE_DATE,
+                    receipt.purchase_date
+                )
+                navController.currentBackStackEntry?.arguments?.putString(
                     KEY_RECEIPT_ID,
                     receipt.id
                 )
@@ -257,21 +264,12 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = stringResource(R.string.field_receipt_number) + " " + receipt.receipt_id,
+                text = stringResource(R.string.field_date) + " " + formatReceiptListAPIDate(receipt.purchase_date, context),
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
             )
-            // ToDo purchase date should be formatted
-            Text(
-                text = stringResource(R.string.field_date) + " " + receipt.purchase_date/*formatReceiptListDate(receipt.purchase_date, context)*/,
-                fontFamily = font_sf_pro,
-                color = Color.Black,
-                textAlign = TextAlign.Start,
-                fontSize = 13.sp,
-            )
-
         }
         Column(
             modifier = Modifier.weight(0.3f),
