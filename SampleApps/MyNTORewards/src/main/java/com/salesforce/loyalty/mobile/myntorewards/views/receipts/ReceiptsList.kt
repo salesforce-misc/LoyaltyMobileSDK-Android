@@ -263,13 +263,23 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
             }
     ) {
         Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+
             Text(
-                text = stringResource(R.string.field_date) + " " + formatReceiptListAPIDate(receipt.purchase_date, context),
+                text = stringResource(R.string.field_receipt_number) + " " + receipt.receipt_id,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
             )
+
+            Text(
+                text = stringResource(R.string.field_date) + " " + formatReceiptListAPIDate(receipt.purchase_date, context),
+                fontFamily = font_sf_pro,
+                color = Color.Black,
+                textAlign = TextAlign.Start,
+                fontSize = 13.sp,
+            )
+
         }
         Column(
             modifier = Modifier.weight(0.3f),
