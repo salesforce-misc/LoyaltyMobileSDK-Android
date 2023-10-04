@@ -279,9 +279,10 @@ fun ManualReview(
         when (receiptStatusUpdateViewState) {
             is ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess -> {
                 if (statusUpdateInProgress) {
+                    val receiptNumber = analyzeExpenseResponse?.receiptNumber ?: ""
                     Toast.makeText(
                         LocalContext.current,
-                        "Receipt was submitted for manual review.",
+                        "Receipt $receiptNumber was submitted for manual review.",
                         Toast.LENGTH_LONG
                     ).show()
                     reviewText = TextFieldValue("")

@@ -140,7 +140,7 @@
     <string name="header_label_receipt">Receipts</string>
     <string name="receipt_search_text">Search receipts…</string>
     <string name="label_new_receipt">New</string>
-    <string name="download_option">Download</string>
+    <string name="download_option">Download Original Receipt</string>
     <string name="label_receipt_number">Receipt Number:</string>
     <string name="button_submit_receipt">Submit</string>
     <string name="button_process">Upload</string>
@@ -149,7 +149,7 @@
     <string name="scanning_congrats_background">Congratulations Screen Background</string>
     <string name="scanning_congrats_gift_icon">Congrats Gift Icon</string>
     <string name="scanning_congrats_subtitle">We’ve credited %s points for the uploaded receipt.</string>
-    <string name="scanning_receipt_subtitle_no_points">Stay tuned as we update the Loyalty points for the eligible items of the receipt.</string>
+    <string name="scanning_receipt_subtitle_no_points">Calculating loyalty points for the eligible items can take a while. Check back later.</string>
     <string name="scanning_done">Done</string>
     <string name="scan_another_receipt">Upload Another Receipt</string>
     <string name="scan_progress_indicator">Generating preview…</string>
@@ -190,19 +190,19 @@
     <string name="label_empty_receipt">You have no Receipt Available.</string>
 
 
-    <string name="receipt_status_pending">Submitted for Manual Review</string>
+    <string name="receipt_status_pending">In Manual Review</string>
     <string name="receipt_status_processing">Processing</string>
     <string name="receipt_status_rejected">Rejected</string>
     <string name="receipt_points">Points</string>
 
-    <string name="receipt_tab_eligible_items">Items Detected</string>
+    <string name="receipt_tab_eligible_items">Receipt Items</string>
     <string name="receipt_tab_receipt_image">Receipt Image</string>
     <string name="header_receipt_detail">Receipt Details</string>
     <string name="cd_camera_flash_icon">camera flash icon</string>
     <string name="image_more_than_5mb_msg">Image is more than 5 MB please try again.</string>
     <string name="error_cd">Error while scanning</string>
-    <string name="receipt_scanning_error_desc">Oops! Something went wrong while processing the request. Try again.</string>
-    <string name="receipt_scanning_error_desc_image">Oops! The image size is over 5MB. Try uploading an image of smaller file size or try lowering your device camera resolution.</string>
+    <string name="receipt_scanning_error_desc">Something went wrong. Try again.</string>
+    <string name="receipt_scanning_error_desc_image">Image size exceeds 5 MB. Either resize the image or recapture with a lower resolution.</string>
     <string name="button_home">Home</string>
 
     <string name="date_format">Date Format</string>
@@ -210,8 +210,8 @@
 
     <string name="not_supported_image_msg">Image is not supported please try with different receipt.</string>
 
-    <string name="label_eligible_items">Eligible Items detected in the Receipt</string>
-    <string name="label_ineligible_items">Non Eligible Items detected in the Receipt</string>
+    <string name="label_eligible_items">Eligible Items</string>
+    <string name="label_ineligible_items">Ineligible Items</string>
 
 
 </resources>

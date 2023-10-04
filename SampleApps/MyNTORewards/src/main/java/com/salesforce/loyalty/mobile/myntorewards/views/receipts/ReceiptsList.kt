@@ -262,7 +262,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                 navController.navigate(MoreScreens.ReceiptDetailScreen.route)
             }
     ) {
-        Column(modifier = Modifier.weight(0.7f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(modifier = Modifier.weight(0.65f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
 
             Text(
                 text = stringResource(R.string.field_receipt_number) + " " + receipt.receipt_id,
@@ -282,7 +282,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
 
         }
         Column(
-            modifier = Modifier.weight(0.3f),
+            modifier = Modifier.weight(0.35f),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.End
         ) {
