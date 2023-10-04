@@ -11,6 +11,8 @@ import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.MY_PROFILE_FULL_SCREEN_HEADER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ADDRESS_DETAIL
@@ -83,7 +85,8 @@ class SampleAppUnitTest {
                 getOnBoardingMockViewModel(),
                 getBenefitViewModel(),
                 getTransactionViewModel(),
-                getCheckoutFlowViewModel()
+                getCheckoutFlowViewModel(),
+                getScanningViewModel()
             )
         }
         /*     composeTestRule.setContent {
@@ -818,4 +821,65 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
 
     }
+}
+
+    fun getScanningViewModel(): ScanningViewModelInterface {
+        return object : ScanningViewModelInterface {
+            override fun analyzeExpense(
+                context: Context,
+                encodedImage: ByteArray
+            ): AnalyzeExpenseResponse? {
+                TODO("Not yet implemented")
+            }
+
+            override val receiptListLiveData: LiveData<ReceiptListResponse>
+                get() = TODO("Not yet implemented")
+            override val receiptListViewState: LiveData<ReceiptViewState>
+                get() = TODO("Not yet implemented")
+            override val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
+                get() = TODO("Not yet implemented")
+            override val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
+                get() = TODO("Not yet implemented")
+            override val createTransactionJournalViewStateLiveData: LiveData<CreateTransactionJournalViewState>
+                get() = TODO("Not yet implemented")
+            override val receiptStatusUpdateViewStateLiveData: LiveData<ReceiptStatusUpdateViewState>
+                get() = TODO("Not yet implemented")
+
+            override fun getReceiptListsAPI(context: Context, membershipKey: String) {
+                TODO("Not yet implemented")
+            }
+
+            override fun getReceiptLists(context: Context, refreshRequired: Boolean) {
+                TODO("Not yet implemented")
+            }
+
+            override fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse) {
+                TODO("Not yet implemented")
+            }
+
+            override fun submitForManualReview(receiptId: String, comments: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun submitForProcessing(receiptId: String) {
+                TODO("Not yet implemented")
+            }
+
+            override fun getReceiptStatus(
+                receiptId: String,
+                membershipNumber: String,
+                maxRetryCount: Int,
+                delaySeconds: Long
+            ) {
+                TODO("Not yet implemented")
+            }
+
+            override fun cancellingSubmission(receiptId: String) {
+                TODO("Not yet implemented")
+            }
+
+            override val cancellingSubmissionLiveData: LiveData<UploadRecieptCancelledViewState>
+                get() = TODO("Not yet implemented")
+
+        }
 }
