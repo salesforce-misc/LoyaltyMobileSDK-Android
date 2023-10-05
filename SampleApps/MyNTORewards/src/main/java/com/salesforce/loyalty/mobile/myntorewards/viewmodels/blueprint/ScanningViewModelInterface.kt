@@ -22,7 +22,6 @@ interface ScanningViewModelInterface {
     val receiptStatusUpdateViewStateLiveData: LiveData<ReceiptStatusUpdateViewState>
     fun getReceiptListsAPI(context: Context, membershipKey: String)
     fun getReceiptLists(context: Context, refreshRequired: Boolean = false)
-    fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse)
     fun submitForManualReview(receiptId: String, comments: String?)
     fun submitForProcessing(receiptId: String)
     fun getReceiptStatus(
