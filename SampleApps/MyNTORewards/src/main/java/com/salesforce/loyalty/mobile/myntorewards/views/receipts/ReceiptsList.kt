@@ -273,7 +273,10 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
             )
 
             Text(
-                text = stringResource(R.string.field_date) + " " + formatReceiptListAPIDate(receipt.purchase_date, context),
+                text = stringResource(R.string.field_date) + " " + (receipt.purchase_date?.let {
+                    formatReceiptListAPIDate(
+                        it, context)
+                } ?: ""),
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
