@@ -221,8 +221,9 @@ private fun LazyListScope.itemList(itemList: List<LineItem>) {
                     alignment = TextAlign.Left
                 )
             }
+            val quantity = invoice.quantity ?: ""
             TableCell(
-                text = invoice.quantity.toString(),
+                text = quantity.toString(),
                 weight = column2Weight,
                 alignment = TextAlign.Left
             )

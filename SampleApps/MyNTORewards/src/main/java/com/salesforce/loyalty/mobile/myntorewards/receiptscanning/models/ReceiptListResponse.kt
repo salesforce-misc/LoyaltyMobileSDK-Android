@@ -15,10 +15,10 @@ data class Record(
     @SerializedName("Name")
     val name: String,
 
-    @SerializedName("Purchase_Date__c")
-    val purchase_date: String,
+    @SerializedName("PurchaseDate__c")
+    val purchase_date: String?,
 
-    @SerializedName("ReceiptId" +
+    @SerializedName("ReceiptID" +
             "__c")
     val receipt_id: String,
 
@@ -34,10 +34,10 @@ data class Record(
     @SerializedName("ImageUrl__c")
     val imageUrl: String?,
 
-    @SerializedName("Processed_AWS_Response__c")
+    @SerializedName("APIResponse__c")
     val processedAWSResponse: String?,
 
-    @SerializedName("Total_Points__c")
+    @SerializedName("TotalRewardPoints__c")
     val total_points: Any,
 
     @SerializedName("attributes")

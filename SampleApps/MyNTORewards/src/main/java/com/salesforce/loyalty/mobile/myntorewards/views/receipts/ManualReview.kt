@@ -13,10 +13,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,6 +41,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningV
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ManualReview(
     scanningViewModel: ScanningViewModelInterface,
@@ -65,6 +68,7 @@ fun ManualReview(
         modifier = Modifier
             .background(MyProfileScreenBG, RoundedCornerShape(22.dp, 22.dp, 0.dp, 0.dp))
             .padding(start = 20.dp, end = 18.dp, top = 16.dp, bottom = 16.dp)
+            .fillMaxHeight(0.7f)
             .verticalScroll(
                 rememberScrollState()
             )
@@ -74,6 +78,7 @@ fun ManualReview(
         verticalArrangement = Arrangement.Top
     ) {
 
+        val keyboardController = LocalSoftwareKeyboardController.current
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -234,6 +239,7 @@ fun ManualReview(
             Button(
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
+                    keyboardController?.hide()
                     manualReviewSubmitted = true
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
@@ -261,6 +267,7 @@ fun ManualReview(
                         TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
                     )
                     .clickable {
+                        keyboardController?.hide()
                         closePopup(ReceiptListScreenPopupState.RECEIPT_DETAIL)
 
                     },

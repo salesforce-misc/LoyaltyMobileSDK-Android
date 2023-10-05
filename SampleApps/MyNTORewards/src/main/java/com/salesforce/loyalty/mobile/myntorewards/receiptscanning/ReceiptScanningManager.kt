@@ -77,7 +77,6 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
             analyzeExpenseResponse
         )
     }
-
     suspend fun receiptStatusUpdate(
         receiptId: String,
         status: String,
@@ -114,7 +113,7 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     private fun fetchReceiptListSOQLQuery(membershipKey: String): String {
-        return "select Id,Purchase_Date__c,ReceiptId__c,Name,Status__c,StoreName__c,Total_Points__c,TotalAmount__c,Processed_AWS_Response__c,ImageUrl__c from Receipts__c WHERE Loyalty_Program_Member__r.MembershipNumber = '${membershipKey}' Order by CreatedDate DESC"
+        return "select Id,PurchaseDate__c,ReceiptID__c,Name,Status__c,StoreName__c,TotalRewardPoints__c,TotalAmount__c,APIResponse__c,ImageUrl__c from Receipts__c WHERE LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' Order by CreatedDate DESC"
     }
 
     private fun getCreateTransactionUrl(): String {
@@ -126,6 +125,6 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     private fun fetchReceiptStatusSOQLQuery(membershipKey: String, receiptId: String): String {
-        return "select Id,Status__c,Total_Points__c from Receipts__c WHERE Loyalty_Program_Member__r.MembershipNumber = '${membershipKey}' AND Id = '${receiptId}'"
+        return "select Id,Status__c,TotalRewardPoints__c from Receipts__c WHERE LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' AND Id = '${receiptId}'"
     }
 }
