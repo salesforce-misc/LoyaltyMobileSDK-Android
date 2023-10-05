@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
 import android.content.Context
+import android.util.Log
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_APP_DATE
@@ -27,10 +28,18 @@ class Common {
             return date.format(promotionDateFormat)
         }
         fun formatReceiptListAPIDate(apiDate: String, context: Context): String {
-            val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_API_FORMAT)
-            val date = LocalDate.parse(apiDate, apiDateFormat)
-            val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
-            return date.format(promotionDateFormat)
+            try {
+                val apiDateFormat = DateTimeFormatter.ofPattern(RECEIPT_API_FORMAT)
+                val date = LocalDate.parse(apiDate, apiDateFormat)
+                val promotionDateFormat = DateTimeFormatter.ofPattern(getApplicationDateFormat(context))
+                return date.format(promotionDateFormat)
+            }
+            catch (ee:Exception)
+            {
+                Log.d("DateFormate: ", "Exception: "+ee.message)
+                return apiDate
+            }
+
         }
 
 
