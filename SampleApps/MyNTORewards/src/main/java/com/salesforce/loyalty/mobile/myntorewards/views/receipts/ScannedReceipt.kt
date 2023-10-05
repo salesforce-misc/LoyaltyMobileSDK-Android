@@ -117,11 +117,14 @@ fun ShowScannedReceiptScreen(
                     modifier = Modifier.weight(0.5f)
                 )
             }
-            ReceiptDetailTable(itemLists = itemLists)
-
+            Column(
+                modifier = Modifier.weight(0.8f),
+            ) {
+                ReceiptDetailTable(itemLists = itemLists)
+            }
 
             Column(
-                modifier = Modifier
+                modifier = Modifier.weight(0.2f)
                     .padding(16.dp)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,

@@ -2,9 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import android.graphics.Bitmap
 import android.util.Base64
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -167,7 +165,8 @@ fun ImagePreviewScreen(
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxHeight(0.7f),
+                    .fillMaxHeight(0.7f)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             )
