@@ -191,7 +191,7 @@ fun ImagePreviewScreen(
             ) {
 
                 Button(
-                    modifier = Modifier
+                    modifier = Modifier.testTag("UploadReceipt")
                         .fillMaxWidth(), onClick = {
                         processClicked = true
 

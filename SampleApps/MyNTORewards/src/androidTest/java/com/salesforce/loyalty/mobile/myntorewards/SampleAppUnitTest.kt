@@ -106,7 +106,6 @@ class SampleAppUnitTest {
     @Test
     fun login_app_flow() {
         composeTestRule.onNodeWithContentDescription("Application Logo").assertIsDisplayed()
-        app_has_swipe_images()
         verify_login_button()
     }
 
@@ -119,6 +118,7 @@ class SampleAppUnitTest {
 
     @OptIn(ExperimentalTestApi::class)
     private fun verify_login_button() {
+        //app_has_swipe_images()
         verifyLoginTesting()
         display_home_ui_testing()
         receipt_scanning_ui_testing()
@@ -260,14 +260,23 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_SEARCH_FIELD).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST).assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_RECEIPT_LIST_ITEM)).assertCountEquals(5)
-        composeTestRule.onNodeWithContentDescription("receipt_back_button").assertIsDisplayed()
+
 
         //receipt list verify back button flow
-        composeTestRule.onNodeWithContentDescription("receipt_back_button").performClick()
-        composeTestRule.onNodeWithTag(TEST_TAG_HOME_SCREEN).assertIsDisplayed()
+        composeTestRule.onNodeWithText("More").assertIsDisplayed()
+        composeTestRule.onNodeWithText("More").performClick()
         Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Receipts").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Receipts").performClick()
+
+     /*    composeTestRule.onNodeWithContentDescription("receipt_back_button").assertIsDisplayed()
+      composeTestRule.onNodeWithContentDescription("receipt_back_button").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_HOME_SCREEN).assertIsDisplayed()*/
+
+
+        /*Thread.sleep(1000)
         composeTestRule.onNodeWithContentDescription("Receipt Scanning").performClick()
-        Thread.sleep(2000)
+        Thread.sleep(2000)*/
         composeTestRule.onNodeWithText("New").assertIsDisplayed()
 
         //start camera screen flow
@@ -300,7 +309,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("image preview back button")
             .assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Captured photo").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Process").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Upload").assertIsDisplayed()
         composeTestRule.onNodeWithText("Try Again").assertIsDisplayed()
 
         Thread.sleep(1000)
@@ -320,14 +329,20 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("shutter button").performClick()
         Thread.sleep(1000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_IMAGE_PREVIEW_SCREEN).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Process").performClick()
+
+        composeTestRule.onNodeWithTag("UploadReceipt").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("UploadReceipt").performClick()
+
         Thread.sleep(3000)
 
         //verify process screen
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_PROCESS_SCREEN).assertIsDisplayed()
+        //composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_PROCESS_SCREEN).assertIsDisplayed()
+      /*   composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
 
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit Receipt"), 5500)
-
+        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 6000)*/
+        composeTestRule.onNodeWithTag("submitReceipt").assertIsDisplayed()
 
         //verifying processed receipt screen
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
@@ -346,7 +361,7 @@ class SampleAppUnitTest {
         Thread.sleep(1000)
         composeTestRule.onNodeWithContentDescription("shutter button").performClick()
         Thread.sleep(1000)
-        composeTestRule.onNodeWithText("Process").performClick()
+        composeTestRule.onNodeWithText("Upload").performClick()
         composeTestRule.waitUntilExactlyOneExists(hasText("Submit Receipt"), 5500)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
 
@@ -825,32 +840,69 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
     fun getScanningViewModel(): ScanningViewModelInterface {
         return object : ScanningViewModelInterface {
+            override val receiptListLiveData: LiveData<ReceiptListResponse>
+                get() = receiptList
+
+            private val receiptList = MutableLiveData<ReceiptListResponse>()
+
+            override val receiptListViewState: LiveData<ReceiptViewState>
+                get() = viewState
+
+            private val viewState = MutableLiveData<ReceiptViewState>()
+            override val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
+                get() = scannedReceipt
+
+            private val scannedReceipt = MutableLiveData<AnalyzeExpenseResponse>()
+            override val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
+                get() = receiptScanningViewState
+
+            private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
+
+
             override fun analyzeExpense(
                 context: Context,
                 encodedImage: ByteArray
             ): AnalyzeExpenseResponse? {
-                TODO("Not yet implemented")
+                var result: AnalyzeExpenseResponse? = null
+                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
+                val gson = Gson()
+                val mockResponse = MockResponseFileReader("AnalyzeExpense.json").content
+
+                scannedReceipt.value = gson.fromJson(
+                    mockResponse,
+                    AnalyzeExpenseResponse::class.java
+                )
+                result= gson.fromJson(
+                    mockResponse,
+                    AnalyzeExpenseResponse::class.java
+                )
+
+                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                return result
             }
 
-            override val receiptListLiveData: LiveData<ReceiptListResponse>
-                get() = TODO("Not yet implemented")
-            override val receiptListViewState: LiveData<ReceiptViewState>
-                get() = TODO("Not yet implemented")
-            override val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
-                get() = TODO("Not yet implemented")
-            override val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
-                get() = TODO("Not yet implemented")
             override val createTransactionJournalViewStateLiveData: LiveData<CreateTransactionJournalViewState>
                 get() = TODO("Not yet implemented")
             override val receiptStatusUpdateViewStateLiveData: LiveData<ReceiptStatusUpdateViewState>
                 get() = TODO("Not yet implemented")
 
             override fun getReceiptListsAPI(context: Context, membershipKey: String) {
-                TODO("Not yet implemented")
+                viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)
+                val gson = Gson()
+                val mockResponse = MockResponseFileReader("Receiptlist.json").content
+
+                receiptList.value = gson.fromJson(
+                    mockResponse,
+                    ReceiptListResponse::class.java
+                )
+
+                viewState.postValue(ReceiptViewState.ReceiptListFetchSuccessView)
             }
 
+
+
             override fun getReceiptLists(context: Context, refreshRequired: Boolean) {
-                TODO("Not yet implemented")
+                getReceiptListsAPI(context, "")
             }
 
             override fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse) {

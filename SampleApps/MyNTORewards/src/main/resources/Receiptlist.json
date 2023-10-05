@@ -1,0 +1,102 @@
+{
+    "totalSize": 6,
+    "done": true,
+    "records": [
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyfffUAA"
+            },
+            "Id": "a0N1Q00000cyfffUAA",
+            "PurchaseDate__c": "2014-09-28",
+            "ReceiptID__c": "427146343000",
+            "Name": "R00001017",
+            "Status__c": "In Progress",
+            "StoreName__c": "COSTCO WHOLESALE",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": "200.37",
+            "APIResponse__c": "{\n  \"storeName\" : \"COSTCO WHOLESALE\",\n  \"storeAddress\" : \"8505 WEST GAGE BLVD.\\nKENNEWICK, WA 99336\",\n  \"receiptNumber\" : \"427146343000\",\n  \"receiptDate\" : \"2014-09-28\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"productName\" : \"SWEET ONIONS\",\n    \"lineItemPrice\" : \"5.89\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"MIXED PEPPER\",\n    \"lineItemPrice\" : \"7.79\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"ORGANIC CORN\",\n    \"lineItemPrice\" : \"6.59\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"PORK CHOPS\",\n    \"lineItemPrice\" : \"23.78\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"ORG. CARROTS\",\n    \"lineItemPrice\" : \"4.99\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"BNLS/SL BRST\",\n    \"lineItemPrice\" : \"29.09\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"THIGH MEAT\",\n    \"lineItemPrice\" : \"17.46\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"FRZ GAL ZIPR\",\n    \"lineItemPrice\" : \"12.59\",\n    \"isEligible\" : true\n  }, {\n    \"productName\" : \"KS STEWEDTOM\",\n    \"lineItemPrice\" : \"5.99\",\n    \"isEligible\" : false\n  }, {\n    \"lineItemPrice\" : \"5.99\"\n  }, {\n    \"lineItemPrice\" : \"10.99\"\n  } ]\n}",
+            "ImageUrl__c": "https://6oki26ohlg.execute-api.ap-south-1.amazonaws.com/prod/test03209320/b8564140-41ad-4930-bb71-4abecc265ef2.jpg"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyffaUAA"
+            },
+            "Id": "a0N1Q00000cyffaUAA",
+            "PurchaseDate__c": "2019-07-12",
+            "ReceiptID__c": "21772",
+            "Name": "R00001016",
+            "Status__c": "In Progress",
+            "StoreName__c": "MEGA BIGBOX",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": "$1810.46",
+            "APIResponse__c": "{\n  \"storeName\" : \"MEGA BIGBOX\",\n  \"storeAddress\" : \"CHICAGO, IL\",\n  \"receiptNumber\" : \"21772\",\n  \"receiptDate\" : \"2019-07-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"productName\" : \"LG FLATSCREEN 65\",\n    \"lineItemPrice\" : \"$899.99\\nS\",\n    \"isEligible\" : true\n  }, {\n    \"productName\" : \"SONY VIAO I7 6938\",\n    \"lineItemPrice\" : \"$689.99\\nS\",\n    \"isEligible\" : true\n  }, {\n    \"productName\" : \"6FT HDMI CABLE BB\",\n    \"lineItemPrice\" : \"$19.99\\nS\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"APPLE TV V4\",\n    \"lineItemPrice\" : \"$89.99 S\",\n    \"isEligible\" : false\n  } ]\n}",
+            "ImageUrl__c": "https://6oki26ohlg.execute-api.ap-south-1.amazonaws.com/prod/test03209320/7d89b14e-aff3-55f4-47f2-ee01f320bd83.jpg"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyffQUAQ"
+            },
+            "Id": "a0N1Q00000cyffQUAQ",
+            "PurchaseDate__c": "2011-11-06",
+            "ReceiptID__c": "05332",
+            "Name": "R00001014",
+            "Status__c": "In Progress",
+            "StoreName__c": "Walmart",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": "46.30",
+            "APIResponse__c": "{\n  \"storeName\" : \"Walmart\",\n  \"storeAddress\" : \"8885 N FLORIDA AVE\\nTAMPA FL 33604\",\n  \"receiptNumber\" : \"05332\",\n  \"receiptDate\" : \"2011-11-06\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"productName\" : \"BREAD\",\n    \"lineItemPrice\" : \"2.88\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"BREAD\",\n    \"lineItemPrice\" : \"2.88\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"GV PNT BUTTR\",\n    \"lineItemPrice\" : \"3.84\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"GV PNT BUTTR\",\n    \"lineItemPrice\" : \"3.84\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"GV PNT BUTTR\",\n    \"lineItemPrice\" : \"3.84\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"GV PNT BUTTR\",\n    \"lineItemPrice\" : \"3.84\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"GV PARM 160Z\",\n    \"lineItemPrice\" : \"4.98\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"GV CHNK CHKN\",\n    \"lineItemPrice\" : \"1.98\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"GV CHNK CHKN\",\n    \"lineItemPrice\" : \"1.98\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"12 CT NITRIL\",\n    \"lineItemPrice\" : \"2.78\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"FOLGERS\",\n    \"lineItemPrice\" : \"10.48\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"SC TWIST UP\",\n    \"lineItemPrice\" : \"0.84\",\n    \"isEligible\" : false\n  }, {\n    \"productName\" : \"EGGS\",\n    \"lineItemPrice\" : \"1.88\",\n    \"isEligible\" : false\n  } ]\n}",
+            "ImageUrl__c": "https://6oki26ohlg.execute-api.ap-south-1.amazonaws.com/prod/test03209320/0d3a7d43-ab74-6680-620f-4adcb25e96fc.jpg"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyff6UAA"
+            },
+            "Id": "a0N1Q00000cyff6UAA",
+            "PurchaseDate__c": "2018-04-19",
+            "ReceiptID__c": "38",
+            "Name": "R00001010",
+            "Status__c": "In Progress",
+            "StoreName__c": "FROSTSTICKS",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": "260.00",
+            "APIResponse__c": "{\n  \"storeName\" : \"FROSTSTICKS\",\n  \"receiptNumber\" : \"38\",\n  \"receiptDate\" : \"2018-04-19\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1.00\",\n    \"productName\" : \"THE PHAL\",\n    \"price\" : \"95.24\",\n    \"lineItemPrice\" : \"95.24\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1.00\",\n    \"productName\" : \"NATURAL\",\n    \"price\" : \"76.19\",\n    \"lineItemPrice\" : \"76.19\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"1.00\",\n    \"productName\" : \"FIGS\",\n    \"price\" : \"76.19\",\n    \"lineItemPrice\" : \"76.19\",\n    \"isEligible\" : false\n  } ]\n}",
+            "ImageUrl__c": "https://6oki26ohlg.execute-api.ap-south-1.amazonaws.com/prod/test03209320/52762cd9-be93-7d8c-0fed-cde6ffae2c92.jpg"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyff1UAA"
+            },
+            "Id": "a0N1Q00000cyff1UAA",
+            "PurchaseDate__c": "2019-02-11",
+            "ReceiptID__c": "US-001",
+            "Name": "R00001009",
+            "Status__c": "Processed",
+            "StoreName__c": "East Repair Inc.",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$154.06",
+            "APIResponse__c": "{\n  \"storeName\" : \"East Repair Inc.\",\n  \"storeAddress\" : \"1912 Harvest Lane\\nNew York, NY 12210\",\n  \"receiptNumber\" : \"US-001\",\n  \"receiptDate\" : \"2019-02-11\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"Front and rear brake cables\",\n    \"price\" : \"100.00\",\n    \"lineItemPrice\" : \"100.00\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"New set of pedal arms\",\n    \"price\" : \"15.00\",\n    \"lineItemPrice\" : \"30.00\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"3\",\n    \"productName\" : \"Labor 3hrs\",\n    \"price\" : \"5.00\",\n    \"lineItemPrice\" : \"15.00\",\n    \"isEligible\" : false\n  } ]\n}",
+            "ImageUrl__c": "https://6oki26ohlg.execute-api.ap-south-1.amazonaws.com/prod/test03209320/cb7bd3ca-29a8-166f-4bb0-21bcb454b1b0.jpg"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyfbxUAA"
+            },
+            "Id": "a0N1Q00000cyfbxUAA",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00001006",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 50.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : false\n  } ]\n}",
+            "ImageUrl__c": "https://6oki26ohlg.execute-api.ap-south-1.amazonaws.com/prod/test03209320/eddbc15c-f8af-20ac-531d-ebd8a6cb17b2.png"
+        }
+    ]
+}
