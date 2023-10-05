@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class NetworkClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
 
@@ -23,6 +24,9 @@ class NetworkClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
                 .setLevel(HttpLoggingInterceptor.Level.BODY)
             mAuthOkHttpClient.addInterceptor(mHttpLoggingInterceptor)
         }
+        mAuthOkHttpClient.connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
         return mAuthOkHttpClient
     }
 
