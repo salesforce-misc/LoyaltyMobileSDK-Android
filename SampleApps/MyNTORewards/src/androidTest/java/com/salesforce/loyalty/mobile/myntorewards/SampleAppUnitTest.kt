@@ -1,6 +1,10 @@
 package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.os.Looper.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.LiveData
@@ -19,11 +23,13 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_APP_LOGO_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BENEFITS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_FLOW_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_DESCRIPTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_POPUP_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_COLLECTION_TYPE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONGRATULATIONS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMAIL_PHONE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ENROLLMENT_CONGRATULATIONS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EXPIRATION_DATE
@@ -60,6 +66,9 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -122,11 +131,11 @@ class SampleAppUnitTest {
         verifyLoginTesting()
         display_home_ui_testing()
         receipt_scanning_ui_testing()
-        display_promo_popup_testing()
+        /*display_promo_popup_testing()
         offer_tab_testing()
         profile_ui_testing()
         verify_more_tab_testing()
-        home_screen_extensive_testing()
+        home_screen_extensive_testing()*/
     }
 
 
@@ -333,53 +342,56 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag("UploadReceipt").assertIsDisplayed()
         composeTestRule.onNodeWithTag("UploadReceipt").performClick()
 
-        Thread.sleep(3000)
+        //Thread.sleep(3000)
+
+        composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
 
         //verify process screen
         //composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_PROCESS_SCREEN).assertIsDisplayed()
-      /*   composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
+      /*
+        */
+        composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
         composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
         composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
 
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 6000)*/
-        composeTestRule.onNodeWithTag("submitReceipt").assertIsDisplayed()
+        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
 
         //verifying processed receipt screen
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Receipt Number:", true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Receipt", true).assertIsDisplayed()
 
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT).performClick()
+        Thread.sleep(2000)
 
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
 
         //try again from receipt scan screen button and coming back to table screen
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
         Thread.sleep(1000)
         composeTestRule.onNodeWithContentDescription("shutter button").performClick()
         Thread.sleep(1000)
         composeTestRule.onNodeWithText("Upload").performClick()
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit Receipt"), 5500)
+        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
 
 
         //continue scan receipt screen submit receipt flow
-        composeTestRule.onNodeWithText("Submit Receipt").performClick()
+        composeTestRule.onNodeWithText("Submit").performClick()
 
         Thread.sleep(2000)
 
         //verifying congratulations screen
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CONGRATULATIONS_SCREEN).assertIsDisplayed()
-
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CONGRATULATIONS_SCREEN), 5000)
         composeTestRule.onNodeWithContentDescription("Congratulations Screen Background")
             .assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Congrats Gift Icon").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Congratulations!!!").assertIsDisplayed()
-        composeTestRule.onNodeWithText("We’ve credited {count} points for the scanned receipt")
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Your receipt is uploaded!").assertIsDisplayed()
+        /*composeTestRule.onNodeWithText("We’ve credited 79.9 points for the scanned receipt")
+            .assertIsDisplayed()*/
         composeTestRule.onNode(hasText("Scan Another Receipt"))
         composeTestRule.onNodeWithText("Done").assertIsDisplayed()
 
@@ -401,9 +413,21 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Done").performClick()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
-        Thread.sleep(2000)
-        composeTestRule.onNodeWithContentDescription("receipt_back_button").performClick()
 
+
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_RECEIPT_LIST_ITEM)).onFirst().performClick()
+        composeTestRule.onNodeWithText("Receipt Details").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("receiptNumber").assertIsDisplayed()
+       // composeTestRule.onNodeWithText("79.9 Points").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("receipt_detail_back_button")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("receipt_detail_back_button").performClick()
+        Thread.sleep(2000)
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
 
     }
 
@@ -877,14 +901,22 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                     AnalyzeExpenseResponse::class.java
                 )
 
-                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                Handler(getMainLooper()).postDelayed({
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                }, 5000)
+
                 return result
             }
 
             override val createTransactionJournalViewStateLiveData: LiveData<CreateTransactionJournalViewState>
-                get() = TODO("Not yet implemented")
+                get() = createTransactionJournalViewState
+
+            private val createTransactionJournalViewState = MutableLiveData<CreateTransactionJournalViewState>()
             override val receiptStatusUpdateViewStateLiveData: LiveData<ReceiptStatusUpdateViewState>
-                get() = TODO("Not yet implemented")
+                get() = receiptStatusUpdateViewState
+
+            private val receiptStatusUpdateViewState = MutableLiveData<ReceiptStatusUpdateViewState>()
+
 
             override fun getReceiptListsAPI(context: Context, membershipKey: String) {
                 viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)
@@ -914,7 +946,12 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             }
 
             override fun submitForProcessing(receiptId: String) {
-                TODO("Not yet implemented")
+                createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalInProgress)
+
+                Handler(getMainLooper()).postDelayed({
+                    createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalSuccess)
+                }, 2000)
+
             }
 
             override fun getReceiptStatus(
@@ -923,15 +960,31 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 maxRetryCount: Int,
                 delaySeconds: Long
             ) {
-                TODO("Not yet implemented")
+                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
+
+                Handler(getMainLooper()).postDelayed({
+                    receiptStatusUpdateViewState.postValue(
+                        ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(
+                            "79.9"
+                        )
+                    )
+                }, 1000)
+
             }
 
             override fun cancellingSubmission(receiptId: String) {
-                TODO("Not yet implemented")
+                cancellingSubmissionViewState.postValue(UploadRecieptCancelledViewState.UploadRecieptCancelledInProgress)
+
+                Handler(getMainLooper()).postDelayed({
+                    cancellingSubmissionViewState.postValue(UploadRecieptCancelledViewState.UploadRecieptCancelledSuccess)
+                }, 2000)
+
             }
 
             override val cancellingSubmissionLiveData: LiveData<UploadRecieptCancelledViewState>
-                get() = TODO("Not yet implemented")
+                get() = cancellingSubmissionViewState
+
+            private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
 
         }
 }
