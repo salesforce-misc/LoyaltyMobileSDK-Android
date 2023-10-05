@@ -62,6 +62,7 @@ fun ShowScannedReceiptScreen(
     val cancelSubmissionViewState by scanningViewModel.cancellingSubmissionLiveData.observeAsState()
     val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
     var inProgress by remember { mutableStateOf(false) }
+    var cancelInProgress by remember { mutableStateOf(false) }
     var statusUpdateInProgress by remember { mutableStateOf(false) }
     val itemLists = analyzeExpenseResponse?.lineItems
     val context: Context = LocalContext.current
@@ -238,8 +239,8 @@ fun ShowScannedReceiptScreen(
 
         when (cancelSubmissionViewState) {
             UploadRecieptCancelledViewState.UploadRecieptCancelledSuccess -> {
-                if (inProgress) {
-                    inProgress = false
+                if (cancelInProgress) {
+                    cancelInProgress = false
                     closePopup()
                     navHostController.popBackStack(
                         MoreScreens.CaptureImageScreen.route,
@@ -249,11 +250,11 @@ fun ShowScannedReceiptScreen(
             }
 
             UploadRecieptCancelledViewState.UploadRecieptCancelledInProgress -> {
-                inProgress = true
+                cancelInProgress = true
             }
             UploadRecieptCancelledViewState.UploadRecieptCancelledFailure -> {
-                if (inProgress) {
-                    inProgress = false
+                if (cancelInProgress) {
+                    cancelInProgress = false
                     closePopup()
                     navHostController.popBackStack(
                         MoreScreens.CaptureImageScreen.route,
@@ -264,7 +265,7 @@ fun ShowScannedReceiptScreen(
             else -> {}
         }
 
-        if (inProgress || statusUpdateInProgress) {
+        if (inProgress || statusUpdateInProgress || cancelInProgress) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .fillMaxSize(0.1f)
