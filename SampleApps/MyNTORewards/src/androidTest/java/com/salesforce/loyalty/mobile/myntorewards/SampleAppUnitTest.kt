@@ -972,10 +972,6 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 getReceiptListsAPI(context, "")
             }
 
-            override fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse) {
-                TODO("Not yet implemented")
-            }
-
             override fun submitForManualReview(receiptId: String, comments: String?) {
                 receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
                 Handler(getMainLooper()).postDelayed({

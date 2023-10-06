@@ -63,7 +63,6 @@ fun ShowScannedReceiptScreen(
     val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
     var cancelInProgress by remember { mutableStateOf(false) }
     var inProgress by remember { mutableStateOf(false) }
-    var cancelInProgress by remember { mutableStateOf(false) }
     var statusUpdateInProgress by remember { mutableStateOf(false) }
     val itemLists = analyzeExpenseResponse?.lineItems
     val context: Context = LocalContext.current
