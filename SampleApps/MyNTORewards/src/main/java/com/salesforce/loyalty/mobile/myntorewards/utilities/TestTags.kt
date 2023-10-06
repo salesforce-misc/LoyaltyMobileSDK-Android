@@ -81,6 +81,7 @@ class TestTags {
         const val TEST_TAG_RECEIPT_NUMBER= "receiptNumber"
         const val TEST_TAG_RECEIPT_DATE= "receiptDate"
         const val TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON= "receipt_detail_back_button"
+        const val TEST_TAG_RECEIPT_UPLOAD= "UploadReceipt"
 
 
     }

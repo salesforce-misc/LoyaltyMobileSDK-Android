@@ -55,6 +55,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_UPLOAD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
 import kotlinx.coroutines.launch
@@ -191,7 +192,7 @@ fun ImagePreviewScreen(
             ) {
 
                 Button(
-                    modifier = Modifier.testTag("UploadReceipt")
+                    modifier = Modifier.testTag(TEST_TAG_RECEIPT_UPLOAD)
                         .fillMaxWidth(), onClick = {
                         processClicked = true
 

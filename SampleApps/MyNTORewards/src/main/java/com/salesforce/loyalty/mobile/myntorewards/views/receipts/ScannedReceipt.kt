@@ -133,7 +133,7 @@ fun ShowScannedReceiptScreen(
             ) {
                 Button(
                     modifier = Modifier
-                        .fillMaxWidth().testTag("submitReceipt"), onClick = {
+                        .fillMaxWidth(), onClick = {
                         congPopupState = true
 //                        navHostController.navigate(MoreScreens.ScannedCongratsScreen.route)
                     },

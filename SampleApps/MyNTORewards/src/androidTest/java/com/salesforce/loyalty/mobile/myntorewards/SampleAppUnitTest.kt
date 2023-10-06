@@ -64,6 +64,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_STATUS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_UPLOAD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_COLOUR_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_QUANTITY_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PAYMENT_SCREEN
@@ -348,8 +349,8 @@ class SampleAppUnitTest {
         Thread.sleep(1000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_IMAGE_PREVIEW_SCREEN).assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("UploadReceipt").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("UploadReceipt").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
 
         //Thread.sleep(3000)
 
