@@ -36,6 +36,14 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager.DIRECTORY_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_BACK_BUTTON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_COMMENT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_DATE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_NUMBER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_POINT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_REVIEW_HEADER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_SUBMIT_BUTTON
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptStatusUpdateViewState
@@ -92,7 +100,7 @@ fun ManualReview(
                 modifier = Modifier
                     .clickable {
                         closePopup(ReceiptListScreenPopupState.RECEIPT_LIST_SCREEN)
-                    }
+                    }.testTag(TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON)
                     .align(Alignment.End))
         }
 
@@ -108,7 +116,7 @@ fun ManualReview(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Start)
-                .padding(start = 4.dp)
+                .padding(start = 4.dp).testTag(TEST_TAG_MANUAL_REVIEW_HEADER)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -130,6 +138,7 @@ fun ManualReview(
                     fontFamily = font_sf_pro,
                     textAlign = TextAlign.Start,
                     fontSize = 13.sp,
+                    modifier = Modifier.testTag(TEST_TAG_MANUAL_RECEIPT_NUMBER)
                 )
 
                 Text(
@@ -143,13 +152,15 @@ fun ManualReview(
                     color = LighterBlack,
                     textAlign = TextAlign.Start,
                     fontSize = 13.sp,
+                    modifier = Modifier.testTag(TEST_TAG_MANUAL_RECEIPT_DATE)
                 )
 
             }
             Column(
-                modifier = Modifier.weight(0.3f),
+                modifier = Modifier.weight(0.3f).testTag(TEST_TAG_MANUAL_RECEIPT_POINT),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.End
+
             ) {
                 Text(
                     text = analyzeExpenseResponse?.totalAmount ?: "",
@@ -202,7 +213,7 @@ fun ManualReview(
                 .background(
                     color = Color(0xFFFAFCFF),
                     shape = RoundedCornerShape(size = 8.dp)
-                ),
+                ).testTag(TEST_TAG_MANUAL_RECEIPT_COMMENT),
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.review_screen_placeholder_text),
@@ -237,7 +248,7 @@ fun ManualReview(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
-                modifier = Modifier
+                modifier = Modifier.testTag(TEST_TAG_MANUAL_SUBMIT_BUTTON)
                     .fillMaxWidth(), onClick = {
                     keyboardController?.hide()
                     manualReviewSubmitted = true
@@ -264,7 +275,7 @@ fun ManualReview(
                 modifier = Modifier
                     .padding(top = 12.dp, bottom = 3.dp)
                     .testTag(
-                        TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
+                        TEST_TAG_MANUAL_BACK_BUTTON
                     )
                     .clickable {
                         keyboardController?.hide()

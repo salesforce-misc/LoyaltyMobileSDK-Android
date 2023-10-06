@@ -2,9 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
 import android.os.Handler
-import android.os.Looper
 import android.os.Looper.*
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.LiveData
@@ -12,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
@@ -24,6 +23,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BENEFITS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_ADD_TO_CART
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_DELIVER_TO_ADDRESS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_FLOW_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_DESCRIPTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_NAME
@@ -38,6 +39,13 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_JOIN_BUTTON
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_JOIN_UI
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_LOGIN_UI
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_COMMENT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_DATE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_NUMBER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_RECEIPT_POINT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_REVIEW_HEADER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_MANUAL_SUBMIT_BUTTON
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_OLD_TRANSACTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_DESCRIPTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_IMAGE_SELCTION
@@ -51,8 +59,11 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_QR_CODE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RATING
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECENT_TRANSACTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_NUMBER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_COLOUR_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_QUANTITY_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PAYMENT_SCREEN
@@ -66,9 +77,6 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -127,15 +135,15 @@ class SampleAppUnitTest {
 
     @OptIn(ExperimentalTestApi::class)
     private fun verify_login_button() {
-        //app_has_swipe_images()
+        app_has_swipe_images()
         verifyLoginTesting()
         display_home_ui_testing()
         receipt_scanning_ui_testing()
-        /*display_promo_popup_testing()
+        display_promo_popup_testing()
         offer_tab_testing()
         profile_ui_testing()
         verify_more_tab_testing()
-        home_screen_extensive_testing()*/
+        home_screen_extensive_testing()
     }
 
 
@@ -228,6 +236,9 @@ class SampleAppUnitTest {
     }
 
     private fun display_promo_popup_testing() {
+        composeTestRule.onNodeWithText("Home").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Home").performClick()
+
         composeTestRule.onNodeWithTag(TEST_TAG_PROMOTION_CARD).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMOTION_CARD).performClick()
         Thread.sleep(2000)
@@ -273,19 +284,17 @@ class SampleAppUnitTest {
 
         //receipt list verify back button flow
         composeTestRule.onNodeWithText("More").assertIsDisplayed()
+
         composeTestRule.onNodeWithText("More").performClick()
         Thread.sleep(1000)
         composeTestRule.onNodeWithText("Receipts").assertIsDisplayed()
         composeTestRule.onNodeWithText("Receipts").performClick()
 
-     /*    composeTestRule.onNodeWithContentDescription("receipt_back_button").assertIsDisplayed()
-      composeTestRule.onNodeWithContentDescription("receipt_back_button").performClick()
-        composeTestRule.onNodeWithTag(TEST_TAG_HOME_SCREEN).assertIsDisplayed()*/
+        composeTestRule.onNodeWithText("Home").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Home").performClick()
 
-
-        /*Thread.sleep(1000)
         composeTestRule.onNodeWithContentDescription("Receipt Scanning").performClick()
-        Thread.sleep(2000)*/
+        Thread.sleep(2000)
         composeTestRule.onNodeWithText("New").assertIsDisplayed()
 
         //start camera screen flow
@@ -346,10 +355,7 @@ class SampleAppUnitTest {
 
         composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
 
-        //verify process screen
-        //composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_PROCESS_SCREEN).assertIsDisplayed()
-      /*
-        */
+
         composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
         composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
         composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
@@ -390,24 +396,9 @@ class SampleAppUnitTest {
             .assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Congrats Gift Icon").assertIsDisplayed()
         composeTestRule.onNodeWithText("Your receipt is uploaded!").assertIsDisplayed()
-        /*composeTestRule.onNodeWithText("We’ve credited 79.9 points for the scanned receipt")
-            .assertIsDisplayed()*/
         composeTestRule.onNode(hasText("Scan Another Receipt"))
         composeTestRule.onNodeWithText("Done").assertIsDisplayed()
 
-        //scan another congratulations screen receipt flow
-        //pending upon fixing congratulation screen issue. Button must be flexible based on screen height.
-        /*   composeTestRule.onNode(hasText("Scan Another Receipt")).performClick()
-           composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
-           Thread.sleep(1000)
-           composeTestRule.onNodeWithContentDescription("shutter button").performClick()
-           Thread.sleep(1000)
-           composeTestRule.onNodeWithText("Process").performClick()
-           composeTestRule.waitUntilExactlyOneExists(hasText("Submit Receipt"), 5500)
-           Thread.sleep(1000)
-           composeTestRule.onNodeWithText("Submit Receipt").performClick()
-           composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CONGRATULATIONS_SCREEN).assertIsDisplayed()
-   */
 
         //continue congratulations screen done flow
         composeTestRule.onNodeWithText("Done").performClick()
@@ -415,19 +406,63 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
 
 
-
+        Thread.sleep(2000)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_RECEIPT_LIST_ITEM)).onFirst().performClick()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_DETAIL_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithText("Receipt Details").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("receiptNumber").assertIsDisplayed()
-       // composeTestRule.onNodeWithText("79.9 Points").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_NUMBER).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_NUMBER).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_STATUS).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Receipt Items").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Receipt Image").assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("receipt_detail_back_button")
+
+       // composeTestRule.onNodeWithText("79.9 Points").assertIsDisplayed()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON)
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("receipt_detail_back_button").performClick()
+
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON).performClick()
         Thread.sleep(2000)
 
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_RECEIPT_LIST_ITEM)).onLast().performClick()
+        composeTestRule.onNodeWithText("Request a Manual Review").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Request a Manual Review").performClick()
+
+
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON).performClick()
+        composeTestRule.onNodeWithText("Request a Manual Review").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Request a Manual Review").performClick()
+        Thread.sleep(2000)
+
+        composeTestRule.onNode(hasText("Back"))
+        composeTestRule.onNode(hasText("Back")).performClick()
+
+        composeTestRule.onNodeWithText("Request a Manual Review").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Request a Manual Review").performClick()
+
+
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_REVIEW_HEADER).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Comments").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_RECEIPT_NUMBER).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_RECEIPT_DATE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_RECEIPT_POINT).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_RECEIPT_COMMENT).assertIsDisplayed()
+
+
+        composeTestRule.onNodeWithText("Enter the reason for manual request…").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_SUBMIT_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_SUBMIT_BUTTON).performClick()
+        composeTestRule.onNodeWithTag("receipt_detail_screen").assertIsDisplayed()
+
 
     }
 
@@ -464,7 +499,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_PROMO_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNodeWithText("Details").assertIsDisplayed()
         composeTestRule.onNodeWithText("Reviews").assertIsDisplayed()
-        composeTestRule.onNodeWithText("TnC").assertIsDisplayed()
+        composeTestRule.onNodeWithText("T&C").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_RATING).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_COLLECTION_TYPE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_ORDER_DESCRIPTION).assertIsDisplayed()
@@ -475,10 +510,10 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_FLOW_CONTAINER)
             .performMouseInput { scroll(10F) }
         Thread.sleep(5000)
-        composeTestRule.onNodeWithText("Select Size").assertIsDisplayed()
-        composeTestRule.onNodeWithText("View Size Chart").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Size").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Size Chart").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SIZE_SELECTION_ROW).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Available Colors").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Colors").assertIsDisplayed()
         composeTestRule.onNodeWithText("Quantity").assertIsDisplayed()
 
         composeTestRule.onNodeWithTag(TEST_TAG_SELECT_COLOUR_ROW).assertIsDisplayed()
@@ -486,11 +521,11 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_PRODUCT_PRICE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SHIPPING_PRICE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_FLOW_CONTAINER)
-            .performMouseInput { scroll(5F) }
-
-        composeTestRule.onNodeWithText("Buy Now").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Add To Cart").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Buy Now").performClick()
+            .performMouseInput { scroll(6F) }
+        Thread.sleep(3000)
+        composeTestRule.onNodeWithText("Buy").assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag(TEST_TAG_CHECKOUT_ADD_TO_CART))
+        composeTestRule.onNodeWithText("Buy").performClick()
 
         composeTestRule.onNodeWithTag(TEST_TAG_SHIPPING_PAYMENT_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("shipping payment back button")
@@ -498,13 +533,13 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Order Details").assertIsDisplayed()
         composeTestRule.onNodeWithText("1. Shipping").assertIsDisplayed()
         composeTestRule.onNodeWithText("2. Payment").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Shipping Address").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Address").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_ADDRESS_DETAIL).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Add New Address").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Add a New Address").assertIsDisplayed()
         composeTestRule.onNodeWithText("Edit Address").assertIsDisplayed()
         composeTestRule.onNodeWithText("Delete Address").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Deliver To This Address").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Deliver To This Address").performClick()
+        composeTestRule.onNode(hasTestTag(TEST_TAG_CHECKOUT_DELIVER_TO_ADDRESS))
+        composeTestRule.onNode(hasTestTag(TEST_TAG_CHECKOUT_DELIVER_TO_ADDRESS)).performClick()
 
         composeTestRule.onNodeWithTag(TEST_TAG_PAYMENT_UI_CONTAINER).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT).performClick()
@@ -942,7 +977,11 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             }
 
             override fun submitForManualReview(receiptId: String, comments: String?) {
-                TODO("Not yet implemented")
+                receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateInProgress)
+                Handler(getMainLooper()).postDelayed({
+                    receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(null))
+                }, 1000)
+
             }
 
             override fun submitForProcessing(receiptId: String) {

@@ -59,6 +59,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.for
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SEARCH_FIELD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
@@ -452,7 +453,7 @@ fun ReceiptStatusText(totalPoints: String?, status: String) {
         color = textColour,
         textAlign = TextAlign.End,
         fontSize = 13.sp,
-        modifier = Modifier
+        modifier = Modifier.testTag(TEST_TAG_RECEIPT_STATUS)
     )
 }
 /*

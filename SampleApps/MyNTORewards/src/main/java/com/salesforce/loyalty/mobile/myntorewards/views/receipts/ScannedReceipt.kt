@@ -217,11 +217,15 @@ fun ShowScannedReceiptScreen(
                 if (inProgress) {
                     inProgress = false
                     LaunchedEffect(key1 = true) {
-                        getUpdatedReceiptStatus(
-                            context,
-                            receiptId = "",
-                            scanningViewModel
-                        )
+
+                        (analyzeExpenseResponse?.receiptId?.let {
+                            getUpdatedReceiptStatus(
+                                context,
+                                receiptId = it,
+                                scanningViewModel
+                            )
+                        }?: "")
+
                     }
                 }
             }
