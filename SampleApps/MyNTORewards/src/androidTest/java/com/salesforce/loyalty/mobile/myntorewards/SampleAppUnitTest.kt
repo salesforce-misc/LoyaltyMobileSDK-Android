@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
@@ -926,7 +925,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 var result: AnalyzeExpenseResponse? = null
                 receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
                 val gson = Gson()
-                val mockResponse = MockResponseFileReader("AnalyzeExpense.json").content
+                val mockResponse = MockResponseFileReader("SampleAnalyzeExpense.json").content
 
                 scannedReceipt.value = gson.fromJson(
                     mockResponse,
@@ -957,7 +956,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             override fun getReceiptListsAPI(context: Context, membershipKey: String) {
                 viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)
                 val gson = Gson()
-                val mockResponse = MockResponseFileReader("Receiptlist.json").content
+                val mockResponse = MockResponseFileReader("SampleReceiptlist.json").content
 
                 receiptList.value = gson.fromJson(
                     mockResponse,
