@@ -67,16 +67,6 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
-    suspend fun createTransactionJournal(
-        analyzeExpenseResponse: AnalyzeExpenseResponse
-    ): Result<List<CreateTransactionalJournalResponse>> {
-        Logger.d(TAG, "createTransactionJournal()")
-
-        return receiptClient.receiptApi.createTransactionalJournal(
-            getCreateTransactionUrl(),
-            analyzeExpenseResponse
-        )
-    }
     suspend fun receiptStatusUpdate(
         receiptId: String,
         status: String,
