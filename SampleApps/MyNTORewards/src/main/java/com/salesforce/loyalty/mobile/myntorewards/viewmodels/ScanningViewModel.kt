@@ -150,22 +150,6 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         return result
     }
 
-    override fun createTransactionalJournal(analyzeExpenseResponse: AnalyzeExpenseResponse) {
-        Logger.d(TAG, "analyzeExpense")
-        viewModelScope.launch {
-            createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalInProgress)
-
-            receiptScanningManager.createTransactionJournal(analyzeExpenseResponse).onSuccess {
-                Logger.d(TAG, "createTransactionalJournal Success : $it")
-                createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalSuccess)
-            }
-                .onFailure {
-                    Logger.d(TAG, "createTransactionalJournal failed: ${it.message}")
-                    createTransactionJournalViewState.postValue(CreateTransactionJournalViewState.CreateTransactionJournalFailure)
-                }
-        }
-    }
-
     override fun submitForManualReview(receiptId: String, comments: String?) {
         Logger.d(TAG, "submitForManualReview")
         viewModelScope.launch {

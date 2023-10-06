@@ -1,0 +1,24 @@
+{
+  "storeName" : "BULL BAR & RESTAURANT",
+  "storeAddress" : "2000, BULL PARK AVE\nNEW HILLS, NC, 27154-8908",
+  "receiptSFDCId" : "a0N1Q00000cyegpUAA",
+  "receiptNumber" : "246",
+  "receiptDate" : "2019-12-12",
+  "memberShipNumber" : "24345678",
+  "lineItem" : [ {
+    "quantity" : "1",
+    "productName" : "WINE BOTTLE",
+    "lineItemPrice" : "$ 19.99",
+    "isEligible" : true
+  }, {
+    "quantity" : "2",
+    "productName" : "CHEESE STEAK",
+    "lineItemPrice" : "$ 17.98",
+    "isEligible" : false
+  }, {
+    "quantity" : "1",
+    "productName" : "SPICY BARQUE STEAK",
+    "lineItemPrice" : "$ 12.49",
+    "isEligible" : true
+  } ]
+}
