@@ -33,6 +33,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -64,6 +65,11 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListAPIDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DATE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReceiptListScreenPopupState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReceiptTabs
@@ -165,7 +171,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .blur(blurBG),
+                .blur(blurBG).testTag(TEST_TAG_RECEIPT_DETAIL_SCREEN),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -185,7 +191,8 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                     painter = painterResource(id = R.drawable.back_arrow),
                     contentDescription = stringResource(id = R.string.cd_receipt_back_button),
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
+                    modifier = Modifier.testTag(
+                        TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON)
                         .padding(top = 16.dp, start = 8.dp)
                         .clickable {
                             navController.popBackStack()
@@ -222,6 +229,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             color = Color.Black,
                             textAlign = TextAlign.Start,
                             fontSize = 13.sp,
+                            modifier = Modifier.testTag(TEST_TAG_RECEIPT_NUMBER)
                         )
                         Text(
                             text = stringResource(R.string.field_date) + " " + purchaseDate?.let { purchase_date ->
@@ -232,6 +240,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             color = Color.Black,
                             textAlign = TextAlign.Start,
                             fontSize = 13.sp,
+                            modifier = Modifier.testTag(TEST_TAG_RECEIPT_DATE)
                         )
 
                     }

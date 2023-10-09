@@ -66,6 +66,22 @@ class TestTags {
         const val MY_PROMOTION_FULL_SCREEN_HEADER = "my_promotion_header"
         const val MY_PROFILE_FULL_SCREEN_HEADER = "my_profile_header"
         const val MORE_FULL_SCREEN_HEADER = "more_header"
+        const val TEST_TAG_CHECKOUT_DELIVER_TO_ADDRESS = "checkout_deliver_to_address_button"
+        const val TEST_TAG_CHECKOUT_ADD_TO_CART ="checkout_add_to_cart_button"
+        const val TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON ="manual_review_closepopup_icon"
+        const val TEST_TAG_MANUAL_REVIEW_HEADER ="manual_review_header"
+        const val TEST_TAG_MANUAL_RECEIPT_NUMBER ="manual_review_receipt_number"
+        const val TEST_TAG_MANUAL_RECEIPT_DATE ="manual_review_receipt_date"
+        const val TEST_TAG_MANUAL_RECEIPT_POINT ="manual_review_receipt_point"
+        const val TEST_TAG_MANUAL_RECEIPT_COMMENT ="manual_review_receipt_comment"
+        const val TEST_TAG_MANUAL_SUBMIT_BUTTON ="manual_review_submit_button"
+        const val TEST_TAG_MANUAL_BACK_BUTTON = "manual_review_back_button"
+        const val TEST_TAG_RECEIPT_STATUS = "receiptStatus"
+        const val TEST_TAG_RECEIPT_DETAIL_SCREEN = "receipt_detail_screen"
+        const val TEST_TAG_RECEIPT_NUMBER= "receiptNumber"
+        const val TEST_TAG_RECEIPT_DATE= "receiptDate"
+        const val TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON= "receipt_detail_back_button"
+        const val TEST_TAG_RECEIPT_UPLOAD= "UploadReceipt"
 
 
     }

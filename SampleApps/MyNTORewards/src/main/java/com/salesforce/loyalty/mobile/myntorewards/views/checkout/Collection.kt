@@ -28,6 +28,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_FIRST_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_ADD_TO_CART
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_FLOW_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_DESCRIPTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_PROMO_NAME
@@ -502,7 +503,7 @@ fun ButtonBuyOrAddCard(navCheckOutFlowController: NavController) {
         )
         Button(
             colors = ButtonDefaults.buttonColors(Color.White),
-            modifier = Modifier
+            modifier = Modifier.testTag(TEST_TAG_CHECKOUT_ADD_TO_CART)
                 .fillMaxWidth()
                 .border(1.dp, VibrantPurple40, RoundedCornerShape(100.dp)), onClick = {
             },

@@ -61,8 +61,8 @@ fun ShowScannedReceiptScreen(
     val createTransactionJournalViewState by scanningViewModel.createTransactionJournalViewStateLiveData.observeAsState()
     val cancelSubmissionViewState by scanningViewModel.cancellingSubmissionLiveData.observeAsState()
     val receiptStatusUpdateViewState by scanningViewModel.receiptStatusUpdateViewStateLiveData.observeAsState()
-    var inProgress by remember { mutableStateOf(false) }
     var cancelInProgress by remember { mutableStateOf(false) }
+    var inProgress by remember { mutableStateOf(false) }
     var statusUpdateInProgress by remember { mutableStateOf(false) }
     val itemLists = analyzeExpenseResponse?.lineItems
     val context: Context = LocalContext.current
@@ -122,6 +122,7 @@ fun ShowScannedReceiptScreen(
             ) {
                 ReceiptDetailTable(itemLists = itemLists)
             }
+
 
             Column(
                 modifier = Modifier.weight(0.2f)
@@ -216,13 +217,15 @@ fun ShowScannedReceiptScreen(
                 if (inProgress) {
                     inProgress = false
                     LaunchedEffect(key1 = true) {
-                        analyzeExpenseResponse?.receiptId?.let {
+
+                        (analyzeExpenseResponse?.receiptId?.let {
                             getUpdatedReceiptStatus(
                                 context,
                                 receiptId = it,
                                 scanningViewModel
                             )
-                        }
+                        }?: "")
+
                     }
                 }
             }
