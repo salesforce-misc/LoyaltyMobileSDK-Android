@@ -197,37 +197,37 @@ fun MoreOptionList(
             verticalArrangement = Arrangement.Top
         ) {
 
-            AddMoreOption(
+           /* AddMoreOption(
                 imageRes = R.drawable.ic_user_account,
                 textRes = R.string.header_label_account
-            ) {}
-            AddMoreOption(
+            ) {}*/
+           /* AddMoreOption(
                 imageRes = R.drawable.ic_addresses,
                 textRes = R.string.header_label_addresses
-            ) {}
-            AddMoreOption(
+            ) {}*/
+         /*   AddMoreOption(
                 imageRes = R.drawable.ic_preference,
                 textRes = R.string.header_label_payment_methods
-            ) {}
-            AddMoreOption(
+            ) {}*/
+           /* AddMoreOption(
                 imageRes = R.drawable.ic_notification,
                 textRes = R.string.header_label_orders
-            ) {}
+            ) {}*/
             ReceiptOption(navHostController)
-            AddMoreOption(
+           /* AddMoreOption(
                 imageRes = R.drawable.ic_quote,
                 textRes = R.string.header_label_support
-            ) {}
+            ) {}*/
             AddMoreOption(
-                imageRes = R.drawable.ic_quote,
+                imageRes = R.drawable.date_formate,
                 textRes = R.string.header_label_dates
             ) {
                 openBottomSheet("Date Formate")
             }
-            AddMoreOption(
+          /*  AddMoreOption(
                 imageRes = R.drawable.ic_favorite,
                 textRes = R.string.header_label_favourite
-            ) {}
+            ) {}*/
             LogoutOption(onBoardingModel)
             AppVersionHolder()
         }
