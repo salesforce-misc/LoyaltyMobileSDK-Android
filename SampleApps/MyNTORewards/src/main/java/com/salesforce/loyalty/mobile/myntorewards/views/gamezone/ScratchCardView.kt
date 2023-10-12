@@ -16,6 +16,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -39,11 +40,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardPerforationColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 data class DraggedPath(
@@ -53,7 +59,7 @@ data class DraggedPath(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ScratchCardView() {
+fun ScratchCardView(loyaltyAPIManager: LoyaltyAPIManager) {
     val overlayImage = ImageBitmap.imageResource(id = R.drawable.overlay_img)
     val baseImage = ImageBitmap.imageResource(id = R.drawable.onboarding_image_2)
 
@@ -89,6 +95,7 @@ fun ScratchCardView() {
             },
             currentPath = currentPathState.value.path,
             currentPathThickness = currentPathState.value.width,
+            loyaltyAPIManager = loyaltyAPIManager
         )
     }
 }
@@ -103,6 +110,7 @@ fun ScratchingCanvas(
     onMovedOffset: (Float, Float) -> Unit,
     currentPath: Path,
     currentPathThickness: Float,
+    loyaltyAPIManager: LoyaltyAPIManager
 ) {
     val textMeasurer = rememberTextMeasurer()
     val scratchedSize = remember { mutableStateOf<Float?>(0f) }
@@ -111,70 +119,82 @@ fun ScratchingCanvas(
         width = 5f,
         pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
     )
-    AnimatedContent(targetState = animate, modifier = modifier) {
-    Box(
-        modifier = modifier
-            .height(199.dp)
-            .width(343.dp)
-            .background(VibrantPurple40)
-            .drawBehind {
-//                drawRoundRect(color = Color.White, style = stroke)
-                /*val borderSize = 4.dp.toPx()
-                drawLine(
-                    color = Color.Red,
-                    start = Offset(0f, size.height),
-                    end = Offset(size.width, size.height),
-                    strokeWidth = borderSize
 
-                )*/
-                val step = 32.dp
-                val stepPx = step.toPx()
+    val coroutineScope = rememberCoroutineScope()
+
+    var apiCalled by remember {
+        mutableStateOf(false)
+    }
+
+    val rewardTextMutableLiveData = MutableLiveData<String>()
+//    val rewardTextLiveData: LiveData<String> = rewardTextMutableLiveData
+
+    rewardTextMutableLiveData.value = "Loading..."
+
+    val rewardTextValue by rewardTextMutableLiveData.observeAsState()
+
+    AnimatedContent(targetState = animate, modifier = modifier) {
+        Box(
+            modifier = modifier
+                .height(199.dp)
+                .width(343.dp)
+                .background(VibrantPurple40)
+                .drawBehind {
+//                drawRoundRect(color = Color.White, style = stroke)
+                    /*val borderSize = 4.dp.toPx()
+                    drawLine(
+                        color = Color.Red,
+                        start = Offset(0f, size.height),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = borderSize
+
+                    )*/
+                    val step = 32.dp
+                    val stepPx = step.toPx()
 //                val stepsCount = (size.width / stepPx).roundToInt()
 //                val actualStep = size.width / stepsCount
 //                val dotSize = Size(width = actualStep / 2, height = actualStep / 2)
-                val dotSize = Size(width = 16.dp.toPx(), height = 16.dp.toPx())
-                val spacing = 8.dp.toPx()
-                val stepsCount = (size.width / (dotSize.width + spacing)).roundToInt()
-                val actualStep = dotSize.width + spacing
-                for (i in 1..(stepsCount - 1)) {
-                    val rect = Rect(
-                        offset = Offset(
-                            x = i * actualStep,
-                            y = (size.height - (dotSize.height / 2))
-                        ),
-                        size = dotSize,
-                    )
-                    /*drawRect(
-                        ScratchCardPerforationColor,
-                        topLeft = rect.topLeft,
-                        size = rect.size,
-                    )*/
-                    drawOval(
-                        color = ScratchCardPerforationColor, topLeft = rect.topLeft,
-                        size = rect.size
-                    )
+                    val dotSize = Size(width = 16.dp.toPx(), height = 16.dp.toPx())
+                    val spacing = 8.dp.toPx()
+                    val stepsCount = (size.width / (dotSize.width + spacing)).roundToInt()
+                    val actualStep = dotSize.width + spacing
+                    for (i in 1..(stepsCount - 1)) {
+                        val rect = Rect(
+                            offset = Offset(
+                                x = i * actualStep,
+                                y = (size.height - (dotSize.height / 2))
+                            ),
+                            size = dotSize,
+                        )
+                        /*drawRect(
+                            ScratchCardPerforationColor,
+                            topLeft = rect.topLeft,
+                            size = rect.size,
+                        )*/
+                        drawOval(
+                            color = ScratchCardPerforationColor, topLeft = rect.topLeft,
+                            size = rect.size
+                        )
 
-                }
-                for (i in 1..(stepsCount - 1)) {
-                    val rect = Rect(
-                        offset = Offset(x = i * actualStep, y = (-dotSize.height / 2)),
-                        size = dotSize,
-                    )
-                    /*drawRect(
-                        ScratchCardPerforationColor,
-                        topLeft = rect.topLeft,
-                        size = rect.size,
-                    )*/
-                    drawOval(
-                        color = ScratchCardPerforationColor, topLeft = rect.topLeft,
-                        size = rect.size
-                    )
+                    }
+                    for (i in 1..(stepsCount - 1)) {
+                        val rect = Rect(
+                            offset = Offset(x = i * actualStep, y = (-dotSize.height / 2)),
+                            size = dotSize,
+                        )
+                        /*drawRect(
+                            ScratchCardPerforationColor,
+                            topLeft = rect.topLeft,
+                            size = rect.size,
+                        )*/
+                        drawOval(
+                            color = ScratchCardPerforationColor, topLeft = rect.topLeft,
+                            size = rect.size
+                        )
 
-                }
-            },
-    ) {
-
-
+                    }
+                },
+        ) {
 
 
             Canvas(
@@ -229,9 +249,52 @@ fun ScratchingCanvas(
         if(scratchedSize.value!! >= canvasSize){
             Log.d("Canvas", "scratchedSize is bigger!!!!!!!!!!!!!!!!!!!!")
         }*/
+                val rect: Rect? = currentPath?.getBounds()
+                rect?.let {
+                    val scratched = rect.width * rect.height
+                    //First time scratched, call the API
+//                    LaunchedEffect(key1 = true ) {
+                    if (!apiCalled && (scratched > 0f)) {
+                        apiCalled = true
+                        coroutineScope.launch {
+                            val result = loyaltyAPIManager.getGameReward(true)
+                            result.onSuccess {
+                                Log.d("Canvas", "API Result SUCCESS: ${it}")
+                                val reward: String? =
+                                    it?.gameRewards?.get(0)?.description
+                                reward?.let {
+                                    Log.d("Canvas", "API Result SUCCESS LIVEDATA SET: ${it}")
+                                    rewardTextMutableLiveData.postValue(it)
+                                    rewardTextMutableLiveData.value = it
+                                }
+                            }.onFailure {
+                                Log.d("Canvas", "API Result FAILURE: ${it}")
+                            }
+                        }
+
+//                        }
+
+                    }
+
+                    Log.d("Canvas", "Bounds of current path: ${rect.width * rect.height}")
+
+                    if (scratched >= canvasSize) {
+                        currentPath.moveTo(size.width, size.height)
+                        animate = true
+                        currentPath.addRect(
+                            rect = Rect(
+                                Offset(0f, 0f),
+                                (size.width * size.height)
+                            )
+                        )
+
+                    }
+                }
+                rewardTextValue?.let {
+                    Log.d("Canvas", "rewardTextValue: $rewardTextValue")
                 val measuredText =
                     textMeasurer.measure(
-                        AnnotatedString("20% OFF"),
+                        AnnotatedString(rewardTextValue.toString()),
                         constraints = Constraints.fixed(
                             (size.width).toInt(),
                             (size.height).toInt()
@@ -253,23 +316,9 @@ fun ScratchingCanvas(
                     drawRect(VibrantPurple40, size = imageSize.toSize())
                     drawText(measuredText, topLeft = Offset(x = 0.dp.toPx(), y = 30.dp.toPx()))
                 }
-                val rect: Rect? = currentPath?.getBounds()
-                rect?.let {
-                    Log.d("Canvas", "Bounds of current path: ${rect.width * rect.height}")
-                    val scratched = rect.width * rect.height
-                    if (scratched >= canvasSize) {
-                        currentPath.moveTo(size.width, size.height)
-                        animate = true
-                        currentPath.addRect(
-                            rect = Rect(
-                                Offset(0f, 0f),
-                                (size.width * size.height)
-                            )
-                        )
+            }
 
-                    }
-                }
             }
         }
-}
+    }
 }
