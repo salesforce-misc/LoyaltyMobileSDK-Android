@@ -51,3 +51,4 @@ val SearchIconColor = Color(0xFFAEAEAE)
 
 val ReceiptPointColourWarning = Color(0xFFDD7A01)
 val ReceiptPointColourError = Color(0xFFBA0517)
+val ScratchCardPerforationColor = Color(0xFFF8EFFF)
