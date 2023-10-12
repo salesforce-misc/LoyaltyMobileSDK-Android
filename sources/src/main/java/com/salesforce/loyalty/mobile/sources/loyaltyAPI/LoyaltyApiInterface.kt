@@ -73,4 +73,9 @@ interface LoyaltyApiInterface {
         @Query("productName") productName: String?,
         @Query("productCategoryName") productCategoryName: String?
     ): Result<VoucherResult>
+
+    @GET()
+    suspend fun getGameReward(
+        @Url url: String,
+    ): Result<GameRewardResponse>
 }

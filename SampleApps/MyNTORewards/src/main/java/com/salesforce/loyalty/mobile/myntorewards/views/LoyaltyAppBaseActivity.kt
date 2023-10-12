@@ -112,7 +112,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     checkoutFlowModel,
                     scanningViewModel
                 )*/
-                ScratchCardView()
+                ScratchCardView(loyaltyAPIManager)
             }
         }
         observeSessionExpiry(onboardingModel, forceAuthManager)

@@ -22,6 +22,7 @@ object LoyaltyConfig {
     const val KEY_PROGRAM_NAME = "programName"
     const val HEADER_AUTHORIZATION = "Authorization"
 
+
     /**
      * Enum class to hold the mapping of process name with the Processes.
      */
@@ -41,6 +42,8 @@ object LoyaltyConfig {
         class TransactionsHistory(val programName: String, val membershipNumber: String): Resource()
         class LoyaltyProgramProcess(val programName: String, val programProcessName: ProgramProcessName) : Resource()
         class Vouchers(val programName: String, val membershipNumber: String): Resource()
+
+        class GameReward(): Resource()
     }
 
     /**
@@ -70,6 +73,9 @@ object LoyaltyConfig {
             }
             is Resource.Vouchers -> {
                 instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/vouchers"
+            }
+            is Resource.GameReward -> {
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/game/definition/Definition123/Participant/Participant123/Play"
             }
         }
     }
