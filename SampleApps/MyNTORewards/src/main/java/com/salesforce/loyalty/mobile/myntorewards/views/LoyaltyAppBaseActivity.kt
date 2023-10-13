@@ -102,7 +102,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     scanningViewModel
                 )
             } else {
-                /*MainScreenStart(
+                MainScreenStart(
                     profileModel,
                     promotionModel,
                     voucherModel,
@@ -111,8 +111,9 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel
-                )*/
-                ScratchCardView(loyaltyAPIManager)
+                )
+                // Added for testing purpose.
+//                ScratchCardView(loyaltyAPIManager)
             }
         }
         observeSessionExpiry(onboardingModel, forceAuthManager)
