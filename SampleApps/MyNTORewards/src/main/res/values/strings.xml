@@ -213,5 +213,8 @@
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
 
-
+    <string name="game_scratch_card_title">Scratch and win!</string>
+    <string name="game_scratch_card_sub_title">Get a chance to win instant rewards!</string>
+    <string name="game_scratch_card_instruction">Scratch coupon to play</string>
+    <string name="game_scratch_card_detail_instruction">This is a one time offer exclusively for you. This offer if declined may not be repeated. Please refer to the terms and conditions for more information. </string>
 </resources>
