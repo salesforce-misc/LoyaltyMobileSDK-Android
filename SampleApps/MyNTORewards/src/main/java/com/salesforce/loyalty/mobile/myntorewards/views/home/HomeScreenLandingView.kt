@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -47,6 +48,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherV
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.SpinWheel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.rememberSpinWheelState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)

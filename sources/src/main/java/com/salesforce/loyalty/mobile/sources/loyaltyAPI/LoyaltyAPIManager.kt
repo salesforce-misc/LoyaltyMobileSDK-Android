@@ -338,4 +338,22 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             )
         }
     }
+
+    suspend fun getGames(mockResponse: Boolean): Result<Games> {
+        Logger.d(TAG, "getGames")
+
+        if (mockResponse) {
+            val reader =
+                InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("Games.json"))
+            val content: String = reader.readText()
+            reader.close()
+            val response =
+                Gson().fromJson(content, Games::class.java)
+            return Result.success(response)
+        } else {
+            return mLoyaltyClient.getNetworkClient().getGames(
+                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.Games()),
+            )
+        }
+    }
 }

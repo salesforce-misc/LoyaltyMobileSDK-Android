@@ -13,7 +13,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.*
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.ScratchCardView
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -91,7 +91,9 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
 
         setContent {
             if (loginSuccess == true) {
-                HomeTabScreen(
+
+                SpinWheelLandingPage(loyaltyAPIManager)
+             /*   HomeTabScreen(
                     profileModel,
                     promotionModel,
                     voucherModel,
@@ -100,7 +102,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel
-                )
+                )*/
             } else {
                 MainScreenStart(
                     profileModel,
@@ -113,7 +115,9 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     scanningViewModel
                 )
                 // Added for testing purpose.
-//                ScratchCardView(loyaltyAPIManager)
+                //ScratchCardView(loyaltyAPIManager)
+
+
             }
         }
         observeSessionExpiry(onboardingModel, forceAuthManager)

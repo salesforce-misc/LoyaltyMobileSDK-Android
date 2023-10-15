@@ -83,7 +83,7 @@ interface SpinWheelColors {
 }
 
 @Immutable
-private class DefaultSpinWheelColors(
+public class DefaultSpinWheelColors(
     private val frameColor: Color,
     private val dividerColor: Color,
     private val selectorColor: Color,
