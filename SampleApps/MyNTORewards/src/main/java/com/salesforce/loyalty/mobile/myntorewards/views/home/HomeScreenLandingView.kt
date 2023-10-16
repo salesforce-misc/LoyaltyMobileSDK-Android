@@ -98,41 +98,14 @@ fun HomeScreenLandingView(
 
                 AppLogoAndSearchRow(navCheckOutFlowController)
                 UserNameAndRewardRow(profileModel)
-
-                    val textList by remember {
-                    mutableStateOf(
-                        listOf("1000 Bonus Points", "150 Bonus Points", "\$15\u2028Off", "300\n" +
-                                "Bonus Oinnts", "\$12\u2028Off", "20%\u2028Off", "Better\u2028Luck Next Time", "1000 Bonus Points","1000 Bonus Points", "150 Bonus Points")
-                    )
-                }
-
-                val state = rememberSpinWheelState()
-                val scope = rememberCoroutineScope()
-
-                SpinWheel(
-                    state = state,
-                    onClick = { scope.launch { state.animate {pieIndex -> } } }
-                ){ pieIndex ->
-                    Text(
-                        text = textList[pieIndex],
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = font_sf_pro,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 12.sp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                }
-
-               /* PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)
+                PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)
                 {
                     blurBG = it
                 }
                 VoucherRow(navCheckOutFlowController, voucherModel)
                 {
                     blurBG = it
-                }*/
+                }
             }
 
             PullRefreshIndicator(refreshing, state)
