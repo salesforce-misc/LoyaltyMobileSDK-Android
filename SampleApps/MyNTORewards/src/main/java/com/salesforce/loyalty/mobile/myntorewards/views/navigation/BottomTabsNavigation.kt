@@ -28,7 +28,8 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                   benefitViewModel: BenefitViewModelInterface,
                   transactionViewModel: TransactionViewModelInterface,
                   checkOutFlowViewModel: CheckOutFlowViewModelInterface,
-                  scanningViewModel: ScanningViewModelInterface
+                  scanningViewModel: ScanningViewModelInterface,
+                  gameViewModel: GameViewModelInterface
 ) {
     val bottomTabsNavController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -43,7 +44,7 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                 .padding(padding)
                 .background(TextPurpleLightBG).testTag(TEST_TAG_HOME_SCREEN)
         ) {
-            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel) {
+            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel) {
                 bottomBarState.value = it
             }
         }
@@ -61,6 +62,7 @@ fun TabNavigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
+    gameViewModel: GameViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
 
@@ -85,7 +87,7 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreenNavigation( onboardingModel, scanningViewModel){
+            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel){
                 showBottomBar(it)
             }
         }

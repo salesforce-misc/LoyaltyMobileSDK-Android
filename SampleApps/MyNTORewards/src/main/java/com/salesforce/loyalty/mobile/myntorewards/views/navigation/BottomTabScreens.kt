@@ -25,6 +25,8 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameZoneScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.ScratchCardView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
@@ -221,6 +223,7 @@ fun RedeemScreen() {
 fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     scanningViewModel: ScanningViewModelInterface,
+    gameViewModel: GameViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -257,6 +260,14 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.ScanningProgressScreen.route) {
             showBottomBar(false)
 //            ScanningProgress(navController)
+        }
+        composable(route = MoreScreens.GameZoneScreen.route) {
+            showBottomBar(true)
+            GameZoneScreen(navController)
+        }
+        composable(route = MoreScreens.ScratchCardScreen.route) {
+            showBottomBar(true)
+            ScratchCardView(navController, gameViewModel)
         }
     }
 }

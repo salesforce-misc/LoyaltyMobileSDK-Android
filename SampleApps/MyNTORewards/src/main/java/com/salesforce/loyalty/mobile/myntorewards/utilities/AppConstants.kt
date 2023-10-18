@@ -143,6 +143,7 @@ class AppConstants {
         const val PREF_MY_DATE = "MyDatePrefs"
         const val KEY_APP_DATE = "appDate"
 
-
+        const val ROUTE_GAME_ZONE_SCREEN = "game_zone_screen"
+        const val ROUTE_GAME_SCRATCH_CARD = "game_scratch_card"
     }
 }

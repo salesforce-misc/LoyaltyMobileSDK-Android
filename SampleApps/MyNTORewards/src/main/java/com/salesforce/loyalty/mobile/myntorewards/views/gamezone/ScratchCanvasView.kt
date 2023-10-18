@@ -36,6 +36,7 @@ import androidx.lifecycle.MutableLiveData
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardPerforationColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -50,7 +51,7 @@ fun CanvasForScratching(
     onCursorMovedOffset: (Float, Float) -> Unit,
     path: Path,
     scratchThickness: Float,
-    loyaltyAPIManager: LoyaltyAPIManager
+    gameViewModel: GameViewModelInterface
 ) {
     val textMeasurer = rememberTextMeasurer()
     var animate by remember { mutableStateOf(false) }
@@ -63,9 +64,9 @@ fun CanvasForScratching(
 
     var isFirstTime by remember { mutableStateOf(false) }
 
-    var rewardTextMutableLiveData by remember { mutableStateOf(MutableLiveData<String>("Loading...")) }
 
-    val rewardTextValue by rewardTextMutableLiveData.observeAsState()
+
+    val rewardTextValue by gameViewModel.rewardTextLiveData.observeAsState()
 
     AnimatedContent(targetState = animate, modifier = modifier) {
         Box(
@@ -187,8 +188,9 @@ fun CanvasForScratching(
         if (isFirstTime && !apiCalled) {
             LaunchedEffect(true) {
                 apiCalled = true
+                gameViewModel.getGameReward(true)
                 coroutineScope.launch {
-                    val result = loyaltyAPIManager.getGameReward(true)
+                    /*val result = loyaltyAPIManager.getGameReward(true)
                     result.onSuccess {
                         Log.d("Canvas", "API Result SUCCESS: ${it}")
                         val reward: String? =
@@ -199,7 +201,7 @@ fun CanvasForScratching(
                         }
                     }.onFailure {
                         Log.d("Canvas", "API Result FAILURE: ${it}")
-                    }
+                    }*/
                 }
             }
         }

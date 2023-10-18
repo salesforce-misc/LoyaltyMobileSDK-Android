@@ -224,6 +224,12 @@ fun MoreOptionList(
             ) {
                 openBottomSheet("Date Formate")
             }
+            AddMoreOption(
+                imageRes = R.drawable.ic_game_zone,
+                textRes = R.string.header_label_game_zone
+            ) {
+                navHostController.navigate(MoreScreens.GameZoneScreen.route)
+            }
           /*  AddMoreOption(
                 imageRes = R.drawable.ic_favorite,
                 textRes = R.string.header_label_favourite
