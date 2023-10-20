@@ -15,16 +15,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.AnimatedSpinWheel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.DefaultSpinWheelColors
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.SpinWheel
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.SpinWheelColors
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.DefaultSpinWheelDimensions
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.rememberSpinWheelState
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,7 +65,7 @@ fun SpinWheelLandingPage(loyaltyAPIManager: LoyaltyAPIManager) {
         }
         if(wheelValuesLoaded)
         {
-            Wheel(gamesList, colourList)
+            Wheel(loyaltyAPIManager, gamesList, colourList)
         }
     }
 
@@ -70,9 +74,9 @@ fun SpinWheelLandingPage(loyaltyAPIManager: LoyaltyAPIManager) {
 }
 
 @Composable
-fun Wheel(gamesList: MutableList<String>, colourList: MutableList<Color>)
+fun Wheel(loyaltyAPIManager:LoyaltyAPIManager, gamesList: MutableList<String>, colourList: MutableList<Color>)
 {
-    val state = rememberSpinWheelState()
+    val state = rememberSpinWheelState(loyaltyAPIManager, gamesList.size)
     val scope = rememberCoroutineScope()
     Column {
         val textList by remember { mutableStateOf(gamesList) }
@@ -86,23 +90,22 @@ fun Wheel(gamesList: MutableList<String>, colourList: MutableList<Color>)
             selectorColor = selectorColor,
             pieColors = colourList
         )
+        val defaultDimensions=  DefaultSpinWheelDimensions(
+            spinWheelSize = 296.dp,
+            frameWidth = 4.dp,
+            selectorWidth = 12.dp,
+        )
+        var coroutineScope: CoroutineScope = rememberCoroutineScope()
 
-        SpinWheel(
+        AnimatedSpinWheel(
+
             state = state,
-            onClick = { scope.launch { state.animate {pieIndex -> } } },
-            colors = defaultColours
-
-        ){ pieIndex ->
-            Text(
-                text = textList[pieIndex],
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = font_sf_pro,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                fontSize = 12.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
+            size = defaultDimensions.spinWheelSize().value,
+            frameWidth = defaultDimensions.frameWidth().value,
+            selectorWidth = defaultDimensions.selectorWidth().value,
+            pieColors = defaultColours.pieColors().value,
+            onClick = { scope.launch { state.animate(coroutineScope) {pieIndex -> } } },
+            wheelData=textList
+        )
     }
 }

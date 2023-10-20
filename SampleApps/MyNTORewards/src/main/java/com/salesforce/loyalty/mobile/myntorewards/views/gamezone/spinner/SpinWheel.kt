@@ -8,68 +8,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-
-@Composable
-fun SpinWheel(
-    modifier: Modifier = Modifier,
-    state: SpinWheelState = rememberSpinWheelState(),
-    dimensions: SpinWheelDimensions = SpinWheelDefaults.spinWheelDimensions(),
-    colors: SpinWheelColors = SpinWheelDefaults.spinWheelColors(),
-    onClick: () -> Unit = {},
-    content: @Composable BoxScope.(pieIndex: Int) -> Unit
-) {
-    AnimatedSpinWheel(
-        modifier = modifier,
-        state = state,
-        size = dimensions.spinWheelSize().value,
-        frameWidth = dimensions.frameWidth().value,
-        selectorWidth = dimensions.selectorWidth().value,
-        frameColor = colors.frameColor().value,
-        dividerColor = colors.dividerColor().value,
-        selectorColor = colors.selectorColor().value,
-        pieColors = colors.pieColors().value,
-        onClick = onClick,
-        content = content
-    )
-}
-
-object SpinWheelDefaults{
-    @Composable
-    fun spinWheelColors(
-        frameColor: Color = Color(0xFFFFFFFF),
-        dividerColor: Color = Color.White,
-        selectorColor: Color = Color(0xFFFF0000),
-        pieColors: List<Color> = listOf(
-            Color(0xFFFF4B3A),
-            Color(0xFFFDC301),
-            Color(0xFF01CD6C),
-            Color(0xFF0099DD),
-            Color(0xFFFF4B3A),
-            Color(0xFFFDC301),
-            Color(0xFF01CD6C),
-            Color(0xFF0099DD),
-            Color(0xFF0099DD),
-            Color(0xFFFF4B3A),
-        )
-    ): SpinWheelColors = DefaultSpinWheelColors(
-        frameColor = frameColor,
-        dividerColor = dividerColor,
-        selectorColor = selectorColor,
-        pieColors = pieColors
-    )
-
-    @Composable
-    fun spinWheelDimensions(
-        spinWheelSize: Dp = 296.dp,
-        frameWidth: Dp = 4.dp,
-        selectorWidth: Dp = 12.dp,
-    ): SpinWheelDimensions = DefaultSpinWheelDimensions(
-        spinWheelSize = spinWheelSize,
-        frameWidth = frameWidth,
-        selectorWidth = selectorWidth
-    )
-}
 
 interface SpinWheelColors {
     @Composable
@@ -121,7 +59,7 @@ interface SpinWheelDimensions {
 }
 
 @Immutable
-private class DefaultSpinWheelDimensions(
+class DefaultSpinWheelDimensions(
     private val spinWheelSize: Dp,
     private val frameWidth: Dp,
     private val selectorWidth: Dp

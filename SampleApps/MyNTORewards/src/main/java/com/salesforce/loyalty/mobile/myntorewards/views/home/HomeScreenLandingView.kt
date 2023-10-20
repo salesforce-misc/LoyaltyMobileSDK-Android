@@ -45,8 +45,6 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.SpinWheel
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.rememberSpinWheelState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

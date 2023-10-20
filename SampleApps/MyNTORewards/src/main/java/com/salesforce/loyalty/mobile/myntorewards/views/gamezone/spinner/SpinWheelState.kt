@@ -1,15 +1,23 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
-import androidx.annotation.IntRange
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
+import androidx.test.core.app.ActivityScenario.launch
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 data class SpinWheelState(
+    internal val loyaltyAPIManager: LoyaltyAPIManager,
     internal val pieCount: Int,
     private val durationMillis: Int,
     private val delayMillis: Int,
@@ -22,10 +30,10 @@ data class SpinWheelState(
     internal var rotation by mutableStateOf(Animatable(startDegree))
     private var spinAnimationState by mutableStateOf(SpinAnimationState.STOPPED)
 
-    suspend fun animate(onFinish: (pieIndex: Int) -> Unit = {}) {
+    suspend fun animate(coroutineScope: CoroutineScope, onFinish: (pieIndex: Int) -> Unit = {}) {
         when(spinAnimationState) {
             SpinAnimationState.STOPPED -> {
-                spin(onFinish = onFinish)
+                spin(coroutineScope, onFinish = onFinish)
             }
             SpinAnimationState.SPINNING -> {
                 reset()
@@ -33,21 +41,37 @@ data class SpinWheelState(
         }
     }
 
-    suspend fun spin(onFinish: (pieIndex: Int) -> Unit = {}) {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun spin(coroutineScope: CoroutineScope, onFinish: (pieIndex: Int) -> Unit = {}) {
         if(spinAnimationState == SpinAnimationState.STOPPED) {
 
             spinAnimationState = SpinAnimationState.SPINNING
 
-            val randomRotationDegree = generateRandomRotationDegree()
-
-            rotation.animateTo(
-                targetValue = (360f * rotationPerSecond * (durationMillis / 1000)) + (resultDegree ?: randomRotationDegree),
+            val randomRotationDegree = generateRandomRotationDegree(pieCount)
+            Log.d("Akash random", ""+randomRotationDegree)
+            Log.d("Akash result", ""+resultDegree)
+          /*  rotation.animateTo(
+                targetValue = (360f * 4 * (6000 / 1000)),
                 animationSpec = tween(
-                    durationMillis = durationMillis,
+                    durationMillis = 2000,
                     delayMillis = delayMillis,
-                    easing = easing
+                    easing = LinearEasing
                 )
-            )
+            )*/
+
+
+            coroutineScope.launch {
+                rotation.snapTo(resultDegree ?:randomRotationDegree)
+                rotation.animateTo(
+                    targetValue = (360f * rotationPerSecond * (durationMillis / 1000)),
+                    animationSpec = tween(
+                        durationMillis = 24000,
+                        delayMillis = delayMillis,
+                        easing = easing
+                    )
+                )
+            }
+
 
             val pieDegree = 360f / pieCount
             val quotient = (resultDegree ?: randomRotationDegree).toInt() / pieDegree.toInt()
@@ -55,14 +79,40 @@ data class SpinWheelState(
 
             onFinish(resultIndex)
 
-            rotation.snapTo(resultDegree ?:randomRotationDegree)
+            coroutineScope.launch {
+                val result = loyaltyAPIManager.getGames(true)
+                rotation.snapTo(resultDegree ?:randomRotationDegree)
+                result.onSuccess {
+                    Logger.d("getGames", "after delay")
+                    Log.d("Akash", "get Game Response")
+                    rotation.animateTo(
+                        targetValue = (360f * rotationPerSecond * (durationMillis / 1000)) + (resultDegree ?: randomRotationDegree),
+                        animationSpec = tween(
+                            durationMillis = durationMillis,
+                            delayMillis = delayMillis,
+                            easing = easing
+                        )
+                    )
+                    autoSpinDelay?.let {
+                        delay(it)
+                        spin(coroutineScope)
+                    }
+
+                }.onFailure {
+                    Log.d("Games", "API Result FAILURE: ${it}")
+                }
+            }
+
+
+
 
             spinAnimationState = SpinAnimationState.STOPPED
 
-            autoSpinDelay?.let {
-                delay(it)
-                spin()
-            }
+
+
+            Log.d("Akash target", ""+(360f * rotationPerSecond * (durationMillis / 1000)))
+
+
         }
     }
 
@@ -75,9 +125,17 @@ data class SpinWheelState(
         }
     }
 
-    private fun generateRandomRotationDegree(): Float {
-        return Random().nextInt(360).toFloat()
+    private fun generateRandomRotationDegree(pieCount: Int): Float {
+
+        val size= pieCount
+        val factor = 360/size
+        val stopAtWheelIndex= 2
+        val returnFactor = 360/(size*2)+  ((size-1)-stopAtWheelIndex) * (360/size)
+        Log.d("returnFactor",""+ returnFactor)
+        return returnFactor.toFloat()
+
     }
+
 }
 
 enum class SpinAnimationState {
@@ -86,7 +144,8 @@ enum class SpinAnimationState {
 
 @Composable
 fun rememberSpinWheelState(
-    @IntRange(from = 2, to = 8) pieCount: Int = 8,
+   loyaltyAPIManager: LoyaltyAPIManager,
+    pieCount: Int,
     durationMillis: Int = 12000,
     delayMillis: Int = 0,
     rotationPerSecond: Float = 1f,
@@ -97,6 +156,7 @@ fun rememberSpinWheelState(
 ): SpinWheelState {
     return remember {
         SpinWheelState(
+            loyaltyAPIManager,
             pieCount,
             durationMillis,
             delayMillis,

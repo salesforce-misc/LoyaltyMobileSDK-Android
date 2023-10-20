@@ -92,8 +92,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         setContent {
             if (loginSuccess == true) {
 
-               // SpinWheelLandingPage(loyaltyAPIManager)
-                HomeTabScreen(
+                SpinWheelLandingPage(loyaltyAPIManager)
+               /* HomeTabScreen(
                     profileModel,
                     promotionModel,
                     voucherModel,
@@ -102,7 +102,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel
-                )
+                )*/
             } else {
                 MainScreenStart(
                     profileModel,

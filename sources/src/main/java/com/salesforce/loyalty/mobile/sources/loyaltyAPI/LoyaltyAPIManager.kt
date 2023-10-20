@@ -13,6 +13,7 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import kotlinx.coroutines.delay
 import java.io.InputStreamReader
 
 /**
@@ -349,6 +350,8 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             reader.close()
             val response =
                 Gson().fromJson(content, Games::class.java)
+            Logger.d("getGames", "before delay")
+            delay(5000)
             return Result.success(response)
         } else {
             return mLoyaltyClient.getNetworkClient().getGames(

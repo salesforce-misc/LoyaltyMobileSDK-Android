@@ -18,7 +18,7 @@ import java.lang.Math.sin
 internal fun SpinWheelContent(
     modifier: Modifier = Modifier,
     spinSize: Dp,
-    @IntRange(from = 2, to = 8) pieCount: Int,
+    @IntRange(from = 2, to = 16) pieCount: Int,
     rotationDegree: Float,
     content: @Composable BoxScope.(pieIndex: Int) -> Unit
 ) {
