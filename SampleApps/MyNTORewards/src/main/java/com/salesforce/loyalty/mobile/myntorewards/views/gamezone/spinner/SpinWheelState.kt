@@ -84,7 +84,6 @@ data class SpinWheelState(
                 rotation.snapTo(resultDegree ?:randomRotationDegree)
                 result.onSuccess {
                     Logger.d("getGames", "after delay")
-                    Log.d("Akash", "get Game Response")
                     rotation.animateTo(
                         targetValue = (360f * rotationPerSecond * (durationMillis / 1000)) + (resultDegree ?: randomRotationDegree),
                         animationSpec = tween(
@@ -102,17 +101,7 @@ data class SpinWheelState(
                     Log.d("Games", "API Result FAILURE: ${it}")
                 }
             }
-
-
-
-
             spinAnimationState = SpinAnimationState.STOPPED
-
-
-
-            Log.d("Akash target", ""+(360f * rotationPerSecond * (durationMillis / 1000)))
-
-
         }
     }
 

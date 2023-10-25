@@ -3,31 +3,37 @@ package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 import androidx.annotation.IntRange
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import java.lang.Math.cos
 import java.lang.Math.sin
 
 @Composable
 internal fun SpinWheelContent(
-    modifier: Modifier = Modifier,
     spinSize: Dp,
     @IntRange(from = 2, to = 16) pieCount: Int,
     rotationDegree: Float,
-    content: @Composable BoxScope.(pieIndex: Int) -> Unit
+    wheelData: MutableList<String>,
 ) {
     val pieAngle = 360f / pieCount
     val startOffset = 180
     val radius = (spinSize.value / 2)
-    val pieRadius = getPieRadius(pieCount, radius)
+    val pieRadius = getPieRadius(pieCount, radius) //provided offset info for content
     Box(
-        modifier = modifier
+        modifier = Modifier.padding(10.dp)
             .size(spinSize),
         contentAlignment = Alignment.Center
     ){
@@ -37,26 +43,22 @@ internal fun SpinWheelContent(
             val offsetY = (pieRadius * cos(Math.toRadians(startAngle.toDouble()))).toFloat()
             Box(
                 modifier = Modifier
-                    .size(getPieBoxSize(pieCount, spinSize))
+                    .size(spinSize / 4) //sets the size of box based on different sizes
                     .offset(x = Dp(offsetX), y = Dp(offsetY)),
                 contentAlignment = Alignment.Center
             ) {
-                content(pieIndex)
+                Text(
+                    text = wheelData[pieIndex],
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = font_sf_pro,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
             }
         }
-    }
-}
-
-private fun getPieBoxSize(pieCount: Int, spinSize: Dp): Dp{
-    return when(pieCount){
-        2 -> spinSize / 3
-        3 -> spinSize / 4
-        4 -> spinSize / 4
-        5 -> spinSize / 5
-        6 -> spinSize / 5
-        7 -> spinSize / 6
-        8 -> spinSize / 6
-        else -> spinSize / 2
     }
 }
 
