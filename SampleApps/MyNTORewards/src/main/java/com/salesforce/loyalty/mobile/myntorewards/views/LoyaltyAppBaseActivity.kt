@@ -106,7 +106,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     benefitModel,
                     transactionModel,
                     checkoutFlowModel,
-                    scanningViewModel
+                    scanningViewModel,
+                    gameViewModel
                 )
             } else {
                 MainScreenStart(
@@ -117,7 +118,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     benefitModel,
                     transactionModel,
                     checkoutFlowModel,
-                    scanningViewModel
+                    scanningViewModel,
+                    gameViewModel
                 )
                 // Added for testing purpose.
                 //ScratchCardView(loyaltyAPIManager)
