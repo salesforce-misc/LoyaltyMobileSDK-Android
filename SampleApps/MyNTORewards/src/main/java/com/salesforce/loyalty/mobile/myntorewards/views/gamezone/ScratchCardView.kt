@@ -18,8 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 data class ScratchedPath(
@@ -29,7 +31,7 @@ data class ScratchedPath(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ScratchCardView(loyaltyAPIManager: LoyaltyAPIManager) {
+fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewModelInterface) {
     val overlayImage = ImageBitmap.imageResource(id = R.drawable.overlay_img)
     val currentState = remember { mutableStateOf(ScratchedPath(path = Path())) }
     val movedState = remember { mutableStateOf<Offset?>(null) }
@@ -37,13 +39,13 @@ fun ScratchCardView(loyaltyAPIManager: LoyaltyAPIManager) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(ScratchCardPerforationColor)
+            .background(LightPurple)
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .fillMaxHeight()
-                .background(MyProfileScreenBG)
+                .background(LightPurple)
         ) {
             Column(
                 verticalArrangement = Arrangement.Top,
@@ -61,6 +63,7 @@ fun ScratchCardView(loyaltyAPIManager: LoyaltyAPIManager) {
                         .padding(top = 10.dp, bottom = 10.dp)
                         .clickable {
                             // Add action for back button press.
+                            navController.popBackStack()
                         }
                 )
             }
@@ -100,7 +103,7 @@ fun ScratchCardView(loyaltyAPIManager: LoyaltyAPIManager) {
             },
             path = currentState.value.path,
             scratchThickness = currentState.value.thickness,
-            loyaltyAPIManager = loyaltyAPIManager
+            gameViewModel = gameViewModel
         )
 
         Column(

@@ -1,8 +1,10 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.view.*
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
@@ -13,7 +15,6 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.*
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -88,12 +89,16 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             ViewModelProvider(this, ScanningViewModelFactory(receiptManager)).get(
                 ScanningViewModel::class.java
             )
-
+        val gameViewModel: GameViewModel =
+            ViewModelProvider(this, GameViewModelFactory(loyaltyAPIManager)).get(
+                GameViewModel::class.java
+            )
         setContent {
             if (loginSuccess == true) {
 
-                SpinWheelLandingPage(loyaltyAPIManager)
-               /* HomeTabScreen(
+               
+                //SpinWheelLandingPage(loyaltyAPIManager)
+                HomeTabScreen(
                     profileModel,
                     promotionModel,
                     voucherModel,
@@ -102,7 +107,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel
-                )*/
+                )
             } else {
                 MainScreenStart(
                     profileModel,
@@ -129,7 +134,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             benefitModel,
             transactionModel,
             checkoutFlowModel,
-            scanningViewModel
+            scanningViewModel,
+            gameViewModel
         )
 
     }
@@ -150,7 +156,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                                    benefitModel: BenefitViewModelInterface,
                                    transactionModel: TransactionViewModelInterface,
                                    checkoutFlowModel: CheckOutFlowViewModelInterface,
-                                   scanningViewModel: ScanningViewModelInterface
+                                   scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface
     ) {
         onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
             run {
@@ -166,7 +172,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                             benefitModel,
                             transactionModel,
                             checkoutFlowModel,
-                            scanningViewModel
+                            scanningViewModel,
+                            gameViewModel
                         )
                     }
                 }
