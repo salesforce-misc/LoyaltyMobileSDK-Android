@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,8 +15,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,10 +35,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
-import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
-import com.salesforce.loyalty.mobile.myntorewards.utilities.ReceiptScanningBottomSheetType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ROW_STORE_DETAILS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
@@ -51,10 +51,10 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 fun ShowScannedReceiptScreen(
     navHostController: NavHostController,
     scanningViewModel: ScanningViewModelInterface,
-    analyzeExpenseResponse: AnalyzeExpenseResponse?,
+    /*analyzeExpenseResponse: AnalyzeExpenseResponse?,
     closePopup: () -> Unit,
     openCongratsPopup: (popupStatus: ReceiptScanningBottomSheetType) -> Unit,
-    setTotalPoints: (totalPoints: String?) -> Unit
+    setTotalPoints: (totalPoints: String?) -> Unit*/
 ) {
     var congPopupState by remember { mutableStateOf(false) }
     var submissionTryAgainState by remember { mutableStateOf(false) }
@@ -64,19 +64,38 @@ fun ShowScannedReceiptScreen(
     var cancelInProgress by remember { mutableStateOf(false) }
     var inProgress by remember { mutableStateOf(false) }
     var statusUpdateInProgress by remember { mutableStateOf(false) }
+    val analyzeExpenseResponseStr = navHostController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_ANALYZED_AWS_RESPONSE)
+    val analyzeExpenseResponse = Gson().fromJson(analyzeExpenseResponseStr, AnalyzeExpenseResponse::class.java)
     val itemLists = analyzeExpenseResponse?.lineItems
     val context: Context = LocalContext.current
     Box() {
         Column(
             modifier = Modifier
-                .fillMaxHeight(0.92f)
-                .fillMaxWidth()
-                .background(MyProfileScreenBG, RoundedCornerShape(22.dp))
+                .fillMaxSize()
+                .background(MyProfileScreenBG)
                 .padding(16.dp)
                 .testTag(TEST_TAG_RECEIPT_TABLE_SCREEN),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .background(Color.White),
+            ) {
+                Spacer(modifier = Modifier.height(15.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.back_arrow),
+                    contentDescription = stringResource(id = R.string.cd_receipt_back_button),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .padding(top = 16.dp, start = 8.dp)
+                        .clickable {
+                            navHostController.popBackStack()
+                        }
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse?.receiptNumber,
@@ -84,7 +103,7 @@ fun ShowScannedReceiptScreen(
                     fontSize = 16.sp,
                     lineHeight = 20.sp,
                     fontFamily = font_sf_pro,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = LighterBlack,
                 )
             )
@@ -125,7 +144,8 @@ fun ShowScannedReceiptScreen(
 
 
             Column(
-                modifier = Modifier.weight(0.2f)
+                modifier = Modifier
+                    .weight(0.2f)
                     .padding(16.dp)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,
@@ -194,15 +214,15 @@ fun ShowScannedReceiptScreen(
                     statusUpdateInProgress = false
                     val totalPoint =
                         (receiptStatusUpdateViewState as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points
-                    setTotalPoints(totalPoint)
-                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
+                   /* setTotalPoints(totalPoint)
+                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)*/
                 }
             }
 
             ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure -> {
                 if (statusUpdateInProgress) {
                     statusUpdateInProgress = false
-                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
+//                    openCongratsPopup(ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS)
                 }
             }
 
@@ -247,7 +267,7 @@ fun ShowScannedReceiptScreen(
             UploadRecieptCancelledViewState.UploadRecieptCancelledSuccess -> {
                 if (cancelInProgress) {
                     cancelInProgress = false
-                    closePopup()
+//                    closePopup()
                     navHostController.popBackStack(
                         MoreScreens.CaptureImageScreen.route,
                         false
@@ -261,7 +281,7 @@ fun ShowScannedReceiptScreen(
             UploadRecieptCancelledViewState.UploadRecieptCancelledFailure -> {
                 if (cancelInProgress) {
                     cancelInProgress = false
-                    closePopup()
+//                    closePopup()
                     navHostController.popBackStack(
                         MoreScreens.CaptureImageScreen.route,
                         false

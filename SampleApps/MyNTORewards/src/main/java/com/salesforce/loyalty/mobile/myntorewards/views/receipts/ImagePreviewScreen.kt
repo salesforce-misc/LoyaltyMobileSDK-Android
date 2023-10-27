@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import android.graphics.Bitmap
 import android.util.Base64
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
@@ -56,6 +58,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_UPLOAD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
@@ -191,7 +194,8 @@ fun ImagePreviewScreen(
             ) {
 
                 Button(
-                    modifier = Modifier.testTag(TEST_TAG_RECEIPT_UPLOAD)
+                    modifier = Modifier
+                        .testTag(TEST_TAG_RECEIPT_UPLOAD)
                         .fillMaxWidth(), onClick = {
                         processClicked = true
 
@@ -242,6 +246,7 @@ fun ImagePreviewScreen(
                     val context = LocalContext.current
                     LaunchedEffect(key1 = true) {
                         scanningViewModel.analyzeExpense(context, b)
+
                     }
                 }
                 processClicked = false
@@ -250,8 +255,17 @@ fun ImagePreviewScreen(
                 is ReceiptScanningViewState.ReceiptScanningSuccess -> {
                     if (progressPopupState) {
                         progressPopupState = false
-                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
-                        openBottomSheet()
+                        /*currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
+                        openBottomSheet()*/
+                        scannedReceiptLiveData?.let { response ->
+
+                            navController.currentBackStackEntry?.arguments?.putString(
+                                AppConstants.KEY_ANALYZED_AWS_RESPONSE,
+                                Gson().toJson(response)
+                            )
+//                            closeBottomSheet()
+                            navController.navigate(MoreScreens.ScannedReceiptScreen.route)
+                        }
                     }
                 }
 

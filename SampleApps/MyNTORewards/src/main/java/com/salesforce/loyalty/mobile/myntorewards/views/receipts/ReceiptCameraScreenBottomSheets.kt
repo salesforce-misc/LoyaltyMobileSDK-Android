@@ -33,7 +33,7 @@ fun OpenReceiptBottomSheetContent(
         }
 
         ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT -> {
-            ShowScannedReceiptScreen(
+            /*ShowScannedReceiptScreen(
                 navController,
                 scanningViewModel,
                 scannedReceiptLiveData,
@@ -45,7 +45,7 @@ fun OpenReceiptBottomSheetContent(
                 },
                 setTotalPoints = {
                     totalPoints = it
-                })
+                })*/
         }
 
         ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS -> {

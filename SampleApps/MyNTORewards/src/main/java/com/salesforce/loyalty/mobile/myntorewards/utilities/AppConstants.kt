@@ -115,6 +115,7 @@ class AppConstants {
         val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
 
         const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
+        const val KEY_ANALYZED_AWS_RESPONSE = "key_analyzed_aws_response"
         const val KEY_PURCHASE_DATE= "key_purchase_date"
         const val KEY_RECEIPT_ID = "key_receipt_id"
         const val KEY_RECEIPT_STATUS = "key_receipt_status"
