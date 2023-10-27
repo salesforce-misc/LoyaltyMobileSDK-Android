@@ -25,7 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
@@ -49,7 +51,7 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 @Composable
 fun ShowScannedReceiptScreen(
-    navHostController: NavHostController,
+    navHostController: NavController,
     scanningViewModel: ScanningViewModelInterface,
     /*analyzeExpenseResponse: AnalyzeExpenseResponse?,
     closePopup: () -> Unit,
@@ -64,7 +66,10 @@ fun ShowScannedReceiptScreen(
     var cancelInProgress by remember { mutableStateOf(false) }
     var inProgress by remember { mutableStateOf(false) }
     var statusUpdateInProgress by remember { mutableStateOf(false) }
-    val analyzeExpenseResponseStr = navHostController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_ANALYZED_AWS_RESPONSE)
+
+    val analyzeExpenseResponseStr = navHostController.previousBackStackEntry?.savedStateHandle?.get<String>(
+        AppConstants.KEY_ANALYZED_AWS_RESPONSE
+    )
     val analyzeExpenseResponse = Gson().fromJson(analyzeExpenseResponseStr, AnalyzeExpenseResponse::class.java)
     val itemLists = analyzeExpenseResponse?.lineItems
     val context: Context = LocalContext.current

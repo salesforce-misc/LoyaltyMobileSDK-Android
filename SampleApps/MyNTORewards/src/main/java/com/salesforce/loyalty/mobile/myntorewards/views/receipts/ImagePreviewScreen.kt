@@ -259,12 +259,12 @@ fun ImagePreviewScreen(
                         openBottomSheet()*/
                         scannedReceiptLiveData?.let { response ->
 
-                            navController.currentBackStackEntry?.arguments?.putString(
-                                AppConstants.KEY_ANALYZED_AWS_RESPONSE,
-                                Gson().toJson(response)
-                            )
-//                            closeBottomSheet()
-                            navController.navigate(MoreScreens.ScannedReceiptScreen.route)
+
+                            navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                set(AppConstants.KEY_ANALYZED_AWS_RESPONSE, Gson().toJson(response))
+                            }
+
+                           navController.navigate(MoreScreens.ScannedReceiptScreen.route)
                         }
                     }
                 }
