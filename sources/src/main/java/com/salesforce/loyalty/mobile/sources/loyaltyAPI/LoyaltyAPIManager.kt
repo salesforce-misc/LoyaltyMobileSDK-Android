@@ -13,6 +13,7 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import kotlinx.coroutines.delay
 import java.io.InputStreamReader
 
 /**
@@ -335,6 +336,26 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         } else {
             return mLoyaltyClient.getNetworkClient().getGameReward(
                 LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.GameReward()),
+            )
+        }
+    }
+
+    suspend fun getGames(mockResponse: Boolean): Result<Games> {
+        Logger.d(TAG, "getGames")
+
+        if (mockResponse) {
+            val reader =
+                InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("Games.json"))
+            val content: String = reader.readText()
+            reader.close()
+            val response =
+                Gson().fromJson(content, Games::class.java)
+            Logger.d("getGames", "before delay")
+            delay(5000)
+            return Result.success(response)
+        } else {
+            return mLoyaltyClient.getNetworkClient().getGames(
+                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.Games()),
             )
         }
     }
