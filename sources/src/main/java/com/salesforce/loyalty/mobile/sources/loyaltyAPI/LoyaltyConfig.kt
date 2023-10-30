@@ -44,6 +44,7 @@ object LoyaltyConfig {
         class Vouchers(val programName: String, val membershipNumber: String): Resource()
 
         class GameReward(): Resource()
+        class Games(): Resource()
     }
 
     /**
@@ -76,6 +77,10 @@ object LoyaltyConfig {
             }
             is Resource.GameReward -> {
                 instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/game/definition/Definition123/Participant/Participant123/Play"
+            }
+
+            is Resource.Games -> {
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/game/participant/Participant123/Games"
             }
         }
     }

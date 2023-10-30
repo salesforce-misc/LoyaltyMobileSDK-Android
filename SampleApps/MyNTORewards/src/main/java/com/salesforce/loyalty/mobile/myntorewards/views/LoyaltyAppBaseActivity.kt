@@ -95,6 +95,9 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             )
         setContent {
             if (loginSuccess == true) {
+
+               
+                //SpinWheelLandingPage(loyaltyAPIManager)
                 HomeTabScreen(
                     profileModel,
                     promotionModel,
@@ -119,7 +122,9 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     gameViewModel
                 )
                 // Added for testing purpose.
-//                ScratchCardView(loyaltyAPIManager)
+                //ScratchCardView(loyaltyAPIManager)
+
+
             }
         }
         observeSessionExpiry(onboardingModel, forceAuthManager)

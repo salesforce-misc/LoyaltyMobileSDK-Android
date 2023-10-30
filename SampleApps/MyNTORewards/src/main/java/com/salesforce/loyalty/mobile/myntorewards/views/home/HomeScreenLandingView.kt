@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -45,6 +46,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -94,7 +96,6 @@ fun HomeScreenLandingView(
 
                 AppLogoAndSearchRow(navCheckOutFlowController)
                 UserNameAndRewardRow(profileModel)
-
                 PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)
                 {
                     blurBG = it

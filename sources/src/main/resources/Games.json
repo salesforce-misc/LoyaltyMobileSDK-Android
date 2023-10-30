@@ -1,0 +1,111 @@
+{
+  "message": null,
+  "status": true,
+  "GameDefinitions": [
+    {
+      "Name": "",
+      "Description": "",
+      "Type": "",
+      "Start Date": "",
+      "End Date": "",
+      "Timeout Duration": "",
+      "Status": "",
+      "GameReward": {
+        "EligibleRewards": [
+          {
+            "Name": "20%\u2028Off",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "FF4B3A",
+            "Image": ""
+          },
+          {
+            "Name": "$12\u2028Off",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "FDC301",
+            "Image": ""
+          },
+          {
+            "Name": "$15\u2028Off",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "01CD6C",
+            "Image": ""
+          },
+          {
+            "Name": "300\n Bonus Points",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "0099DD",
+            "Image": ""
+          },
+          {
+            "Name": "Better\u2028Luck Next Time",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "FF4B3A",
+            "Image": ""
+          },
+          {
+            "Name": "5000 Bonus Points",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "FDC301",
+            "Image": ""
+          },
+          {
+            "Name": "1000 Bonus Points",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "01CD6C",
+            "Image": ""
+          },
+          {
+            "Name": "150 Bonus Points",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "0099DD",
+            "Image": ""
+          }
+        ],
+        "AssignedRewards": [
+          {
+            "Name": "",
+            "Description": "",
+            "Reward Type": "",
+            "Reward Definition": "",
+            "Reward Value": "",
+            "Color": "0099DD",
+            "Image": "",
+            "Expiration Date": "",
+            "Issued Reward Reference": ""
+          }
+        ],
+        "ExpiredRewards": [
+          {
+            "Name": "",
+            "Description": "",
+            "Reward Type": ""
+          }
+        ]
+      }
+    }
+  ]
+}
