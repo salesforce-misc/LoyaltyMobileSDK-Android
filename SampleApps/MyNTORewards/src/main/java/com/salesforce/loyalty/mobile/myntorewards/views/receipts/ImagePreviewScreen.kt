@@ -127,12 +127,7 @@ fun ImagePreviewScreen(
                 OpenReceiptBottomSheetContent(
                     bottomSheetType = bottomSheetType,
                     navController = navController,
-                    scannedReceiptLiveData = scannedReceiptLiveData,
-                    scanningViewModel = scanningViewModel,
                     errorMessage = errorMessage,
-                    setBottomSheetState = {
-                        currentPopupState = it
-                    },
                     closeSheet = { closeBottomSheet() },
                 )
             }
@@ -258,12 +253,9 @@ fun ImagePreviewScreen(
                         /*currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
                         openBottomSheet()*/
                         scannedReceiptLiveData?.let { response ->
-
-
                             navController.currentBackStackEntry?.savedStateHandle?.apply {
                                 set(AppConstants.KEY_ANALYZED_AWS_RESPONSE, Gson().toJson(response))
                             }
-
                            navController.navigate(MoreScreens.ScannedReceiptScreen.route)
                         }
                     }

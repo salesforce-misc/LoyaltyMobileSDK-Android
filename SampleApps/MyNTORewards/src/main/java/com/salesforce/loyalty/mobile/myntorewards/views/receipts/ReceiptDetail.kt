@@ -154,7 +154,13 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
             Spacer(modifier = Modifier.height(1.dp))
             receiptId?.let {
                 processedAWSReponse?.let { it1 ->
-                    ManualReview(scanningViewModel, it, purchaseDate, it1, totalPoints, closePopup = {
+                    var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
+                        val gson = Gson()
+                        analyzeExpenseResponse = gson.fromJson<AnalyzeExpenseResponse>(
+                            it,
+                            AnalyzeExpenseResponse::class.java
+                        )
+                    ManualReview(scanningViewModel, it, purchaseDate, analyzeExpenseResponse, totalPoints, closePopup = {
                         openBottomsheet = false
                         closeBottomSheet()
                         openReceiptDetail = it
