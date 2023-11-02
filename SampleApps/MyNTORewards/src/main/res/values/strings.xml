@@ -212,6 +212,10 @@
 
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
-
+    <string name="receipt_progress_subheading">Hang in there! This may take a minute.</string>
+    <string name="receipt_progress_step_1">Uploading receipt image…</string>
+    <string name="receipt_progress_step_2">Reading receipt information… </string>
+    <string name="receipt_progress_step_3">Processing receipt information…</string>
+    <string name="receipt_progress_step_4">Receipt Scanning Process Completed</string>
 
 </resources>

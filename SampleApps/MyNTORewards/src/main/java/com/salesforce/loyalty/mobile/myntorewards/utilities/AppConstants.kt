@@ -88,6 +88,10 @@ class AppConstants {
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
+        const val RECEIPT_PROGRESS_STARTED = "progress_started"
+        const val RECEIPT_PROGRESS_FIRST_STEP = "progress_first_step_completed"
+        const val RECEIPT_PROGRESS_SECOND_STEP = "progress_second_step_completed"
+        const val RECEIPT_PROGRESS_COMPLETED = "progress_completed"
         const val ORDER_ID = "orderID"
         const val PROMOTION_NAME = "promotionName"
 
