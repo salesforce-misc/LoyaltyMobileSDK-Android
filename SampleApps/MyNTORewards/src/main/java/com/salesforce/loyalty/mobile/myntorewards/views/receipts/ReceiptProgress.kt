@@ -220,7 +220,7 @@ fun ProgressText(currentProgress: String) {
             fontWeight = FontWeight.Bold,
             color = LighterBlack,
             textAlign = TextAlign.Center,
-            fontSize = 16.sp,
+            fontSize = 20.sp,
             modifier = Modifier
                 .fillMaxWidth()
         )
