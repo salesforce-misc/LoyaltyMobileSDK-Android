@@ -153,11 +153,11 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
             receiptId?.let {
-                processedAWSReponse?.let { it1 ->
+                processedAWSReponse?.let { awsResponse ->
                     var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
                         val gson = Gson()
                         analyzeExpenseResponse = gson.fromJson<AnalyzeExpenseResponse>(
-                            it,
+                            awsResponse,
                             AnalyzeExpenseResponse::class.java
                         )
                     ManualReview(scanningViewModel, it, purchaseDate, analyzeExpenseResponse, totalPoints, closePopup = {

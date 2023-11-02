@@ -264,6 +264,7 @@ fun ShowScannedReceiptScreen(
                                 modifier = Modifier
                                     .padding(top = 12.dp, bottom = 3.dp)
                                     .clickable {
+                                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_MANUAL_REVIEW
                                         openBottomSheet()
                                     },
                                 textAlign = TextAlign.Center,
