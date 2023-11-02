@@ -2,13 +2,10 @@ package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,61 +14,86 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_PROGRESS_FIRST_STEP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_PROGRESS_SECOND_STEP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_PROGRESS_STARTED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_PROGRESS_COMPLETED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ReceiptProgressScreen() {
-
+fun ReceiptProgressScreen(
+    navHostController: NavHostController,
+    closePopup: () -> Unit,
+    currentProgress: String
+) {
 
     Column(
         verticalArrangement = Arrangement.Center,
 
         modifier = Modifier
-            .fillMaxSize()
-            .background(MyProfileScreenBG)
+            .fillMaxHeight(0.92f)
+            .fillMaxWidth()
+            .background(
+                MyProfileScreenBG,
+                RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE)
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Column(
+            modifier = Modifier
+                .weight(0.9f)
+                .background(MyProfileScreenBG)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
 
-
-        val progresStatus: List<String> = mutableListOf(
-            RECEIPT_PROGRESS_STARTED,
-            RECEIPT_PROGRESS_FIRST_STEP,
-            RECEIPT_PROGRESS_SECOND_STEP,
-            RECEIPT_PROGRESS_COMPLETED
-        )
-        var currentProgress by remember { mutableStateOf(RECEIPT_PROGRESS_STARTED) }
-
-        LaunchedEffect(key1 = true) {
-            launch {
-                for (item in progresStatus) {
-                    currentProgress = item
-                    delay(2000)
-                }
-            }
+            ProgressBarRow(currentProgress)
+            Spacer(modifier = Modifier.height(24.dp))
+            ProgressText(currentProgress)
         }
+        Column(
+            modifier = Modifier
+                .weight(0.1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Text(
+                text = stringResource(id = R.string.btn_cancel),
+                fontFamily = font_sf_pro,
+                modifier = Modifier
+                    .padding(top = 12.dp, bottom = 3.dp)
+                    .clickable {
+                        closePopup()
+                        navHostController.popBackStack(
+                            MoreScreens.CaptureImageScreen.route,
+                            false
+                        )
+                    },
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                color = LighterBlack,
+                fontWeight = FontWeight.Normal,
 
-
-        ProgressBarRow(currentProgress)
-        Spacer(modifier = Modifier.height(24.dp))
-        ProgressText(currentProgress)
-
+                )
+        }
     }
-
-
 }
 
 @Composable

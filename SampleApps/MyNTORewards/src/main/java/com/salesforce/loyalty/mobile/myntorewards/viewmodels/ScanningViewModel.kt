@@ -120,7 +120,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
         }
     }
 
-    override fun analyzeExpense(context: Context, encodedImage: ByteArray): AnalyzeExpenseResponse? {
+    override fun analyzeExpense(context: Context, fileName: String): AnalyzeExpenseResponse? {
         Logger.d(TAG, "analyzeExpense")
         var result: AnalyzeExpenseResponse? = null
         viewModelScope.launch {
@@ -135,7 +135,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
 
             var membershipKey = member.membershipNumber ?: ""
 
-            receiptScanningManager.analyzeExpense(membershipKey, encodedImage).onSuccess {
+            receiptScanningManager.analyzeExpense(fileName = fileName, membershipNumber = membershipKey).onSuccess {
                 Logger.d(TAG, "analyzeExpense Success : $it")
                 scannedReceipt.value= it
                 result = it
@@ -248,5 +248,58 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 )
             )
         }
+    }
+
+    override fun uploadReceipt(context: Context, encodedImage: ByteArray): String? {
+        Logger.d(TAG, "analyzeExpense")
+        var result: String? = null
+        viewModelScope.launch {
+            receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptInProgress)
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Logger.d(TAG, "failed: analyzeExpense Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+
+            var membershipKey = member.membershipNumber ?: ""
+
+            receiptScanningManager.uploadReceipt(membershipNumber = membershipKey, encodedImage).onSuccess {
+                Logger.d(TAG, "analyzeExpense Success : $it")
+//                scannedReceipt.value= it
+                result = it.message
+
+                result?.let {
+                    receiptScanningViewState.postValue(
+                        ReceiptScanningViewState.UploadReceiptSuccess(
+                            result
+                        )
+                    )
+                    receiptScanningManager.analyzeExpense(
+                        fileName = it,
+                        membershipNumber = membershipKey
+                    ).onSuccess {
+                        Logger.d(TAG, "analyzeExpense Success : $it")
+                        scannedReceipt.value = it
+                        receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                    }
+                        .onFailure {
+                            Logger.d(TAG, "analyzeExpense failed: ${it.message}")
+                            receiptScanningViewState.postValue(
+                                ReceiptScanningViewState.ReceiptScanningFailure(
+                                    it.message
+                                )
+                            )
+                        }
+                }
+            }
+                .onFailure {
+                    Logger.d(TAG, "analyzeExpense failed: ${it.message}")
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure(it.message))
+                }
+
+        }
+        return result
     }
 }

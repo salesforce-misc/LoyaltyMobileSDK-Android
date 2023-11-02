@@ -16,17 +16,16 @@ fun OpenReceiptBottomSheetContent(
     bottomSheetType: ReceiptScanningBottomSheetType,
     navController: NavHostController,
     errorMessage: String,
+    currentProgress: String,
     closeSheet: () -> Unit,
 ) {
-    val context = LocalContext.current
-    var totalPoints: String? by remember {
-        mutableStateOf(null)
-    }
     when (bottomSheetType) {
         ReceiptScanningBottomSheetType.POPUP_PROGRESS -> {
-            ScanningProgress(
+            ReceiptProgressScreen(
                 navHostController = navController,
-                closePopup = { closeSheet() })
+                closePopup = { closeSheet() },
+                currentProgress = currentProgress
+            )
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR -> {

@@ -73,6 +73,7 @@ fun ImagePreviewScreen(
 
 ) {
     var currentPopupState: ReceiptScanningBottomSheetType? by remember { mutableStateOf(null) }
+    var currentProgress by remember { mutableStateOf(AppConstants.RECEIPT_PROGRESS_STARTED) }
     val scannedReceiptLiveData by scanningViewModel.scannedReceiptLiveData.observeAsState()
     val scannedReceiptViewState by scanningViewModel.receiptScanningViewStateLiveData.observeAsState()
     var imageMoreThan5MB by remember { mutableStateOf(false) }
@@ -128,6 +129,7 @@ fun ImagePreviewScreen(
                     bottomSheetType = bottomSheetType,
                     navController = navController,
                     errorMessage = errorMessage,
+                    currentProgress = currentProgress,
                     closeSheet = { closeBottomSheet() },
                 )
             }
@@ -240,15 +242,34 @@ fun ImagePreviewScreen(
 //                    Log.d("ImageCaptureScreen", "Encoded image: $encImage")
                     val context = LocalContext.current
                     LaunchedEffect(key1 = true) {
-                        scanningViewModel.analyzeExpense(context, b)
-
+//                        scanningViewModel.analyzeExpense(context, b)
+                        scanningViewModel.uploadReceipt(context, b)
+//                        scanningViewModel.analyzeExpense(context, "5f867fb8-edcb-800f-fbdb-3b81788e98f1.jpg")
                     }
                 }
                 processClicked = false
             }
             when (scannedReceiptViewState) {
+                is ReceiptScanningViewState.UploadReceiptInProgress -> {
+                    progressPopupState = true
+                    currentProgress = AppConstants.RECEIPT_PROGRESS_FIRST_STEP
+                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                    openBottomSheet()
+                }
+
+                is ReceiptScanningViewState.UploadReceiptSuccess -> {
+                    progressPopupState = true
+                    currentProgress = AppConstants.RECEIPT_PROGRESS_SECOND_STEP
+                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                    openBottomSheet()
+                }
+
                 is ReceiptScanningViewState.ReceiptScanningSuccess -> {
                     if (progressPopupState) {
+                        progressPopupState = true
+                        currentProgress = AppConstants.RECEIPT_PROGRESS_COMPLETED
+                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                        openBottomSheet()
                         progressPopupState = false
                         /*currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
                         openBottomSheet()*/

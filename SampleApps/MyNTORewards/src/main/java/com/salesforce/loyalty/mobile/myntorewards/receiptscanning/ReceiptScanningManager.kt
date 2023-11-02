@@ -32,19 +32,15 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     suspend fun analyzeExpense(
+        fileName: String,
         membershipNumber: String,
-        encodedImage: ByteArray
     ): Result<AnalyzeExpenseResponse> {
         Logger.d(TAG, "analyzeExpense()")
 
-        /*val requestBody =
-            AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)*/
-        var requestBody: RequestBody =
-            encodedImage.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, encodedImage.size)
         try {
             val success = receiptClient.receiptApi.analyzeExpense(
-                getAnalyzeExpenseUrl(),
-                requestBody, membershipNumber
+                getAnalyzeExpenseUrl(), fileName,
+                membershipNumber
             )
             return Result.success(success)
         } catch (e: HttpException) {
@@ -94,6 +90,20 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
+    suspend fun uploadReceipt(
+        membershipNumber: String,
+        encodedImage: ByteArray
+    ): Result<UploadReceiptResponse> {
+        Logger.d(TAG, "uploadReceipt()")
+
+        var requestBody: RequestBody =
+            encodedImage.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, encodedImage.size)
+        return receiptClient.receiptApi.uploadReceipt(
+            getUploadReceiptUrl(),
+            requestBody, membershipNumber
+        )
+    }
+
     private fun getAnalyzeExpenseUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_ANALYZE_EXPENSE
     }
@@ -116,5 +126,9 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
 
     private fun fetchReceiptStatusSOQLQuery(membershipKey: String, receiptId: String): String {
         return "select Id,Status__c,TotalRewardPoints__c from Receipts__c WHERE LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' AND Id = '${receiptId}'"
+    }
+
+    private fun getUploadReceiptUrl(): String {
+        return mInstanceUrl + ReceiptScanningConfig.RECEIPT_UPLOAD_RECEIPT
     }
 }
