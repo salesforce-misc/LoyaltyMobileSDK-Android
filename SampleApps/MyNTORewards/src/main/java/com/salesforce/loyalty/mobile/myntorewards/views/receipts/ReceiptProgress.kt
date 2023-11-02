@@ -78,7 +78,7 @@ fun ReceiptProgressScreen(
                 text = stringResource(id = R.string.btn_cancel),
                 fontFamily = font_sf_pro,
                 modifier = Modifier
-                    .padding(top = 12.dp, bottom = 3.dp)
+                    .padding(bottom = 8.dp)
                     .clickable {
                         closePopup()
                         navHostController.popBackStack(
