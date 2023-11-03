@@ -22,8 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_PROGRESS_FIRST_STEP
@@ -194,22 +197,22 @@ fun ProgressText(currentProgress: String) {
         var progressHeadingText = ""
         var progressSubHeadingText = ""
         when (currentProgress) {
-            "progress_started" -> {
+            RECEIPT_PROGRESS_STARTED -> {
                 progressHeadingText = stringResource(id = R.string.receipt_progress_step_1)
                 progressSubHeadingText = stringResource(id = R.string.receipt_progress_subheading)
             }
 
-            "progress_first_step_completed" -> {
+            RECEIPT_PROGRESS_FIRST_STEP -> {
                 progressHeadingText = stringResource(id = R.string.receipt_progress_step_2)
                 progressSubHeadingText = stringResource(id = R.string.receipt_progress_subheading)
             }
 
-            "progress_second_step_completed" -> {
+            RECEIPT_PROGRESS_SECOND_STEP -> {
                 progressHeadingText = stringResource(id = R.string.receipt_progress_step_3)
                 progressSubHeadingText = stringResource(id = R.string.receipt_progress_subheading)
             }
 
-            "progress_third_step_completed" -> {
+            RECEIPT_PROGRESS_COMPLETED -> {
                 progressHeadingText = stringResource(id = R.string.receipt_progress_step_4)
                 progressSubHeadingText = ""
             }

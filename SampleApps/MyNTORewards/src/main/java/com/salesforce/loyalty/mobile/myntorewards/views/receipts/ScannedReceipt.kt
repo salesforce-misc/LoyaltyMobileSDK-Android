@@ -26,10 +26,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ConfidenceStatus
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -50,7 +52,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ShowScannedReceiptScreen(
-    navHostController: NavController,
+    navHostController: NavHostController,
     scanningViewModel: ScanningViewModelInterface
 ) {
     var congPopupState by remember { mutableStateOf(false) }
@@ -61,7 +63,8 @@ fun ShowScannedReceiptScreen(
     var cancelInProgress by remember { mutableStateOf(false) }
     var inProgress by remember { mutableStateOf(false) }
     var statusUpdateInProgress by remember { mutableStateOf(false) }
-    var manualReviewOption  by remember { mutableStateOf(true) }
+    var manualReviewOption  by remember { mutableStateOf(false) }
+    var submitOption  by remember { mutableStateOf(true) }
 
     val analyzeExpenseResponseStr = navHostController.previousBackStackEntry?.savedStateHandle?.get<String>(
         AppConstants.KEY_ANALYZED_AWS_RESPONSE
@@ -69,6 +72,8 @@ fun ShowScannedReceiptScreen(
     val analyzeExpenseResponse = Gson().fromJson(analyzeExpenseResponseStr, AnalyzeExpenseResponse::class.java)
 
     val itemLists = analyzeExpenseResponse?.lineItems
+    val eligibleItems = itemLists?.filter { it.isEligible == true }
+    val inEligibleItems = itemLists?.filter { it.isEligible == false }
     val context: Context = LocalContext.current
     var openBottomsheet by remember { mutableStateOf(false) }
     var blurBG by remember { mutableStateOf(0.dp) }
@@ -77,6 +82,21 @@ fun ShowScannedReceiptScreen(
     var totalPoints: String? by remember {
         mutableStateOf(null)
     }
+    val confidenceStatus = analyzeExpenseResponse?.confidenceStatus
+    confidenceStatus?.let {
+        if (ConfidenceStatus.PARTIAL.status == it) {
+            manualReviewOption = true
+            submitOption = false
+        }
+    }
+    if (eligibleItems?.isEmpty() == true) {
+        manualReviewOption = true
+        submitOption = false
+    }
+    if (inEligibleItems?.isNotEmpty() == true) {
+        manualReviewOption = true
+    }
+
     val bottomSheetScaffoldState = androidx.compose.material.rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
             confirmValueChange = {
@@ -218,45 +238,69 @@ fun ShowScannedReceiptScreen(
                         verticalArrangement = Arrangement.Bottom,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth(), onClick = {
-                                congPopupState = true
+                        if(submitOption) {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth(), onClick = {
+                                    congPopupState = true
 //                        navHostController.navigate(MoreScreens.ScannedCongratsScreen.route)
-                            },
-                            colors = ButtonDefaults.buttonColors(VibrantPurple40),
-                            shape = RoundedCornerShape(100.dp)
+                                },
+                                colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                                shape = RoundedCornerShape(100.dp)
 
-                        ) {
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.button_submit_receipt),
+                                    fontFamily = font_sf_pro,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 16.sp,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(top = 3.dp, bottom = 3.dp)
+                                )
+                            }
                             Text(
-                                text = stringResource(id = R.string.button_submit_receipt),
+                                text = stringResource(id = R.string.button_try_again),
                                 fontFamily = font_sf_pro,
+                                modifier = Modifier
+                                    .padding(top = 12.dp, bottom = 3.dp)
+                                    .testTag(
+                                        TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
+                                    )
+                                    .clickable {
+                                        submissionTryAgainState = true
+                                    },
                                 textAlign = TextAlign.Center,
                                 fontSize = 16.sp,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(top = 3.dp, bottom = 3.dp)
-                            )
-                        }
+                                color = LighterBlack,
+                                fontWeight = FontWeight.Normal,
 
-                        Text(
-                            text = stringResource(id = R.string.button_try_again),
-                            fontFamily = font_sf_pro,
-                            modifier = Modifier
-                                .padding(top = 12.dp, bottom = 3.dp)
-                                .testTag(
-                                    TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT
                                 )
-                                .clickable {
+                        } else {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth(), onClick = {
                                     submissionTryAgainState = true
                                 },
-                            textAlign = TextAlign.Center,
-                            fontSize = 16.sp,
-                            color = LighterBlack,
-                            fontWeight = FontWeight.Normal,
+                                colors = ButtonDefaults.buttonColors(VibrantPurple40),
+                                shape = RoundedCornerShape(100.dp)
 
-                            )
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.button_try_again),
+                                    fontFamily = font_sf_pro,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 16.sp,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(top = 3.dp, bottom = 3.dp)
+                                )
+                            }
+                        }
+
+
                         if (manualReviewOption) {
                             Text(
                                 text = stringResource(id = R.string.manual_review_option),
@@ -264,7 +308,8 @@ fun ShowScannedReceiptScreen(
                                 modifier = Modifier
                                     .padding(top = 12.dp, bottom = 3.dp)
                                     .clickable {
-                                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_MANUAL_REVIEW
+                                        currentPopupState =
+                                            ReceiptScanningBottomSheetType.POPUP_MANUAL_REVIEW
                                         openBottomSheet()
                                     },
                                 textAlign = TextAlign.Center,
