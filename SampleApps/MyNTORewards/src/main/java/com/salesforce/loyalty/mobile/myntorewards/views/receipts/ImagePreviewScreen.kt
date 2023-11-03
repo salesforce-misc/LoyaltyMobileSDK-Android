@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ConfidenceStatus
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -274,10 +275,23 @@ fun ImagePreviewScreen(
                         /*currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
                         openBottomSheet()*/
                         scannedReceiptLiveData?.let { response ->
-                            navController.currentBackStackEntry?.savedStateHandle?.apply {
-                                set(AppConstants.KEY_ANALYZED_AWS_RESPONSE, Gson().toJson(response))
+                            val confidenceStatus = response.confidenceStatus
+                            confidenceStatus?.let {
+                                if (ConfidenceStatus.FAILURE.status == it) {
+                                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
+                                    errorMessage =
+                                        stringResource(id = R.string.receipt_error_confidence_status_failure)
+                                    openBottomSheet()
+                                } else {
+                                    navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                        set(
+                                            AppConstants.KEY_ANALYZED_AWS_RESPONSE,
+                                            Gson().toJson(response)
+                                        )
+                                    }
+                                    navController.navigate(MoreScreens.ScannedReceiptScreen.route)
+                                }
                             }
-                           navController.navigate(MoreScreens.ScannedReceiptScreen.route)
                         }
                     }
                 }
