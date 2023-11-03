@@ -61,6 +61,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptSca
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_POINT_STATUS_PROCESSED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListAPIDate
@@ -255,16 +256,13 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                        Text(
-                            text = analyzeExpenseResponse?.totalAmount ?: "",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black,
-                            textAlign = TextAlign.End,
-                            fontSize = 13.sp,
-                            modifier = Modifier
-                        )
                         if (receiptStatus != null) {
                             if (isSubmittedForManualReview) {
+                                // If points are already available and user has requested for the manual review, show points as well with status
+                                if (!totalPoints.isNullOrEmpty()) {
+                                    ReceiptStatusText(totalPoints, RECEIPT_POINT_STATUS_PROCESSED)
+                                }
+
                                 ReceiptStatusText(
                                     totalPoints = totalPoints,
                                     status = RECEIPT_STATUS_MANUAL_REVIEW
