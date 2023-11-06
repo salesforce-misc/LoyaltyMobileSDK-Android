@@ -47,10 +47,10 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
             val responseBody = e.response()?.errorBody()?.string()
             Logger.d(TAG, "Analyze Expense exception : $responseBody")
             val errorMessageBody = Gson().fromJson(responseBody, AnalyzeExpenseErrorResponse::class.java)
-            errorMessageBody?.message?.let{
-                return Result.failure(Throwable(it))
-            }
-            return Result.failure(Throwable(""))
+            return Result.failure(Throwable(errorMessageBody?.message))
+        } catch (e: Exception) {
+            Logger.d(TAG, "Analyze Expense generic exception : ${e.message}")
+            return Result.failure(Throwable())
         }
     }
 
@@ -95,13 +95,24 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         encodedImage: ByteArray
     ): Result<UploadReceiptResponse> {
         Logger.d(TAG, "uploadReceipt()")
-
-        var requestBody: RequestBody =
-            encodedImage.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, encodedImage.size)
-        return receiptClient.receiptApi.uploadReceipt(
-            getUploadReceiptUrl(),
-            requestBody, membershipNumber
-        )
+        try {
+            var requestBody: RequestBody =
+                encodedImage.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, encodedImage.size)
+            val success =  receiptClient.receiptApi.uploadReceipt(
+                getUploadReceiptUrl(),
+                requestBody, membershipNumber
+            )
+            return Result.success(success)
+        } catch (e: HttpException) {
+            val responseBody = e.response()?.errorBody()?.string()
+            Logger.d(TAG, "uploadReceipt exception : $responseBody")
+            val errorMessageBody =
+                Gson().fromJson(responseBody, AnalyzeExpenseErrorResponse::class.java)
+            return Result.failure(Throwable(errorMessageBody?.message))
+        } catch (e: Exception) {
+            Logger.d(TAG, "uploadReceipt generic exception : ${e.message}")
+            return Result.failure(Throwable())
+        }
     }
 
     private fun getAnalyzeExpenseUrl(): String {
