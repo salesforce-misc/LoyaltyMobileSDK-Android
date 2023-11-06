@@ -295,7 +295,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                 }
             }
                 .onFailure {
-                    Logger.d(TAG, "analyzeExpense failed: ${it.message}")
+                    Logger.d(TAG, "uploadReceipt failed: ${it.message}")
                     receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure(it.message))
                 }
 

@@ -18,7 +18,7 @@ interface ReceiptScanningNetworkInterface {
         @Url url: String,
         @Body requestBody: RequestBody,
         @Query("membershipnumber") membershipNumber: String
-    ): Result<UploadReceiptResponse>
+    ): UploadReceiptResponse
 
     @GET()
     suspend fun receiptList(

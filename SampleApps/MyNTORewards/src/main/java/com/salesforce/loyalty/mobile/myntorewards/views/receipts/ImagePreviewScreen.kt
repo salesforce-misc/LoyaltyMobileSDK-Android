@@ -306,9 +306,9 @@ fun ImagePreviewScreen(
                     if (progressPopupState) {
                         progressPopupState = false
                         currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
-                        (scannedReceiptViewState as ReceiptScanningViewState.ReceiptScanningFailure).message?.let {
-                            errorMessage = it
-                        }
+                        errorMessage = (scannedReceiptViewState as ReceiptScanningViewState.ReceiptScanningFailure).message?.let {
+                            it
+                        } ?: stringResource(id = R.string.receipt_generic_failure)
                         openBottomSheet()
                     }
                     // TODO Handle failure scenario.
