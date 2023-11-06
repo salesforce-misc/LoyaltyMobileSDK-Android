@@ -210,6 +210,7 @@
 
     <string name="not_supported_image_msg">Image is not supported please try with different receipt.</string>
 
+    <string name="no_eligible_items_message">No Eligible Items found in the Receipt!</string>
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
     <string name="receipt_progress_subheading">Hang in there! This may take a minute.</string>
