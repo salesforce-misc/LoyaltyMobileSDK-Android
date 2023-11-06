@@ -32,10 +32,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ConfidenceStatus
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ROW_STORE_DETAILS
@@ -83,8 +80,10 @@ fun ShowScannedReceiptScreen(
         mutableStateOf(null)
     }
     val confidenceStatus = analyzeExpenseResponse?.confidenceStatus
+    var partialConfidenceStatus by remember { mutableStateOf(false) }
     confidenceStatus?.let {
         if (ConfidenceStatus.PARTIAL.status == it) {
+            partialConfidenceStatus = true
             manualReviewOption = true
             submitOption = false
         }
@@ -226,7 +225,11 @@ fun ShowScannedReceiptScreen(
                             .weight(0.7f)
                             .padding(start = 8.dp, end = 8.dp, top = 8.dp),
                     ) {
-                        ReceiptDetailTable(itemLists = itemLists)
+                        if (partialConfidenceStatus) {
+                            ReceiptPartiallyReadableScreen()
+                        } else {
+                            ReceiptDetailTable(itemLists = itemLists)
+                        }
                     }
 
 
@@ -498,4 +501,35 @@ fun openSheet(
         else -> {}
     }
 
+}
+
+@Composable
+fun ReceiptPartiallyReadableScreen() {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Color.White, shape = RoundedCornerShape(16.dp))
+            .padding(start = 16.dp, end = 16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_astronaut),
+            contentDescription = stringResource(R.string.error_cd),
+            modifier = Modifier
+                .width(220.dp)
+                .height(220.dp),
+            contentScale = ContentScale.FillWidth,
+
+            )
+
+        Text(
+            text = stringResource(id = R.string.receipt_error_confidence_status_partial),
+            fontFamily = font_sf_pro,
+            color = TextDarkGray,
+            fontSize = 16.sp,
+            modifier = Modifier.padding(start = 32.dp, end = 32.dp),
+            textAlign = TextAlign.Center
+        )
+    }
 }
