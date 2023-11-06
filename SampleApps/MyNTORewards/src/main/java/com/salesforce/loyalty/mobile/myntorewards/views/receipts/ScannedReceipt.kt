@@ -429,6 +429,9 @@ fun ShowScannedReceiptScreen(
                         .align(Alignment.Center)
                 )
             }
+            if(isSubmittedForManualReview){
+                navHostController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
+            }
         }
     }
 }
