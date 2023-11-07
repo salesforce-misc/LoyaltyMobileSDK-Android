@@ -86,19 +86,19 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
     var blurBG by remember { mutableStateOf(0.dp) }
     val context: Context = LocalContext.current
 
-    val processedAWSReponse =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE)
+    val processedAWSReponse by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE))}
 
-    val purchaseDate =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PURCHASE_DATE)
+    val purchaseDate by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PURCHASE_DATE))}
     val receiptId =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_ID)
-    val receiptStatus =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_STATUS)
-    val totalPoints =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_TOTAL_POINTS)
-    val imageUrl =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_IMAGE_URL)
+    val receiptStatus by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_STATUS))}
+    val totalPoints by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_TOTAL_POINTS))}
+    val imageUrl by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_IMAGE_URL))}
     var isSubmittedForManualReview by remember {
         mutableStateOf(
             receiptStatus.equals(
@@ -268,7 +268,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                                     status = RECEIPT_STATUS_MANUAL_REVIEW
                                 )
                             } else {
-                                ReceiptStatusText(totalPoints, receiptStatus)
+                                ReceiptStatusText(totalPoints, receiptStatus!!)
                             }
                         }
                     }
@@ -348,7 +348,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                     }
                     TAB_ORIGINAL_RECEIPT_IMAGE -> {
                         if (imageUrl != null) {
-                            ZoomableImage(imageUrl) {
+                            ZoomableImage(imageUrl!!) {
                                 bitmap.value = it
                             }
                         }

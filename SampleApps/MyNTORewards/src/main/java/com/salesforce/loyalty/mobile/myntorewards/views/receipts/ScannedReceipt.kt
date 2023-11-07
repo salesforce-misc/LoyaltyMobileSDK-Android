@@ -68,9 +68,9 @@ fun ShowScannedReceiptScreen(
     )
     val analyzeExpenseResponse = Gson().fromJson(analyzeExpenseResponseStr, AnalyzeExpenseResponse::class.java)
 
-    val itemLists = analyzeExpenseResponse?.lineItems
-    val eligibleItems = itemLists?.filter { it.isEligible == true }
-    val inEligibleItems = itemLists?.filter { it.isEligible == false }
+    val itemLists by remember { mutableStateOf(analyzeExpenseResponse?.lineItems)}
+    val eligibleItems by remember { mutableStateOf( itemLists?.filter { it.isEligible == true })}
+    val inEligibleItems by remember { mutableStateOf( itemLists?.filter { it.isEligible == false })}
     val context: Context = LocalContext.current
     var openBottomsheet by remember { mutableStateOf(false) }
     var blurBG by remember { mutableStateOf(0.dp) }

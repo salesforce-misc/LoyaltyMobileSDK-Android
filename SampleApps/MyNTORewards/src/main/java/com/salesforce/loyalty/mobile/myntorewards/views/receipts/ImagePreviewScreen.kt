@@ -272,6 +272,7 @@ fun ImagePreviewScreen(
                         currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
                         openBottomSheet()
                         progressPopupState = false
+                        closeBottomSheet()
                         /*currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
                         openBottomSheet()*/
                         scannedReceiptLiveData?.let { response ->
