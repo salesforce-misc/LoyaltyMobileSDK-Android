@@ -39,7 +39,7 @@ fun PrimaryButton(
 ) {
     Button(
         modifier = modifier,
-        onClick = onClick,
+        onClick = { onClick() },
         colors = colors,
         shape = shape,
         border = border,
@@ -61,7 +61,7 @@ fun SecondaryButton(
 ) {
     OutlinedButton(
         modifier = modifier,
-        onClick = onClick,
+        onClick = { onClick() },
         colors = colors,
         shape = shape,
         border = border,

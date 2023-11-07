@@ -117,7 +117,8 @@ fun GameZoneScreen(navController: NavHostController) {
                                     titleId = R.string.game_placeholder_title,
                                     GameType.SPIN_A_WHEEL
                                 ){
-
+                                    // TODO: replace this with correct navigation component
+                                    navController.navigate(MoreScreens.GameBetterLuckScreen.route)
                                 }
                             }
                             item() {
@@ -135,7 +136,8 @@ fun GameZoneScreen(navController: NavHostController) {
                                     titleId = R.string.game_placeholder_title,
                                     GameType.SPIN_A_WHEEL
                                 ){
-
+                                    // TODO: replace this with correct navigation component
+                                    navController.navigate(MoreScreens.GameCongratsScreen.route)
                                 }
                             }
                             item {

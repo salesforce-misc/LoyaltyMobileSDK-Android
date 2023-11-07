@@ -45,7 +45,7 @@ fun ConfirmationScreen(
 
         PrimaryButton(
             textContent = buttonText,
-            onClick = buttonClick,
+            onClick = { buttonClick() },
             modifier = Modifier.constrainAs(button) {
                 width = Dimension.fillToConstraints
                 bottom.linkTo(parent.bottom, margin = 56.dp)
@@ -106,7 +106,7 @@ fun BetterLuckScreen(onClick: () -> Unit) {
         imageContentDescription = stringResource(id = R.string.better_luck_next_time),
         bannerContentDescription = stringResource(id = R.string.better_luck_next_time_sub_header),
         imageDrawableId = R.drawable.game_no_voucher_icon,
-    ) { onClick }
+    ) { onClick() }
 }
 
 @Composable
@@ -120,7 +120,7 @@ fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
         bannerVisibility = true,
         imageDrawableId = R.drawable.gift_gamezone,
         bannerDrawableId = R.drawable.congratulations
-    ) { onClick }
+    ) { onClick() }
 }
 
 @Preview(showSystemUi = true)
