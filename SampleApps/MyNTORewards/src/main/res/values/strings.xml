@@ -226,11 +226,11 @@
     <string name="game_spin_a_wheel">Spin a Wheel</string>
     <string name="game_scratch_card">Scratch Card</string>
 
-    <!-- Game zone Confirmation Screen -->
+    <!-- Game zone Better luck Screen -->
     <string name="better_luck_next_time">Better luck next time!</string>
     <string name="better_luck_next_time_sub_header">Thank you for playing… \n\nKeep a watch out for more such offers.</string>
 
     <!-- Game zone Congratulations Screen -->
     <string name="game_zone_congrats_header_content">Congratulations!!!</string>
-    <string name="game_zone_congrats_sub_header_content">You have won A voucher for 20% off for your next purchase. Go to the voucher section to claim your reward!</string>
+    <string name="game_zone_congrats_sub_header_content">You have won A voucher for %s off for your next purchase. Go to the voucher section to claim your reward!</string>
 </resources>

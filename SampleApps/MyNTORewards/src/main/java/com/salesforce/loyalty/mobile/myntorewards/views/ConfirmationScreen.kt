@@ -18,9 +18,17 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 
+/**
+ * Common composable screen for Better Luck and Congratulations screen as most of the look and feel is same
+ */
 @Composable
 fun ConfirmationScreen(
-    confirmationScreenUiState: ConfirmationScreenUiState,
+    headerContent: String,
+    subHeaderContent: String,
+    buttonText: String,
+    imageContentDescription: String,
+    bannerContentDescription: String,
+    bannerVisibility: Boolean = false,
     imageDrawableId: Int,
     bannerDrawableId: Int = R.drawable.congratulations,
     buttonClick: () -> Unit
@@ -36,19 +44,18 @@ fun ConfirmationScreen(
         val guideLineEnd = createGuidelineFromEnd(16.dp)
 
         PrimaryButton(
-            textContent = confirmationScreenUiState.buttonText,
+            textContent = buttonText,
             onClick = buttonClick,
-            modifier = Modifier
-                .constrainAs(button) {
-                    width = Dimension.fillToConstraints
-                    bottom.linkTo(parent.bottom, margin = 56.dp)
-                    start.linkTo(guideLineStart)
-                    end.linkTo(guideLineEnd)
-                }
+            modifier = Modifier.constrainAs(button) {
+                width = Dimension.fillToConstraints
+                bottom.linkTo(parent.bottom, margin = 56.dp)
+                start.linkTo(guideLineStart)
+                end.linkTo(guideLineEnd)
+            }
         )
 
         HeaderText(
-            text = confirmationScreenUiState.headerContent,
+            text = headerContent,
             modifier = Modifier.constrainAs(headerText) {
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
@@ -57,21 +64,19 @@ fun ConfirmationScreen(
             }
         )
 
-        if (confirmationScreenUiState.bannerVisibility) {
+        if (bannerVisibility) {
             ImageComponent(
                 drawableId = bannerDrawableId,
-                confirmationScreenUiState.bannerContentDescription,
-                modifier = Modifier
-                    .constrainAs(topBanner) {
-                        top.linkTo(parent.top)
-                    }
-                    .fillMaxWidth()
+                bannerContentDescription,
+                modifier = Modifier.constrainAs(topBanner) {
+                    top.linkTo(parent.top)
+                }.fillMaxWidth()
             )
         }
 
         ImageComponent(
             drawableId = imageDrawableId,
-            contentDescription = confirmationScreenUiState.imageContentDescription,
+            contentDescription = imageContentDescription,
             modifier = Modifier
                 .size(150.dp)
                 .constrainAs(image) {
@@ -82,7 +87,7 @@ fun ConfirmationScreen(
         )
 
         BodyText(
-            text = confirmationScreenUiState.subHeaderContent,
+            text = subHeaderContent,
             modifier = Modifier.constrainAs(subText) {
                 top.linkTo(headerText.bottom)
                 start.linkTo(guideLineStart)
@@ -94,34 +99,25 @@ fun ConfirmationScreen(
 
 @Composable
 fun BetterLuckScreen(onClick: () -> Unit) {
-    val betterLuckScreenState = ConfirmationScreenUiState(
+    ConfirmationScreen(
         headerContent = stringResource(id = R.string.better_luck_next_time),
         subHeaderContent = stringResource(id = R.string.better_luck_next_time_sub_header),
         buttonText = stringResource(id = R.string.back_text),
         imageContentDescription = stringResource(id = R.string.better_luck_next_time),
         bannerContentDescription = stringResource(id = R.string.better_luck_next_time_sub_header),
-        bannerVisibility = false
-    )
-
-    ConfirmationScreen(
-        confirmationScreenUiState = betterLuckScreenState,
         imageDrawableId = R.drawable.game_no_voucher_icon,
     ) { onClick }
 }
 
 @Composable
-fun CongratulationsScreen(onClick: () -> Unit) {
-    val congratulationScreenState = ConfirmationScreenUiState(
+fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
+    ConfirmationScreen(
         headerContent = stringResource(id = R.string.game_zone_congrats_header_content),
-        subHeaderContent = stringResource(id = R.string.game_zone_congrats_sub_header_content),
+        subHeaderContent = stringResource(id = R.string.game_zone_congrats_sub_header_content, offerPercent),
         buttonText = stringResource(id = R.string.back_text),
         imageContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         bannerContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
-        bannerVisibility = true
-    )
-
-    ConfirmationScreen(
-        confirmationScreenUiState = congratulationScreenState,
+        bannerVisibility = true,
         imageDrawableId = R.drawable.gift_gamezone,
         bannerDrawableId = R.drawable.congratulations
     ) { onClick }
@@ -136,5 +132,5 @@ fun BetterLuckScreenPreview() {
 @Preview(showSystemUi = true)
 @Composable
 fun CongratulationsScreenPreview() {
-    CongratulationsScreen {}
+    CongratulationsScreen("20%") {}
 }

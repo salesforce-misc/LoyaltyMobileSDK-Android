@@ -13,15 +13,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TierColourWhite
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
+/**
+ * This file has all buttons related Composables with different styles.
+ */
 @Composable
 fun PrimaryButton(
     onClick: () -> Unit,
@@ -83,11 +88,11 @@ private fun ButtonText(textContent: String, textColor: Color) {
 @Preview
 @Composable
 fun PrimaryButtonPreview() {
-    PrimaryButton(textContent = "Done", onClick = {})
+    PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = {})
 }
 
 @Preview
 @Composable
 fun SecondaryButtonPreview() {
-    SecondaryButton(textContent = "Done", onClick = {})
+    SecondaryButton(textContent = stringResource(id = R.string.btn_cancel), onClick = {})
 }

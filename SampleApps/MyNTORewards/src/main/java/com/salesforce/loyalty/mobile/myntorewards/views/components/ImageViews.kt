@@ -14,6 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 
+/**
+ * This file has all Image Views related Composables with different shapes/styles.
+ */
 @Composable
 fun ImageComponent(
     drawableId: Int,
