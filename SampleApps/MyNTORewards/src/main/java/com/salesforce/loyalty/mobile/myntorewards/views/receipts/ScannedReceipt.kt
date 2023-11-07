@@ -126,7 +126,7 @@ fun ShowScannedReceiptScreen(
                 bottomSheetScaffoldState.bottomSheetState.collapse()
             }
         }
-        currentPopupState = null
+//        currentPopupState = null
     }
     androidx.compose.material.BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -496,6 +496,7 @@ fun openSheet(
                 closePopup
                 //Invalidate receipt list cache
                 LocalFileManager.clearFolder(context, LocalFileManager.DIRECTORY_RECEIPT_LIST)
+                navController.popBackStack(MoreScreens.CaptureImageScreen.route, false)
             })
         }
         else -> {}

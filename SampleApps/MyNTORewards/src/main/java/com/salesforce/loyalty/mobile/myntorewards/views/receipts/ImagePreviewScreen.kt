@@ -107,7 +107,7 @@ fun ImagePreviewScreen(
                 bottomSheetScaffoldState.bottomSheetState.collapse()
             }
         }
-        currentPopupState = null
+//        currentPopupState = null
         imageClicked(false)
     }
 
