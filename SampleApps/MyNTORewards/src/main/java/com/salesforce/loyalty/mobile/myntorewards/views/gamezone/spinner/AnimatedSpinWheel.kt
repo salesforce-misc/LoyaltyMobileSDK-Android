@@ -1,9 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -69,15 +67,17 @@ fun Wheel(navController: NavHostController, loyaltyAPIManager: LoyaltyAPIManager
                 }
             }
         }
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(SpinnerBackground),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SpinnerBackground)
+                .verticalScroll(rememberScrollState()),
 //            contentAlignment = Alignment.Center
         ) {
             Column(
                 verticalArrangement = Arrangement.Top,
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .wrapContentHeight()
                     .background(SpinnerBackground)
             ) {
                 Column(
@@ -126,7 +126,9 @@ fun Wheel(navController: NavHostController, loyaltyAPIManager: LoyaltyAPIManager
 
                 }
 
-                Box(modifier = Modifier.fillMaxWidth().padding(top = 16.dp),contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),contentAlignment = Alignment.Center) {
 
                     SpinWheelFrame(size, defaultDimensions.frameWidth().value)
 
@@ -136,21 +138,21 @@ fun Wheel(navController: NavHostController, loyaltyAPIManager: LoyaltyAPIManager
                         state.rotation.value,
                         defaultColours.pieColors().value
                     )
-                    {
-                        scope.launch { state.animate(coroutineScope) { pieIndex -> } }
-                    }
                     SpinWheelContent(
                         spinSize = size - defaultDimensions.frameWidth().value - defaultDimensions.selectorWidth().value,
                         pieCount = state.pieCount,
                         rotationDegree = state.rotation.value,
                         textList
                     )
-                    SpinWheelPointer()
+                    SpinWheelPointer() {
+                        scope.launch { state.animate(coroutineScope) { pieIndex -> } }
+                    }
                 }
             }
+            Spacer(modifier = Modifier.height(24.dp))
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 60.dp, end = 60.dp, bottom = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally

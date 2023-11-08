@@ -17,7 +17,7 @@ fun SpinWheelColourSegment(
     pieCount: Int,
     rotationDegree: Float,
     pieColors: List<Color>,
-    onClick: () -> Unit,
+
 )
 {
     val pieAngle = 360f / pieCount
@@ -29,7 +29,7 @@ fun SpinWheelColourSegment(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = onClick
+                onClick = {}
             )
     ){
 

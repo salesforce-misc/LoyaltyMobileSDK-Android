@@ -1,12 +1,13 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
+import android.os.SystemClock
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 
 @Composable
 fun GameView(thumbnailId: Int, titleId: Int, gameType: GameType, onClicked: () -> Unit) {
+    var lastClickTime by remember { mutableStateOf(0L) }
     Column(
         modifier = Modifier
             .width(165.dp)
@@ -50,7 +52,8 @@ fun GameView(thumbnailId: Int, titleId: Int, gameType: GameType, onClicked: () -
                 modifier = Modifier
                     .width(165.dp)
                     .height(90.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)).background(ScratchCardBackground),
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .background(ScratchCardBackground),
                 contentScale = ContentScale.Crop
             )
         }
@@ -100,7 +103,8 @@ fun GameView(thumbnailId: Int, titleId: Int, gameType: GameType, onClicked: () -
                 fontFamily = font_sf_pro,
                 textAlign = TextAlign.Start,
                 fontSize = 12.sp,
-                modifier = Modifier.height(24.dp)
+                modifier = Modifier
+                    .height(24.dp)
                     .background(Color.Black, shape = RoundedCornerShape(4.dp))
                     .padding(start = 12.dp, end = 12.dp, bottom = 4.dp)
 
