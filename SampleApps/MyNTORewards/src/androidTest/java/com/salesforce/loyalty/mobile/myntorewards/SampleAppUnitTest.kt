@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards
 
+import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper.*
@@ -9,6 +10,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject2
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
@@ -87,13 +92,15 @@ import org.mockito.*
 @RunWith(AndroidJUnit4::class)
 class SampleAppUnitTest {
 
+    private lateinit var uiDevice: UiDevice
+
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @Before
     fun init() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-
+        uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         composeTestRule.setContent {
             Navigation(
                 getMembershipProfileViewModel(),
@@ -302,6 +309,17 @@ class SampleAppUnitTest {
 
         Thread.sleep(2000)
         //verify camera screen
+        composeTestRule.onNodeWithText("Request permission")
+            .assertIsDisplayed().performClick()
+        Thread.sleep(2000)
+
+        val permissionPopupText: UiObject2 = uiDevice.findObject(By.text("While using the app"))
+        permissionPopupText.click()
+
+//        composeTestRule.onNodeWithText("While using the app")
+//            .assertIsDisplayed().performClick()
+        Thread.sleep(2000)
+
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("gallery icon").assertIsDisplayed()
@@ -920,7 +938,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
             override fun analyzeExpense(
                 context: Context,
-                encodedImage: ByteArray
+                fileName: String
             ): AnalyzeExpenseResponse? {
                 var result: AnalyzeExpenseResponse? = null
                 receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
@@ -1018,6 +1036,10 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
             override val cancellingSubmissionLiveData: LiveData<UploadRecieptCancelledViewState>
                 get() = cancellingSubmissionViewState
+
+            override fun uploadReceipt(context: Context, encodedImage: ByteArray): String? {
+                return "Upload Success"
+            }
 
             private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
 
