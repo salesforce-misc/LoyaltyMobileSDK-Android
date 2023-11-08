@@ -274,7 +274,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.SpinWheelScreen.route) {
             showBottomBar(true)
-            SpinWheelLandingPage(loyaltyAPIManager)
+            SpinWheelLandingPage(navController, loyaltyAPIManager)
         }
     }
 }

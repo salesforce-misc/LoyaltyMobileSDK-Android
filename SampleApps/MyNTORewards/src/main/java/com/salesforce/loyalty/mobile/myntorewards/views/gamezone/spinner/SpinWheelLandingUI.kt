@@ -15,12 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun SpinWheelLandingPage(loyaltyAPIManager: LoyaltyAPIManager) {
+fun SpinWheelLandingPage(navController: NavHostController, loyaltyAPIManager: LoyaltyAPIManager) {
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
     Box(contentAlignment = Alignment.TopCenter) {
@@ -53,7 +54,7 @@ fun SpinWheelLandingPage(loyaltyAPIManager: LoyaltyAPIManager) {
         }
         if(wheelValuesLoaded)
         {
-            Wheel(loyaltyAPIManager, gamesList, colourList)
+            Wheel(navController, loyaltyAPIManager, gamesList, colourList)
         } else{
             Box(modifier = Modifier.fillMaxSize()){
                 CircularProgressIndicator(
