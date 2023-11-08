@@ -20,7 +20,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 @Composable
 fun ImageComponent(
     drawableId: Int,
-    contentDescription: String,
+    contentDescription: String?,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.FillWidth
 ) {

@@ -10,7 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
@@ -28,7 +30,7 @@ fun ConfirmationScreen(
     buttonText: String,
     imageContentDescription: String,
     bannerContentDescription: String,
-    bannerVisibility: Boolean = false,
+    requireAnimation: Boolean = false,
     imageDrawableId: Int,
     bannerDrawableId: Int = R.drawable.congratulations,
     buttonClick: () -> Unit
@@ -38,7 +40,7 @@ fun ConfirmationScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val (image, topBanner, headerText, subText, button) = createRefs()
+        val (image, topBanner, lineImage, headerText, subText, button) = createRefs()
 
         val guideLineStart = createGuidelineFromStart(16.dp)
         val guideLineEnd = createGuidelineFromEnd(16.dp)
@@ -64,15 +66,14 @@ fun ConfirmationScreen(
             }
         )
 
-        if (bannerVisibility) {
-            ImageComponent(
-                drawableId = bannerDrawableId,
-                bannerContentDescription,
-                modifier = Modifier.constrainAs(topBanner) {
-                    top.linkTo(parent.top)
-                }.fillMaxWidth()
-            )
-        }
+        AnimatedView(
+            requireAnimation,
+            bannerDrawableId,
+            bannerContentDescription,
+            topBanner,
+            lineImage,
+            image
+        )
 
         ImageComponent(
             drawableId = imageDrawableId,
@@ -98,6 +99,37 @@ fun ConfirmationScreen(
 }
 
 @Composable
+private fun ConstraintLayoutScope.AnimatedView(
+    requireAnimation: Boolean,
+    bannerDrawableId: Int,
+    bannerContentDescription: String,
+    topBanner: ConstrainedLayoutReference,
+    lineImage: ConstrainedLayoutReference,
+    image: ConstrainedLayoutReference
+) {
+    if (requireAnimation) {
+        ImageComponent(
+            drawableId = bannerDrawableId,
+            bannerContentDescription,
+            modifier = Modifier.Companion.constrainAs(topBanner) {
+                top.linkTo(parent.top)
+            }.fillMaxWidth()
+        )
+    } else {
+        ImageComponent(
+            drawableId = R.drawable.game_better_luck_line,
+            contentDescription = null,
+            modifier = Modifier.Companion.constrainAs(lineImage) {
+                start.linkTo(image.start)
+                end.linkTo(image.end)
+                top.linkTo(image.top)
+                bottom.linkTo(image.bottom)
+            }
+        )
+    }
+}
+
+@Composable
 fun BetterLuckScreen(onClick: () -> Unit) {
     ConfirmationScreen(
         headerContent = stringResource(id = R.string.better_luck_next_time),
@@ -117,7 +149,7 @@ fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
         buttonText = stringResource(id = R.string.back_text),
         imageContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         bannerContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
-        bannerVisibility = true,
+        requireAnimation = true,
         imageDrawableId = R.drawable.gift_gamezone,
         bannerDrawableId = R.drawable.congratulations
     ) { onClick() }
