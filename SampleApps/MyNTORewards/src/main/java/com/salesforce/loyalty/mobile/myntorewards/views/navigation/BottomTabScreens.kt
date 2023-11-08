@@ -27,6 +27,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameZoneScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.ScratchCardView
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
@@ -36,6 +37,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewSc
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.*
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
@@ -224,6 +226,7 @@ fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModelInterface,
+    loyaltyAPIManager: LoyaltyAPIManager,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -268,6 +271,10 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.ScratchCardScreen.route) {
             showBottomBar(true)
             ScratchCardView(navController, gameViewModel)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route) {
+            showBottomBar(true)
+            SpinWheelLandingPage(loyaltyAPIManager)
         }
     }
 }

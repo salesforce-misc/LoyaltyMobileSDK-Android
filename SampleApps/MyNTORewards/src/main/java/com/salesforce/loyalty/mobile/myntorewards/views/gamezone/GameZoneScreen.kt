@@ -21,10 +21,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @Composable
 fun GameZoneScreen(navController: NavHostController) {
@@ -117,7 +119,7 @@ fun GameZoneScreen(navController: NavHostController) {
                                     titleId = R.string.game_placeholder_title,
                                     GameType.SPIN_A_WHEEL
                                 ){
-
+                                    navController.navigate(MoreScreens.SpinWheelScreen.route)
                                 }
                             }
                             item() {
@@ -135,7 +137,7 @@ fun GameZoneScreen(navController: NavHostController) {
                                     titleId = R.string.game_placeholder_title,
                                     GameType.SPIN_A_WHEEL
                                 ){
-
+                                    navController.navigate(MoreScreens.SpinWheelScreen.route)
                                 }
                             }
                             item {

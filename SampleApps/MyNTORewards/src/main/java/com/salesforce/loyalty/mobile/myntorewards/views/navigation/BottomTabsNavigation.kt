@@ -19,6 +19,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @Composable
 fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
@@ -29,7 +30,8 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                   transactionViewModel: TransactionViewModelInterface,
                   checkOutFlowViewModel: CheckOutFlowViewModelInterface,
                   scanningViewModel: ScanningViewModelInterface,
-                  gameViewModel: GameViewModelInterface
+                  gameViewModel: GameViewModelInterface,
+                  loyaltyAPIManager: LoyaltyAPIManager
 ) {
     val bottomTabsNavController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -44,7 +46,7 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                 .padding(padding)
                 .background(TextPurpleLightBG).testTag(TEST_TAG_HOME_SCREEN)
         ) {
-            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel) {
+            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel, loyaltyAPIManager) {
                 bottomBarState.value = it
             }
         }
@@ -63,6 +65,7 @@ fun TabNavigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModelInterface,
+    loyaltyAPIManager: LoyaltyAPIManager,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
 
@@ -87,7 +90,7 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel){
+            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel, loyaltyAPIManager){
                 showBottomBar(it)
             }
         }

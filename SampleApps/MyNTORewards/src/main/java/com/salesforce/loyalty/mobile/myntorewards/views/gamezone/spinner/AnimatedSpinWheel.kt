@@ -2,11 +2,8 @@ package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelPointer
@@ -67,7 +65,9 @@ fun Wheel(loyaltyAPIManager: LoyaltyAPIManager, gamesList: MutableList<String>, 
                 }
             }
         }
-        Box(
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(LightPurple),
             contentAlignment = Alignment.Center
         ) {
             SpinWheelFrame(size, defaultDimensions.frameWidth().value)
