@@ -103,7 +103,7 @@ class SampleAppUnitTest {
                 getBenefitViewModel(),
                 getTransactionViewModel(),
                 getCheckoutFlowViewModel(),
-                getScanningViewModel()
+                getScanningViewModel(),
             )
         }
         /*     composeTestRule.setContent {
