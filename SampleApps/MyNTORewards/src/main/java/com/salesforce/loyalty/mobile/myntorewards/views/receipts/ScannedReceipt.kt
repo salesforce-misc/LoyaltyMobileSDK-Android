@@ -450,7 +450,7 @@ private fun getUpdatedReceiptStatus(
     if (memberJson == null) {
     }
     val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-    val membershipKey = member.membershipNumber ?: ""
+    val membershipKey = member?.membershipNumber ?: ""
     scanningViewModel.getReceiptStatus(
         receiptId = receiptId,
         membershipKey,

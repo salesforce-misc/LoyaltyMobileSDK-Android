@@ -1,7 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards
 
-import android.Manifest
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Looper.*
 import androidx.compose.ui.test.*
@@ -10,10 +10,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject2
-import com.google.accompanist.permissions.rememberPermissionState
+import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
@@ -309,15 +307,16 @@ class SampleAppUnitTest {
 
         Thread.sleep(2000)
         //verify camera screen
-        composeTestRule.onNodeWithText("Request permission")
-            .assertIsDisplayed().performClick()
-        Thread.sleep(2000)
-
-        val permissionPopupText: UiObject2 = uiDevice.findObject(By.text("While using the app"))
-        permissionPopupText.click()
-
-//        composeTestRule.onNodeWithText("While using the app")
+//        composeTestRule.onNodeWithText("Request permission")
 //            .assertIsDisplayed().performClick()
+//        Thread.sleep(1000)
+
+//        denyRuntimePermission()
+//        Thread.sleep(1000)
+//        composeTestRule.onNodeWithText("Request permission").assertIsDisplayed().performClick()
+//        Thread.sleep(1000)
+        grantRuntimePermission()
+
         Thread.sleep(2000)
 
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
@@ -332,7 +331,7 @@ class SampleAppUnitTest {
         //back from camera screen
         composeTestRule.onNodeWithContentDescription("camera back button").performClick()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         composeTestRule.onNodeWithText("New").performClick()
         Thread.sleep(2000)
 
@@ -369,16 +368,21 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
 
-        //Thread.sleep(3000)
+        Thread.sleep(1000)
 
-        composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
+//        composeTestRule.onNodeWithText("Reading receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Uploading receipt image…").assertIsDisplayed()
+//        composeTestRule.waitUntilExactlyOneExists(hasText("Reading receipt information…"), 1000)
+        Thread.sleep(1000)
 
+//        composeTestRule.waitUntilExactlyOneExists(hasText("Processing receipt information…"), 1000)
+        composeTestRule.onNodeWithText("Processing receipt information…").assertIsDisplayed()
+//        composeTestRule.waitUntilExactlyOneExists(hasText("Receipt Scanning Process Completed"), 1000)
+//        Thread.sleep(1500)
+//
+//        composeTestRule.onNodeWithText("Receipt Scanning Process Completed").assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
-
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
+        Thread.sleep(1000)
 
         //verifying processed receipt screen
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
@@ -406,7 +410,7 @@ class SampleAppUnitTest {
         //continue scan receipt screen submit receipt flow
         composeTestRule.onNodeWithText("Submit").performClick()
 
-        Thread.sleep(2000)
+//        Thread.sleep(2000)
 
         //verifying congratulations screen
         composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CONGRATULATIONS_SCREEN), 5000)
@@ -1038,10 +1042,63 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 get() = cancellingSubmissionViewState
 
             override fun uploadReceipt(context: Context, encodedImage: ByteArray): String? {
-                return "Upload Success"
+//                Handler(getMainLooper()).postDelayed({
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptInProgress)
+//                }, 1000)
+
+                Handler(getMainLooper()).postDelayed({
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess(""))
+                }, 1000)
+
+                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
+                val gson = Gson()
+                val mockResponse = MockResponseFileReader("SampleAnalyzeExpense.json").content
+
+                scannedReceipt.value = gson.fromJson(
+                    mockResponse,
+                    AnalyzeExpenseResponse::class.java
+                )
+
+                Handler(getMainLooper()).postDelayed({
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                }, 2000)
+                return "Upload and Scan Success"
             }
+
+
 
             private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
 
         }
+}
+
+fun grantRuntimePermission() {
+    val instrumentation = InstrumentationRegistry.getInstrumentation()
+    val allowPermission = UiDevice.getInstance(instrumentation).findObject(
+        UiSelector().text(
+            when {
+                Build.VERSION.SDK_INT <= 28 -> "ALLOW"
+                Build.VERSION.SDK_INT == 29 -> "Allow only while using the app"
+                else -> "While using the app"
+            }
+        )
+    )
+    if (allowPermission.exists()) {
+        allowPermission.click()
+    }
+}
+
+fun denyRuntimePermission() {
+    val instrumentation = InstrumentationRegistry.getInstrumentation()
+    val denyPermission = UiDevice.getInstance(instrumentation).findObject(
+        UiSelector().text(
+            when (Build.VERSION.SDK_INT) {
+                in 24..28 -> "DENY"
+                else -> "Don't allow"
+            }
+        )
+    )
+    if (denyPermission.exists()) {
+        denyPermission.click()
+    }
 }
