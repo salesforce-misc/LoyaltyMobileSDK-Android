@@ -110,7 +110,7 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(start = 60.dp, end = 60.dp, bottom = 60.dp),
+                .padding(start = 60.dp, end = 60.dp, bottom = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text(

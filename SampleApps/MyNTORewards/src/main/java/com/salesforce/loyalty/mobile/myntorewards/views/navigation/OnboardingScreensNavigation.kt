@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @Composable
 fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
@@ -15,7 +16,7 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
                     benefitModel: BenefitViewModelInterface,
                     transactionModel: TransactionViewModelInterface,
                     checkoutFlowModel: CheckOutFlowViewModelInterface,
-                    scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface) {
+                    scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface, loyaltyAPIManager: LoyaltyAPIManager) {
 
     Navigation(
         profileModel,
@@ -26,7 +27,8 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
         transactionModel,
         checkoutFlowModel,
         scanningViewModel,
-        gameViewModel
+        gameViewModel,
+        loyaltyAPIManager
     )
 }
 
@@ -40,7 +42,8 @@ fun Navigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
-    gameViewModel: GameViewModelInterface
+    gameViewModel: GameViewModelInterface,
+    loyaltyAPIManager: LoyaltyAPIManager
 
 ) {
     val navController = rememberNavController()
@@ -51,7 +54,7 @@ fun Navigation(
             OnboardingScreenBox(navController, onboardingModel)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel)
+            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel, loyaltyAPIManager)
         }
     }
 }

@@ -135,7 +135,7 @@ enum class SpinAnimationState {
 fun rememberSpinWheelState(
    loyaltyAPIManager: LoyaltyAPIManager,
     pieCount: Int,
-    durationMillis: Int = 12000,
+    durationMillis: Int = 5000,
     delayMillis: Int = 0,
     rotationPerSecond: Float = 1f,
     easing: Easing = CubicBezierEasing(0.16f, 1f, 0.3f, 1f),

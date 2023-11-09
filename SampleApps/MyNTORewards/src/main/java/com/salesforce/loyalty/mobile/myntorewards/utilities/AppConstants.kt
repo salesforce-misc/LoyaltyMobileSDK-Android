@@ -145,6 +145,7 @@ class AppConstants {
 
         const val ROUTE_GAME_ZONE_SCREEN = "game_zone_screen"
         const val ROUTE_GAME_SCRATCH_CARD = "game_scratch_card"
+        const val ROUTE_GAME_SPIN_WHEEL = "game_spin_wheel"
         const val ROUTE_GAME_CONGRATS_SCREEN = "game_congrats_screen"
         const val ROUTE_GAME_BETTER_LUCK_SCREEN = "game_better_luck_screen"
     }

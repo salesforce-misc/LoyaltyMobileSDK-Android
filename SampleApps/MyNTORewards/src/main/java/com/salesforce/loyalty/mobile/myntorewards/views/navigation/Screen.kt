@@ -5,6 +5,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_BETTER_LUCK_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_SCRATCH_CARD
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_SPIN_WHEEL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_LANDING_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_MORE_LIST_SCREEN
@@ -59,6 +60,8 @@ sealed class MoreScreens(val route: String) {
     object GameZoneScreen : MoreScreens(ROUTE_GAME_ZONE_SCREEN)
 
     object ScratchCardScreen : MoreScreens(ROUTE_GAME_SCRATCH_CARD)
+
+    object SpinWheelScreen : MoreScreens(ROUTE_GAME_SPIN_WHEEL)
     object GameCongratsScreen : MoreScreens(ROUTE_GAME_CONGRATS_SCREEN)
     object GameBetterLuckScreen : MoreScreens(ROUTE_GAME_BETTER_LUCK_SCREEN)
 }

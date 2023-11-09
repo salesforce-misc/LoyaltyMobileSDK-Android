@@ -64,8 +64,6 @@ fun CanvasForScratching(
 
     var isFirstTime by remember { mutableStateOf(false) }
 
-
-
     val rewardTextValue by gameViewModel.rewardTextLiveData.observeAsState()
 
     AnimatedContent(targetState = animate, modifier = modifier) {

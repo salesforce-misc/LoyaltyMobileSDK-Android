@@ -107,7 +107,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel,
-                    gameViewModel
+                    gameViewModel, loyaltyAPIManager
                 )
             } else {
                 MainScreenStart(
@@ -119,7 +119,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel,
-                    gameViewModel
+                    gameViewModel,
+                    loyaltyAPIManager
                 )
                 // Added for testing purpose.
                 //ScratchCardView(loyaltyAPIManager)
@@ -137,7 +138,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             transactionModel,
             checkoutFlowModel,
             scanningViewModel,
-            gameViewModel
+            gameViewModel, loyaltyAPIManager
         )
 
     }
@@ -158,7 +159,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                                    benefitModel: BenefitViewModelInterface,
                                    transactionModel: TransactionViewModelInterface,
                                    checkoutFlowModel: CheckOutFlowViewModelInterface,
-                                   scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface
+                                   scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface, loyaltyAPIManager: LoyaltyAPIManager
     ) {
         onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
             run {
@@ -175,7 +176,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                             transactionModel,
                             checkoutFlowModel,
                             scanningViewModel,
-                            gameViewModel
+                            gameViewModel, loyaltyAPIManager
                         )
                     }
                 }
