@@ -280,6 +280,11 @@ fun ImagePreviewScreen(
                             val confidenceStatus = response.confidenceStatus
                             confidenceStatus?.let {
                                 if (ConfidenceStatus.FAILURE.status == it) {
+                                    LaunchedEffect(key1 = true) {
+                                        response.receiptId?.let { id ->
+                                            scanningViewModel.cancellingSubmission(id)
+                                        }
+                                    }
                                     currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
                                     errorMessage =
                                         stringResource(id = R.string.receipt_error_confidence_status_failure)

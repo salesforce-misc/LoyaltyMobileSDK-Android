@@ -169,6 +169,11 @@ fun ShowScannedReceiptScreen(
                     modifier = Modifier
                         .padding(top = 40.dp, start = 12.dp, bottom = 16.dp)
                         .clickable {
+                            coroutineScope.launch {
+                                analyzeExpenseResponse?.let {
+                                    it.receiptId?.let { id -> scanningViewModel.cancellingSubmission(id) }
+                                }
+                            }
                             navHostController.popBackStack()
                         }
                 )
