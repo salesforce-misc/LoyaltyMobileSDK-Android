@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
@@ -307,17 +308,10 @@ class SampleAppUnitTest {
 
         Thread.sleep(2000)
         //verify camera screen
-//        composeTestRule.onNodeWithText("Request permission")
-//            .assertIsDisplayed().performClick()
-//        Thread.sleep(1000)
-
-//        denyRuntimePermission()
-//        Thread.sleep(1000)
-//        composeTestRule.onNodeWithText("Request permission").assertIsDisplayed().performClick()
-//        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Request permission").assertIsDisplayed().performClick()
+        Thread.sleep(1000)
         grantRuntimePermission()
-
-        Thread.sleep(2000)
+        Thread.sleep(500)
 
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA).assertIsDisplayed()
@@ -367,21 +361,12 @@ class SampleAppUnitTest {
 
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
-
         Thread.sleep(1000)
 
-//        composeTestRule.onNodeWithText("Reading receipt information…").assertIsDisplayed()
         composeTestRule.onNodeWithText("Uploading receipt image…").assertIsDisplayed()
-//        composeTestRule.waitUntilExactlyOneExists(hasText("Reading receipt information…"), 1000)
         Thread.sleep(1000)
 
-//        composeTestRule.waitUntilExactlyOneExists(hasText("Processing receipt information…"), 1000)
         composeTestRule.onNodeWithText("Processing receipt information…").assertIsDisplayed()
-//        composeTestRule.waitUntilExactlyOneExists(hasText("Receipt Scanning Process Completed"), 1000)
-//        Thread.sleep(1500)
-//
-//        composeTestRule.onNodeWithText("Receipt Scanning Process Completed").assertIsDisplayed()
-
         Thread.sleep(1000)
 
         //verifying processed receipt screen
@@ -410,8 +395,6 @@ class SampleAppUnitTest {
         //continue scan receipt screen submit receipt flow
         composeTestRule.onNodeWithText("Submit").performClick()
 
-//        Thread.sleep(2000)
-
         //verifying congratulations screen
         composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CONGRATULATIONS_SCREEN), 5000)
         composeTestRule.onNodeWithContentDescription("Congratulations Screen Background")
@@ -421,12 +404,10 @@ class SampleAppUnitTest {
         composeTestRule.onNode(hasText("Scan Another Receipt"))
         composeTestRule.onNodeWithText("Done").assertIsDisplayed()
 
-
         //continue congratulations screen done flow
         composeTestRule.onNodeWithText("Done").performClick()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
-
 
         Thread.sleep(2000)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_RECEIPT_LIST_ITEM)).onFirst().performClick()
@@ -440,12 +421,10 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Receipt Items").assertIsDisplayed()
         composeTestRule.onNodeWithText("Receipt Image").assertIsDisplayed()
 
-
        // composeTestRule.onNodeWithText("79.9 Points").assertIsDisplayed()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON)
             .assertIsDisplayed()
-
 
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON).performClick()
         Thread.sleep(2000)
@@ -455,7 +434,6 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Request a Manual Review").assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Request a Manual Review").performClick()
-
 
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON).performClick()
@@ -484,7 +462,6 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_SUBMIT_BUTTON).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_SUBMIT_BUTTON).performClick()
         composeTestRule.onNodeWithTag("receipt_detail_screen").assertIsDisplayed()
-
 
     }
 
@@ -1042,9 +1019,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 get() = cancellingSubmissionViewState
 
             override fun uploadReceipt(context: Context, encodedImage: ByteArray): String? {
-//                Handler(getMainLooper()).postDelayed({
-                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptInProgress)
-//                }, 1000)
+                receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptInProgress)
 
                 Handler(getMainLooper()).postDelayed({
                     receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess(""))
@@ -1079,26 +1054,11 @@ fun grantRuntimePermission() {
             when {
                 Build.VERSION.SDK_INT <= 28 -> "ALLOW"
                 Build.VERSION.SDK_INT == 29 -> "Allow only while using the app"
-                else -> "While using the app"
+                else -> "Only this time"
             }
         )
     )
     if (allowPermission.exists()) {
         allowPermission.click()
-    }
-}
-
-fun denyRuntimePermission() {
-    val instrumentation = InstrumentationRegistry.getInstrumentation()
-    val denyPermission = UiDevice.getInstance(instrumentation).findObject(
-        UiSelector().text(
-            when (Build.VERSION.SDK_INT) {
-                in 24..28 -> "DENY"
-                else -> "Don't allow"
-            }
-        )
-    )
-    if (denyPermission.exists()) {
-        denyPermission.click()
     }
 }
