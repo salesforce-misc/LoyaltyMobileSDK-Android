@@ -283,7 +283,9 @@ fun ShowScannedReceiptScreen(
                         } else {
                             Button(
                                 modifier = Modifier
-                                    .fillMaxWidth(), onClick = {
+                                    .fillMaxWidth()
+                                    .testTag(TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT),
+                                onClick = {
                                     submissionTryAgainState = true
                                 },
                                 colors = ButtonDefaults.buttonColors(VibrantPurple40),

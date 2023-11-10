@@ -10,14 +10,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mockReceiptResponse
+//import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.receiptApiConfidenceStatus
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ConfidenceStatus
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.MY_PROFILE_FULL_SCREEN_HEADER
@@ -36,6 +38,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONGRATULATIONS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMAIL_PHONE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ENROLLMENT_CONGRATULATIONS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ERROR_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EXPIRATION_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN_CONTAINER
@@ -67,6 +70,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_NUMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_STATUS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_UPLOAD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_COLOUR_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_QUANTITY_ROW
@@ -81,11 +85,16 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.*
+import kotlin.coroutines.CoroutineContext
 
 
 @RunWith(AndroidJUnit4::class)
@@ -96,10 +105,14 @@ class SampleAppUnitTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    companion object {
+        var mockReceiptResponse: String ? = null
+    }
     @Before
     fun init() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
         composeTestRule.setContent {
             Navigation(
                 getMembershipProfileViewModel(),
@@ -353,47 +366,15 @@ class SampleAppUnitTest {
 
         //verifying image preview try again  flow
         composeTestRule.onNodeWithText("Try Again").performClick()
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
-        Thread.sleep(1000)
-        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
-        Thread.sleep(1000)
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_IMAGE_PREVIEW_SCREEN).assertIsDisplayed()
+        verifyReceiptUploadingWithApiFailureFlow()
 
-        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
-        Thread.sleep(1000)
+        verifyConfidenceFailureScenario()
 
-        composeTestRule.onNodeWithText("Uploading receipt image…").assertIsDisplayed()
-        Thread.sleep(1000)
+        verifyPartialConfidenceScenario()
 
-        composeTestRule.onNodeWithText("Processing receipt information…").assertIsDisplayed()
-        Thread.sleep(1000)
+        verifyReceiptSuccessNoEligibleItemsScenario()
 
-        //verifying processed receipt screen
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Receipt", true).assertIsDisplayed()
-
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
-            .assertIsDisplayed()
-
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT).performClick()
-        Thread.sleep(2000)
-
-        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
-
-        //try again from receipt scan screen button and coming back to table screen
-        Thread.sleep(1000)
-        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
-        Thread.sleep(1000)
-        composeTestRule.onNodeWithText("Upload").performClick()
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
-
-
-        //continue scan receipt screen submit receipt flow
-        composeTestRule.onNodeWithText("Submit").performClick()
+        verifyReceiptSuccessSubmissionFlow()
 
         //verifying congratulations screen
         composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CONGRATULATIONS_SCREEN), 5000)
@@ -463,6 +444,109 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_SUBMIT_BUTTON).performClick()
         composeTestRule.onNodeWithTag("receipt_detail_screen").assertIsDisplayed()
 
+    }
+
+    private fun verifyReceiptUploadingWithApiFailureFlow() {
+        composeTestRule.onNodeWithTag(TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_IMAGE_PREVIEW_SCREEN).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
+        Thread.sleep(1000)
+
+        composeTestRule.onNodeWithText("Uploading receipt image…").assertIsDisplayed()
+        Thread.sleep(1000)
+
+        composeTestRule.onNodeWithText("Processing receipt information…").assertIsDisplayed()
+        Thread.sleep(1000)
+
+        //verifying API Failure Scenario
+        mockReceiptResponse = null
+        composeTestRule.onNodeWithText("Something went wrong. Try again.").assertIsDisplayed()
+        Thread.sleep(1000)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyConfidenceFailureScenario() {
+        mockReceiptResponse = "SampleAnalyzeExpenseFailureScenario.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN).assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_ERROR_SCREEN), 10000)
+        composeTestRule.onNodeWithText(
+            "Oops! The required information in the receipt could not be read and processed.",
+            substring = true
+        ).assertIsDisplayed()
+        Thread.sleep(1000)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyPartialConfidenceScenario() {
+        mockReceiptResponse = "SampleAnalyzeExpensePartialScenario.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN).assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_RECEIPT_TABLE_SCREEN), 10000)
+        composeTestRule.onNodeWithText(
+            "Oops! Some items in the receipt could not be read and processed.",
+            substring = true
+        ).assertIsDisplayed().performClick()
+        Thread.sleep(1000)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyReceiptSuccessNoEligibleItemsScenario() {
+        mockReceiptResponse = "SampleAnalyzeExpenseNoEligibleItems.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
+            .assertIsDisplayed().performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasText("No Eligible Items found in the Receipt!"), 10000)
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
+            .assertIsDisplayed().performClick()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyReceiptSuccessSubmissionFlow() {
+        mockReceiptResponse = "SampleAnalyzeExpense.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
+            .assertIsDisplayed().performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_RECEIPT_TABLE_SCREEN), 10000)
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Receipt", true).assertIsDisplayed()
+
+        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
+
+        //continue scan receipt screen submit receipt flow
+        composeTestRule.onNodeWithText("Submit").performClick()
     }
 
 
@@ -897,6 +981,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 }
 
     fun getScanningViewModel(): ScanningViewModelInterface {
+
         return object : ScanningViewModelInterface {
             override val receiptListLiveData: LiveData<ReceiptListResponse>
                 get() = receiptList
@@ -915,7 +1000,6 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 get() = receiptScanningViewState
 
             private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
-
 
             override fun analyzeExpense(
                 context: Context,
@@ -951,6 +1035,9 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
             private val receiptStatusUpdateViewState = MutableLiveData<ReceiptStatusUpdateViewState>()
 
+            private var receiptApiConfidenceStatus: ConfidenceStatus? = null
+
+            private val mockList = listOf(null, "SampleAnalyzeExpenseFailureScenario.json", "SampleAnalyzeExpensePartialScenario.json", "SampleAnalyzeExpense.json")
 
             override fun getReceiptListsAPI(context: Context, membershipKey: String) {
                 viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)
@@ -1026,21 +1113,37 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 }, 1000)
 
                 receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
-                val gson = Gson()
-                val mockResponse = MockResponseFileReader("SampleAnalyzeExpense.json").content
-
-                scannedReceipt.value = gson.fromJson(
-                    mockResponse,
-                    AnalyzeExpenseResponse::class.java
-                )
 
                 Handler(getMainLooper()).postDelayed({
-                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                    mockReceiptResponse?.let {
+                        val mockResponse = MockResponseFileReader(it).content
+                        scannedReceipt.value = Gson().fromJson(mockResponse, AnalyzeExpenseResponse::class.java)
+                        receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                    } ?: receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure(null))
                 }, 2000)
+
                 return "Upload and Scan Success"
             }
 
-
+            private fun mockedApiResponse(): String? {
+                return when (this.receiptApiConfidenceStatus) {
+                    null -> {
+                        receiptApiConfidenceStatus = ConfidenceStatus.FAILURE
+                        null
+                    }
+                    ConfidenceStatus.FAILURE -> {
+                        receiptApiConfidenceStatus = ConfidenceStatus.PARTIAL
+                        "SampleAnalyzeExpenseFailureScenario.json"
+                    }
+                    ConfidenceStatus.PARTIAL -> {
+                        receiptApiConfidenceStatus = ConfidenceStatus.SUCCESS
+                        "SampleAnalyzeExpensePartialScenario.json"
+                    }
+                    ConfidenceStatus.SUCCESS -> {
+                        "SampleAnalyzeExpense.json"
+                    }
+                }
+            }
 
             private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
 

@@ -63,6 +63,8 @@ class TestTags {
         const val TEST_TAG_RECEIPT_TABLE = "receipt_table"
         const val TEST_TAG_CONGRATULATIONS_SCREEN = "congratulations_screen"
         const val TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT = "screened_receipt-try_again_button"
+        const val TEST_TAG_TRY_AGAIN_ERROR_SCREEN = "error_screen_try_again_button"
+        const val TEST_TAG_ERROR_SCREEN = "error_screen_tag"
         const val MY_PROMOTION_FULL_SCREEN_HEADER = "my_promotion_header"
         const val MY_PROFILE_FULL_SCREEN_HEADER = "my_profile_header"
         const val MORE_FULL_SCREEN_HEADER = "more_header"

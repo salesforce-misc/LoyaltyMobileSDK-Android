@@ -11,12 +11,12 @@
         "productName" : "Alpine-Bran Cereal",
         "price" : "$7.99",
         "lineItemPrice" : "$39.95",
-        "isEligible" : true
+        "isEligible" : false
     }, {
         "quantity" : "2",
         "productName" : "Alpine-Oat Cereal",
         "price" : "$7.99",
         "lineItemPrice" : "$15.98",
-        "isEligible" : true
+        "isEligible" : false
     } ]
 }
