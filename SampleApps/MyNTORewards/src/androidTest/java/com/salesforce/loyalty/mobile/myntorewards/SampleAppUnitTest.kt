@@ -981,26 +981,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 }
 
     fun getScanningViewModel(): ScanningViewModelInterface {
-
         return object : ScanningViewModelInterface {
-            override val receiptListLiveData: LiveData<ReceiptListResponse>
-                get() = receiptList
-
-            private val receiptList = MutableLiveData<ReceiptListResponse>()
-
-            override val receiptListViewState: LiveData<ReceiptViewState>
-                get() = viewState
-
-            private val viewState = MutableLiveData<ReceiptViewState>()
-            override val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
-                get() = scannedReceipt
-
-            private val scannedReceipt = MutableLiveData<AnalyzeExpenseResponse>()
-            override val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
-                get() = receiptScanningViewState
-
-            private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
-
             override fun analyzeExpense(
                 context: Context,
                 fileName: String
@@ -1026,6 +1007,24 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 return result
             }
 
+            override val receiptListLiveData: LiveData<ReceiptListResponse>
+                get() = receiptList
+
+            private val receiptList = MutableLiveData<ReceiptListResponse>()
+
+            override val receiptListViewState: LiveData<ReceiptViewState>
+                get() = viewState
+
+            private val viewState = MutableLiveData<ReceiptViewState>()
+            override val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>
+                get() = scannedReceipt
+
+            private val scannedReceipt = MutableLiveData<AnalyzeExpenseResponse>()
+            override val receiptScanningViewStateLiveData: LiveData<ReceiptScanningViewState>
+                get() = receiptScanningViewState
+
+            private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
+
             override val createTransactionJournalViewStateLiveData: LiveData<CreateTransactionJournalViewState>
                 get() = createTransactionJournalViewState
 
@@ -1035,9 +1034,6 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
             private val receiptStatusUpdateViewState = MutableLiveData<ReceiptStatusUpdateViewState>()
 
-            private var receiptApiConfidenceStatus: ConfidenceStatus? = null
-
-            private val mockList = listOf(null, "SampleAnalyzeExpenseFailureScenario.json", "SampleAnalyzeExpensePartialScenario.json", "SampleAnalyzeExpense.json")
 
             override fun getReceiptListsAPI(context: Context, membershipKey: String) {
                 viewState.postValue(ReceiptViewState.ReceiptListFetchInProgressView)

@@ -107,7 +107,7 @@ fun ImagePreviewScreen(
                 bottomSheetScaffoldState.bottomSheetState.collapse()
             }
         }
-        currentPopupState = null
+//        currentPopupState = null
         imageClicked(false)
     }
 
@@ -259,10 +259,12 @@ fun ImagePreviewScreen(
                 }
 
                 is ReceiptScanningViewState.UploadReceiptSuccess -> {
-                    progressPopupState = true
-                    currentProgress = AppConstants.RECEIPT_PROGRESS_SECOND_STEP
-                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
-                    openBottomSheet()
+                    if(progressPopupState) {
+                        progressPopupState = true
+                        currentProgress = AppConstants.RECEIPT_PROGRESS_SECOND_STEP
+                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                        openBottomSheet()
+                    }
                 }
 
                 is ReceiptScanningViewState.ReceiptScanningSuccess -> {
@@ -278,11 +280,17 @@ fun ImagePreviewScreen(
                             val confidenceStatus = response.confidenceStatus
                             confidenceStatus?.let {
                                 if (ConfidenceStatus.FAILURE.status == it) {
+                                    LaunchedEffect(key1 = true) {
+                                        response.receiptId?.let { id ->
+                                            scanningViewModel.cancellingSubmission(id)
+                                        }
+                                    }
                                     currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
                                     errorMessage =
                                         stringResource(id = R.string.receipt_error_confidence_status_failure)
                                     openBottomSheet()
                                 } else {
+                                    closeBottomSheet()
                                     navController.currentBackStackEntry?.savedStateHandle?.apply {
                                         set(
                                             AppConstants.KEY_ANALYZED_AWS_RESPONSE,

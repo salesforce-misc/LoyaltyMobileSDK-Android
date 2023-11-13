@@ -68,9 +68,9 @@ fun ShowScannedReceiptScreen(
     )
     val analyzeExpenseResponse = Gson().fromJson(analyzeExpenseResponseStr, AnalyzeExpenseResponse::class.java)
 
-    val itemLists = analyzeExpenseResponse?.lineItems
-    val eligibleItems = itemLists?.filter { it.isEligible == true }
-    val inEligibleItems = itemLists?.filter { it.isEligible == false }
+    val itemLists by remember { mutableStateOf(analyzeExpenseResponse?.lineItems)}
+    val eligibleItems by remember { mutableStateOf( itemLists?.filter { it.isEligible == true })}
+    val inEligibleItems by remember { mutableStateOf( itemLists?.filter { it.isEligible == false })}
     val context: Context = LocalContext.current
     var openBottomsheet by remember { mutableStateOf(false) }
     var blurBG by remember { mutableStateOf(0.dp) }
@@ -126,7 +126,7 @@ fun ShowScannedReceiptScreen(
                 bottomSheetScaffoldState.bottomSheetState.collapse()
             }
         }
-        currentPopupState = null
+//        currentPopupState = null
     }
     androidx.compose.material.BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -169,6 +169,11 @@ fun ShowScannedReceiptScreen(
                     modifier = Modifier
                         .padding(top = 40.dp, start = 12.dp, bottom = 16.dp)
                         .clickable {
+                            coroutineScope.launch {
+                                analyzeExpenseResponse?.let {
+                                    it.receiptId?.let { id -> scanningViewModel.cancellingSubmission(id) }
+                                }
+                            }
                             navHostController.popBackStack()
                         }
                 )
@@ -498,6 +503,7 @@ fun openSheet(
                 closePopup
                 //Invalidate receipt list cache
                 LocalFileManager.clearFolder(context, LocalFileManager.DIRECTORY_RECEIPT_LIST)
+                navController.popBackStack(MoreScreens.CaptureImageScreen.route, false)
             })
         }
         else -> {}
