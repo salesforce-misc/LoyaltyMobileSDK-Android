@@ -1099,7 +1099,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptInProgress)
 
                 Handler(getMainLooper()).postDelayed({
-                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess(""))
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess)
                 }, 1000)
 
                 receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)

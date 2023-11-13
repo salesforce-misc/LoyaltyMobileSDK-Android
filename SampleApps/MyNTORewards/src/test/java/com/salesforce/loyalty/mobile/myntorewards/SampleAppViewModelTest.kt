@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
@@ -13,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScannin
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptStatusUpdateResponse
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.UploadReceiptResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
@@ -717,6 +719,8 @@ class SampleAppViewModelTest {
 
         Assert.assertEquals(MyProfileViewStates.MyProfileFetchInProgress, profileViewStates[0])
         Assert.assertEquals(MyProfileViewStates.MyProfileFetchFailure, profileViewStates[1])
+
+
     }
 
 
@@ -1565,7 +1569,7 @@ class SampleAppViewModelTest {
         Assert.assertEquals(ReceiptViewState.ReceiptListFetchFailureView, receiptListViewState[1])
     }
 
-    @Test
+  /*  @Test
     fun `for analyze expense failure, data must not be available`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
@@ -1590,9 +1594,9 @@ class SampleAppViewModelTest {
             ReceiptScanningViewState.ReceiptScanningFailure("HTTP 401 Unauthorized").message,
             (receiptScanningViewState[1] as ReceiptScanningViewState.ReceiptScanningFailure).message
         )
-    }
+    }*/
 
-    @Test
+   /* @Test
     fun `for analyze expense success, data must be available`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
@@ -1622,6 +1626,121 @@ class SampleAppViewModelTest {
             scanningViewModel.scannedReceiptLiveData.value,
             mockAnalyzeExpenseResponse
         )
+    }*/
+
+
+     @Test
+    fun `for upload receipt success, data must be available`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponse)
+
+        val uploadReceiptResponse =
+            Gson().fromJson(
+                MockResponseFileReader("UploadReceiptFileNameFetch.json").content,
+                UploadReceiptResponse::class.java
+            )
+         val mockAnalyzeExpenseResponse =
+             Gson().fromJson(
+                 MockResponseFileReader("AnalyzeExpense.json").content,
+                 AnalyzeExpenseResponse::class.java
+             )
+
+        coEvery {
+            receiptScanningManager.uploadReceipt(any(), any())
+        } returns Result.success(uploadReceiptResponse)
+
+         coEvery {
+             receiptScanningManager.analyzeExpense(any(), any())
+         } returns Result.success(mockAnalyzeExpenseResponse)
+
+        scanningViewModel.uploadReceipt(context, byteArrayOf())
+
+        coVerify {
+            receiptScanningManager.uploadReceipt(any(), any())
+        }
+         coVerify {
+             receiptScanningManager.analyzeExpense(any(), any())
+         }
+         Log.d("Akash", receiptScanningViewState[1].toString())
+        Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
+        Assert.assertEquals(ReceiptScanningViewState.UploadReceiptSuccess, receiptScanningViewState[1])
+        Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningSuccess, receiptScanningViewState[2])
+    }
+
+    @Test
+    fun `for upload receipt failure, data must not be available`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponse)
+
+
+
+        coEvery {
+            receiptScanningManager.uploadReceipt(any(), any())
+        } returns Result.failure(Exception("HTTP 401 Unauthorized"))
+
+
+        scanningViewModel.uploadReceipt(context, byteArrayOf())
+
+        coVerify {
+            receiptScanningManager.uploadReceipt(any(), any())
+        }
+        coVerify(exactly = 0) {
+            receiptScanningManager.analyzeExpense(any(), any())
+        }
+        Log.d("Akash", receiptScanningViewState[1].toString())
+        Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
+        Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningFailure("HTTP 401 Unauthorized").message, (receiptScanningViewState[1] as ReceiptScanningViewState.ReceiptScanningFailure).message )
+
+    }
+
+    @Test
+    fun `for upload receipt success but analyze expense failed, data must not be available`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponse)
+
+        val uploadReceiptResponse =
+            Gson().fromJson(
+                MockResponseFileReader("UploadReceiptFileNameFetch.json").content,
+                UploadReceiptResponse::class.java
+            )
+
+        coEvery {
+            receiptScanningManager.uploadReceipt(any(), any())
+        } returns Result.success(uploadReceiptResponse)
+
+
+        coEvery {
+            receiptScanningManager.analyzeExpense(any(), any())
+        } returns Result.failure(Exception("HTTP 401 Unauthorized"))
+
+
+        scanningViewModel.uploadReceipt(context, byteArrayOf())
+
+        coVerify {
+            receiptScanningManager.uploadReceipt(any(), any())
+        }
+        coVerify {
+            receiptScanningManager.analyzeExpense(any(), any())
+        }
+        Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
+        Assert.assertEquals(ReceiptScanningViewState.UploadReceiptSuccess, receiptScanningViewState[1])
+        Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningFailure("HTTP 401 Unauthorized").message, (receiptScanningViewState[2] as ReceiptScanningViewState.ReceiptScanningFailure).message )
+
     }
 
     @Test
