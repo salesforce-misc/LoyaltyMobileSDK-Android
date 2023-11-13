@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards
 
-//import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.receiptApiConfidenceStatus
 import android.content.Context
 import android.os.Build
 import android.os.Handler
