@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards
 
+//import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.receiptApiConfidenceStatus
 import android.content.Context
 import android.os.Build
 import android.os.Handler
@@ -14,12 +15,10 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mockReceiptResponse
-//import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.receiptApiConfidenceStatus
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ConfidenceStatus
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.MY_PROFILE_FULL_SCREEN_HEADER
@@ -85,16 +84,11 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.*
-import kotlin.coroutines.CoroutineContext
 
 
 @RunWith(AndroidJUnit4::class)
@@ -1119,26 +1113,6 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 }, 2000)
 
                 return "Upload and Scan Success"
-            }
-
-            private fun mockedApiResponse(): String? {
-                return when (this.receiptApiConfidenceStatus) {
-                    null -> {
-                        receiptApiConfidenceStatus = ConfidenceStatus.FAILURE
-                        null
-                    }
-                    ConfidenceStatus.FAILURE -> {
-                        receiptApiConfidenceStatus = ConfidenceStatus.PARTIAL
-                        "SampleAnalyzeExpenseFailureScenario.json"
-                    }
-                    ConfidenceStatus.PARTIAL -> {
-                        receiptApiConfidenceStatus = ConfidenceStatus.SUCCESS
-                        "SampleAnalyzeExpensePartialScenario.json"
-                    }
-                    ConfidenceStatus.SUCCESS -> {
-                        "SampleAnalyzeExpense.json"
-                    }
-                }
             }
 
             private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
