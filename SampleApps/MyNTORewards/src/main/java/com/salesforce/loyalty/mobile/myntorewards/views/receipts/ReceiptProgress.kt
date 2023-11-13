@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -34,6 +35,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_PROGRESS_STARTED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_PROGRESS_COMPLETED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -142,13 +145,14 @@ fun ProgressBarRow(currentProgress: String) {
 
         Image(
             painter = painterResource(id = firststepImageID),
-            contentDescription = stringResource(id = R.string.label_empty_promotions)
+            contentDescription = stringResource(id = R.string.receipt_progress_step_2)
         )
         if (currentProgress == RECEIPT_PROGRESS_FIRST_STEP) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .width(89.dp)
-                    .height(2.dp),
+                    .height(2.dp)
+                    .testTag(TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED),
                 color = ReceiptProgressProgress,
                 trackColor = ReceiptProgressTrackColor //progress color
             )
@@ -160,13 +164,14 @@ fun ProgressBarRow(currentProgress: String) {
         }
         Image(
             painter = painterResource(id = secondstepImageID),
-            contentDescription = stringResource(id = R.string.label_empty_promotions)
+            contentDescription = stringResource(id = R.string.receipt_progress_step_3)
         )
         if (currentProgress == RECEIPT_PROGRESS_SECOND_STEP) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .width(89.dp)
-                    .height(2.dp),
+                    .height(2.dp)
+                    .testTag(TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED),
                 color = ReceiptProgressProgress,
                 trackColor = ReceiptProgressTrackColor //progress color
             )
@@ -178,7 +183,7 @@ fun ProgressBarRow(currentProgress: String) {
         }
         Image(
             painter = painterResource(id = thirdStepImageID),
-            contentDescription = stringResource(id = R.string.label_empty_promotions)
+            contentDescription = stringResource(id = R.string.receipt_progress_step_4)
         )
     }
 }

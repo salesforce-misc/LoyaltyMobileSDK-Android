@@ -65,8 +65,10 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RATING
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_NUMBER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_STATUS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_UPLOAD
@@ -359,7 +361,7 @@ class SampleAppUnitTest {
 
         //verifying image preview try again  flow
         composeTestRule.onNodeWithText("Try Again").performClick()
-        verifyReceiptUploadingWithApiFailureFlow()
+        verifyReceiptUploadingProgressIndicatorWithApiFailure()
 
         verifyConfidenceFailureScenario()
 
@@ -439,7 +441,7 @@ class SampleAppUnitTest {
 
     }
 
-    private fun verifyReceiptUploadingWithApiFailureFlow() {
+    private fun verifyReceiptUploadingProgressIndicatorWithApiFailure() {
         composeTestRule.onNodeWithTag(TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
         Thread.sleep(1000)
         composeTestRule.onNodeWithContentDescription("shutter button").performClick()
@@ -450,11 +452,18 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
         Thread.sleep(1000)
 
-        composeTestRule.onNodeWithText("Uploading receipt image…").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Reading receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Reading receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED).assertIsDisplayed()
         Thread.sleep(1000)
 
         composeTestRule.onNodeWithText("Processing receipt information…").assertIsDisplayed()
-        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Processing receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Receipt Scanning Process Completed").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED).assertIsDisplayed()
+        Thread.sleep(2000)
 
         //verifying API Failure Scenario
         mockReceiptResponse = null
@@ -1101,7 +1110,9 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                     receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess(""))
                 }, 1000)
 
-                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
+                Handler(getMainLooper()).postDelayed({
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
+                }, 2000)
 
                 Handler(getMainLooper()).postDelayed({
                     mockReceiptResponse?.let {
@@ -1109,7 +1120,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                         scannedReceipt.value = Gson().fromJson(mockResponse, AnalyzeExpenseResponse::class.java)
                         receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
                     } ?: receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure(null))
-                }, 2000)
+                }, 3000)
 
                 return "Upload and Scan Success"
             }
