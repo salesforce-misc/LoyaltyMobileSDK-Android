@@ -1569,65 +1569,6 @@ class SampleAppViewModelTest {
         Assert.assertEquals(ReceiptViewState.ReceiptListFetchFailureView, receiptListViewState[1])
     }
 
-  /*  @Test
-    fun `for analyze expense failure, data must not be available`() {
-        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
-        val context = mockk<Context>(relaxed = true)
-        val mockResponse = MockResponseFileReader("MemberInfo.json").content
-        every { context.getSharedPreferences(any(), any()) }
-            .returns(sharedPrefs)
-        every { sharedPrefs.getString(any(), any()) }
-            .returns(mockResponse)
-
-        val value = Result.failure<AnalyzeExpenseResponse>(Exception("HTTP 401 Unauthorized"))
-        coEvery {
-            receiptScanningManager.analyzeExpense(any(), any())
-        } returns value
-        scanningViewModel.analyzeExpense(context, byteArrayOf())
-
-        coVerify {
-            receiptScanningManager.analyzeExpense(any(), any())
-        }
-
-        Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningInProgress, receiptScanningViewState[0])
-        Assert.assertEquals(
-            ReceiptScanningViewState.ReceiptScanningFailure("HTTP 401 Unauthorized").message,
-            (receiptScanningViewState[1] as ReceiptScanningViewState.ReceiptScanningFailure).message
-        )
-    }*/
-
-   /* @Test
-    fun `for analyze expense success, data must be available`() {
-        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
-        val context = mockk<Context>(relaxed = true)
-        val mockResponse = MockResponseFileReader("MemberInfo.json").content
-        every { context.getSharedPreferences(any(), any()) }
-            .returns(sharedPrefs)
-        every { sharedPrefs.getString(any(), any()) }
-            .returns(mockResponse)
-
-        val mockAnalyzeExpenseResponse =
-            Gson().fromJson(
-                MockResponseFileReader("AnalyzeExpense.json").content,
-                AnalyzeExpenseResponse::class.java
-            )
-        coEvery {
-            receiptScanningManager.analyzeExpense(any(), any())
-        } returns Result.success(mockAnalyzeExpenseResponse)
-        scanningViewModel.analyzeExpense(context, byteArrayOf())
-
-        coVerify {
-            receiptScanningManager.analyzeExpense(any(), any())
-        }
-
-        Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningInProgress, receiptScanningViewState[0])
-        Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningSuccess, receiptScanningViewState[1])
-        Assert.assertEquals(
-            scanningViewModel.scannedReceiptLiveData.value,
-            mockAnalyzeExpenseResponse
-        )
-    }*/
-
 
      @Test
     fun `for upload receipt success, data must be available`() {
