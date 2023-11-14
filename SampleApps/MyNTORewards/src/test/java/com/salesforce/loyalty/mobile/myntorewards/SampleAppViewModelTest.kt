@@ -1666,7 +1666,6 @@ class SampleAppViewModelTest {
          coVerify {
              receiptScanningManager.analyzeExpense(any(), any())
          }
-         Log.d("Akash", receiptScanningViewState[1].toString())
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptSuccess, receiptScanningViewState[1])
         Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningSuccess, receiptScanningViewState[2])
@@ -1697,7 +1696,6 @@ class SampleAppViewModelTest {
         coVerify(exactly = 0) {
             receiptScanningManager.analyzeExpense(any(), any())
         }
-        Log.d("Akash", receiptScanningViewState[1].toString())
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
         Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningFailure("HTTP 401 Unauthorized").message, (receiptScanningViewState[1] as ReceiptScanningViewState.ReceiptScanningFailure).message )
 
