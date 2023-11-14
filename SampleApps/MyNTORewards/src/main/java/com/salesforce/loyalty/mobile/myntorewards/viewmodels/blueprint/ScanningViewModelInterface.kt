@@ -12,8 +12,6 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.UploadRe
 
 interface ScanningViewModelInterface {
 
-    fun analyzeExpense(context: Context, fileName: String): AnalyzeExpenseResponse?
-
     val receiptListLiveData: LiveData<ReceiptListResponse>
     val receiptListViewState: LiveData<ReceiptViewState>
     val scannedReceiptLiveData: LiveData<AnalyzeExpenseResponse>

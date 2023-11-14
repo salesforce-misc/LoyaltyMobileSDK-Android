@@ -984,30 +984,6 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
     fun getScanningViewModel(): ScanningViewModelInterface {
         return object : ScanningViewModelInterface {
-            override fun analyzeExpense(
-                context: Context,
-                fileName: String
-            ): AnalyzeExpenseResponse? {
-                var result: AnalyzeExpenseResponse? = null
-                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
-                val gson = Gson()
-                val mockResponse = MockResponseFileReader("SampleAnalyzeExpense.json").content
-
-                scannedReceipt.value = gson.fromJson(
-                    mockResponse,
-                    AnalyzeExpenseResponse::class.java
-                )
-                result= gson.fromJson(
-                    mockResponse,
-                    AnalyzeExpenseResponse::class.java
-                )
-
-                Handler(getMainLooper()).postDelayed({
-                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
-                }, 5000)
-
-                return result
-            }
 
             override val receiptListLiveData: LiveData<ReceiptListResponse>
                 get() = receiptList
@@ -1107,7 +1083,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptInProgress)
 
                 Handler(getMainLooper()).postDelayed({
-                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess(""))
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess)
                 }, 1000)
 
                 Handler(getMainLooper()).postDelayed({
