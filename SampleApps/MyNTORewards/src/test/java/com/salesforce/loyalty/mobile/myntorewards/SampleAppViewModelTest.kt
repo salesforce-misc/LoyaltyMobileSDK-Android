@@ -1610,6 +1610,7 @@ class SampleAppViewModelTest {
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptSuccess, receiptScanningViewState[1])
         Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningSuccess, receiptScanningViewState[2])
+        Assert.assertEquals(scanningViewModel.scannedReceiptLiveData.value, mockAnalyzeExpenseResponse)
     }
 
     @Test
@@ -1639,7 +1640,7 @@ class SampleAppViewModelTest {
         }
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
         Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningFailure("HTTP 401 Unauthorized").message, (receiptScanningViewState[1] as ReceiptScanningViewState.ReceiptScanningFailure).message )
-
+        Assert.assertEquals(scanningViewModel.scannedReceiptLiveData.value, null)
     }
 
     @Test
@@ -1679,7 +1680,7 @@ class SampleAppViewModelTest {
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptInProgress, receiptScanningViewState[0])
         Assert.assertEquals(ReceiptScanningViewState.UploadReceiptSuccess, receiptScanningViewState[1])
         Assert.assertEquals(ReceiptScanningViewState.ReceiptScanningFailure("HTTP 401 Unauthorized").message, (receiptScanningViewState[2] as ReceiptScanningViewState.ReceiptScanningFailure).message )
-
+        Assert.assertEquals(scanningViewModel.scannedReceiptLiveData.value, null)
     }
 
     @Test
