@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ERROR_SCREEN
 
 @Composable
 fun ScanningErrorPopup(
@@ -43,7 +46,8 @@ fun ScanningErrorPopup(
             Modifier
                 .weight(0.75f)
                 .background(Color.White, shape = RoundedCornerShape(16.dp))
-                .padding(start = 16.dp, end = 16.dp),
+                .padding(start = 16.dp, end = 16.dp)
+                .testTag(TEST_TAG_ERROR_SCREEN),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -76,7 +80,9 @@ fun ScanningErrorPopup(
         ) {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(), onClick = {
+                    .fillMaxWidth()
+                    .testTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN),
+                onClick = {
                     scanAnotherReceipt()
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),

@@ -288,7 +288,9 @@ fun ShowScannedReceiptScreen(
                         } else {
                             Button(
                                 modifier = Modifier
-                                    .fillMaxWidth(), onClick = {
+                                    .fillMaxWidth()
+                                    .testTag(TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT),
+                                onClick = {
                                     submissionTryAgainState = true
                                 },
                                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
@@ -455,7 +457,7 @@ private fun getUpdatedReceiptStatus(
     if (memberJson == null) {
     }
     val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
-    val membershipKey = member.membershipNumber ?: ""
+    val membershipKey = member?.membershipNumber ?: ""
     scanningViewModel.getReceiptStatus(
         receiptId = receiptId,
         membershipKey,
