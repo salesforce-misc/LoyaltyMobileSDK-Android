@@ -42,12 +42,12 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
             coroutineScope.launch {
 
                 games?.let {
-                    val gamesDate = it.gameDefinitions.get(0).gameReward.eligibleRewards
-                    gamesDate.let {
-                        for(item in it)
+                    val gamesDate = it.gameDefinitions.get(0).gameRewards
+                    gamesDate.let {gameReward ->
+                        for(item in gameReward)
                         {
-                            gamesList.add(item.name)
-                            colourList.add(Color(("#"+item.seg_color).toColorInt()))
+                            item.name?.let { name -> gamesList.add(name) }
+                            colourList.add(Color(("#"+item.segColor).toColorInt()))
                         }
                         wheelValuesLoaded= true
                     }

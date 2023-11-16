@@ -3,27 +3,34 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 import com.google.gson.annotations.SerializedName
 
 data class GameDefinition(
-    @SerializedName("Description")
-    val description: String,
 
-    @SerializedName("End Date")
-    val end_date: String,
+    @SerializedName("description")
+    val description: String?,
 
-    @SerializedName("GameReward")
-    val gameReward: GameReward,
+    @SerializedName("gameDefinitionId")
+    val gameDefinitionId: String?,
 
-    @SerializedName("Name")
-    val name: String,
+    @SerializedName("endDate")
+    val endDate: String?,
 
-    @SerializedName("Start Date")
-    val start_date: String,
+    @SerializedName("gameRewards")
+    val gameRewards: List<GameReward> = mutableListOf(),
 
-    @SerializedName("Status")
-    val status: String,
+    @SerializedName("participantGameRewards")
+    val participantGameRewards: List<GameReward> = mutableListOf(),
 
-    @SerializedName("Timeout Duration")
-    val timeout_duration: String,
+    @SerializedName("name")
+    val name: String?,
 
-    @SerializedName("Type")
+    @SerializedName("startDate")
+    val startDate: String?,
+
+    @SerializedName("status")
+    val status: String?,
+
+    @SerializedName("timeoutDuration")
+    val timeoutDuration: String?,
+
+    @SerializedName("type")
     val type: String
 )
