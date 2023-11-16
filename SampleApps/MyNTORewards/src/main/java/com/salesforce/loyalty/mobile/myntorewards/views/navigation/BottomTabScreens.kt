@@ -267,7 +267,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.GameZoneScreen.route) {
             showBottomBar(true)
-            GameZoneScreen(navController)
+            GameZoneScreen(navController, gameViewModel)
         }
         composable(route = MoreScreens.ScratchCardScreen.route) {
             showBottomBar(true)

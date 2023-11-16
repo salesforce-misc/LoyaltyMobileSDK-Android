@@ -17,7 +17,7 @@ data class GameDefinition(
     val gameRewards: List<GameReward> = mutableListOf(),
 
     @SerializedName("participantGameRewards")
-    val participantGameRewards: List<GameReward> = mutableListOf(),
+    val participantGameRewards: List<ParticipantGameReward> = mutableListOf(),
 
     @SerializedName("name")
     val name: String?,

@@ -47,7 +47,7 @@
           "sourceActivityId": "201",
           "expirationDate": "2024-11-01T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active",
+          "status": "active"
         }
       ],
       "name": "Bonnie and Clyde Style Promotion",
@@ -103,7 +103,7 @@
           "sourceActivityId": "201",
           "expirationDate": "2024-11-01T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active",
+          "status": "active"
         }
       ],
       "name": "Billy the Kid Promotion",
@@ -158,7 +158,7 @@
           "sourceActivityId": "201",
           "expirationDate": "2024-11-01T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active",
+          "status": "active"
         }
       ],
       "name": "Meow Scratch Mouse",
@@ -213,7 +213,7 @@
           "sourceActivityId": "201",
           "expirationDate": "2024-11-01T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active",
+          "status": "active"
         }
       ],
       "name": "Cat Scratch Fever Returns",

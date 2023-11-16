@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
@@ -29,7 +33,13 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @Composable
-fun GameZoneScreen(navController: NavHostController) {
+fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
+    val games by gameViewModel.gamesLiveData.observeAsState()
+    val gameViewState by gameViewModel.gamesViewState.observeAsState()
+    var isInProgress by remember { mutableStateOf(false) }
+    LaunchedEffect(true) {
+        gameViewModel.getGames(true)
+    }
     Box(
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier.background(TextPurpleLightBG)
@@ -101,61 +111,81 @@ fun GameZoneScreen(navController: NavHostController) {
                     }
 
                 }
-                when (selectedTab) {
-                    0 -> {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            modifier = Modifier
-                                .background(VeryLightPurple)
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .fillMaxHeight(),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            item {
-                                GameView(
-                                    thumbnailId = R.drawable.placeholder_game_thumbnail,
-                                    titleId = R.string.game_placeholder_title,
-                                    GameType.SPIN_A_WHEEL
-                                ){
-                                    navController.navigate(MoreScreens.SpinWheelScreen.route)
+                when (gameViewState) {
+                    GamesViewState.GamesFetchSuccess -> {
+                        isInProgress = false
+                        when (selectedTab) {
+                            0 -> {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(2),
+                                    modifier = Modifier
+                                        .background(VeryLightPurple)
+                                        .padding(16.dp)
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    item {
+                                        GameView(
+                                            false,
+                                            titleId = R.string.game_placeholder_title,
+                                            GameType.SPIN_A_WHEEL
+                                        ) {
+                                            navController.navigate(MoreScreens.SpinWheelScreen.route)
+                                        }
+                                    }
+                                    item() {
+                                        GameView(
+                                            false,
+                                            titleId = R.string.game_placeholder_scratch_card_title,
+                                            GameType.SCRATCH_CARD
+                                        ) {
+                                            navController.navigate(MoreScreens.ScratchCardScreen.route)
+                                        }
+                                    }
+                                    item() {
+                                        GameView(
+                                            false,
+                                            titleId = R.string.game_placeholder_title,
+                                            GameType.SPIN_A_WHEEL
+                                        ) {
+                                            navController.navigate(MoreScreens.SpinWheelScreen.route)
+                                        }
+                                    }
+                                    item {
+                                        GameView(
+                                            false,
+                                            titleId = R.string.game_placeholder_scratch_card_title,
+                                            GameType.SCRATCH_CARD
+                                        ) {
+                                            navController.navigate(MoreScreens.ScratchCardScreen.route)
+                                        }
+                                    }
                                 }
                             }
-                            item() {
-                                GameView(
-                                    thumbnailId = R.drawable.placeholder_scratch_card,
-                                    titleId = R.string.game_placeholder_scratch_card_title,
-                                    GameType.SCRATCH_CARD
-                                ){
-                                    navController.navigate(MoreScreens.ScratchCardScreen.route)
-                                }
-                            }
-                            item() {
-                                GameView(
-                                    thumbnailId = R.drawable.placeholder_game_thumbnail,
-                                    titleId = R.string.game_placeholder_title,
-                                    GameType.SPIN_A_WHEEL
-                                ){
-                                    navController.navigate(MoreScreens.SpinWheelScreen.route)
-                                }
-                            }
-                            item {
-                                GameView(
-                                    thumbnailId = R.drawable.placeholder_scratch_card,
-                                    titleId = R.string.game_placeholder_scratch_card_title,
-                                    GameType.SCRATCH_CARD
-                                ){
-                                    navController.navigate(MoreScreens.ScratchCardScreen.route)
-                                }
+                            1 -> {
+
                             }
                         }
                     }
-                    1 -> {
-
+                    GamesViewState.GamesFetchFailure -> {
+                        isInProgress = false
                     }
+                    GamesViewState.GamesFetchInProgress -> {
+                        isInProgress = true
+                    }
+
+                    else -> {}
                 }
             }
+        }
+
+        if (isInProgress) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize(0.1f).align(Alignment.Center)
+            )
         }
     }
 }
