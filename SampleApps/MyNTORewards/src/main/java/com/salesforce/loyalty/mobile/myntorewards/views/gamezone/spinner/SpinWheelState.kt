@@ -49,8 +49,6 @@ data class SpinWheelState(
             spinAnimationState = SpinAnimationState.SPINNING
 
             val randomRotationDegree = generateRandomRotationDegree(pieCount)
-            Log.d("Akash random", ""+randomRotationDegree)
-            Log.d("Akash result", ""+resultDegree)
           /*  rotation.animateTo(
                 targetValue = (360f * 4 * (6000 / 1000)),
                 animationSpec = tween(
