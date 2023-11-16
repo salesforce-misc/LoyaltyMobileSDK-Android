@@ -1,5 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.components
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,13 +30,28 @@ fun BodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun CommonText(
+fun BodyTextLarge(text: String, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 18.sp, modifier = modifier)
+}
+
+@Composable
+fun BodyTextSmall(text: String, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 12.sp, modifier = modifier)
+}
+
+@Composable
+fun BodyTextSmallBold(text: String, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = modifier)
+}
+
+@Composable
+fun CommonText(
     text: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.fillMaxWidth(),
     fontFamily: FontFamily = font_sf_pro,
     color: Color = Color.Black,
-    fontSize: TextUnit = 16.sp,
-    textAlign: TextAlign = TextAlign.Center,
+    fontSize: TextUnit = 14.sp,
+    textAlign: TextAlign = TextAlign.Start,
     fontWeight: FontWeight = FontWeight.Normal,
 ) {
     Text(

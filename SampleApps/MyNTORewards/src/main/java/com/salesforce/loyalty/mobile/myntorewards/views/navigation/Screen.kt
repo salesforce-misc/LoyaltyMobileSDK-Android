@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.navigation
 
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MY_REFERRALS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_BENEFIT_FULL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_CAPTURE_IMAGE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_BETTER_LUCK_SCREEN
@@ -64,4 +65,5 @@ sealed class MoreScreens(val route: String) {
     object SpinWheelScreen : MoreScreens(ROUTE_GAME_SPIN_WHEEL)
     object GameCongratsScreen : MoreScreens(ROUTE_GAME_CONGRATS_SCREEN)
     object GameBetterLuckScreen : MoreScreens(ROUTE_GAME_BETTER_LUCK_SCREEN)
+    object MyReferralsScreen : MoreScreens(MY_REFERRALS_SCREEN)
 }
