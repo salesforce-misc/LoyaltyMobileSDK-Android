@@ -6,13 +6,9 @@ import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
-import androidx.test.core.app.ActivityScenario.launch
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
-import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
