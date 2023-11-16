@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class Games(
 
+    @SerializedName("errorMessage")
+    val errorMessage: String?,
+
     @SerializedName("GameDefinitions")
     val gameDefinitions: List<GameDefinition>,
-
-    @SerializedName("message")
-    val message: Any,
 
     @SerializedName("status")
     val status: Boolean
