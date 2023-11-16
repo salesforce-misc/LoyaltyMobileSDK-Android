@@ -7,7 +7,7 @@ data class Games(
     @SerializedName("errorMessage")
     val errorMessage: String?,
 
-    @SerializedName("GameDefinitions")
+    @SerializedName("gameDefinitions")
     val gameDefinitions: List<GameDefinition>,
 
     @SerializedName("status")

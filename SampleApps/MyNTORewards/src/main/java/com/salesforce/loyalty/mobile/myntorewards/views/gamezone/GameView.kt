@@ -31,7 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 
 @Composable
-fun GameView(thumbnailId: Int, titleId: Int, gameType: GameType, onClicked: () -> Unit) {
+fun GameView(isExpired: Boolean, titleId: Int, gameType: GameType, onClicked: () -> Unit) {
     var lastClickTime by remember { mutableStateOf(0L) }
     Column(
         modifier = Modifier
@@ -46,6 +46,22 @@ fun GameView(thumbnailId: Int, titleId: Int, gameType: GameType, onClicked: () -
 
     {
         Box() {
+            val thumbnailId = when (gameType) {
+                GameType.SPIN_A_WHEEL -> {
+                    if (isExpired) {
+                        R.drawable.placeholder_game_thumbnail
+                    } else {
+                        R.drawable.placeholder_game_thumbnail
+                    }
+                }
+                GameType.SCRATCH_CARD -> {
+                    if (isExpired) {
+                        R.drawable.placeholder_scratch_card
+                    } else {
+                        R.drawable.placeholder_scratch_card
+                    }
+                }
+            }
             Image(
                 painter = painterResource(id = thumbnailId),
                 contentDescription ="game",
@@ -117,5 +133,5 @@ fun GameView(thumbnailId: Int, titleId: Int, gameType: GameType, onClicked: () -
 @Preview
 @Composable
 fun previewGameView(){
-    GameView(thumbnailId = R.drawable.placeholder_game_thumbnail, titleId = R.string.game_placeholder_title, gameType = GameType.SPIN_A_WHEEL){}
+    GameView(false, titleId = R.string.game_placeholder_title, gameType = GameType.SPIN_A_WHEEL){}
 }

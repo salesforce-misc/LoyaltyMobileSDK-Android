@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
@@ -25,12 +26,16 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
 
     private val games = MutableLiveData<Games>()
 
+    override val gamesViewState: LiveData<GamesViewState>
+        get() = viewState
+
+    private val viewState = MutableLiveData<GamesViewState>()
 
     override fun getGameReward(mock: Boolean) {
         viewModelScope.launch {
             val result = loyaltyAPIManager.getGameReward(true)
             result.onSuccess {
-                Logger.d("Canvas", "API Result SUCCESS: ${it}")
+                Logger.d(TAG, "API Result SUCCESS: ${it}")
                 val reward: String? =
                     it?.gameRewards?.get(0)?.description
                 delay(2000)
@@ -38,19 +43,21 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
                     rewardTextMutableLiveData.postValue(it)
                 }
             }.onFailure {
-                Logger.d("Canvas", "API Result FAILURE: ${it}")
+                Logger.d(TAG, "API Result FAILURE: ${it}")
             }
         }
     }
 
-    override fun getGames(mock: Boolean)
-    {
+    override fun getGames(mock: Boolean) {
+        viewState.postValue(GamesViewState.GamesFetchInProgress)
         viewModelScope.launch {
             val result = loyaltyAPIManager.getGames(true)
             result.onSuccess {
-                games.value= it
+                games.value = it
+                viewState.postValue(GamesViewState.GamesFetchSuccess)
             }.onFailure {
-                Logger.d("Canvas", "API Result FAILURE: ${it}")
+                Logger.d(TAG, "API Result FAILURE: ${it}")
+                viewState.postValue(GamesViewState.GamesFetchFailure)
             }
         }
     }
