@@ -12,6 +12,8 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewM
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberBenefit
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -23,6 +25,12 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
 
     override val rewardTextLiveData: LiveData<String>
         get() = rewardTextMutableLiveData
+
+    override val gamesLiveData: LiveData<Games>
+        get() = games
+
+    private val games = MutableLiveData<Games>()
+
 
     override fun getGameReward(mock: Boolean) {
         viewModelScope.launch {
@@ -40,4 +48,17 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             }
         }
     }
+
+    override fun getGames(mock: Boolean)
+    {
+        viewModelScope.launch {
+            val result = loyaltyAPIManager.getGames(true)
+            result.onSuccess {
+                games.value= it
+            }.onFailure {
+                Logger.d("Canvas", "API Result FAILURE: ${it}")
+            }
+        }
+    }
+
 }

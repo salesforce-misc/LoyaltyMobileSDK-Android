@@ -7,6 +7,7 @@ import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.test.core.app.ActivityScenario.launch
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 data class SpinWheelState(
-    internal val loyaltyAPIManager: LoyaltyAPIManager,
+    internal val gameViewModel: GameViewModelInterface,
     internal val pieCount: Int,
     private val durationMillis: Int,
     private val delayMillis: Int,
@@ -78,28 +79,33 @@ data class SpinWheelState(
             val resultIndex = pieCount - quotient - 1
 
             onFinish(resultIndex)
+            gameViewModel.getGames(true)
 
             coroutineScope.launch {
-                val result = loyaltyAPIManager.getGames(true)
-                rotation.snapTo(resultDegree ?:randomRotationDegree)
-                result.onSuccess {
-                    Logger.d("getGames", "after delay")
-                    rotation.animateTo(
-                        targetValue = (360f * rotationPerSecond * (durationMillis / 1000)) + (resultDegree ?: randomRotationDegree),
-                        animationSpec = tween(
-                            durationMillis = durationMillis,
-                            delayMillis = delayMillis,
-                            easing = easing
-                        )
-                    )
-                    autoSpinDelay?.let {
-                        delay(it)
-                        spin(coroutineScope)
-                    }
+                val result = gameViewModel.getGames(true)
 
-                }.onFailure {
-                    Log.d("Games", "API Result FAILURE: ${it}")
+                rotation.snapTo(resultDegree ?:randomRotationDegree)
+
+                rotation.animateTo(
+                    targetValue = (360f * rotationPerSecond * (durationMillis / 1000)) + (resultDegree ?: randomRotationDegree),
+                    animationSpec = tween(
+                        durationMillis = durationMillis,
+                        delayMillis = delayMillis,
+                        easing = easing
+                    )
+                )
+                autoSpinDelay?.let {
+                    delay(it)
+                    spin(coroutineScope)
                 }
+
+//                result.onSuccess {
+//                    Logger.d("getGames", "after delay")
+//
+//
+//                }.onFailure {
+//                    Log.d("Games", "API Result FAILURE: ${it}")
+//                }
             }
             spinAnimationState = SpinAnimationState.STOPPED
         }
@@ -133,7 +139,7 @@ enum class SpinAnimationState {
 
 @Composable
 fun rememberSpinWheelState(
-   loyaltyAPIManager: LoyaltyAPIManager,
+    gameViewModel: GameViewModelInterface,
     pieCount: Int,
     durationMillis: Int = 5000,
     delayMillis: Int = 0,
@@ -145,7 +151,7 @@ fun rememberSpinWheelState(
 ): SpinWheelState {
     return remember {
         SpinWheelState(
-            loyaltyAPIManager,
+            gameViewModel,
             pieCount,
             durationMillis,
             delayMillis,

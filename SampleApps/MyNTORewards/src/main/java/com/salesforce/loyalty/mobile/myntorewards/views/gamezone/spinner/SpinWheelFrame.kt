@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerFrameColour
 
 
 @Composable
@@ -20,17 +21,32 @@ fun SpinWheelFrame(frameSize: Dp, frameWidth: Dp)
 {
     Canvas(
         modifier = Modifier
-            .size(frameSize-10.dp)
+            .size(frameSize)
     ){
         val canvasWidth = size.width
         val canvasHeight = size.height
         drawArc(
-            color = Color.White,
+            color = SpinnerFrameColour,
             startAngle = 0f,
             sweepAngle = 360f,
             useCenter = true,
             style = Stroke(frameWidth.toPx()),
             size = Size(canvasWidth, canvasHeight)
+        )
+    }
+}
+@Composable
+fun SpinWheelCircle(frameSize: Dp, frameWidth: Dp)
+{
+    Canvas(
+        modifier = Modifier
+            .size(frameSize-10.dp)
+    ){
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        drawCircle(
+            color = Color.White,
+            radius = 400f,
         )
     }
 }
