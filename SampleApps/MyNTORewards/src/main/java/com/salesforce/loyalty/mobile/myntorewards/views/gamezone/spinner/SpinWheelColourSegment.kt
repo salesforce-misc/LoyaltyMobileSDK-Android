@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.PADDING_ANGLE_BETWEEN_WHEEL_SEGMENT
 
 @Composable
 fun SpinWheelColourSegment(
@@ -18,8 +19,7 @@ fun SpinWheelColourSegment(
     rotationDegree: Float,
     pieColors: List<Color>,
 
-)
-{
+    ) {
     val pieAngle = 360f / pieCount
     val startAngleOffset = 270
 
@@ -31,17 +31,17 @@ fun SpinWheelColourSegment(
                 indication = null,
                 onClick = {}
             )
-    ){
+    ) {
 
         val canvasWidth = size.width
         val canvasHeight = size.height
-        for(i in 0 until pieCount){
+        for (i in 0 until pieCount) {
             val startAngle = pieAngle * i + rotationDegree + startAngleOffset
             val nextColor = pieColors.getOrElse(i) { Color.LightGray }
             drawArc(
                 color = nextColor,
                 startAngle = startAngle,
-                sweepAngle = pieAngle-2,
+                sweepAngle = pieAngle - PADDING_ANGLE_BETWEEN_WHEEL_SEGMENT,
                 useCenter = true,
                 size = Size(canvasWidth, canvasHeight),
             )

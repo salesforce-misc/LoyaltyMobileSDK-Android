@@ -1,20 +1,12 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
-import android.util.Log
 import androidx.annotation.IntRange
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_TEXT_INITIAL_ROTATION
 import java.lang.Math.cos
 import java.lang.Math.sin
 
@@ -49,8 +42,8 @@ internal fun SpinWheelContent(
             .padding(10.dp)
             .size(spinSize),
         contentAlignment = Alignment.Center
-    ){
-        for(pieIndex in 0 until pieCount){
+    ) {
+        for (pieIndex in 0 until pieCount) {
             //rotationDegree is maintaining the degree of wheel has been rotated  ,
             val startAngle = pieAngle * pieIndex + startOffset + rotationDegree + pieAngle / 2
 
@@ -58,7 +51,8 @@ internal fun SpinWheelContent(
 
             val offsetY = (pieRadius * cos(Math.toRadians(startAngle.toDouble()))).toFloat()
 
-            val rotateAngle =   270f+ (pieAngle/2)+ (pieAngle*pieIndex)+ rotationDegree
+            val rotateAngle =
+                WHEEL_TEXT_INITIAL_ROTATION + (pieAngle / 2) + (pieAngle * pieIndex) + rotationDegree
             Box(
                 modifier = Modifier
                     .size(spinSize / 4) //sets the size of box based on different sizes
@@ -66,10 +60,11 @@ internal fun SpinWheelContent(
                 contentAlignment = Alignment.Center
             ) {
 
-                Row(  modifier = Modifier
-                    .rotate(rotateAngle)) {
-                    if(pieIndex ==2)
-                    {
+                Row(
+                    modifier = Modifier
+                        .rotate(rotateAngle)
+                ) {
+                    if (pieIndex == 2) {
 
                         Image(
                             painter = painterResource(id = R.drawable.phone_icon),
@@ -86,11 +81,9 @@ internal fun SpinWheelContent(
                         textAlign = TextAlign.Center,
                         fontSize = 12.sp,
 
-                    )
+                        )
 
                 }
-
-
 
 
             }
@@ -98,8 +91,8 @@ internal fun SpinWheelContent(
     }
 }
 
-fun getPieRadius(pieCount: Int, radius: Float): Float{
-    return when(pieCount){
+fun getPieRadius(pieCount: Int, radius: Float): Float {
+    return when (pieCount) {
         2 -> radius / 2f
         3 -> radius / 1.8f
         4 -> radius / 1.8f

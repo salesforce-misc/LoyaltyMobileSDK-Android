@@ -3,7 +3,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,19 +22,22 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.Spinner
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_SIZE
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerLandingPageHeader
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Wheel(navController: NavHostController, gameViewModel: GameViewModelInterface, gamesList: MutableList<String>, colourList: MutableList<Color>)
-{
+fun Wheel(
+    navController: NavHostController,
+    gameViewModel: GameViewModelInterface,
+    gamesList: MutableList<String>,
+    colourList: MutableList<Color>
+) {
     val state = rememberSpinWheelState(gameViewModel, gamesList.size)
 
     val scope = rememberCoroutineScope()
     Column {
         val rewardList by remember { mutableStateOf(gamesList) }
 
-        val wheelColours=  rememberUpdatedState(colourList)
+        val wheelColours = rememberUpdatedState(colourList)
 
         val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
@@ -46,13 +48,18 @@ fun Wheel(navController: NavHostController, gameViewModel: GameViewModelInterfac
                 .verticalScroll(rememberScrollState()),
         ) {
             SpinnerLandingPageHeader(navController)
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp), contentAlignment = Alignment.Center
+            ) {
 
                 SpinWheelCircle(WHEEL_SIZE + WHEEL_BORDER_WIDTH)
 
-                SpinWheelFrame(WHEEL_SIZE+WHEEL_BORDER_WIDTH+WHEEL_FRAME_WIDTH, WHEEL_FRAME_WIDTH)
+                SpinWheelFrame(
+                    WHEEL_SIZE + WHEEL_BORDER_WIDTH + WHEEL_FRAME_WIDTH,
+                    WHEEL_FRAME_WIDTH
+                )
 
                 SpinWheelColourSegment(
                     WHEEL_SIZE,
@@ -67,7 +74,7 @@ fun Wheel(navController: NavHostController, gameViewModel: GameViewModelInterfac
                     rewardList
                 )
                 SpinWheelPointer() {
-                    scope.launch { state.animate(coroutineScope, rewardList) { pieIndex -> } }
+                    scope.launch { state.animate(coroutineScope, rewardList) }
                 }
             }
             SpinWheelLandingPageFooter()

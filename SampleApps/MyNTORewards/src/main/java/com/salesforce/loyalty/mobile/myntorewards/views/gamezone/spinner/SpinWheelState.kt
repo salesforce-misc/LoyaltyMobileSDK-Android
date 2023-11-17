@@ -13,10 +13,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.Spinner
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.ROTATION_PER_SECOND
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.START_DEGREE
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
 
 data class SpinWheelState(
     internal val gameViewModel: GameViewModelInterface,
@@ -32,26 +29,24 @@ data class SpinWheelState(
     suspend fun animate(
         coroutineScope: CoroutineScope,
         textList: MutableList<String>,
-        onFinish: (pieIndex: Int) -> Unit = {}
     ) {
-        when(spinAnimationState) {
+        when (spinAnimationState) {
             SpinAnimationState.STOPPED -> {
 
-                spin(coroutineScope,textList, onFinish = onFinish)
+                spin(coroutineScope, textList)
             }
+
             SpinAnimationState.SPINNING -> {
                 reset()
             }
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun spin(
         coroutineScope: CoroutineScope,
         textList: MutableList<String>,
-        onFinish: (pieIndex: Int) -> Unit = {}
     ) {
-        if(spinAnimationState == SpinAnimationState.STOPPED) {
+        if (spinAnimationState == SpinAnimationState.STOPPED) {
 
             spinAnimationState = SpinAnimationState.SPINNING
             coroutineScope.launch {
@@ -64,11 +59,6 @@ data class SpinWheelState(
                     )
                 )
             }
-
-        /*    val pieDegree = 360f / pieCount
-            val quotient = (360f).toInt() / pieDegree.toInt()
-            val resultIndex = pieCount - quotient - 1
-            onFinish(resultIndex)*/
 
             gameViewModel.getGames(true)
 
@@ -90,14 +80,13 @@ data class SpinWheelState(
                 }
 
 
-
             }
             spinAnimationState = SpinAnimationState.STOPPED
         }
     }
 
     suspend fun reset() {
-        if(spinAnimationState == SpinAnimationState.SPINNING) {
+        if (spinAnimationState == SpinAnimationState.SPINNING) {
 
             rotation.snapTo(startDegree)
 
@@ -111,11 +100,11 @@ data class SpinWheelState(
         reward: String?,
     ): Float {
 
-        val size= pieCount
-        val factor = 360/size
-        val stopAtWheelIndex= textList.indexOf(reward)
-        val returnFactor = 360/(size*2)+  ((size-1)-stopAtWheelIndex) * (360/size)
-        Log.d("returnFactor",""+ returnFactor)
+        val size = pieCount
+        val factor = 360 / size
+        val stopAtWheelIndex = textList.indexOf(reward)
+        val returnFactor = 360 / (size * 2) + ((size - 1) - stopAtWheelIndex) * (360 / size)
+        Log.d("returnFactor", "" + returnFactor)
         return returnFactor.toFloat()
 
     }
@@ -133,7 +122,7 @@ fun rememberSpinWheelState(
     durationMillis: Int = ROTATION_DURATION,
     rotationPerSecond: Float = ROTATION_PER_SECOND,
     easing: Easing = CubicBezierEasing(0.16f, 1f, 0.3f, 1f),
-    startDegree:Float= START_DEGREE
+    startDegree: Float = START_DEGREE
 ): SpinWheelState {
     return remember {
         SpinWheelState(

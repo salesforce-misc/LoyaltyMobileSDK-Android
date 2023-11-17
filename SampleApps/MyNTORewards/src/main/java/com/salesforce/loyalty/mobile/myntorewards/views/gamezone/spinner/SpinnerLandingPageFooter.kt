@@ -20,8 +20,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 @Composable
-fun SpinWheelLandingPageFooter()
-{
+fun SpinWheelLandingPageFooter() {
     Spacer(modifier = Modifier.height(24.dp))
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -29,7 +28,7 @@ fun SpinWheelLandingPageFooter()
             .fillMaxWidth()
             .padding(start = 60.dp, end = 60.dp, bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(
             text = "Tap 'Spin' to play.",
             color = Color.White,
@@ -45,7 +44,7 @@ fun SpinWheelLandingPageFooter()
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = font_sf_pro,
-            modifier = Modifier.padding(top=16.dp)
+            modifier = Modifier.padding(top = 16.dp)
         )
     }
 }

@@ -27,10 +27,10 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
     val games by gameViewModel.gamesLiveData.observeAsState()
 
     Box(contentAlignment = Alignment.TopCenter) {
-        val gamesList= remember {
+        val gamesList = remember {
             mutableListOf<String>()
         }
-        val colourList= remember {
+        val colourList = remember {
             mutableListOf<Color>()
         }
 
@@ -43,27 +43,26 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
 
                 games?.let {
                     val gamesDate = it.gameDefinitions.get(0).gameRewards
-                    gamesDate.let {gameReward ->
-                        for(item in gameReward)
-                        {
+                    gamesDate.let { gameReward ->
+                        for (item in gameReward) {
                             item.name?.let { name -> gamesList.add(name) }
-                            colourList.add(Color(("#"+item.segColor).toColorInt()))
+                            colourList.add(Color(("#" + item.segColor).toColorInt()))
                         }
-                        wheelValuesLoaded= true
+                        wheelValuesLoaded = true
                     }
                 }
             }
         }
-        if(wheelValuesLoaded)
-        {
+        if (wheelValuesLoaded) {
             Wheel(navController, gameViewModel, gamesList, colourList)
-        } else{
-            Box(modifier = Modifier.fillMaxSize()){
+        } else {
+            Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .fillMaxSize(0.1f)
                         .align(Alignment.Center)
-                )            }
+                )
+            }
         }
     }
 }
