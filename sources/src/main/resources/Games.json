@@ -42,10 +42,10 @@
       ],
       "participantGameRewards":[
         {
-          "gameRewardId": "501",
+          "gameRewardId": null,
           "gameParticipantRewardId": "201",
           "sourceActivityId": "201",
-          "expirationDate": "2024-11-01T19:00:00.000Z",
+          "expirationDate": "2024-11-16T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "active"
         }
@@ -98,10 +98,10 @@
       ],
       "participantGameRewards":[
         {
-          "gameRewardId": "501",
+          "gameRewardId": null,
           "gameParticipantRewardId": "201",
           "sourceActivityId": "201",
-          "expirationDate": "2024-11-01T19:00:00.000Z",
+          "expirationDate": "2023-11-18T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "active"
         }
@@ -153,10 +153,10 @@
       ],
       "participantGameRewards":[
         {
-          "gameRewardId": "501",
+          "gameRewardId": null,
           "gameParticipantRewardId": "201",
           "sourceActivityId": "201",
-          "expirationDate": "2024-11-01T19:00:00.000Z",
+          "expirationDate": "2023-11-17T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "active"
         }
@@ -165,7 +165,7 @@
       "startDate": "2023-10-01T19:00:00.000Z",
       "status": "expired",
       "timeoutDuration": 10,
-      "type": "scratchCard"
+      "type": "ScratchCard"
     },
     {
       "gameDefinitionId":"10",
@@ -208,10 +208,10 @@
       ],
       "participantGameRewards":[
         {
-          "gameRewardId": "501",
+          "gameRewardId": null,
           "gameParticipantRewardId": "201",
           "sourceActivityId": "201",
-          "expirationDate": "2024-11-01T19:00:00.000Z",
+          "expirationDate": "2023-11-01T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "active"
         }
@@ -220,7 +220,62 @@
       "startDate": "2023-10-01T19:00:00.000Z",
       "status": "active",
       "timeoutDuration": 10,
-      "type": "scratchCard"
+      "type": "ScratchCard"
+    },
+    {
+      "gameDefinitionId":"18",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF5733",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "501",
+          "color": "000000",
+          "description": "Get 50%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "501",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": null,
+          "gameParticipantRewardId": "201",
+          "sourceActivityId": "201",
+          "expirationDate": "2023-11-1T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "active"
+        }
+      ],
+      "name": "Billy the Kid Promotion",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "expired",
+      "timeoutDuration": 10,
+      "type": "SpintheWheel"
     }
   ],
   "status": true

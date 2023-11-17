@@ -152,5 +152,8 @@ class AppConstants {
         // Game types
         const val SPIN_A_WHEEL_GAME = "SpintheWheel"
         const val SCRATCH_CARD_GAME = "ScratchCard"
+        const val GAME_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        const val TAB_ACTIVE_GAMES = 0
+        const val TAB_EXPIRED_GAMES = 1
     }
 }
