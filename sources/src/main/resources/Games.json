@@ -9,11 +9,55 @@
         {
           "gameRewardId": "501",
           "rewardDefinitionId": "101",
-          "color": "FF5733",
+          "color": "DFFF00",
           "description": "Get 10%  Off Voucher",
           "expirationDate": "2023-10-31T19:00:00.000Z",
           "imageUrl": null,
           "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FFBF00",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "20 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF7F50",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "30 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "DE3163",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "40 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "9FE2BF",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
           "rewardType": "Voucher",
           "rewardValue": null
         },
@@ -24,7 +68,7 @@
           "description": "Get 50%  Off Voucher",
           "expirationDate": "2023-10-31T19:00:00.000Z",
           "imageUrl": null,
-          "name": "50 % Off",
+          "name": "60 % Off",
           "rewardType": "Voucher",
           "rewardValue": null
         },

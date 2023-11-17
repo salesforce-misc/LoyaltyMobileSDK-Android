@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedContent
@@ -42,6 +43,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
 @ExperimentalComposeUiApi
 @Composable
 fun CanvasForScratching(

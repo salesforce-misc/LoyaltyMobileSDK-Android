@@ -8,6 +8,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewM
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameRewardResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,6 +47,11 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
                 Logger.d(TAG, "API Result FAILURE: ${it}")
             }
         }
+    }
+
+    override suspend fun getGameRewardResult(mock: Boolean): Result<GameRewardResponse> {
+        delay(2000)
+        return loyaltyAPIManager.getGameReward(true)
     }
 
     override fun getGames(mock: Boolean) {

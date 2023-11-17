@@ -1,21 +1,34 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
+import android.util.Log
 import androidx.annotation.IntRange
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import java.lang.Math.cos
 import java.lang.Math.sin
@@ -24,7 +37,7 @@ import java.lang.Math.sin
 internal fun SpinWheelContent(
     spinSize: Dp,
     @IntRange(from = 2, to = 16) pieCount: Int,
-    rotationDegree: Float,
+    rotationDegree: Float, // maintaining the degree of wheel has been rotated
     wheelData: MutableList<String>,
 ) {
     val pieAngle = 360f / pieCount
@@ -32,30 +45,54 @@ internal fun SpinWheelContent(
     val radius = (spinSize.value / 2)
     val pieRadius = getPieRadius(pieCount, radius) //provided offset info for content
     Box(
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier
+            .padding(10.dp)
             .size(spinSize),
         contentAlignment = Alignment.Center
     ){
         for(pieIndex in 0 until pieCount){
+            //rotationDegree is maintaining the degree of wheel has been rotated  ,
             val startAngle = pieAngle * pieIndex + startOffset + rotationDegree + pieAngle / 2
+
             val offsetX = -(pieRadius * sin(Math.toRadians(startAngle.toDouble()))).toFloat()
+
             val offsetY = (pieRadius * cos(Math.toRadians(startAngle.toDouble()))).toFloat()
+
+            val rotateAngle =   270f+ (pieAngle/2)+ (pieAngle*pieIndex)+ rotationDegree
             Box(
                 modifier = Modifier
                     .size(spinSize / 4) //sets the size of box based on different sizes
                     .offset(x = Dp(offsetX), y = Dp(offsetY)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = wheelData[pieIndex],
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = font_sf_pro,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
+
+                Row(  modifier = Modifier
+                    .rotate(rotateAngle)) {
+                    if(pieIndex ==2)
+                    {
+
+                        Image(
+                            painter = painterResource(id = R.drawable.phone_icon),
+                            contentDescription = "game_back_button",
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+
+                    Text(
+                        text = wheelData[pieIndex],
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = font_sf_pro,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp,
+
+                    )
+
+                }
+
+
+
+
             }
         }
     }
