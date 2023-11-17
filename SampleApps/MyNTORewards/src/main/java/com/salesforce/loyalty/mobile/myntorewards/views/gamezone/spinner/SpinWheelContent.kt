@@ -64,6 +64,7 @@ internal fun SpinWheelContent(
                     modifier = Modifier
                         .rotate(rotateAngle)
                 ) {
+                    //this is for POC to show image can also be added other than text
                     if (pieIndex == 2) {
 
                         Image(
