@@ -65,6 +65,7 @@ fun CanvasForScratching(
 
     var isInProgress by remember { mutableStateOf(false) }
 
+    // Initialized the reward text with a placeholder for now. Will replace it with CX approved text once that is available.
     var rewardTextValue by remember { mutableStateOf("Loading...") }
 
     val rewardTextLiveDataValue by gameViewModel.rewardTextLiveData.observeAsState()
@@ -156,7 +157,6 @@ fun CanvasForScratching(
 
                     if (scratched >= canvasSize) {
                         path.moveTo(size.width, size.height)
-//                        animate = true
                         path.addRect(
                             rect = Rect(
                                 Offset(0f, 0f),
