@@ -27,8 +27,8 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
     // TODO: REMOVE MOCK DATA ONCE THE REAL API IS INTEGRATED
     private fun successState() = MyReferralScreenState(
         tabItems = listOf(ReferralTabs.Success.tabName, ReferralTabs.InProgress.tabName),
-        completedStates = referralItemStates(),
-        inProgressStates = referralItemStatesInProgress(),
+        completedStates = completedItemStates(),
+        inProgressStates = inProgressItemStates(),
         listOf(Pair(R.string.my_referral_sent_label, "18"),
             Pair(R.string.my_referrals_accepted_label, "12"),
             Pair(R.string.my_referrals_vouchers_earned_label, "12"),
@@ -36,61 +36,21 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
         referralsRecentDuration = "90"
     )
 
-    private fun referralItemStates(): ArrayList<ReferralItemState> {
-        return arrayListOf(
-            ReferralItemState(
-                R.string.recent_referrals_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.COMPLETED
-            ),
-            ReferralItemState(
-                R.string.referral_one_month_ago_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.COMPLETED
-            ),
-            ReferralItemState(
-                R.string.referrals_older_than_three_months_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.COMPLETED
-            ),
-            ReferralItemState(
-                R.string.recent_referrals_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.COMPLETED
-            )
+    private fun completedItemStates(): List<ReferralItemState> {
+        return listOf(
+            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
+            ReferralItemState(R.string.referral_one_month_ago_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
+            ReferralItemState(R.string.referrals_older_than_three_months_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
+            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED)
         )
     }
 
-    private fun referralItemStatesInProgress(): ArrayList<ReferralItemState> {
-        return arrayListOf(
-            ReferralItemState(
-                R.string.recent_referrals_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.PENDING
-            ),
-            ReferralItemState(
-                R.string.referral_one_month_ago_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.SIGNED_UP
-            ),
-            ReferralItemState(
-                R.string.referrals_older_than_three_months_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.PENDING
-            ),
-            ReferralItemState(
-                R.string.recent_referrals_section_name,
-                "strawberry.sheikh@yahoo.com",
-                "2 days ago",
-                ReferralStatusType.SIGNED_UP
-            )
+    private fun inProgressItemStates(): List<ReferralItemState> {
+        return listOf(
+            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.PENDING),
+            ReferralItemState(R.string.referral_one_month_ago_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.SIGNED_UP),
+            ReferralItemState(R.string.referrals_older_than_three_months_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.PENDING),
+            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.SIGNED_UP)
         )
     }
 }
