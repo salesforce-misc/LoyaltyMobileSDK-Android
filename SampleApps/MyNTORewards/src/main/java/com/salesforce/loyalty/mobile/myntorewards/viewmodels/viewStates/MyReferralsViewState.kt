@@ -13,7 +13,8 @@ data class MyReferralScreenState(
     val tabItems: List<Int>,
     val completedStates: List<ReferralItemState>,
     val inProgressStates: List<ReferralItemState>,
-    val referralsCountList: List<Pair<Int, String>>
+    val referralsCountList: List<Pair<Int, String>>,
+    val referralsRecentDuration: String
 )
 
 data class ReferralItemState(

@@ -246,7 +246,7 @@
     <string name="purchase_status_completed">Purchase Completed</string>
     <string name="purchase_status_pending">Pending</string>
     <string name="purchase_status_signed_up">Signed-up</string>
-    <string name="my_referral_card_header">YOUR REFERRALS: Last 90 Days</string>
+    <string name="my_referral_card_header"><![CDATA[<b>YOUR REFERRALS:</b> Last %s Days]]></string>
     <string name="my_referral_sent_label">SENT</string>
     <string name="my_referrals_accepted_label">ACCEPTED</string>
     <string name="my_referrals_vouchers_earned_label">VOUCHERS EARNED</string>

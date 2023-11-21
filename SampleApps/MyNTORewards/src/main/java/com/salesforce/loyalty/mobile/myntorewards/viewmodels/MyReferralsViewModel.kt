@@ -32,7 +32,8 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
         listOf(Pair(R.string.my_referral_sent_label, "18"),
             Pair(R.string.my_referrals_accepted_label, "12"),
             Pair(R.string.my_referrals_vouchers_earned_label, "12"),
-            Pair(R.string.my_referrals_points_earned_label, "1200"))
+            Pair(R.string.my_referrals_points_earned_label, "1200")),
+        referralsRecentDuration = "90"
     )
 
     fun referralItemStates(): ArrayList<ReferralItemState> {
