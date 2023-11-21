@@ -28,12 +28,12 @@ data class SpinWheelState(
 
     suspend fun animate(
         coroutineScope: CoroutineScope,
-        textList: MutableList<String>,
+        rewardList: MutableList<String>,
     ) {
         when (spinAnimationState) {
             SpinAnimationState.STOPPED -> {
 
-                spin(coroutineScope, textList)
+                spin(coroutineScope, rewardList)
             }
 
             SpinAnimationState.SPINNING -> {
@@ -44,7 +44,7 @@ data class SpinWheelState(
 
     fun spin(
         coroutineScope: CoroutineScope,
-        textList: MutableList<String>,
+        rewardList: MutableList<String>,
     ) {
         if (spinAnimationState == SpinAnimationState.STOPPED) {
 
@@ -66,7 +66,7 @@ data class SpinWheelState(
                 val result = gameViewModel.getGameRewardResult(true)
                 result.onSuccess {
                     val reward: String? = it?.gameRewards?.get(0)?.name
-                    val stopAtThisDegree = stopAtThisDegree(pieCount, textList, reward)
+                    val stopAtThisDegree = stopAtThisDegree(pieCount, rewardList, reward)
                     rotation.snapTo(stopAtThisDegree)
                     rotation.animateTo(
                         targetValue = (360f * rotationPerSecond * (durationMillis / 1000)) + (stopAtThisDegree),
@@ -96,14 +96,22 @@ data class SpinWheelState(
 
     private fun stopAtThisDegree(
         pieCount: Int,
-        textList: MutableList<String>,
+        rewardList: MutableList<String>,
         reward: String?,
     ): Float {
+        //360 degree devided by total element will give angel which will be there for every element.
+        //for example if 4 elements then each element will have 360/4= 90 degree angle
+        val eachSegmentOccupiedAngle = 360 / pieCount
 
-        val size = pieCount
-        val factor = 360 / size
-        val stopAtWheelIndex = textList.indexOf(reward)
-        val returnFactor = 360 / (size * 2) + ((size - 1) - stopAtWheelIndex) * (360 / size)
+        val stopAtWheelIndex = rewardList.indexOf(reward)
+
+        //eachSegmentOccupiedAngle/2 will provide middle of segment to stop
+        //for example if total 4 elements then each element will hold 90 degree.
+        //we want top stop at 1st element (2nd member or array) then we we will need total angle should be
+        // 45 degree(middle of element)+ 180 degree
+        //45+ ((4-1)-1)*90= =45+ 180 degree rotation
+
+        val returnFactor = eachSegmentOccupiedAngle/2 + ((pieCount - 1) - stopAtWheelIndex) * eachSegmentOccupiedAngle
         Log.d("returnFactor", "" + returnFactor)
         return returnFactor.toFloat()
 

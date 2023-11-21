@@ -225,6 +225,9 @@
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
     <string name="game_spin_a_wheel">Spin a Wheel</string>
     <string name="game_scratch_card">Scratch Card</string>
+    <string name="tap_spin_to_play">Tap \'Spin\' to play.</string>
+    <string name="text_spin_a_wheel">Spin a wheel!.</string>
+    <string name="cd_game_back_button">"game back button".</string>
 
     <!-- Game zone Better luck Screen -->
     <string name="better_luck_next_time">Better luck next time!</string>

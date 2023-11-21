@@ -37,7 +37,7 @@ fun SpinnerLandingPageHeader(navController: NavHostController) {
         Spacer(modifier = Modifier.height(50.dp))
         Image(
             painter = painterResource(id = R.drawable.back_arrow),
-            contentDescription = "game_back_button",
+            contentDescription = stringResource(id = R.string.cd_game_back_button),
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .padding(top = 10.dp, bottom = 10.dp)
@@ -56,7 +56,7 @@ fun SpinnerLandingPageHeader(navController: NavHostController) {
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
         Text(
-            text = "Spin a wheel!",
+            text = stringResource(id = R.string.text_spin_a_wheel),
             color = Color.White,
             textAlign = TextAlign.Center,
             fontSize = 24.sp,

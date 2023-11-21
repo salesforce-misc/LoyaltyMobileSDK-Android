@@ -65,7 +65,7 @@ internal fun SpinWheelContent(
                         .rotate(rotateAngle)
                 ) {
                     //this is for POC to show image can also be added other than text
-                    if (pieIndex == 2) {
+                  /*  if (pieIndex == 2) {
 
                         Image(
                             painter = painterResource(id = R.drawable.phone_icon),
@@ -73,20 +73,16 @@ internal fun SpinWheelContent(
                             contentScale = ContentScale.Fit
                         )
                     }
-
+*/
                     Text(
                         text = wheelData[pieIndex],
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font_sf_pro,
                         color = Color.White,
                         textAlign = TextAlign.Center,
-                        fontSize = 12.sp,
-
-                        )
+                        fontSize = 12.sp,)
 
                 }
-
-
             }
         }
     }

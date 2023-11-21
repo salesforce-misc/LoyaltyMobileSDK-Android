@@ -30,7 +30,7 @@ fun SpinWheelLandingPageFooter() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Tap 'Spin' to play.",
+            text = stringResource(id = R.string.tap_spin_to_play),
             color = Color.White,
             textAlign = TextAlign.Center,
             fontSize = 16.sp,

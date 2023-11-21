@@ -43,7 +43,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@SuppressLint("UnusedContentLambdaTargetStateParameter")
 @ExperimentalComposeUiApi
 @Composable
 fun CanvasForScratching(
