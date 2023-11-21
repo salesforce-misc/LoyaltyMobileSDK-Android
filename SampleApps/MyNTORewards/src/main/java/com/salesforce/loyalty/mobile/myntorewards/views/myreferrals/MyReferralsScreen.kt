@@ -25,6 +25,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferr
 import com.salesforce.loyalty.mobile.myntorewards.views.TitleView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
 fun MyReferralsScreen(navController: NavHostController) {
@@ -58,7 +59,7 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, navController: NavHost
                 .padding(vertical = 12.dp, horizontal = 24.dp)
         ) {
             ReferralCard(uiState.referralsCountList, uiState.referralsRecentDuration) {
-                // TODO: Navigation to Refer a Friend Screen
+                navController.navigate(MoreScreens.ReferFriendScreen.route)
             }
         }
 

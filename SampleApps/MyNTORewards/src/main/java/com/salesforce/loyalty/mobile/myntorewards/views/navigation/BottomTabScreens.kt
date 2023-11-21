@@ -290,5 +290,9 @@ fun MoreScreenNavigation(
             showBottomBar(true)
             MyReferralsScreen(navController)
         }
+        composable(route = MoreScreens.ReferFriendScreen.route) {
+            showBottomBar(true)
+            MyReferralsScreen(navController)
+        }
     }
 }
