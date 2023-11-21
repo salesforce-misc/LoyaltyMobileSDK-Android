@@ -148,6 +148,13 @@ class AppConstants {
         const val ROUTE_GAME_SPIN_WHEEL = "game_spin_wheel"
         const val ROUTE_GAME_CONGRATS_SCREEN = "game_congrats_screen"
         const val ROUTE_GAME_BETTER_LUCK_SCREEN = "game_better_luck_screen"
+
+        // Game types
+        const val SPIN_A_WHEEL_GAME = "SpintheWheel"
+        const val SCRATCH_CARD_GAME = "ScratchCard"
+        const val GAME_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        const val TAB_ACTIVE_GAMES = 0
+        const val TAB_EXPIRED_GAMES = 1
         const val MY_REFERRALS_SCREEN = "my_referrals_screen"
     }
 }

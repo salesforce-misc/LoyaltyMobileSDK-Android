@@ -3,12 +3,30 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 import com.google.gson.annotations.SerializedName
 
 data class GameReward(
-    @SerializedName("AssignedRewards")
-    val assignedRewards: List<AssignedReward>,
+    @SerializedName("color")
+    val segColor: String?,
 
-    @SerializedName("EligibleRewards")
-    val eligibleRewards: List<EligibleReward>,
+    @SerializedName("description")
+    val description: String?,
 
-    @SerializedName("ExpiredRewards")
-    val expiredRewards: List<ExpiredReward>
+    @SerializedName("expirationDate")
+    val expirationDate: String?,
+
+    @SerializedName("imageUrl")
+    val imageUrl: String?,
+
+    @SerializedName("name")
+    val name: String?,
+
+    @SerializedName("rewardDefinitionId")
+    val rewardDefinitionId: String?,
+
+    @SerializedName("rewardType")
+    val rewardType: String?,
+
+    @SerializedName("rewardValue")
+    val rewardValue: String?,
+
+    @SerializedName("gameRewardId")
+    val gameRewardId: String,
 )
