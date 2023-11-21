@@ -26,9 +26,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponen
 
 @Composable
 fun ReferralList(itemStates: List<ReferralItemState>) {
-
+    // Group Items based on section name to show items under the respective section header
     val grouped = itemStates.groupBy{ stringResource(id = it.sectionName) }
-
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -60,13 +59,11 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
         ImageComponent(
             drawableId = purchaseStatus.iconId,
             contentDescription = null,
-            modifier = Modifier
-                .constrainAs(statusIcon) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
-                .padding(end = 8.dp)
+            modifier = Modifier.constrainAs(statusIcon) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+            }.padding(end = 8.dp)
         )
 
         BodyTextSmallBold(
@@ -100,32 +97,16 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
 @Preview
 @Composable
 fun ReferralsListPreview() {
-    val referralItemStates = referralItemStates()
-    ReferralList(referralItemStates)
+    ReferralList(referralItemStates())
 }
 
-@Composable
-fun referralItemStates(): ArrayList<ReferralItemState> {
-    val referralItemStates = arrayListOf(
+private fun referralItemStates(): List<ReferralItemState> {
+    return listOf(
         ReferralItemState(
             R.string.recent_referrals_section_name,
             "strawberry.sheikh@yahoo.com",
             "2 days ago",
             ReferralStatusType.COMPLETED
-        ),
-        ReferralItemState(
-            R.string.referral_one_month_ago_section_name,
-            "strawberry.sheikh@yahoo.com",
-            "2 days ago",
-            ReferralStatusType.COMPLETED
-        ),
-        ReferralItemState(
-            R.string.referrals_older_than_three_months_section_name,
-            "strawberry.sheikh@yahoo.com",
-            "2 days ago",
-            ReferralStatusType.COMPLETED
-        ),
-        ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED)
+        )
     )
-    return referralItemStates
 }

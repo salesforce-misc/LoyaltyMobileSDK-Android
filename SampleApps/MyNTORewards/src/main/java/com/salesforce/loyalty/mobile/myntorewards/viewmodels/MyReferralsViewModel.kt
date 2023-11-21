@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
@@ -18,13 +17,14 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
     }
 
     private fun fetchReferralsInfo() {
-        _uiState.value = MyReferralsViewState.MyReferralsFetchInProgress
+        uiMutableState.value = MyReferralsViewState.MyReferralsFetchInProgress
         viewModelScope.launch {
             delay(2000) // TODO: REMOVE
-            _uiState.value = MyReferralsViewState.MyReferralsFetchSuccess(successState())
+            uiMutableState.value = MyReferralsViewState.MyReferralsFetchSuccess(successState())
         }
     }
 
+    // TODO: REMOVE MOCK DATA ONCE THE REAL API IS INTEGRATED
     private fun successState() = MyReferralScreenState(
         tabItems = listOf(ReferralTabs.Success.tabName, ReferralTabs.InProgress.tabName),
         completedStates = referralItemStates(),
@@ -36,8 +36,8 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
         referralsRecentDuration = "90"
     )
 
-    fun referralItemStates(): ArrayList<ReferralItemState> {
-        val referralItemStates = arrayListOf(
+    private fun referralItemStates(): ArrayList<ReferralItemState> {
+        return arrayListOf(
             ReferralItemState(
                 R.string.recent_referrals_section_name,
                 "strawberry.sheikh@yahoo.com",
@@ -63,10 +63,10 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
                 ReferralStatusType.COMPLETED
             )
         )
-        return referralItemStates
     }
-    fun referralItemStatesInProgress(): ArrayList<ReferralItemState> {
-        val referralItemStates = arrayListOf(
+
+    private fun referralItemStatesInProgress(): ArrayList<ReferralItemState> {
+        return arrayListOf(
             ReferralItemState(
                 R.string.recent_referrals_section_name,
                 "strawberry.sheikh@yahoo.com",
@@ -85,8 +85,12 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
                 "2 days ago",
                 ReferralStatusType.PENDING
             ),
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.SIGNED_UP)
+            ReferralItemState(
+                R.string.recent_referrals_section_name,
+                "strawberry.sheikh@yahoo.com",
+                "2 days ago",
+                ReferralStatusType.SIGNED_UP
+            )
         )
-        return referralItemStates
     }
 }
