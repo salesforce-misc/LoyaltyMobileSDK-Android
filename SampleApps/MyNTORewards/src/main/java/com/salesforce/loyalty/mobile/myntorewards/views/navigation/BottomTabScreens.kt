@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWhe
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.MyReferralsScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
@@ -285,6 +285,10 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.GameBetterLuckScreen.route) {
             showBottomBar(false)
             BetterLuckScreen { navController.popBackStack() }
+        }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            showBottomBar(true)
+            MyReferralsScreen(navController)
         }
     }
 }

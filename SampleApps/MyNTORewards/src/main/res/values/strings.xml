@@ -133,6 +133,7 @@
     <string name="header_label_dates">Date Format</string>
     <string name="header_label_favourite">Favorites</string>
     <string name="header_label_game_zone">Game Zone</string>
+    <string name="header_label_my_referrals">My Referrals</string>
     <string name="label_opt_in">"Opt In"</string>
     <string name="label_opt_out">"Opt Out"</string>
     <string name="text_voucher_copy_copied">"Code was copied."</string>
@@ -236,4 +237,21 @@
     <string name="game_expired">Expired</string>
     <string name="game_expiring_today">Expiring Today</string>
     <string name="game_expiring_date">Expiry %s</string>
+
+    <!-- My Referrals Screen -->
+    <string name="referral_card_content_description">Referral Card</string>
+    <string name="referral_card_button_text">Refer a Friend Now!</string>
+    <string name="referral_tab_success">Success</string>
+    <string name="referral_tab_in_progress">In Progress</string>
+    <string name="recent_referrals_section_name">Recent Referrals</string>
+    <string name="referral_one_month_ago_section_name">Referral One month ago</string>
+    <string name="referrals_older_than_three_months_section_name">Referrals Older than Three months</string>
+    <string name="purchase_status_completed">Purchase Completed</string>
+    <string name="purchase_status_pending">Pending</string>
+    <string name="purchase_status_signed_up">Signed-up</string>
+    <string name="my_referral_card_header"><![CDATA[<b>YOUR REFERRALS:</b> Last %s Days]]></string>
+    <string name="my_referral_sent_label">SENT</string>
+    <string name="my_referrals_accepted_label">ACCEPTED</string>
+    <string name="my_referrals_vouchers_earned_label">VOUCHERS EARNED</string>
+    <string name="my_referrals_points_earned_label">POINTS EARNED</string>
 </resources>
