@@ -5,6 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -19,23 +25,52 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.TitleView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
+import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomBottomSheet
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MyReferralsScreen(navController: NavHostController) {
     val viewModel: MyReferralsViewModel = viewModel()
     val viewState by viewModel.uiState.observeAsState(null)
 
-    viewState?.let {
-        when(it) {
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
+            confirmValueChange = {
+                // Prevent collapsing by swipe down gesture
+                it != BottomSheetValue.Collapsed
+            })
+    )
+
+    viewState?.let { viewState ->
+        when(viewState) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
-                MyReferralsScreenView(it.uiState, navController)
+
+
+                BottomSheetScaffold(
+                    scaffoldState = bottomSheetScaffoldState,
+                    sheetContent = { ReferFriendScreen() },
+                    sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE),
+                    sheetPeekHeight = 0.dp,
+                    sheetGesturesEnabled = false
+                ) {
+                    MyReferralsScreenView(viewState.uiState, navController)
+                }
+//                CustomBottomSheet(
+//                    sheetContent = {
+//                        ReferFriendScreen()
+//                    },
+//                    content = {
+//                        MyReferralsScreenView(viewState.uiState, navController)
+//                    }
+//                )
             }
             is MyReferralsViewState.MyReferralsFetchFailure -> {
                 // TODO: Handle Error Scenario
@@ -47,10 +82,14 @@ fun MyReferralsScreen(navController: NavHostController) {
     }
 }
 
+
+
 @Composable
 fun MyReferralsScreenView(uiState: MyReferralScreenState, navController: NavHostController) {
     Column(
-        modifier = Modifier.fillMaxSize().background(Color.White)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
         TitleView(stringResource(id = R.string.header_label_my_referrals))
         Box(
@@ -80,7 +119,9 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, navController: NavHost
 @Composable
 fun MyReferralsProgressView() {
     Column(
-        modifier = Modifier.fillMaxSize().background(Color.White)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
         TitleView(stringResource(id = R.string.header_label_my_referrals))
         CircularProgress()
