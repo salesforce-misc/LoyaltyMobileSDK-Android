@@ -38,6 +38,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardPerforatio
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -57,17 +58,22 @@ fun CanvasForScratching(
     val textMeasurer = rememberTextMeasurer()
     var animate by remember { mutableStateOf(false) }
 
-    val coroutineScope = rememberCoroutineScope()
-
     var apiCalled by remember {
         mutableStateOf(false)
     }
 
     var isFirstTime by remember { mutableStateOf(false) }
 
-    val rewardTextValue by gameViewModel.rewardTextLiveData.observeAsState()
+    var isInProgress by remember { mutableStateOf(false) }
 
-    AnimatedContent(targetState = animate, modifier = modifier) {
+    // Initialized the reward text with a placeholder for now. Will replace it with CX approved text once that is available.
+    var rewardTextValue by remember { mutableStateOf("Loading...") }
+
+    val rewardTextLiveDataValue by gameViewModel.rewardTextLiveData.observeAsState()
+
+    val gameRewardViewState by gameViewModel.gameRewardsViewState.observeAsState()
+
+    AnimatedContent(targetState = rewardTextValue, modifier = modifier) {
         Box(
             modifier = modifier
                 .height(199.dp)
@@ -152,7 +158,6 @@ fun CanvasForScratching(
 
                     if (scratched >= canvasSize) {
                         path.moveTo(size.width, size.height)
-                        animate = true
                         path.addRect(
                             rect = Rect(
                                 Offset(0f, 0f),
@@ -164,7 +169,7 @@ fun CanvasForScratching(
                 }
                 val measuredText =
                     textMeasurer.measure(
-                        AnnotatedString(rewardTextValue.toString()),
+                        AnnotatedString(rewardTextValue),
                         constraints = Constraints.fixed(
                             (size.width).toInt(),
                             (size.height).toInt()
@@ -188,21 +193,25 @@ fun CanvasForScratching(
             LaunchedEffect(true) {
                 apiCalled = true
                 gameViewModel.getGameReward(true)
-                coroutineScope.launch {
-                    /*val result = loyaltyAPIManager.getGameReward(true)
-                    result.onSuccess {
-                        Log.d("Canvas", "API Result SUCCESS: ${it}")
-                        val reward: String? =
-                            it?.gameRewards?.get(0)?.description
-                        delay(2000)
-                        reward?.let {
-                            rewardTextMutableLiveData.postValue(it)
-                        }
-                    }.onFailure {
-                        Log.d("Canvas", "API Result FAILURE: ${it}")
-                    }*/
+            }
+        }
+        when (gameRewardViewState) {
+            GameRewardViewState.GameRewardFetchSuccess -> {
+                if (isInProgress) {
+                    isInProgress = false
+                    rewardTextLiveDataValue?.let {
+                        rewardTextValue = it
+                    }
+                    animate = true
                 }
             }
+            GameRewardViewState.GameRewardFetchInProgress -> {
+                isInProgress = true
+            }
+            GameRewardViewState.GameRewardFetchFailure -> {
+                isInProgress = false
+            }
+            else -> {}
         }
     }
 }

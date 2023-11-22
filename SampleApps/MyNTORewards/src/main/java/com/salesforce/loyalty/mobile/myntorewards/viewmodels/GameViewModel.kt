@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -17,7 +18,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     GameViewModelInterface {
     private val TAG = GameViewModel::class.java.simpleName
 
-    private var rewardTextMutableLiveData = MutableLiveData<String>("Loading...")
+    private var rewardTextMutableLiveData = MutableLiveData<String>()
 
     override val rewardTextLiveData: LiveData<String>
         get() = rewardTextMutableLiveData
@@ -32,7 +33,13 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
 
     private val viewState = MutableLiveData<GamesViewState>()
 
+    override val gameRewardsViewState: LiveData<GameRewardViewState>
+        get() = rewardViewState
+
+    private val rewardViewState = MutableLiveData<GameRewardViewState>()
+
     override fun getGameReward(mock: Boolean) {
+        rewardViewState.postValue(GameRewardViewState.GameRewardFetchInProgress)
         viewModelScope.launch {
             val result = loyaltyAPIManager.getGameReward(true)
             result.onSuccess {
@@ -43,8 +50,10 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
                 reward?.let {
                     rewardTextMutableLiveData.postValue(it)
                 }
+                rewardViewState.postValue(GameRewardViewState.GameRewardFetchSuccess)
             }.onFailure {
                 Logger.d(TAG, "API Result FAILURE: ${it}")
+                rewardViewState.postValue(GameRewardViewState.GameRewardFetchFailure)
             }
         }
     }

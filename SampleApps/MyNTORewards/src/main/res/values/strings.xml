@@ -220,7 +220,7 @@
     <string name="game_scratch_card_detail_instruction">This is a one time offer exclusively for you. This offer if declined may not be repeated. Please refer to the terms and conditions for more information. </string>
     <string name="tab_game_zone_active">Active</string>
     <string name="tab_game_zone_expired">Expired</string>
-    <string name="game_expiring_tomorrow">Expiring tomorrow</string>
+    <string name="game_expiring_tomorrow">Expiring Tomorrow</string>
     <string name="game_placeholder_title">Bonnie and Clyde Style Promotion</string>
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
     <string name="game_spin_a_wheel">Spin a Wheel</string>
@@ -236,4 +236,7 @@
     <!-- Game zone Congratulations Screen -->
     <string name="game_zone_congrats_header_content">Congratulations!!!</string>
     <string name="game_zone_congrats_sub_header_content">You have won A voucher for %s off for your next purchase. Go to the voucher section to claim your reward!</string>
+    <string name="game_expired">Expired</string>
+    <string name="game_expiring_today">Expiring Today</string>
+    <string name="game_expiring_date">Expiry %s</string>
 </resources>
