@@ -7,7 +7,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
@@ -21,28 +20,23 @@ fun Modifier.dashedBorder(
     solidCornerRadiusDp: Dp = 10.dp
 ) = composed(
     factory = {
-        val density = LocalDensity.current
-        val strokeWidthPx = density.run { strokeWidth.toPx() }
-        val cornerRadiusPx = density.run { cornerRadiusDp.toPx() }
-        val solidCornerRadiusPx = density.run { solidCornerRadiusDp.toPx() }
-
         this.then(
             Modifier.drawWithCache {
                 onDrawBehind {
                     val stroke = Stroke(
-                        width = strokeWidthPx,
+                        width = strokeWidth.toPx(),
                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                     )
-
                     drawRoundRect(
                         color = color,
                         style = stroke,
-                        cornerRadius = CornerRadius(cornerRadiusPx)
+                        cornerRadius = CornerRadius(cornerRadiusDp.toPx())
                     )
-
-                    drawRoundRect(color = solidColor, cornerRadius = CornerRadius(solidCornerRadiusPx))
+                    drawRoundRect(
+                        color = solidColor,
+                        cornerRadius = CornerRadius(solidCornerRadiusDp.toPx())
+                    )
                 }
-
             }
         )
     }

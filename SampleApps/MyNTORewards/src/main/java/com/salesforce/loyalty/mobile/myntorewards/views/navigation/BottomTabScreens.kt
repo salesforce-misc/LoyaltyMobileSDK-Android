@@ -31,7 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWhe
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.MyReferralsScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.MyReferralsListScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
@@ -287,7 +287,7 @@ fun MoreScreenNavigation(
             BetterLuckScreen { navController.popBackStack() }
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
-            MyReferralsScreen(navController) {
+            MyReferralsListScreen {
                 showBottomBar(it)
             }
         }

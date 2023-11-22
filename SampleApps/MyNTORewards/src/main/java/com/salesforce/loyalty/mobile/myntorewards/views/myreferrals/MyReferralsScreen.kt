@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
@@ -36,10 +35,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyReferralsScreen(navController: NavHostController, showBottomBar: (Boolean) -> Unit) {
-    val viewModel: MyReferralsViewModel = viewModel()
-    val viewState by viewModel.uiState.observeAsState(null)
-
+fun MyReferralsListScreen(showBottomBar: (Boolean) -> Unit) {
     val bottomSheetScaffoldState = BottomSheetCustomState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -59,21 +55,38 @@ fun MyReferralsScreen(navController: NavHostController, showBottomBar: (Boolean)
         }
     }
 
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            ReferFriendScreen { showBottomSheet(false) }
+        },
+        sheetShape = RoundedCornerShape(22.dp, 22.dp, 0.dp, 0.dp),
+        sheetPeekHeight = 0.dp,
+        sheetGesturesEnabled = false
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
+            TitleView(stringResource(id = R.string.header_label_my_referrals))
+            MyReferralsScreen {
+                showBottomSheet(true)
+            }
+        }
+    }
+}
+
+@Composable
+fun MyReferralsScreen(showBottomSheet: (Boolean) -> Unit) {
+    val viewModel: MyReferralsViewModel = viewModel()
+    val viewState by viewModel.uiState.observeAsState(null)
+
     viewState?.let { viewState ->
         when (viewState) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
-                BottomSheetScaffold(
-                    scaffoldState = bottomSheetScaffoldState,
-                    sheetContent = {
-                        ReferFriendScreen { showBottomSheet(false) }
-                    },
-                    sheetShape = RoundedCornerShape(22.dp, 22.dp, 0.dp, 0.dp),
-                    sheetPeekHeight = 0.dp,
-                    sheetGesturesEnabled = false
-                ) {
-                    MyReferralsScreenView(viewState.uiState) {
-                        showBottomSheet(true)
-                    }
+                MyReferralsScreenView(viewState.uiState) {
+                    showBottomSheet(true)
                 }
             }
 
@@ -86,7 +99,7 @@ fun MyReferralsScreen(navController: NavHostController, showBottomBar: (Boolean)
             }
 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
-                MyReferralsProgressView()
+                CircularProgress()
             }
         }
     }
@@ -94,44 +107,25 @@ fun MyReferralsScreen(navController: NavHostController, showBottomBar: (Boolean)
 
 @Composable
 fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: () -> Unit) {
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+            .background(VeryLightPurple)
+            .padding(vertical = 12.dp, horizontal = 24.dp)
     ) {
-        TitleView(stringResource(id = R.string.header_label_my_referrals))
-        Box(
-            modifier = Modifier
-                .background(VeryLightPurple)
-                .padding(vertical = 12.dp, horizontal = 24.dp)
-        ) {
-            ReferralCard(uiState.referralsCountList, uiState.referralsRecentDuration) {
-                openReferFriendSheet()
-            }
-        }
-
-        var selectedTab by remember { mutableStateOf(0) }
-        CustomScrollableTab(uiState.tabItems, selectedTab) { tab -> selectedTab = tab }
-        when (selectedTab) {
-            0 -> {
-                ReferralList(itemStates = uiState.completedStates)
-            }
-
-            1 -> {
-                ReferralList(itemStates = uiState.inProgressStates)
-            }
+        ReferralCard(uiState.referralsCountList, uiState.referralsRecentDuration) {
+            openReferFriendSheet()
         }
     }
-}
 
-@Composable
-fun MyReferralsProgressView() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        TitleView(stringResource(id = R.string.header_label_my_referrals))
-        CircularProgress()
+    var selectedTab by remember { mutableStateOf(0) }
+    CustomScrollableTab(uiState.tabItems, selectedTab) { tab -> selectedTab = tab }
+    when (selectedTab) {
+        0 -> {
+            ReferralList(itemStates = uiState.completedStates)
+        }
+
+        1 -> {
+            ReferralList(itemStates = uiState.inProgressStates)
+        }
     }
 }

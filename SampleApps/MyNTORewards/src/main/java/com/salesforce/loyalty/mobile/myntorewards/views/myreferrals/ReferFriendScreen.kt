@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -37,6 +38,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
+import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
@@ -92,7 +94,7 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
             BodyTextSmall(text = stringResource(R.string.separate_emails_with_commas), color = TextGray, modifier = Modifier.padding(8.dp))
             CommonText(text = stringResource(R.string.share_via), fontSize = 16.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold)
             SocialMediaRow()
-            ReferralCodeView()
+            ReferralCodeView("845FFF907ZX6") // TODO: REPLACE THIS WITH ACTUAL VALUES
             BodyTextSmall(text = stringResource(R.string.share_referral_code_label), color = TextGray, modifier = Modifier.padding(8.dp))
             Spacer(modifier = Modifier.height(24.dp))
             PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { closeAction() })
@@ -103,7 +105,9 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
 @Composable
 fun SocialMediaRow() {
     Row (
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier.weight(1f))
@@ -115,28 +119,29 @@ fun SocialMediaRow() {
 }
 
 @Composable
-fun ReferralCodeView() {
+fun ReferralCodeView(referralCode: String) {
     Row(
         Modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
             .dashedBorder(1.dp, SaffronColor, SaffronColorLight, 8.dp, 10.dp)
     ) {
+        val context = LocalContext.current
         BodyTextBold(
-            text = "84KFFF456FPG", modifier = Modifier
-                .wrapContentSize()
-                .padding(12.dp)
+            text = referralCode,
+            modifier = Modifier.wrapContentSize().padding(12.dp)
         )
         CommonText(
-            text = "TAP TO COPY", textAlign = TextAlign.End,
+            text = stringResource(R.string.tap_to_copy), textAlign = TextAlign.End,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
-                .clickable { }
+                .clickable {
+                    context.copyToClipboard(text = referralCode)
+                }
         )
     }
 }
-
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable

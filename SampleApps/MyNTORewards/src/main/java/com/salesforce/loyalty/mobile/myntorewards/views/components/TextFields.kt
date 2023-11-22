@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -32,6 +33,7 @@ fun TextFieldCustom(
     keyboardType: KeyboardType = KeyboardType.Email,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     rightIconId: Int? = R.drawable.ic_arrow_forward,
+    rightIconContentDescription: Int? = R.string.forward_arrow_content_description,
     modifier: Modifier = Modifier,
     rightIconClick: (() -> Unit)? = null,
     updateTextField: (updatedValue: TextFieldValue) -> Unit
@@ -59,14 +61,17 @@ fun TextFieldCustom(
         ),
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = VeryLightPurple,
-            focusedIndicatorColor = Color.Transparent, //hide the indicator
+            focusedIndicatorColor = Color.Transparent, //Hide the indicator
             unfocusedIndicatorColor = Color.Transparent
         ),
         shape = RoundedCornerShape(16.dp),
         trailingIcon = {
             rightIconId?.let {
                 IconButton(onClick = { rightIconClick?.invoke() }) {
-                    Icon(painter = painterResource(id = rightIconId), contentDescription = "Visibility Icon")
+                    Icon(
+                        painter = painterResource(id = rightIconId),
+                        contentDescription = rightIconContentDescription?.let { stringResource(id = it) }
+                    )
                 }
             }
         },
