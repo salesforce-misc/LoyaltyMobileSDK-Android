@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.animation.AnimatedContent

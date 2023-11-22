@@ -16,8 +16,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 
 @Composable
-fun SpinWheelPointer(onClick: () -> Unit)
-{
+fun SpinWheelPointer(onClick: () -> Unit) {
     Image(
         painter = painterResource(id = R.drawable.wheel_pointer),
         contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
