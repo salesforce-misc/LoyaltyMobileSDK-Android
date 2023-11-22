@@ -267,7 +267,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.GameZoneScreen.route) {
             showBottomBar(true)
-            GameZoneScreen(navController)
+            GameZoneScreen(navController, gameViewModel)
         }
         composable(route = MoreScreens.ScratchCardScreen.route) {
             showBottomBar(true)
@@ -275,7 +275,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.SpinWheelScreen.route) {
             showBottomBar(true)
-            SpinWheelLandingPage(navController, loyaltyAPIManager)
+            SpinWheelLandingPage(navController, gameViewModel)
         }
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)

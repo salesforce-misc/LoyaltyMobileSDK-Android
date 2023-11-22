@@ -1,12 +1,12 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -16,14 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun SpinWheelLandingPage(navController: NavHostController, loyaltyAPIManager: LoyaltyAPIManager) {
+fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameViewModelInterface) {
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
+    val games by gameViewModel.gamesLiveData.observeAsState()
+
     Box(contentAlignment = Alignment.TopCenter) {
         val gamesList= remember {
             mutableListOf<String>()
@@ -33,28 +35,28 @@ fun SpinWheelLandingPage(navController: NavHostController, loyaltyAPIManager: Lo
         }
 
         val coroutineScope = rememberCoroutineScope()
+
+        gameViewModel.getGames(true)
+
         LaunchedEffect(true) {
             coroutineScope.launch {
-                val result = loyaltyAPIManager.getGames(true)
-                result.onSuccess { it ->
-                    Log.d("Games", "API Result SUCCESS: ${it}")
-                    val games = it.gameDefinitions.get(0).gameReward.eligibleRewards
-                    games.let {
-                        for(item in it)
+
+                games?.let {
+                    val gamesDate = it.gameDefinitions.get(0).gameRewards
+                    gamesDate.let {gameReward ->
+                        for(item in gameReward)
                         {
-                            gamesList.add(item.name)
-                            colourList.add(Color(("#"+item.seg_color).toColorInt()))
+                            item.name?.let { name -> gamesList.add(name) }
+                            colourList.add(Color(("#"+item.segColor).toColorInt()))
                         }
                         wheelValuesLoaded= true
                     }
-                }.onFailure {
-                    Log.d("Games", "API Result FAILURE: ${it}")
                 }
             }
         }
         if(wheelValuesLoaded)
         {
-            Wheel(navController, loyaltyAPIManager, gamesList, colourList)
+            Wheel(navController, gameViewModel, gamesList, colourList)
         } else{
             Box(modifier = Modifier.fillMaxSize()){
                 CircularProgressIndicator(

@@ -2,7 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
 import androidx.annotation.IntRange
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
