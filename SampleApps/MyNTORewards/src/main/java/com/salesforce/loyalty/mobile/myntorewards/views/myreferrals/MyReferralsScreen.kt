@@ -7,15 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.BottomSheetState
-import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,56 +23,68 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.TitleView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
-import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomBottomSheet
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import com.salesforce.loyalty.mobile.myntorewards.views.components.BottomSheetCustomState
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ScanningErrorPopup
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyReferralsScreen(navController: NavHostController) {
+fun MyReferralsScreen(navController: NavHostController, showBottomBar: (Boolean) -> Unit) {
     val viewModel: MyReferralsViewModel = viewModel()
     val viewState by viewModel.uiState.observeAsState(null)
 
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
-            confirmValueChange = {
-                // Prevent collapsing by swipe down gesture
-                it != BottomSheetValue.Collapsed
-            })
-    )
+    val bottomSheetScaffoldState = BottomSheetCustomState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // Show Bottom Bar on screen load and hide it when bottom sheet is opened
+    showBottomBar(true)
+
+    val showBottomSheet: (Boolean) -> Job = {
+        coroutineScope.launch {
+            bottomSheetScaffoldState.bottomSheetState.run {
+                showBottomBar(!it)
+                if (it && isCollapsed) {
+                    expand()
+                } else {
+                    collapse()
+                }
+            }
+        }
+    }
 
     viewState?.let { viewState ->
-        when(viewState) {
+        when (viewState) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
-
-
                 BottomSheetScaffold(
                     scaffoldState = bottomSheetScaffoldState,
-                    sheetContent = { ReferFriendScreen() },
-                    sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE),
+                    sheetContent = {
+                        ReferFriendScreen { showBottomSheet(false) }
+                    },
+                    sheetShape = RoundedCornerShape(22.dp, 22.dp, 0.dp, 0.dp),
                     sheetPeekHeight = 0.dp,
                     sheetGesturesEnabled = false
                 ) {
-                    MyReferralsScreenView(viewState.uiState, navController)
+                    MyReferralsScreenView(viewState.uiState) {
+                        showBottomSheet(true)
+                    }
                 }
-//                CustomBottomSheet(
-//                    sheetContent = {
-//                        ReferFriendScreen()
-//                    },
-//                    content = {
-//                        MyReferralsScreenView(viewState.uiState, navController)
-//                    }
-//                )
             }
+
             is MyReferralsViewState.MyReferralsFetchFailure -> {
-                // TODO: Handle Error Scenario
+                ScanningErrorPopup(
+                    viewState.errorMessage,
+                    closePopup = { },
+                    scanAnotherReceipt = {  }
+                )
             }
+
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
                 MyReferralsProgressView()
             }
@@ -82,10 +92,8 @@ fun MyReferralsScreen(navController: NavHostController) {
     }
 }
 
-
-
 @Composable
-fun MyReferralsScreenView(uiState: MyReferralScreenState, navController: NavHostController) {
+fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,7 +106,7 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, navController: NavHost
                 .padding(vertical = 12.dp, horizontal = 24.dp)
         ) {
             ReferralCard(uiState.referralsCountList, uiState.referralsRecentDuration) {
-                navController.navigate(MoreScreens.ReferFriendScreen.route)
+                openReferFriendSheet()
             }
         }
 

@@ -287,12 +287,9 @@ fun MoreScreenNavigation(
             BetterLuckScreen { navController.popBackStack() }
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
-            showBottomBar(true)
-            MyReferralsScreen(navController)
-        }
-        composable(route = MoreScreens.ReferFriendScreen.route) {
-            showBottomBar(true)
-            MyReferralsScreen(navController)
+            MyReferralsScreen(navController) {
+                showBottomBar(it)
+            }
         }
     }
 }
