@@ -18,10 +18,10 @@
           "rewardValue": null
         },
         {
-          "gameRewardId": "501",
+          "gameRewardId": "502",
           "rewardDefinitionId": "101",
           "color": "FFBF00",
-          "description": "Get 10%  Off Voucher",
+          "description": "Get 20%  Off Voucher",
           "expirationDate": "2023-10-31T19:00:00.000Z",
           "imageUrl": null,
           "name": "20 % Off",
@@ -29,7 +29,7 @@
           "rewardValue": null
         },
         {
-          "gameRewardId": "501",
+          "gameRewardId": "503",
           "rewardDefinitionId": "101",
           "color": "FF7F50",
           "description": "Get 10%  Off Voucher",

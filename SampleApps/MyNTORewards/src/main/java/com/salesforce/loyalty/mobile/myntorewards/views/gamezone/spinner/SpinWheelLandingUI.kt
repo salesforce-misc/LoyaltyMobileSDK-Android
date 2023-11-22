@@ -20,6 +20,11 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewM
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
 import kotlinx.coroutines.launch
 
+data class GameNameIDDataModel(
+    val game: String,
+    val gameID: String
+)
+
 @Composable
 fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameViewModelInterface) {
 
@@ -28,7 +33,7 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
 
     Box(contentAlignment = Alignment.TopCenter) {
         val gamesList = remember {
-            mutableListOf<String>()
+            mutableListOf<GameNameIDDataModel>()
         }
         val colourList = remember {
             mutableListOf<Color>()
@@ -45,7 +50,7 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
                     val gamesDate = it.gameDefinitions.get(0).gameRewards
                     gamesDate.let { gameReward ->
                         for (item in gameReward) {
-                            item.name?.let { name -> gamesList.add(name) }
+                            item.name?.let { name -> gamesList.add(GameNameIDDataModel(name, item.gameRewardId))}
                             colourList.add(Color(("#" + item.segColor).toColorInt()))
                         }
                         wheelValuesLoaded = true

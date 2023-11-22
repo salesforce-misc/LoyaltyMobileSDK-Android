@@ -14,6 +14,10 @@ data class GameRewardResponse(
 data class GameRewards(
     @SerializedName("Name")
     val name: String?,
+
+    @SerializedName("gameRewardId")
+    val gameRewardId: String?,
+
     @SerializedName("Description")
     val description: String?,
     @SerializedName("Reward Type")
