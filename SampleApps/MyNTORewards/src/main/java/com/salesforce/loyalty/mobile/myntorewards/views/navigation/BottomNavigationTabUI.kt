@@ -41,16 +41,22 @@ fun BottomNavigationUI(
         //BottomNavTabs.Redeem,  //part of UX but not part of MVP
         BottomNavTabs.More
     )
-    AnimatedVisibility(
+
+    // TODO: Commenting this code as its causing flicker issue when bottom bar is shown/hidden
+    /*AnimatedVisibility(
         visible = bottomBarState.value,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
-        content = {
-
+        content = {*/
+            val bottomViewHeight = if (bottomBarState.value) {
+                83.dp
+            } else {
+                0.dp
+            }
             BottomNavigation(
                 backgroundColor = colorResource(id = R.color.white),
                 contentColor = Color.Black,
-                modifier = Modifier.height(83.dp)
+                modifier = Modifier.height(bottomViewHeight)
             ) {
                 val navBackStackEntry by bottomTabsNavController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
@@ -89,5 +95,5 @@ fun BottomNavigationUI(
                     )
                 }
             }
-        })
+//        })
 }

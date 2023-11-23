@@ -3,6 +3,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
+import com.salesforce.loyalty.mobile.myntorewards.views.components.animation.ConfettiAnimationView
 
 /**
  * Common composable screen for Better Luck and Congratulations screen as most of the look and feel is same
@@ -93,7 +95,7 @@ fun ConfirmationScreen(
                 top.linkTo(headerText.bottom)
                 start.linkTo(guideLineStart)
                 end.linkTo(guideLineEnd)
-            }
+            }.padding(horizontal = 32.dp)
         )
     }
 }
@@ -115,6 +117,7 @@ private fun ConstraintLayoutScope.AnimatedView(
                 top.linkTo(parent.top)
             }.fillMaxWidth()
         )
+        ConfettiAnimationView()
     } else {
         ImageComponent(
             drawableId = R.drawable.game_better_luck_line,
