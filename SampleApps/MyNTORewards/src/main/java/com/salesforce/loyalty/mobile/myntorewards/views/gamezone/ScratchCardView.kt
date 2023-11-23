@@ -103,7 +103,8 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
             },
             path = currentState.value.path,
             scratchThickness = currentState.value.thickness,
-            gameViewModel = gameViewModel
+            gameViewModel = gameViewModel,
+            navController = navController
         )
 
         Column(
