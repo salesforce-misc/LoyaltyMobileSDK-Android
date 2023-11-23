@@ -268,4 +268,5 @@
     <string name="friends_email_address_placeholder">Friend\'s Email Address</string>
     <string name="forward_arrow_content_description">Forward Arrow</string>
     <string name="tap_to_copy">TAP TO COPY</string>
+    <string name="share_referral_message">Use my referral code: %1$s</string>
 </resources>
