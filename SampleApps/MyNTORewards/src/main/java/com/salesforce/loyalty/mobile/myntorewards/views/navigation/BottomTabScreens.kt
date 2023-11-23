@@ -280,7 +280,12 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)
             val offerPercent = "20%" // TODO: Replace this with the actual value
-            CongratulationsScreen(offerPercent) { navController.popBackStack() }
+            CongratulationsScreen(offerPercent) {
+                navController.popBackStack(
+                    MoreScreens.GameZoneScreen.route,
+                    false
+                )
+            }
         }
         composable(route = MoreScreens.GameBetterLuckScreen.route) {
             showBottomBar(false)

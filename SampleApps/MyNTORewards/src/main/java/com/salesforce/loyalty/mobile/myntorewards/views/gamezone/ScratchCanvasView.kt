@@ -31,11 +31,14 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardPerforationColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 @SuppressLint("SuspiciousIndentation")
@@ -49,7 +52,8 @@ fun CanvasForScratching(
     onCursorMovedOffset: (Float, Float) -> Unit,
     path: Path,
     scratchThickness: Float,
-    gameViewModel: GameViewModelInterface
+    gameViewModel: GameViewModelInterface,
+    navController: NavHostController
 ) {
     val textMeasurer = rememberTextMeasurer()
     var animate by remember { mutableStateOf(false) }
@@ -154,12 +158,12 @@ fun CanvasForScratching(
 
                 if ((scratched >= canvasSize) || animate) {
                     path.moveTo(size.width, size.height)
-                    path.addRect(
+                    /*path.addRect(
                         rect = Rect(
                             Offset(0f, 0f),
                             (size.width * size.height)
                         )
-                    )
+                    )*/
 
                 }
             }
@@ -219,5 +223,11 @@ fun CanvasForScratching(
             isInProgress = false
         }
         else -> {}
+    }
+    if (animate) {
+        LaunchedEffect(key1 = true) {
+            delay(3000)
+            navController.navigate(MoreScreens.GameCongratsScreen.route)
+        }
     }
 }
