@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
+import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.animation.ConfettiAnimationView
@@ -89,8 +91,10 @@ fun ConfirmationScreen(
                 }
         )
 
-        BodyText(
+        HtmlText(
             text = subHeaderContent,
+            size = 16f,
+            textGravity = Gravity.CENTER,
             modifier = Modifier.constrainAs(subText) {
                 top.linkTo(headerText.bottom)
                 start.linkTo(guideLineStart)
