@@ -8,6 +8,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.INITIAL_ROTATION_DURATION
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.ROTATION_DURATION
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.ROTATION_PER_SECOND
@@ -28,7 +29,7 @@ data class SpinWheelState(
 
     suspend fun animate(
         coroutineScope: CoroutineScope,
-        rewardList: MutableList<String>,
+        rewardList: MutableList<GameNameIDDataModel>,
     ) {
         when (spinAnimationState) {
             SpinAnimationState.STOPPED -> {
@@ -44,7 +45,7 @@ data class SpinWheelState(
 
     fun spin(
         coroutineScope: CoroutineScope,
-        rewardList: MutableList<String>,
+        rewardList: MutableList<GameNameIDDataModel>,
     ) {
         if (spinAnimationState == SpinAnimationState.STOPPED) {
 
@@ -65,7 +66,7 @@ data class SpinWheelState(
             coroutineScope.launch {
                 val result = gameViewModel.getGameRewardResult(true)
                 result.onSuccess {
-                    val reward: String? = it?.gameRewards?.get(0)?.name
+                    val reward: String? = it?.gameRewards?.get(0)?.gameRewardId
                     val stopAtThisDegree = stopAtThisDegree(pieCount, rewardList, reward)
                     rotation.snapTo(stopAtThisDegree)
                     rotation.animateTo(
@@ -96,14 +97,20 @@ data class SpinWheelState(
 
     private fun stopAtThisDegree(
         pieCount: Int,
-        rewardList: MutableList<String>,
+        rewardList: MutableList<GameNameIDDataModel>,
         reward: String?,
     ): Float {
         //360 degree devided by total element will give angel which will be there for every element.
         //for example if 4 elements then each element will have 360/4= 90 degree angle
         val eachSegmentOccupiedAngle = 360 / pieCount
+        var stopAtWheelIndex= -1
 
-        val stopAtWheelIndex = rewardList.indexOf(reward)
+        for(index in rewardList.indices) {
+            if( rewardList[index].gameID==reward) {
+                stopAtWheelIndex= index
+                break
+            }
+        }
 
         //eachSegmentOccupiedAngle/2 will provide middle of segment to stop
         //for example if total 4 elements then each element will hold 90 degree.

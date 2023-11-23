@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerBackground
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPageFooter
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelPointer
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_BORDER_WIDTH
@@ -24,11 +26,12 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.Spinner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+
 @Composable
 fun Wheel(
     navController: NavHostController,
     gameViewModel: GameViewModelInterface,
-    gamesList: MutableList<String>,
+    gamesList: MutableList<GameNameIDDataModel>,
     colourList: MutableList<Color>
 ) {
     val state = rememberSpinWheelState(gameViewModel, gamesList.size)
@@ -40,6 +43,7 @@ fun Wheel(
         val wheelColours = rememberUpdatedState(colourList)
 
         val coroutineScope: CoroutineScope = rememberCoroutineScope()
+        var isWheelTapClicked by remember { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
@@ -74,10 +78,15 @@ fun Wheel(
                     rewardList
                 )
                 SpinWheelPointer() {
+                    isWheelTapClicked= true
                     scope.launch { state.animate(coroutineScope, rewardList) }
                 }
             }
-            SpinWheelLandingPageFooter()
+            if(!isWheelTapClicked)
+            {
+                SpinWheelLandingPageFooter()
+            }
+
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
 import androidx.annotation.IntRange
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
@@ -13,15 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_TEXT_INITIAL_ROTATION
 import java.lang.Math.cos
 import java.lang.Math.sin
@@ -31,7 +28,7 @@ internal fun SpinWheelContent(
     spinSize: Dp,
     @IntRange(from = 2, to = 16) pieCount: Int,
     rotationDegree: Float, // maintaining the degree of wheel has been rotated
-    wheelData: MutableList<String>,
+    wheelData: MutableList<GameNameIDDataModel>,
 ) {
     val pieAngle = 360f / pieCount
     val startOffset = 180
@@ -75,7 +72,7 @@ internal fun SpinWheelContent(
                     }
 */
                     Text(
-                        text = wheelData[pieIndex],
+                        text = wheelData[pieIndex].game,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = font_sf_pro,
                         color = Color.White,
