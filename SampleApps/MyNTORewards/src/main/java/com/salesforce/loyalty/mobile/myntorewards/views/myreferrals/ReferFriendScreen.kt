@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,11 +33,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
+import com.salesforce.loyalty.mobile.myntorewards.utilities.shareReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
@@ -48,7 +48,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.RoundedIconButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
-import kotlinx.coroutines.Job
 
 @Composable
 fun ReferFriendScreen(closeAction: () -> Unit) {
@@ -93,7 +92,7 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
 
             BodyTextSmall(text = stringResource(R.string.separate_emails_with_commas), color = TextGray, modifier = Modifier.padding(8.dp))
             CommonText(text = stringResource(R.string.share_via), fontSize = 16.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold)
-            SocialMediaRow()
+            SocialMediaRow("845FFF907ZX6")
             ReferralCodeView("845FFF907ZX6") // TODO: REPLACE THIS WITH ACTUAL VALUES
             BodyTextSmall(text = stringResource(R.string.share_referral_code_label), color = TextGray, modifier = Modifier.padding(8.dp))
             Spacer(modifier = Modifier.height(24.dp))
@@ -103,18 +102,29 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
 }
 
 @Composable
-fun SocialMediaRow() {
+fun SocialMediaRow(referralCode: String) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_instagram, contentDescription = stringResource(R.string.share_via_instagram_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_whatsapp, contentDescription = stringResource(R.string.share_via_whatsapp_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_twitter, contentDescription = stringResource(R.string.share_via_twitter_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_share, contentDescription = stringResource(R.string.share_via_icon_description), modifier = Modifier.weight(1f))
+        val context = LocalContext.current
+        ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralCode, ShareType.FACEBOOK)
+        })
+        ImageComponent(drawableId = R.drawable.ic_instagram, contentDescription = stringResource(R.string.share_via_instagram_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralCode, ShareType.INSTAGRAM)
+        })
+        ImageComponent(drawableId = R.drawable.ic_whatsapp, contentDescription = stringResource(R.string.share_via_whatsapp_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralCode, ShareType.WHATSAPP)
+        })
+        ImageComponent(drawableId = R.drawable.ic_twitter, contentDescription = stringResource(R.string.share_via_twitter_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralCode, ShareType.TWITTER)
+        })
+        ImageComponent(drawableId = R.drawable.ic_share, contentDescription = stringResource(R.string.share_via_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralCode, ShareType.SHARE_OTHERS)
+        })
     }
 }
 
