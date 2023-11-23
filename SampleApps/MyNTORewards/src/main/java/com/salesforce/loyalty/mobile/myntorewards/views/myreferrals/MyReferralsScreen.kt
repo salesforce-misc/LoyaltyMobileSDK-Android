@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -29,70 +28,27 @@ import com.salesforce.loyalty.mobile.myntorewards.views.TitleView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BottomSheetCustomState
+import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ScanningErrorPopup
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun MyReferralsListScreen(showBottomBar: (Boolean) -> Unit) {
-    val bottomSheetScaffoldState = BottomSheetCustomState()
-    val coroutineScope = rememberCoroutineScope()
-
-    // Show Bottom Bar on screen load and hide it when bottom sheet is opened
-    showBottomBar(true)
-
-    val showBottomSheet: (Boolean) -> Job = {
-        coroutineScope.launch {
-            bottomSheetScaffoldState.bottomSheetState.run {
-                showBottomBar(!it)
-                if (it && isCollapsed) {
-                    expand()
-                } else {
-                    collapse()
-                }
-            }
-        }
-    }
-
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        sheetContent = {
-            ReferFriendScreen { showBottomSheet(false) }
-        },
-        sheetShape = RoundedCornerShape(22.dp, 22.dp, 0.dp, 0.dp),
-        sheetPeekHeight = 0.dp,
-        sheetGesturesEnabled = false
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            TitleView(stringResource(id = R.string.header_label_my_referrals))
-            MyReferralsScreen {
-                showBottomSheet(true)
-            }
-        }
-    }
-}
 
 @Composable
 fun MyReferralsScreen(showBottomSheet: (Boolean) -> Unit) {
     val viewModel: MyReferralsViewModel = viewModel()
     val viewState by viewModel.uiState.observeAsState(null)
 
-    viewState?.let { viewState ->
-        when (viewState) {
+    viewState?.let {
+        when(it) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
-                MyReferralsScreenView(viewState.uiState) {
+                MyReferralsScreenView(it.uiState) {
                     showBottomSheet(true)
                 }
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
                 ScanningErrorPopup(
-                    viewState.errorMessage,
+                    it.errorMessage,
                     closePopup = { },
                     scanAnotherReceipt = {  }
                 )
@@ -126,6 +82,50 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
 
         1 -> {
             ReferralList(itemStates = uiState.inProgressStates)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun MyReferralsListScreen(showBottomBar: (Boolean) -> Unit) {
+    val bottomSheetScaffoldState = BottomSheetCustomState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // Show Bottom Bar on screen load and hide it when bottom sheet is opened
+    showBottomBar(true)
+
+    val showBottomSheet: (Boolean) -> Job = {
+        coroutineScope.launch {
+            bottomSheetScaffoldState.bottomSheetState.run {
+                showBottomBar(!it)
+                if (it && isCollapsed) {
+                    expand()
+                } else {
+                    collapse()
+                }
+            }
+        }
+    }
+
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            ReferFriendScreen { showBottomSheet(false) }
+        },
+        sheetShape = bottomSheetShape,
+        sheetPeekHeight = 0.dp,
+        sheetGesturesEnabled = false
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
+            TitleView(stringResource(id = R.string.header_label_my_referrals))
+            MyReferralsScreen {
+                showBottomSheet(true)
+            }
         }
     }
 }
