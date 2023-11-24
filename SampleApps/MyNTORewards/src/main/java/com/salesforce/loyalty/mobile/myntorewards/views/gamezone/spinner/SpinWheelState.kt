@@ -7,14 +7,15 @@ import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
+import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.INITIAL_ROTATION_DURATION
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.ROTATION_DURATION
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.ROTATION_PER_SECOND
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.START_DEGREE
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import kotlinx.coroutines.*
 
 data class SpinWheelState(
     internal val gameViewModel: GameViewModelInterface,
@@ -30,11 +31,12 @@ data class SpinWheelState(
     suspend fun animate(
         coroutineScope: CoroutineScope,
         rewardList: MutableList<GameNameIDDataModel>,
+        navController: NavHostController
     ) {
         when (spinAnimationState) {
             SpinAnimationState.STOPPED -> {
 
-                spin(coroutineScope, rewardList)
+                spin(coroutineScope, rewardList, navController)
             }
 
             SpinAnimationState.SPINNING -> {
@@ -46,6 +48,7 @@ data class SpinWheelState(
     fun spin(
         coroutineScope: CoroutineScope,
         rewardList: MutableList<GameNameIDDataModel>,
+        navController: NavHostController
     ) {
         if (spinAnimationState == SpinAnimationState.STOPPED) {
 
@@ -76,6 +79,10 @@ data class SpinWheelState(
                             easing = easing
                         ), 10f
                     )
+                    withContext(Dispatchers.Main) {
+                        delay(3000)
+                        navController.navigate(MoreScreens.GameCongratsScreen.route)
+                    }
                 }.onFailure {
 
                 }

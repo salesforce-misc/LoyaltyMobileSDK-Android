@@ -79,13 +79,13 @@ fun Wheel(
                 )
                 SpinWheelPointer() {
                     isWheelTapClicked= true
-                    scope.launch { state.animate(coroutineScope, rewardList) }
+                    scope.launch { state.animate(coroutineScope, rewardList, navController) }
                 }
             }
-            if(!isWheelTapClicked)
-            {
+            /*if(!isWheelTapClicked)
+            {*/
                 SpinWheelLandingPageFooter()
-            }
+//            }
 
         }
     }
