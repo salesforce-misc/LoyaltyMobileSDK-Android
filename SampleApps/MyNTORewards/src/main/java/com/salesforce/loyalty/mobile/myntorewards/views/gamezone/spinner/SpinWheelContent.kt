@@ -94,6 +94,6 @@ fun getPieRadius(pieCount: Int, radius: Float): Float {
         6 -> radius / 1.6f
         7 -> radius / 1.4f
         8 -> radius / 1.4f
-        else -> radius / 2f
+        else -> radius / 1.4f
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ACTIVE_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_EXPIRED_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
@@ -166,6 +167,11 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     gameType
                                                 ) {
                                                     if (gameType == GameType.SPIN_A_WHEEL) {
+                                                        navController.currentBackStackEntry?.arguments?.putString(
+                                                            AppConstants.KEY_GAME_DEF_ID,
+                                                            activeGame.gameDefinitionId
+                                                        )
+
                                                         navController.navigate(MoreScreens.SpinWheelScreen.route)
                                                     } else {
                                                         navController.navigate(MoreScreens.ScratchCardScreen.route)

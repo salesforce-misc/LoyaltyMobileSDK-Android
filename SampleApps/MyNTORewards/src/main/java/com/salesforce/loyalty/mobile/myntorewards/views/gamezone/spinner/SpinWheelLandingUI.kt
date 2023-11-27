@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
 import kotlinx.coroutines.launch
@@ -30,6 +32,9 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
     val games by gameViewModel.gamesLiveData.observeAsState()
+    val game_def_id =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_GAME_DEF_ID)
+    Log.d("Akash:: ", ""+ game_def_id)
 
     Box(contentAlignment = Alignment.TopCenter) {
         val gamesList = remember {
@@ -47,13 +52,21 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
             coroutineScope.launch {
 
                 games?.let {
-                    val gamesDate = it.gameDefinitions.get(0).gameRewards
-                    gamesDate.let { gameReward ->
-                        for (item in gameReward) {
-                            item.name?.let { name -> gamesList.add(GameNameIDDataModel(name, item.gameRewardId))}
-                            colourList.add(Color(("#" + item.segColor).toColorInt()))
+                    for(games in it.gameDefinitions) {
+                        if(game_def_id==games.gameDefinitionId){
+                            val gamesData = games.gameRewards
+                            gamesData.let { gameReward ->
+                                for (reward in gameReward) {
+                                    reward.name?.let { name -> gamesList.add(GameNameIDDataModel(name, reward.gameRewardId))}
+
+                                    if(reward.segColor?.contains("#") == false){
+                                        colourList.add(Color(("#" + reward.segColor).toColorInt()))
+                                    }
+
+                                }
+                                wheelValuesLoaded = true
                         }
-                        wheelValuesLoaded = true
+                    }
                     }
                 }
             }

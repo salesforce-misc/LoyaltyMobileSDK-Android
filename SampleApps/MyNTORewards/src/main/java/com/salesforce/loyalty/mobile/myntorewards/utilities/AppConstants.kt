@@ -155,5 +155,7 @@ class AppConstants {
         const val GAME_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val TAB_ACTIVE_GAMES = 0
         const val TAB_EXPIRED_GAMES = 1
+
+        const val KEY_GAME_DEF_ID = "game_def_ID"
     }
 }
