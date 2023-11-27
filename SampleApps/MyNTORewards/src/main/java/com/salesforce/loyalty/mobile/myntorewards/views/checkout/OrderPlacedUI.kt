@@ -23,17 +23,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.OrderScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MembershipProfileViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
+import com.salesforce.loyalty.mobile.myntorewards.views.components.TextCustomButton
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameType
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.OrderPlacedGameSection
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import kotlinx.coroutines.launch
 
 @Composable
 fun OrderPlacedUI(
@@ -70,7 +74,7 @@ fun OrderPlacedUI(
                 .padding(start = 67.dp, end = 67.dp)
                 .align(CenterHorizontally)
         ) {
-            Spacer(modifier = Modifier.height(128.dp))
+            Spacer(modifier = Modifier.height(100.dp))
             Image(
                 painter = painterResource(id = R.drawable.circle_check_box),
                 contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
@@ -105,46 +109,70 @@ fun OrderPlacedUI(
                     .align(CenterHorizontally)
             )
         }
-        Column(   modifier = Modifier
-            .padding(start = 67.dp, end = 67.dp)
-            .align(CenterHorizontally)
-        ) {
-            ContinueShoppingButton(navCheckOutFlowController)
-            Spacer(modifier = Modifier.height(40.dp))
-        }
 
+        //TODO: Move these 2 fields to view model when API is ready
+        val isGameUnlocked = true
+        val gameType: GameType = listOf(GameType.SPIN_A_WHEEL, GameType.SCRATCH_CARD).random()
+        OrderPlacedGameSection(isGameUnlocked, gameType)
+        FooterButtonsView(navCheckOutFlowController, isGameUnlocked, gameType)
     }
-
-
 }
 
 @Composable
-fun ContinueShoppingButton(navCheckOutFlowController: NavController) {
+fun FooterButtonsView(
+    navCheckOutFlowController: NavController,
+    isGameUnlocked: Boolean,
+    gameType: GameType
+) {
+    Column(   modifier = Modifier
+        .padding(start = 16.dp, end = 16.dp),
+        horizontalAlignment = CenterHorizontally,
+    ) {
+        val primaryButtonId = if (isGameUnlocked) {
+            R.string.play_now_button_text
+        } else {
+            R.string.text_continue_shopping
+        }
 
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(), onClick = {
+        val continueCheckOutFlow = {
             navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
                 popUpTo(0)
             }
-        },
-        colors = ButtonDefaults.buttonColors(VibrantPurple40),
-        shape = RoundedCornerShape(100.dp)
+        }
 
-    ) {
-        Text(
-            text = stringResource(id = R.string.text_continue_shopping),
-            fontFamily = font_sf_pro,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
+        val navigateToGame = {
+            val route = if (gameType == GameType.SCRATCH_CARD) {
+                MoreScreens.ScratchCardScreen.route
+            } else {
+                MoreScreens.SpinWheelScreen.route
+            }
+            navCheckOutFlowController.navigate(route) {
+                popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
+            }
+        }
+
+        PrimaryButton(
+            textContent = stringResource(primaryButtonId),
+            onClick = {
+                if (isGameUnlocked) {
+                    navigateToGame()
+                } else {
+                    continueCheckOutFlow()
+                }
+            }
         )
-    }
-    Spacer(modifier = Modifier.height(16.dp))
 
+        if (isGameUnlocked) {
+            TextCustomButton(
+                modifier = Modifier.padding(top = 16.dp),
+                textContent = stringResource(id = R.string.text_continue_shopping),
+                onClick = {
+                    navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
+                        popUpTo(0)
+                    }
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+    }
 }

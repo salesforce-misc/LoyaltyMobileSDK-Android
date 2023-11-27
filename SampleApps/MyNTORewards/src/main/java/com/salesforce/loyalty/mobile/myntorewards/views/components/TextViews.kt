@@ -35,6 +35,16 @@ fun BodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun BodyTextBold(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier)
+}
+
+@Composable
+fun BodyTextSmall(text: String, color: Color = Color.Black, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 12.sp, color = color, modifier = modifier)
+}
+
+@Composable
 private fun CommonText(
     text: String,
     modifier: Modifier = Modifier,
