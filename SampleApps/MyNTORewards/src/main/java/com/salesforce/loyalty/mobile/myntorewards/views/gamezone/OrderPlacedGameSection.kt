@@ -17,22 +17,16 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 
 @Composable
-fun OrderPlacedGameSection(
-    isGameUnlocked: Boolean,
-    gameType: GameType
-) {
-    if (!isGameUnlocked) {
-        return
-    }
-    val (headerId, image) = if (gameType == GameType.SCRATCH_CARD) {
+fun OrderConfirmationGameSection(gameType: GameType) {
+    val (headerId, placeholderImage) = if (gameType == GameType.SCRATCH_CARD) {
         Pair(R.string.place_order_game_header_scratch_card, R.drawable.placeholder_scratch_card)
     } else {
         Pair(R.string.place_order_game_header_spin_wheel, R.drawable.placeholder_game_thumbnail)
     }
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(top = 40.dp),
         horizontalAlignment = CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Center
     ) {
         BodyTextBold(text = stringResource(headerId))
         BodyTextSmall(
@@ -40,8 +34,8 @@ fun OrderPlacedGameSection(
             modifier = Modifier.padding(horizontal = 32.dp)
         )
         ImageComponent(
-            drawableId = image,
-            contentDescription = "",
+            drawableId = placeholderImage,
+            contentDescription = stringResource(headerId),
             modifier = Modifier.height(80.dp).width(120.dp)
         )
     }

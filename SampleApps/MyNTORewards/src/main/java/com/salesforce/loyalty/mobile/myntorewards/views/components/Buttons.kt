@@ -73,7 +73,7 @@ fun SecondaryButton(
 }
 
 @Composable
-fun TextCustomButton(
+fun TextButtonCustom(
     onClick: () -> Unit,
     textContent: String,
     modifier: Modifier = Modifier.fillMaxWidth(),
