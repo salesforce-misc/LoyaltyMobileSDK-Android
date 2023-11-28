@@ -18,10 +18,10 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponen
 
 @Composable
 fun OrderConfirmationGameSection(gameType: GameType) {
-    val (headerId, placeholderImage) = if (gameType == GameType.SCRATCH_CARD) {
-        Pair(R.string.place_order_game_header_scratch_card, R.drawable.placeholder_scratch_card)
+    val headerId = if (gameType == GameType.SCRATCH_CARD) {
+        R.string.place_order_game_header_scratch_card
     } else {
-        Pair(R.string.place_order_game_header_spin_wheel, R.drawable.placeholder_game_thumbnail)
+        R.string.place_order_game_header_spin_wheel
     }
     Column(
         modifier = Modifier.fillMaxWidth().padding(top = 40.dp),
@@ -34,7 +34,7 @@ fun OrderConfirmationGameSection(gameType: GameType) {
             modifier = Modifier.padding(horizontal = 32.dp)
         )
         ImageComponent(
-            drawableId = placeholderImage,
+            drawableId = gameType.placeHolderId,
             contentDescription = stringResource(headerId),
             modifier = Modifier.height(80.dp).width(120.dp)
         )
