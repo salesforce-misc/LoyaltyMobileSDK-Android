@@ -19,4 +19,3 @@ dependencyResolutionManagement {
 }
 include("SampleApps:MyNTORewards")
 include(":Sources")
-include(":Gamification")
