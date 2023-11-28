@@ -8,7 +8,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
 
 interface GameViewModelInterface {
 
-    val rewardTextLiveData: LiveData<String>
+    val rewardLiveData: LiveData<GameRewardResponse>
 
     val gamesViewState: LiveData<GamesViewState>
     fun getGameReward(mock: Boolean)

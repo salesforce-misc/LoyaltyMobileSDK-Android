@@ -18,10 +18,10 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     GameViewModelInterface {
     private val TAG = GameViewModel::class.java.simpleName
 
-    private var rewardTextMutableLiveData = MutableLiveData<String>()
+    private var rewardMutableLiveData = MutableLiveData<GameRewardResponse>()
 
-    override val rewardTextLiveData: LiveData<String>
-        get() = rewardTextMutableLiveData
+    override val rewardLiveData: LiveData<GameRewardResponse>
+        get() = rewardMutableLiveData
 
     override val gamesLiveData: LiveData<Games>
         get() = games
@@ -44,12 +44,8 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             val result = loyaltyAPIManager.getGameReward(true)
             result.onSuccess {
                 Logger.d(TAG, "API Result SUCCESS: ${it}")
-                val reward: String? =
-                    it?.gameRewards?.get(0)?.name
                 delay(2000)
-                reward?.let {
-                    rewardTextMutableLiveData.postValue(it)
-                }
+                rewardMutableLiveData.postValue(it)
                 rewardViewState.postValue(GameRewardViewState.GameRewardFetchSuccess)
             }.onFailure {
                 Logger.d(TAG, "API Result FAILURE: ${it}")

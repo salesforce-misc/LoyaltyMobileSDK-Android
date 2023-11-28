@@ -71,7 +71,7 @@ fun CanvasForScratching(
 
     val gameRewardViewState by gameViewModel.gameRewardsViewState.observeAsState()
 
-    val rewardTextLiveDataValue by gameViewModel.rewardTextLiveData.observeAsState()
+    val rewardLiveDataValue by gameViewModel.rewardLiveData.observeAsState()
 
     val alpha: Float by animateFloatAsState(targetValue = if (animate) 0.0f else 1f,
         animationSpec = tween(durationMillis = 700, easing = LinearEasing))
@@ -210,8 +210,12 @@ fun CanvasForScratching(
         GameRewardViewState.GameRewardFetchSuccess -> {
             if (isInProgress) {
                 isInProgress = false
-                rewardTextLiveDataValue?.let {
-                    rewardTextValue = it
+                rewardLiveDataValue?.let {
+                    val reward: String? =
+                        it?.gameRewards?.get(0)?.name
+                    if (reward != null) {
+                        rewardTextValue = reward
+                    }
                 }
                 animate = true
             }
@@ -227,7 +231,14 @@ fun CanvasForScratching(
     if (animate) {
         LaunchedEffect(key1 = true) {
             delay(3000)
-            navController.navigate(MoreScreens.GameCongratsScreen.route)
+            rewardLiveDataValue?.let {
+                val rewardType = it.gameRewards?.get(0)?.rewardType
+                if (RewardType.NO_VOUCHER.rewardType.equals(rewardType)) {
+                    navController.navigate(MoreScreens.GameBetterLuckScreen.route)
+                } else {
+                    navController.navigate(MoreScreens.GameCongratsScreen.route)
+                }
+            }
         }
     }
 }

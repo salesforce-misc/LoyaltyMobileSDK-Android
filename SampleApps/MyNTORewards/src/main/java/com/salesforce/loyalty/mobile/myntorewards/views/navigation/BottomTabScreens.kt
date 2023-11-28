@@ -289,7 +289,10 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.GameBetterLuckScreen.route) {
             showBottomBar(false)
-            BetterLuckScreen { navController.popBackStack() }
+            BetterLuckScreen { navController.popBackStack(
+                MoreScreens.GameZoneScreen.route,
+                false
+            ) }
         }
     }
 }
