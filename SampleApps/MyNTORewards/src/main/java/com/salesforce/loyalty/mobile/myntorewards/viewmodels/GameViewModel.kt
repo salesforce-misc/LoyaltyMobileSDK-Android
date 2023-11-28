@@ -45,7 +45,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             result.onSuccess {
                 Logger.d(TAG, "API Result SUCCESS: ${it}")
                 val reward: String? =
-                    it?.gameRewards?.get(0)?.description
+                    it?.gameRewards?.get(0)?.name
                 delay(2000)
                 reward?.let {
                     rewardTextMutableLiveData.postValue(it)
