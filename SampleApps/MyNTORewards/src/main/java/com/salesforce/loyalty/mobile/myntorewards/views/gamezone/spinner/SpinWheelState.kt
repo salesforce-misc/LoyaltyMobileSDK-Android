@@ -64,8 +64,6 @@ data class SpinWheelState(
                 )
             }
 
-            gameViewModel.getGames(true)
-
             coroutineScope.launch {
                 val result = gameViewModel.getGameRewardResult(true)
                 result.onSuccess {

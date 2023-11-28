@@ -156,6 +156,6 @@ class AppConstants {
         const val TAB_ACTIVE_GAMES = 0
         const val TAB_EXPIRED_GAMES = 1
 
-        const val KEY_GAME_DEF_ID = "game_def_ID"
+        const val KEY_GAME_REWARD= "game_reward"
     }
 }

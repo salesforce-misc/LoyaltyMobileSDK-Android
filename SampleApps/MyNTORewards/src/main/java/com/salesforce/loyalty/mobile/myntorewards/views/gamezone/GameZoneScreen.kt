@@ -32,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewM
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import java.io.Serializable
 
 @Composable
 fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
@@ -167,9 +168,10 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     gameType
                                                 ) {
                                                     if (gameType == GameType.SPIN_A_WHEEL) {
-                                                        navController.currentBackStackEntry?.arguments?.putString(
-                                                            AppConstants.KEY_GAME_DEF_ID,
-                                                            activeGame.gameDefinitionId
+                                                        val gamesData = activeGame.gameRewards
+                                                        navController.currentBackStackEntry?.arguments?.putSerializable(
+                                                            AppConstants.KEY_GAME_REWARD,
+                                                            gamesData as Serializable
                                                         )
 
                                                         navController.navigate(MoreScreens.SpinWheelScreen.route)
