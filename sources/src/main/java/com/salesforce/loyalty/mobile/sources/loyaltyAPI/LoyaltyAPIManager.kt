@@ -351,7 +351,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             val response =
                 Gson().fromJson(content, Games::class.java)
             Logger.d("getGames", "before delay")
-            delay(2000)
+            delay(1000)
             return Result.success(response)
         } else {
             return mLoyaltyClient.getNetworkClient().getGames(
