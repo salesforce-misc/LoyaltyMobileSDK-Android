@@ -64,10 +64,10 @@ data class SpinWheelState(
                 )
             }
 
-            gameViewModel.getGames(true)
+//            gameViewModel.getGames(true)
 
             coroutineScope.launch {
-                val result = gameViewModel.getGameRewardResult(true)
+                val result = gameViewModel.getGameRewardResult("",true)
                 result.onSuccess {
                     val reward: String? = it?.gameRewards?.get(0)?.gameRewardId
                     val stopAtThisDegree = stopAtThisDegree(pieCount, rewardList, reward)
@@ -81,7 +81,14 @@ data class SpinWheelState(
                     )
                     withContext(Dispatchers.Main) {
                         delay(3000)
-                        navController.navigate(MoreScreens.GameCongratsScreen.route)
+                        it?.let {
+                            val rewardType = it.gameRewards?.get(0)?.rewardType
+                            if (RewardType.NO_VOUCHER.rewardType.equals(rewardType)) {
+                                navController.navigate(MoreScreens.GameBetterLuckScreen.route)
+                            } else {
+                                navController.navigate(MoreScreens.GameCongratsScreen.route)
+                            }
+                        }
                     }
                 }.onFailure {
 
