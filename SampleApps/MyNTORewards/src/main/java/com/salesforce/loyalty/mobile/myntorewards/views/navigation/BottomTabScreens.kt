@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +51,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
+    gameViewModel: GameViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -116,6 +116,29 @@ fun HomeScreenAndCheckOutFlowNavigation(
             showBottomBar(false)
 //            ScanningProgress(navCheckOutFlowController)
         }
+        composable(route = MoreScreens.ScratchCardScreen.route) {
+            ScratchCardView(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route) {
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+            val offerPercent = "20%" // TODO: Replace this with the actual value
+            CongratulationsScreen(offerPercent) {
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
+                    popUpTo(0)
+                }
+            }
+        }
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
+                    popUpTo(0)
+                }
+            }
+        }
     }
 }
 
@@ -126,6 +149,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
     voucherModel: VoucherViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
+    gameViewModel: GameViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -160,7 +184,29 @@ fun PromotionScreenAndCheckOutFlowNavigation(
             showBottomBar(false)
             OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel, profileModel)
         }
-
+        composable(route = MoreScreens.ScratchCardScreen.route) {
+            ScratchCardView(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route) {
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+            val offerPercent = "20%" // TODO: Replace this with the actual value
+            CongratulationsScreen(offerPercent) {
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
+                    popUpTo(0)
+                }
+            }
+        }
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                navCheckOutFlowController.navigate(CheckOutFlowScreen.StartCheckoutFlowScreen.route) {
+                    popUpTo(0)
+                }
+            }
+        }
     }
 }
 
