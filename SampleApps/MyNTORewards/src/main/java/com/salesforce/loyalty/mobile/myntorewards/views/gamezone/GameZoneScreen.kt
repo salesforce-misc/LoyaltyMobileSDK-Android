@@ -168,10 +168,10 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     gameType
                                                 ) {
                                                     if (gameType == GameType.SPIN_A_WHEEL) {
-                                                        val gamesData = activeGame.gameRewards
-                                                        navController.currentBackStackEntry?.arguments?.putSerializable(
+                                                        val gamesData = activeGame.gameRewards as ArrayList
+                                                        navController.currentBackStackEntry?.arguments?.putParcelableArrayList(
                                                             AppConstants.KEY_GAME_REWARD,
-                                                            gamesData as Serializable
+                                                            gamesData
                                                         )
 
                                                         navController.navigate(MoreScreens.SpinWheelScreen.route)

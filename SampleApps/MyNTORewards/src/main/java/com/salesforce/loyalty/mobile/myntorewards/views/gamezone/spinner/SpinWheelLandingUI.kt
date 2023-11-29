@@ -23,14 +23,14 @@ import kotlinx.coroutines.launch
 
 data class GameNameIDDataModel(
     val game: String,
-    val gameID: String
+    val gameID: String?
 )
 
 @Composable
 fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameViewModelInterface) {
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
-    val gameRewards = navController.previousBackStackEntry?.arguments?.getSerializable(AppConstants.KEY_GAME_REWARD)
+    val gameRewards = navController.previousBackStackEntry?.arguments?.getParcelableArrayList(AppConstants.KEY_GAME_REWARD, GameReward::class.java)
 
 
 
@@ -48,7 +48,7 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
             coroutineScope.launch {
                 if(gameRewards!=null)
                 {
-                    for (reward in gameRewards as List<GameReward>) {
+                    for (reward in gameRewards) {
                         reward.name?.let { name -> gamesList.add(GameNameIDDataModel(name, reward.gameRewardId))}
                         if(reward.segColor?.contains("#") == false){
                             colourList.add(Color(("#" + reward.segColor).toColorInt()))
@@ -73,15 +73,4 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
             }
         }
     }
-
 }
-
-//might be used later
-/*
-inline fun <reified T : Serializable?> Bundle.getSerializable(key: String): T? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getSerializable(key, T::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        getSerializable(key) as T
-    }*/
