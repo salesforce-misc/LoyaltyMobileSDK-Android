@@ -30,7 +30,7 @@ data class GameNameIDDataModel(
 fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameViewModelInterface) {
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
-    val gameRewards = navController.previousBackStackEntry?.arguments?.getSerializable(AppConstants.KEY_GAME_DEF_ID)
+    val gameRewards = navController.previousBackStackEntry?.arguments?.getSerializable(AppConstants.KEY_GAME_REWARD)
 
 
 
