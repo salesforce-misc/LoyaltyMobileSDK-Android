@@ -72,6 +72,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
                     .getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
             if (memberJson == null) {
                 viewState.postValue(GamesViewState.GamesFetchFailure)
+                return@launch
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
             val membershipNumber = member.membershipNumber ?: ""
