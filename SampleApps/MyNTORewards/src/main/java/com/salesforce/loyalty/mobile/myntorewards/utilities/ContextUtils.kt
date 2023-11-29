@@ -195,7 +195,7 @@ fun getImageUri(context: Context, bmp: Bitmap?): Uri? {
             context.contentResolver.update(
                 localUri, cv, null,
                 null
-            ) //w  ww.j  av a  2  s  .  c  om
+            )
         }
         bmp.recycle()
         return localUri

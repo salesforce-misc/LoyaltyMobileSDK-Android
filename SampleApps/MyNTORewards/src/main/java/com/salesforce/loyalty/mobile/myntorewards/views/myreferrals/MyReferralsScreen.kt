@@ -34,8 +34,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
-fun MyReferralsScreen(showBottomSheet: (Boolean) -> Unit) {
-    val viewModel: MyReferralsViewModel = viewModel()
+fun MyReferralsScreen(viewModel: MyReferralsViewModel = viewModel(), showBottomSheet: (Boolean) -> Unit) {
     val viewState by viewModel.uiState.observeAsState(null)
 
     viewState?.let {

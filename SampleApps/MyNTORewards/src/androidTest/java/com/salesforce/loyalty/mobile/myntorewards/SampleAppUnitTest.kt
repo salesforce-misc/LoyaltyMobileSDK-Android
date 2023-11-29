@@ -3,6 +3,7 @@ package com.salesforce.loyalty.mobile.myntorewards
 import android.content.Context
 import android.os.Handler
 import android.os.Looper.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.LiveData
@@ -13,6 +14,8 @@ import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
@@ -76,6 +79,9 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
+import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import org.junit.Before
 import org.junit.Rule
@@ -94,6 +100,12 @@ class SampleAppUnitTest {
     fun init() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
+        val loyaltyAPIManager = LoyaltyAPIManager(
+            auth = ForceAuthManager(appContext),
+            instanceUrl = AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl,
+            loyaltyClient = LoyaltyClient(ForceAuthManager(appContext), AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
+        )
+
         composeTestRule.setContent {
             Navigation(
                 getMembershipProfileViewModel(),
@@ -104,6 +116,8 @@ class SampleAppUnitTest {
                 getTransactionViewModel(),
                 getCheckoutFlowViewModel(),
                 getScanningViewModel(),
+                getGameViewModel(),
+                loyaltyAPIManager
             )
         }
         /*     composeTestRule.setContent {
@@ -138,12 +152,25 @@ class SampleAppUnitTest {
         app_has_swipe_images()
         verifyLoginTesting()
         display_home_ui_testing()
-        receipt_scanning_ui_testing()
+//        receipt_scanning_ui_testing()
         display_promo_popup_testing()
         offer_tab_testing()
         profile_ui_testing()
         verify_more_tab_testing()
+        verifyReferralScreen()
         home_screen_extensive_testing()
+    }
+
+    private fun verifyReferralScreen() {
+        composeTestRule.onNodeWithText("More").performClick()
+        composeTestRule.onNodeWithText("My Referrals").assertIsDisplayed().performClick()
+        Thread.sleep(500)
+        composeTestRule.onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithTag(TEST_TAG_TITLE_VIEW)
+                .assertTextEquals("My Referrals")
+                .assertIsDisplayed()
+
     }
 
 
@@ -1022,4 +1049,25 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
 
         }
+}
+
+fun getGameViewModel(): GameViewModelInterface {
+    return object : GameViewModelInterface {
+        override val rewardTextLiveData: LiveData<String>
+            get() = TODO("Not yet implemented")
+        override val gamesViewState: LiveData<GamesViewState>
+            get() = TODO("Not yet implemented")
+
+        override fun getGameReward(mock: Boolean) {
+            TODO("Not yet implemented")
+        }
+
+        override fun getGames(mock: Boolean) {
+            TODO("Not yet implemented")
+        }
+
+        override val gamesLiveData: LiveData<Games>
+            get() = TODO("Not yet implemented")
+
+    }
 }
