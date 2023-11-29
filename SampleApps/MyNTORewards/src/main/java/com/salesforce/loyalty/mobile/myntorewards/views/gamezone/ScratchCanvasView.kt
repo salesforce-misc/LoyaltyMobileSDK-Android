@@ -53,7 +53,8 @@ fun CanvasForScratching(
     path: Path,
     scratchThickness: Float,
     gameViewModel: GameViewModelInterface,
-    navController: NavHostController
+    navController: NavHostController,
+    gameParticipantRewardId: String
 ) {
     val textMeasurer = rememberTextMeasurer()
     var animate by remember { mutableStateOf(false) }
@@ -203,7 +204,7 @@ fun CanvasForScratching(
     if (isFirstTime && !apiCalled) {
         LaunchedEffect(true) {
             apiCalled = true
-            gameViewModel.getGameReward(true)
+            gameViewModel.getGameReward(gameParticipantRewardId, true)
         }
     }
     when (gameRewardViewState) {

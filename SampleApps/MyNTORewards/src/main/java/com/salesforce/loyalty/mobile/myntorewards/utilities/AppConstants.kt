@@ -159,5 +159,7 @@ class AppConstants {
         //Reward Types
         const val VOUCHER = "Voucher"
         const val NO_REWARD = "NoReward"
+
+        const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
     }
 }

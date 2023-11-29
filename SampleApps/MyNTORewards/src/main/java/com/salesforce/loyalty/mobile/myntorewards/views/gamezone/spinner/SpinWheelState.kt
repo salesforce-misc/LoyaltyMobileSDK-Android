@@ -64,10 +64,10 @@ data class SpinWheelState(
                 )
             }
 
-            gameViewModel.getGames(true)
+//            gameViewModel.getGames(true)
 
             coroutineScope.launch {
-                val result = gameViewModel.getGameRewardResult(true)
+                val result = gameViewModel.getGameRewardResult("",true)
                 result.onSuccess {
                     val reward: String? = it?.gameRewards?.get(0)?.gameRewardId
                     val stopAtThisDegree = stopAtThisDegree(pieCount, rewardList, reward)
