@@ -13,7 +13,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -32,7 +31,8 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
     val gameRewards = navController.previousBackStackEntry?.arguments?.getParcelableArrayList(AppConstants.KEY_GAME_REWARD, GameReward::class.java)
-
+    val gameParticipantRewardId =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_GAME_PARTICIPANT_REWARD_ID)?:""
 
 
     Box(contentAlignment = Alignment.TopCenter) {
@@ -63,7 +63,7 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
             }
         }
         if (wheelValuesLoaded) {
-            Wheel(navController, gameViewModel, gamesList, colourList)
+            Wheel(navController, gameViewModel, gamesList, colourList, gameParticipantRewardId)
         } else {
             Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(
