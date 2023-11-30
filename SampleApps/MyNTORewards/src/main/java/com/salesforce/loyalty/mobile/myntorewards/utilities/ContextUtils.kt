@@ -18,11 +18,12 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import androidx.annotation.AnyRes
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import java.io.ByteArrayOutputStream
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -38,21 +39,38 @@ fun Context.copyToClipboard(text: String, label: String = "label") {
     clipboardManager.setPrimaryClip(clip)
 }
 
+fun isValidEmail(target: CharSequence?): Boolean {
+    return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+}
+
+fun Context.sendMail(emails: List<String>, subject: String, body: String) {
+    if (emails.isEmpty() || emails.any { !isValidEmail(it.trim()) }) {
+        Toast.makeText(this, "Please enter valid E-mails!", Toast.LENGTH_LONG).show()
+        return
+    }
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "message/rfc822"
+        putExtra(Intent.EXTRA_SUBJECT, subject);
+        putExtra(Intent.EXTRA_TEXT, body);
+        putExtra(Intent.EXTRA_EMAIL, emails.toTypedArray())
+    }
+    startActivity(Intent.createChooser(intent, "Share Referral Code"))
+}
+
 fun Context.shareReferralCode(content: String, shareType: ShareType) {
-    val extraText = getString(R.string.share_referral_message, content)
     var intent = Intent(Intent.ACTION_SEND).apply {
-//        type = "text/plain"
-        putExtra(Intent.EXTRA_TEXT, extraText)
-        putExtra(Intent.EXTRA_TITLE, extraText)
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, content)
+//        putExtra(Intent.EXTRA_TITLE, content)
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
     }
 
-    intent.type = "image/*"
-    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    val bitmap = writeTextOnDrawable(R.drawable.bg_refer_earn, extraText).bitmap
-    intent.putExtra(Intent.EXTRA_STREAM, getImageUri(this, bitmap))
-    intent.putExtra(Intent.EXTRA_TEXT, extraText)
-    intent.putExtra(Intent.EXTRA_TITLE, extraText)
+//    intent.type = "image/*"
+//    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//    val bitmap = writeTextOnDrawable(R.drawable.bg_refer_earn, extraText).bitmap
+//    intent.putExtra(Intent.EXTRA_STREAM, getImageUri(this, bitmap))
+//    intent.putExtra(Intent.EXTRA_TEXT, extraText)
+//    intent.putExtra(Intent.EXTRA_TITLE, extraText)
 
     var sharerUrl: String? = null
 
@@ -63,27 +81,29 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
         }
         ShareType.INSTAGRAM -> {
             intent.setPackage("com.instagram.android")
-//            intent.type = "image/*"
-//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-//            val bitmap = writeTextOnDrawable(R.drawable.bg_refer_earn, extraText).bitmap
-//            intent.putExtra(Intent.EXTRA_STREAM, getImageUri(this, bitmap))
+            intent.type = "image/*"
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val bitmap = writeTextOnDrawable(R.drawable.bg_refer_earn, content).bitmap
+            intent.putExtra(Intent.EXTRA_STREAM, getImageUri(this, bitmap))
 //            intent.putExtra(Intent.EXTRA_STREAM, getUriToResource(R.drawable.bg_refer_friend_banner))
+            intent.putExtra(Intent.EXTRA_TEXT, content)
+            intent.putExtra(Intent.EXTRA_TITLE, content)
         }
         ShareType.WHATSAPP -> {
             intent.setPackage("com.whatsapp")
         }
         ShareType.TWITTER -> {
             intent.setPackage("com.twitter.android")
-            sharerUrl = "https://twitter.com/intent/tweet?text=${urlEncode(extraText)}"
+            sharerUrl = "https://twitter.com/intent/tweet?text=${urlEncode(content)}"
         }
         ShareType.SHARE_OTHERS -> {
             // do nothing
         }
     }
 
-    if (sharerUrl.isNullOrBlank().not() && !isAppInstalled(intent.`package` ?: "")) {
-        intent = Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl))
-        Toast.makeText(this, "Selected app is not installed, redirecting to web page!", Toast.LENGTH_LONG).show()
+    if (/*sharerUrl.isNullOrBlank().not() && */!isAppInstalled(intent.`package` ?: "")) {
+//        intent = Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl))
+        Toast.makeText(this, "Selected app is not installed!", Toast.LENGTH_LONG).show()
     }
     startActivity(Intent.createChooser(intent, "Share Referral Code"))
 }

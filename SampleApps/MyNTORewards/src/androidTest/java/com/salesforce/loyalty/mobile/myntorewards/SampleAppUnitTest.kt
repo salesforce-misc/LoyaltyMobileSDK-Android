@@ -3,14 +3,15 @@ package com.salesforce.loyalty.mobile.myntorewards
 import android.content.Context
 import android.os.Handler
 import android.os.Looper.*
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
@@ -80,6 +81,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFERRAL_CARD
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
@@ -96,6 +98,8 @@ class SampleAppUnitTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    @get:Rule
+    val activity = createAndroidComposeRule<LoyaltyAppBaseActivity>().activity
     @Before
     fun init() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
@@ -162,7 +166,7 @@ class SampleAppUnitTest {
     }
 
     private fun verifyReferralScreen() {
-        composeTestRule.onNodeWithText("More").performClick()
+        composeTestRule.onNodeWithText(activity.getString(R.string.screen_title_more)).performClick()
         composeTestRule.onNodeWithText("My Referrals").assertIsDisplayed().performClick()
         Thread.sleep(500)
         composeTestRule.onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
@@ -170,6 +174,12 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_TITLE_VIEW)
                 .assertTextEquals("My Referrals")
                 .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_REFERRAL_CARD).assertIsDisplayed()
+        composeTestRule.onNodeWithText("YOUR REFERRALS: Last 90 Days").assertIsDisplayed()
+        composeTestRule.onNodeWithText("YOUR REFERRALS: Last 90 Days").assertIsDisplayed()
+        composeTestRule.onNodeWithText("YOUR REFERRALS: Last 90 Days").assertIsDisplayed()
+        composeTestRule.onNodeWithText("YOUR REFERRALS: Last 90 Days").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Refer a Friend Now!").assertIsDisplayed()
 
     }
 

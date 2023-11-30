@@ -87,7 +87,7 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyReferralsListScreen(showBottomBar: (Boolean) -> Unit) {
+fun MyReferralsListScreen(viewModel: MyReferralsViewModel = viewModel(), showBottomBar: (Boolean) -> Unit) {
     val bottomSheetScaffoldState = BottomSheetCustomState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -122,7 +122,7 @@ fun MyReferralsListScreen(showBottomBar: (Boolean) -> Unit) {
                 .background(Color.White)
         ) {
             TitleView(stringResource(id = R.string.header_label_my_referrals))
-            MyReferralsScreen {
+            MyReferralsScreen(viewModel) {
                 showBottomSheet(true)
             }
         }
