@@ -15,6 +15,7 @@ object LoyaltyConfig {
     const val API_VERSION_55 = "v55.0"
     const val API_VERSION_56 = "v56.0"
     const val API_VERSION_58 = "v58.0"
+    const val API_VERSION_60 = "v60.0"
     const val MEMBER_API_SERVICES_PATH = "/services/data/"
     const val KEY_MEMBERSHIP_NUMBER = "MembershipNumber"
     const val KEY_MEMBER_ID = "MemberId"
@@ -43,8 +44,8 @@ object LoyaltyConfig {
         class LoyaltyProgramProcess(val programName: String, val programProcessName: ProgramProcessName) : Resource()
         class Vouchers(val programName: String, val membershipNumber: String): Resource()
 
-        class GameReward(): Resource()
-        class Games(): Resource()
+        class GameReward(val gameParticipantRewardId: String): Resource()
+        class Games(val participantId: String): Resource()
     }
 
     /**
@@ -76,11 +77,11 @@ object LoyaltyConfig {
                 instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/vouchers"
             }
             is Resource.GameReward -> {
-                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/game/definition/Definition123/Participant/Participant123/Play"
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_60 + "/game/gameParticipantReward/" + resource.gameParticipantRewardId + "/game-reward"
             }
 
             is Resource.Games -> {
-                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/game/participant/Participant123/Games"
+                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_60 + "/game/participant/" + resource.participantId + "/games"
             }
         }
     }

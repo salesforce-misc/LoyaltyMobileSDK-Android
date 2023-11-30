@@ -15,10 +15,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ScanningViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
-import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @Composable
@@ -73,12 +71,12 @@ fun TabNavigation(
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel) {
+            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel) {
                 showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            PromotionScreenAndCheckOutFlowNavigation(promotionModel, voucherModel, checkOutFlowViewModel, profileModel) {
+            PromotionScreenAndCheckOutFlowNavigation(promotionModel, voucherModel, checkOutFlowViewModel, profileModel, gameViewModel) {
                 showBottomBar(it)
             }
         }

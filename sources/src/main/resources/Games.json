@@ -13,7 +13,7 @@
           "description":"Win\n $12 \n Off",
           "expirationDate": "2023-10-31T19:00:00.000Z",
           "imageUrl": null,
-          "name": "10 % Off",
+          "name": "10% Off",
           "rewardType": "Voucher",
           "rewardValue": null
         },
@@ -24,7 +24,7 @@
           "description": "Better Luck Next Time",
           "expirationDate": "2023-11-15T19:00:00.000Z",
           "imageUrl": null,
-          "name": "No Reward",
+          "name": "20% Off",
           "rewardType": "NoReward",
           "rewardValue": null
         },
@@ -35,7 +35,7 @@
           "description": "Win1000 Bonus Points",
           "expirationDate": "2023-10-31T19:00:00.000Z",
           "imageUrl": null,
-          "name": "50 % Off",
+          "name": "50% Off",
           "rewardType": "Voucher",
           "rewardValue": null
         },
@@ -46,7 +46,7 @@
           "description":"Win $15 Off",
           "expirationDate": "2023-10-31T19:00:00.000Z",
           "imageUrl": null,
-          "name": "10 % Off",
+          "name": "10% Off",
           "rewardType": "Voucher",
           "rewardValue": null
         },
@@ -57,7 +57,7 @@
           "description": "Win300 Bonus Points",
           "expirationDate": "2023-10-31T19:00:00.000Z",
           "imageUrl": null,
-          "name": "50 % Off",
+          "name": "50% Off",
           "rewardType": "Voucher",
           "rewardValue": null
         },

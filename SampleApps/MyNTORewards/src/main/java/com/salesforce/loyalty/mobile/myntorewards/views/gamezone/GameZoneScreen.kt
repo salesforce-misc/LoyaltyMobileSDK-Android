@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_GAME_PARTICIPANT_REWARD_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ACTIVE_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_EXPIRED_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
@@ -41,7 +42,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
     var isInProgress by remember { mutableStateOf(false) }
     val context = LocalContext.current
     LaunchedEffect(true) {
-        gameViewModel.getGames(true)
+        gameViewModel.getGames(context, true)
     }
     Box(
         contentAlignment = Alignment.Center,
@@ -167,6 +168,10 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     title = activeGame.name ?: "",
                                                     gameType
                                                 ) {
+                                                    navController.currentBackStackEntry?.arguments?.putString(
+                                                        KEY_GAME_PARTICIPANT_REWARD_ID,
+                                                        activeGame.participantGameRewards[0].gameParticipantRewardId
+                                                    )
                                                     if (gameType == GameType.SPIN_A_WHEEL) {
                                                         val gamesData = activeGame.gameRewards as ArrayList
                                                         navController.currentBackStackEntry?.arguments?.putParcelableArrayList(

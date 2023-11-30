@@ -3,33 +3,33 @@ package com.salesforce.loyalty.mobile.sources.loyaltyModels
 import com.google.gson.annotations.SerializedName
 
 data class GameRewardResponse(
-    @SerializedName("message")
-    val message: String?,
+    @SerializedName("errorMessage")
+    val errorMessage: String?,
     @SerializedName("status")
     val status: Boolean?,
-    @SerializedName("GameRewards")
+    @SerializedName("gameReward")
     val gameRewards: List<GameRewards> = mutableListOf()
 )
 
 data class GameRewards(
-    @SerializedName("Name")
-    val name: String?,
-
+    @SerializedName("rewardDefinitionId")
+    val rewardDefinitionId: String?,
     @SerializedName("gameRewardId")
     val gameRewardId: String?,
-
-    @SerializedName("Description")
+    @SerializedName("color")
+    val color: String?,
+    @SerializedName("description")
     val description: String?,
-    @SerializedName("Reward Type")
-    val rewardType: String?,
-    @SerializedName("Reward Definition")
-    val rewardDefinition: String?,
-    @SerializedName("Reward Value")
-    val rewardValue: String?,
-    @SerializedName("Status")
-    val status: String?,
-    @SerializedName("Expiration Date")
+    @SerializedName("expirationDate")
     val expirationDate: String?,
-    @SerializedName("Issued Reward Reference")
-    val issuedRewardReference: String?
+    @SerializedName("issuedRewardReference")
+    val issuedRewardReference: String?,
+    @SerializedName("imageUrl")
+    val imageUrl: String?,
+    @SerializedName("name")
+    val name: String?,
+    @SerializedName("rewardType")
+    val rewardType: String?,
+    @SerializedName("rewardValue")
+    val rewardValue: String?,
 )

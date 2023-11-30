@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
@@ -35,6 +36,8 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
     val overlayImage = ImageBitmap.imageResource(id = R.drawable.overlay_img)
     val currentState = remember { mutableStateOf(ScratchedPath(path = Path())) }
     val movedState = remember { mutableStateOf<Offset?>(null) }
+    val gameParticipantRewardId =
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_GAME_PARTICIPANT_REWARD_ID)
 
     Box(
         modifier = Modifier
@@ -94,18 +97,21 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
             }
         }
         // Scratch Card Implementation
-        CanvasForScratching(
-            overlay = overlayImage,
-            modifier = Modifier.align(Alignment.Center),
-            cursorMovedOffset = movedState.value,
-            onCursorMovedOffset = { x, y ->
-                movedState.value = Offset(x, y)
-            },
-            path = currentState.value.path,
-            scratchThickness = currentState.value.thickness,
-            gameViewModel = gameViewModel,
-            navController = navController
-        )
+        gameParticipantRewardId?.let {
+            CanvasForScratching(
+                overlay = overlayImage,
+                modifier = Modifier.align(Alignment.Center),
+                cursorMovedOffset = movedState.value,
+                onCursorMovedOffset = { x, y ->
+                    movedState.value = Offset(x, y)
+                },
+                path = currentState.value.path,
+                scratchThickness = currentState.value.thickness,
+                gameViewModel = gameViewModel,
+                navController = navController,
+                gameParticipantRewardId = it
+            )
+        }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
