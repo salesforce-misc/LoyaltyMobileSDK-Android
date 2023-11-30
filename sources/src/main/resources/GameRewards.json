@@ -1,10 +1,10 @@
 {
   "message": null,
   "status": true,
-  "GameRewards": [
+  "gameReward": [
     {
       "Name": "20 % Off",
-      "gameRewardId": "555",
+      "gameRewardId": "513",
       "Description": "10% off voucher",
       "Reward Type": "Voucher",
       "Reward Definition": "ID",
