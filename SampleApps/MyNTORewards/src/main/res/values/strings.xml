@@ -254,4 +254,18 @@
     <string name="my_referrals_accepted_label">ACCEPTED</string>
     <string name="my_referrals_vouchers_earned_label">VOUCHERS EARNED</string>
     <string name="my_referrals_points_earned_label">POINTS EARNED</string>
+    <string name="refer_friend_banner_content_description">Refer Friend Banner</string>
+    <string name="refer_a_friend_and_earn_header">Refer a Friend and Earn</string>
+    <string name="refer_a_friend_and_earn_sub_header">Invite your friends and get a voucher when they shop for the first time. </string>
+    <string name="separate_emails_with_commas">Separate emails with Commas</string>
+    <string name="share_via">Or Share Via</string>
+    <string name="share_referral_code_label">Share the referral code above in any other way</string>
+    <string name="share_via_facebook_icon_description">Share via Facebook</string>
+    <string name="share_via_instagram_icon_description">Share via Instagram</string>
+    <string name="share_via_whatsapp_icon_description">Share via Whatsapp</string>
+    <string name="share_via_twitter_icon_description">Share via Twitter</string>
+    <string name="share_via_icon_description">Share via</string>
+    <string name="friends_email_address_placeholder">Friend\'s Email Address</string>
+    <string name="forward_arrow_content_description">Forward Arrow</string>
+    <string name="tap_to_copy">TAP TO COPY</string>
 </resources>

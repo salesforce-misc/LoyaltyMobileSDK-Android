@@ -26,7 +26,7 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
 
     // TODO: REMOVE MOCK DATA ONCE THE REAL API IS INTEGRATED
     private fun successState() = MyReferralScreenState(
-        tabItems = listOf(ReferralTabs.Success.tabName, ReferralTabs.InProgress.tabName),
+        tabItems = ReferralTabs.sortedTabs(),
         completedStates = completedItemStates(),
         inProgressStates = inProgressItemStates(),
         listOf(Pair(R.string.my_referral_sent_label, "18"),
