@@ -62,15 +62,15 @@ internal fun SpinWheelContent(
                         .rotate(rotateAngle)
                 ) {
                     //this is for POC to show image can also be added other than text
-                  /*  if (pieIndex == 2) {
+                   /* if (pieIndex == 2) {
 
                         Image(
                             painter = painterResource(id = R.drawable.phone_icon),
                             contentDescription = "game_back_button",
                             contentScale = ContentScale.Fit
                         )
-                    }
-*/
+                    }*/
+
                     Text(
                         text = wheelData[pieIndex].game,
                         fontWeight = FontWeight.SemiBold,
@@ -94,6 +94,6 @@ fun getPieRadius(pieCount: Int, radius: Float): Float {
         6 -> radius / 1.6f
         7 -> radius / 1.4f
         8 -> radius / 1.4f
-        else -> radius / 2f
+        else -> radius / 1.4f
     }
 }

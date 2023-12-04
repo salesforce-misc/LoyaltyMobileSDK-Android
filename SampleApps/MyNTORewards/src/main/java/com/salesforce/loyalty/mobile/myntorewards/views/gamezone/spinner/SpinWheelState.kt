@@ -20,6 +20,7 @@ import kotlinx.coroutines.*
 data class SpinWheelState(
     internal val gameViewModel: GameViewModelInterface,
     internal val pieCount: Int,
+    val gameParticipantRewardId:String,
     private val durationMillis: Int,
     private val rotationPerSecond: Float,
     private val easing: Easing,
@@ -64,10 +65,8 @@ data class SpinWheelState(
                 )
             }
 
-//            gameViewModel.getGames(true)
-
             coroutineScope.launch {
-                val result = gameViewModel.getGameRewardResult("",true)
+                val result = gameViewModel.getGameRewardResult(gameParticipantRewardId,true)
                 result.onSuccess {
                     val reward: String? = it?.gameRewards?.get(0)?.gameRewardId
                     val stopAtThisDegree = stopAtThisDegree(pieCount, rewardList, reward)
@@ -148,15 +147,18 @@ enum class SpinAnimationState {
 fun rememberSpinWheelState(
     gameViewModel: GameViewModelInterface,
     pieCount: Int,
+    gameParticipantRewardId: String,
     durationMillis: Int = ROTATION_DURATION,
     rotationPerSecond: Float = ROTATION_PER_SECOND,
     easing: Easing = CubicBezierEasing(0.16f, 1f, 0.3f, 1f),
     startDegree: Float = START_DEGREE
+
 ): SpinWheelState {
     return remember {
         SpinWheelState(
             gameViewModel,
             pieCount,
+            gameParticipantRewardId,
             durationMillis,
             rotationPerSecond,
             easing,

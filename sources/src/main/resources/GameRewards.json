@@ -1,30 +1,17 @@
 {
-  "errorMessage": null,
+  "message": null,
+  "status": true,
   "gameReward": [
     {
-      "rewardDefinitionId": "102",
-      "gameRewardId": "503",
-      "color": "#0099DD",
-      "description": "Win 300 Bonus Points",
-      "expirationDate": "2023-10-31T19:00:00.000Z",
-      "issuedRewardReference": "508",
-      "imageUrl": null,
-      "name": "20% Off",
-      "rewardType": "Voucher",
-      "rewardValue": null
-    },
-    {
-      "rewardDefinitionId": "102",
-      "gameRewardId": "509",
-      "color": "#0099DD",
-      "description": "Win 300 Bonus Points",
-      "expirationDate": "2023-10-31T19:00:00.000Z",
-      "issuedRewardReference": "508",
-      "imageUrl": null,
-      "name": "Better Luck Next Time!",
-      "rewardType": "NoReward",
-      "rewardValue": null
+      "Name": "20 % Off",
+      "gameRewardId": "513",
+      "Description": "10% off voucher",
+      "Reward Type": "Voucher",
+      "Reward Definition": "ID",
+      "Reward Value": "ID",
+      "Status":"Rewarded",
+      "Expiration Date":"25/05/2024",
+      "Issued Reward Reference":"ID"
     }
-  ],
-  "status": true
+  ]
 }

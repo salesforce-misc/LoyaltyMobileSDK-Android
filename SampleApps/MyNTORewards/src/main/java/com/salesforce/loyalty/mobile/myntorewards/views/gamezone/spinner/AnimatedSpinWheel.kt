@@ -32,9 +32,10 @@ fun Wheel(
     navController: NavHostController,
     gameViewModel: GameViewModelInterface,
     gamesList: MutableList<GameNameIDDataModel>,
-    colourList: MutableList<Color>
+    colourList: MutableList<Color>,
+    gameParticipantRewardId: String
 ) {
-    val state = rememberSpinWheelState(gameViewModel, gamesList.size)
+    val state = rememberSpinWheelState(gameViewModel, gamesList.size, gameParticipantRewardId)
 
     val scope = rememberCoroutineScope()
     Column {

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_GAME_PARTICIPANT_REWARD_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ACTIVE_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_EXPIRED_GAMES
@@ -32,6 +33,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewM
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import java.io.Serializable
 
 @Composable
 fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
@@ -171,6 +173,12 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                         activeGame.participantGameRewards[0].gameParticipantRewardId
                                                     )
                                                     if (gameType == GameType.SPIN_A_WHEEL) {
+                                                        val gamesData = activeGame.gameRewards as ArrayList
+                                                        navController.currentBackStackEntry?.arguments?.putParcelableArrayList(
+                                                            AppConstants.KEY_GAME_REWARD,
+                                                            gamesData
+                                                        )
+
                                                         navController.navigate(MoreScreens.SpinWheelScreen.route)
                                                     } else {
                                                         navController.navigate(MoreScreens.ScratchCardScreen.route)

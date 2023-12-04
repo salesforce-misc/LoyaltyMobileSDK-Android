@@ -156,10 +156,14 @@ class AppConstants {
         const val TAB_ACTIVE_GAMES = 0
         const val TAB_EXPIRED_GAMES = 1
 
+
+        const val KEY_GAME_REWARD= "game_reward"
+
         //Reward Types
         const val VOUCHER = "Voucher"
         const val NO_REWARD = "NoReward"
 
         const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
+
     }
 }
