@@ -145,6 +145,7 @@ class MyReferralsScreenTest {
             // Perform a click and wait until the app is opened.
             val facebookOpened: Boolean = facebook.clickAndWait(Until.newWindow(), 3000)
             assert(facebookOpened)
+//            assertEquals("com.facebook.katana", uiDevice.currentPackageName)
             uiDevice.pressBack()
             uiDevice.pressBack()
             uiDevice.pressBack()
@@ -157,6 +158,12 @@ class MyReferralsScreenTest {
             // Perform a click and wait until the app is opened.
             val twitterOpened: Boolean = twitter.clickAndWait(Until.newWindow(), 5000)
             assert(twitterOpened)
+            assertEquals("com.twitter.android", uiDevice.currentPackageName)
+            uiDevice.pressBack()
+            uiDevice.pressBack()
+            val twitterDelete: UiObject2 = uiDevice.findObject(By.text("Delete"))
+            // Perform a click and wait until the app is opened.
+            twitterDelete.click()
             Thread.sleep(1000)
 
             onNodeWithContentDescription(activity.getString(R.string.share_via_instagram_icon_description))
@@ -166,6 +173,14 @@ class MyReferralsScreenTest {
             // Perform a click and wait until the app is opened.
             val opened: Boolean = instagram.clickAndWait(Until.newWindow(), 5000)
             assert(opened)
+            assertEquals("com.instagram.android", uiDevice.currentPackageName)
+            uiDevice.pressBack()
+
+            onNodeWithContentDescription(activity.getString(R.string.share_via_whatsapp_icon_description))
+                .assertIsDisplayed().performClick()
+            Thread.sleep(1000)
+            assertEquals("com.whatsapp", uiDevice.currentPackageName)
+            uiDevice.pressBack()
         }
     }
 

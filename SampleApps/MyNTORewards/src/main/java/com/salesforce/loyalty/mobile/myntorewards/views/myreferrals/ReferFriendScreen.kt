@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -93,7 +94,7 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
         ) {
             BodyTextBold(text = stringResource(R.string.refer_a_friend_and_earn_header))
             BodyText(text = stringResource(R.string.refer_a_friend_and_earn_sub_header))
-
+            val focusManager = LocalFocusManager.current
             var textField by remember { mutableStateOf(TextFieldValue("")) }
             TextFieldCustom(
                 textField,
@@ -101,6 +102,7 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
                 modifier = Modifier.padding(top = 16.dp),
                 singleLine = true,
                 rightIconClick = {
+                    focusManager.clearFocus()
                     context.sendMail(textField.text.split(","), "Subject", extraText)
                 },
                 updateTextField = { textField = it }
