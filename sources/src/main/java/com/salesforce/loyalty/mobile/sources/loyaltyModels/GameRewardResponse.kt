@@ -14,20 +14,22 @@ data class GameRewardResponse(
 data class GameRewards(
     @SerializedName("rewardDefinitionId")
     val rewardDefinitionId: String?,
-    @SerializedName("gameRewardId")
-    val gameRewardId: String?,
+
     @SerializedName("color")
     val color: String?,
+
     @SerializedName("description")
     val description: String?,
     @SerializedName("expirationDate")
     val expirationDate: String?,
-    @SerializedName("issuedRewardReference")
-    val issuedRewardReference: String?,
     @SerializedName("imageUrl")
     val imageUrl: String?,
+    @SerializedName("issuedRewardReference")
+    val issuedRewardReference: String?,
     @SerializedName("name")
     val name: String?,
+    @SerializedName("gameRewardId")
+    val gameRewardId: String?,
     @SerializedName("rewardType")
     val rewardType: String?,
     @SerializedName("rewardValue")

@@ -204,7 +204,7 @@ fun CanvasForScratching(
     if (isFirstTime && !apiCalled) {
         LaunchedEffect(true) {
             apiCalled = true
-            gameViewModel.getGameReward(gameParticipantRewardId, true)
+            gameViewModel.getGameReward(gameParticipantRewardId, false)
         }
     }
     when (gameRewardViewState) {

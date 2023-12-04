@@ -42,7 +42,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
     var isInProgress by remember { mutableStateOf(false) }
     val context = LocalContext.current
     LaunchedEffect(true) {
-        gameViewModel.getGames(context, true)
+        gameViewModel.getGames(context, false)
     }
     Box(
         contentAlignment = Alignment.Center,

@@ -55,7 +55,7 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
                             colourList.add(Color(("#" + reward.segColor).toColorInt()))
                         }
                         else{
-                            colourList.add(Color(("" + reward.segColor).toColorInt()))
+                            colourList.add(Color(("" + (reward.segColor?:"#FFFFFF")).toColorInt()))
                         }
                     }
                 }

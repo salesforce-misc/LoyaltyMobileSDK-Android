@@ -46,7 +46,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
         rewardViewState.postValue(GameRewardViewState.GameRewardFetchInProgress)
         viewModelScope.launch {
-            val result = loyaltyAPIManager.getGameReward(gameParticipantRewardId, true)
+            val result = loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
             result.onSuccess {
                 Logger.d(TAG, "API Result SUCCESS: ${it}")
                 delay(2000)
@@ -61,7 +61,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
 
     override suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse> {
         delay(2000)
-        return loyaltyAPIManager.getGameReward(gameParticipantRewardId, true)
+        return loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
     }
 
     override fun getGames(context: Context, mock: Boolean) {
