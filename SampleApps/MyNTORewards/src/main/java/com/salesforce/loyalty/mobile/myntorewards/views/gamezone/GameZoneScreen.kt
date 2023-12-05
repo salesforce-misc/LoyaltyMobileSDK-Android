@@ -230,8 +230,10 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                         }
                     }
                     GamesViewState.GamesFetchFailure -> {
-                        isInProgress = false
-                        ShowEmptyView(selectedTab = selectedTab)
+                        if (isInProgress) {
+                            isInProgress = false
+                            ShowEmptyView(selectedTab = selectedTab)
+                        }
                     }
                     GamesViewState.GamesFetchInProgress -> {
                         isInProgress = true
