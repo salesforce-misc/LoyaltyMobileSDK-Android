@@ -189,12 +189,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                             }
                                         }
                                     } else {
-                                        EmptyView(
-                                            header = stringResource(id = R.string.label_no_games),
-                                            description = stringResource(
-                                                id = R.string.label_empty_active_games
-                                            )
-                                        )
+                                        ShowEmptyView(selectedTab = selectedTab)
                                     }
                                 }
                                 TAB_EXPIRED_GAMES -> {
@@ -226,12 +221,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                             }
                                         }
                                     } else {
-                                        EmptyView(
-                                            header = stringResource(id = R.string.label_no_games),
-                                            description = stringResource(
-                                                id = R.string.label_empty_expired_games
-                                            )
-                                        )
+                                        ShowEmptyView(selectedTab = selectedTab)
                                     }
                                 }
                             }
