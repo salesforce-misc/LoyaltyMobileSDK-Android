@@ -16,7 +16,6 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameRewardResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(),
@@ -49,7 +48,6 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             val result = loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
             result.onSuccess {
                 Logger.d(TAG, "API Result SUCCESS: ${it}")
-                delay(2000)
                 rewardMutableLiveData.postValue(it)
                 rewardViewState.postValue(GameRewardViewState.GameRewardFetchSuccess)
             }.onFailure {
@@ -60,7 +58,6 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     }
 
     override suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse> {
-        delay(2000)
         return loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
     }
 
