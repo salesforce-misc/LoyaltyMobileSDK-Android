@@ -247,4 +247,7 @@
     <string name="label_no_games">No Games</string>
     <string name="label_empty_active_games">You have no Active Games.</string>
     <string name="label_empty_expired_games">You have no Expired Games.</string>
+    <string name="game_error">Error</string>
+    <string name="game_error_desc">Something went wrong. Please try again.</string>
+    <string name="game_error_dialog_ok">OK</string>
 </resources>
