@@ -1,10 +1,13 @@
 package com.salesforce.referral_sdk.di
 
-import com.ezatpanah.hilt_retrofit_youtube.utils.BASE_URL
-import com.ezatpanah.hilt_retrofit_youtube.utils.NETWORK_TIMEOUT
+import com.salesforce.referral_sdk.utils.BASE_URL
+import com.salesforce.referral_sdk.utils.NETWORK_TIMEOUT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.salesforce.referral_sdk.api.ApiServices
+import com.salesforce.referral_sdk.api.ForceAuthenticator
+import com.salesforce.referral_sdk.api.UnauthorizedInterceptor
+import com.salesforce.referral_sdk.utils.API_KEY
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,34 +37,16 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        val requestInterceptor = Interceptor { chain ->
-            val url = chain.request()
-                .url
-                .newBuilder()
-                .addQueryParameter("api_key", API_KEY)
-                .build()
-
-            val request = chain.request()
-                .newBuilder()
-                .url(url)
-                .build()
-            return@Interceptor chain.proceed(request)
-        }
-
-        OkHttpClient
-            .Builder()
-            .addInterceptor(requestInterceptor)
-            .addInterceptor(loggingInterceptor)
-            .build()
-    } else {
-        OkHttpClient
-            .Builder()
-            .build()
+    fun provideOkHttpClient(unauthorizedInterceptor: UnauthorizedInterceptor): OkHttpClient {
+        return OkHttpClient.Builder().apply {
+            addInterceptor(unauthorizedInterceptor)
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    setLevel(HttpLoggingInterceptor.Level.BODY)
+                }
+                addInterceptor(loggingInterceptor)
+            }
+        }.build()
     }
 
     @Provides
@@ -73,4 +58,13 @@ object ApiModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiServices::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUnauthorizedInterceptor(authenticator: ForceAuthenticator)
+        = UnauthorizedInterceptor(authenticator)
+
+    @Provides
+    @Singleton
+    fun provideForceAuthenticator() = ForceAuthManager
 }

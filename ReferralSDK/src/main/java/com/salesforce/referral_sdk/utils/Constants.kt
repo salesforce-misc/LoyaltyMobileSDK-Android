@@ -1,4 +1,4 @@
-package com.ezatpanah.hilt_retrofit_youtube.utils
+package com.salesforce.referral_sdk.utils
 
 
 const val API_KEY = "***"
