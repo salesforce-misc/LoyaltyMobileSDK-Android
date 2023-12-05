@@ -243,4 +243,8 @@
     <string name="place_order_game_header_spin_wheel">Spin a Wheel Game Unlocked!</string>
     <string name="place_order_game_header_scratch_card">Scratch and Win Game Unlocked!</string>
     <string name="play_now_button_text">Play Now</string>
+
+    <string name="label_no_games">No Games</string>
+    <string name="label_empty_active_games">You have no Active Games.</string>
+    <string name="label_empty_expired_games">You have no Expired Games.</string>
 </resources>
