@@ -55,3 +55,4 @@ val ScratchCardPerforationColor = Color(0xFFF8EFFF)
 val ScratchCardBackground = Color(0xFFE5E5E5)
 val SpinnerBackground = Color(0xFF7526E3)
 val SpinnerFrameColour = Color(0xFF23475F)
+val SpinnerDefaultColour = "#FFFFFF"

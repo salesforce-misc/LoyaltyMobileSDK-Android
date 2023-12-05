@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerDefaultColour
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
@@ -55,7 +56,7 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
                             colourList.add(Color(("#" + reward.segColor).toColorInt()))
                         }
                         else{
-                            colourList.add(Color(("" + reward.segColor).toColorInt()))
+                            colourList.add(Color(("" + (reward.segColor?:SpinnerDefaultColour)).toColorInt()))
                         }
                     }
                 }
