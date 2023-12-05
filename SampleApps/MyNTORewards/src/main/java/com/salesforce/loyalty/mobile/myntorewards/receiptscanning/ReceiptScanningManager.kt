@@ -106,9 +106,20 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         } catch (e: HttpException) {
             val responseBody = e.response()?.errorBody()?.string()
             Logger.d(TAG, "uploadReceipt exception : $responseBody")
-            val errorMessageBody =
-                Gson().fromJson(responseBody, AnalyzeExpenseErrorResponse::class.java)
-            return Result.failure(Throwable(errorMessageBody?.message))
+            var errorMessage: String?
+            try {
+                val forceError: List<AnalyzeExpenseErrorResponse> = Gson().fromJson(responseBody, Array<AnalyzeExpenseErrorResponse>::class.java).toList()
+                errorMessage = forceError.firstOrNull()?.message
+                Logger.d(TAG, "uploadReceipt exception : $errorMessage")
+                // Passing null as error message as default error message has to be shown in the UI in this case.
+                errorMessage = null
+            } catch (e: Exception) {
+                Logger.d(TAG, "uploadReceipt exception : $e")
+                errorMessage =
+                    (Gson().fromJson(responseBody, AnalyzeExpenseErrorResponse::class.java))?.message
+            }
+
+            return Result.failure(Throwable(errorMessage))
         } catch (e: Exception) {
             Logger.d(TAG, "uploadReceipt generic exception : ${e.message}")
             return Result.failure(Throwable())
