@@ -43,7 +43,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     private val rewardViewState = MutableLiveData<GameRewardViewState>()
 
     override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
-        rewardViewState.postValue(GameRewardViewState.GameRewardFetchInProgress)
+        rewardViewState.value = GameRewardViewState.GameRewardFetchInProgress
         viewModelScope.launch {
             val result = loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
             result.onSuccess {
@@ -62,7 +62,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     }
 
     override fun getGames(context: Context, mock: Boolean) {
-        viewState.postValue(GamesViewState.GamesFetchInProgress)
+        viewState.value = GamesViewState.GamesFetchInProgress
         viewModelScope.launch {
             val memberJson =
                 PrefHelper.customPrefs(context)
