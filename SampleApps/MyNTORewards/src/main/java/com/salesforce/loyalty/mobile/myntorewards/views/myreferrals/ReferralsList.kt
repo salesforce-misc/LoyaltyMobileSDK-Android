@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,9 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 
+const val TEST_TAG_REFERRALS_LIST = "TEST_TAG_REFERRALS_LIST"
+const val TEST_TAG_REFERRALS_LIST_ITEM = "TEST_TAG_REFERRALS_LIST_ITEM"
+
 @Composable
 fun ReferralList(itemStates: List<ReferralItemState>) {
     // Group Items based on section name to show items under the respective section header
@@ -33,6 +37,7 @@ fun ReferralList(itemStates: List<ReferralItemState>) {
         modifier = Modifier
             .background(VeryLightPurple)
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .testTag(TEST_TAG_REFERRALS_LIST)
     ){
         grouped.forEach { (section, sectionPersons) ->
             item {
@@ -53,6 +58,7 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
             .fillMaxWidth()
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(8.dp)
+            .testTag(TEST_TAG_REFERRALS_LIST_ITEM)
     ) {
         val (statusIcon, mailView, durationView, statusText) = createRefs()
 

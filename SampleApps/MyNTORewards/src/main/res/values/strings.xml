@@ -268,6 +268,10 @@
     <string name="friends_email_address_placeholder">Friend\'s Email Address</string>
     <string name="forward_arrow_content_description">Forward Arrow</string>
     <string name="tap_to_copy">TAP TO COPY</string>
+    <string name="share_referral_message">Use my referral code:\n%1$s</string>
+    <string name="emails_warning_message_multiple">Please enter valid E-mails!</string>
+    <string name="share_referral_code_intent_chooser">Share Referral Code</string>
+    <string name="selected_app_is_not_installed">Selected app is not installed!</string>
 
     <string name="referral_signup_button_text">Sign Up</string>
     <string name="referral_join_button_text">Join</string>

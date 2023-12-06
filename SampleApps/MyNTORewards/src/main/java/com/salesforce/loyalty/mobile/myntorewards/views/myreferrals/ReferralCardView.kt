@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.SecondaryButton
 
+const val TEST_TAG_REFERRAL_CARD = "TEST_TAG_REFERRAL_CARD"
+
 @Composable
 fun ReferralCard(referralsInfo: List<Pair<Int, String>>, recentDuration: String, openReferFriendSheet: () -> Unit) {
     ConstraintLayout(
@@ -36,6 +39,7 @@ fun ReferralCard(referralsInfo: List<Pair<Int, String>>, recentDuration: String,
             .fillMaxWidth()
             .background(VibrantPurple40, shape = RoundedCornerShape(8.dp))
             .padding(horizontal = 8.dp, vertical = 8.dp)
+            .testTag(TEST_TAG_REFERRAL_CARD)
     ) {
         val (referNowButton, headerText, sentView, star1, star2, star3, star4, star5, star6) = createRefs()
 

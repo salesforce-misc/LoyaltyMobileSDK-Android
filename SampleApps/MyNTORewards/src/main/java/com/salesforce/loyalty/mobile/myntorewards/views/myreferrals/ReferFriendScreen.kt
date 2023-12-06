@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.myreferrals
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -39,7 +41,12 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
+import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
+import com.salesforce.loyalty.mobile.myntorewards.utilities.sendMail
+import com.salesforce.loyalty.mobile.myntorewards.utilities.shareReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
 import com.salesforce.loyalty.mobile.myntorewards.utilities.showToast
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReferFriendViewModel
@@ -53,6 +60,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.RoundedIconButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
+
+const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
 
 @Composable
@@ -74,11 +83,15 @@ fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction
 
 @Composable
 fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: ReferralProgramType = SIGNUP, closeAction: () -> Unit) {
+    val referralCode = "845FFF907ZX6"
+    val context = LocalContext.current
+    val extraText = context.getString(R.string.share_referral_message, referralCode)
     Column(
         modifier = Modifier
             .fillMaxHeight(0.88F)
             .fillMaxWidth()
             .background(Color.White)
+            .testTag(TEST_TAG_REFER_FRIEND_SCREEN)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             ImageComponent(
@@ -184,18 +197,29 @@ private fun StartReferUi(viewModel: ReferFriendViewModel, doneAction: () -> Unit
 }
 
 @Composable
-fun SocialMediaRow() {
+fun SocialMediaRow(referralContent: String) {
     Row (
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_instagram, contentDescription = stringResource(R.string.share_via_instagram_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_whatsapp, contentDescription = stringResource(R.string.share_via_whatsapp_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_twitter, contentDescription = stringResource(R.string.share_via_twitter_icon_description), modifier = Modifier.weight(1f))
-        ImageComponent(drawableId = R.drawable.ic_share, contentDescription = stringResource(R.string.share_via_icon_description), modifier = Modifier.weight(1f))
+        val context = LocalContext.current
+        ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralContent, ShareType.FACEBOOK)
+        })
+        ImageComponent(drawableId = R.drawable.ic_instagram, contentDescription = stringResource(R.string.share_via_instagram_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralContent, ShareType.INSTAGRAM)
+        })
+        ImageComponent(drawableId = R.drawable.ic_whatsapp, contentDescription = stringResource(R.string.share_via_whatsapp_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralContent, ShareType.WHATSAPP)
+        })
+        ImageComponent(drawableId = R.drawable.ic_twitter, contentDescription = stringResource(R.string.share_via_twitter_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralContent, ShareType.TWITTER)
+        })
+        ImageComponent(drawableId = R.drawable.ic_share, contentDescription = stringResource(R.string.share_via_icon_description), modifier = Modifier.weight(1f).clickable {
+            context.shareReferralCode(referralContent, ShareType.SHARE_OTHERS)
+        })
     }
 }
 

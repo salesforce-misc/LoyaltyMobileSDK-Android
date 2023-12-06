@@ -12,6 +12,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -25,6 +26,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+
+const val TEST_TAG_TEXT_FIELD_RIGHT_ICON = "TEST_TAG_TEXT_FIELD_RIGHT_ICON"
 
 @Composable
 fun TextFieldCustom(
@@ -71,7 +74,8 @@ fun TextFieldCustom(
                 IconButton(onClick = { rightIconClick?.invoke() }) {
                     Icon(
                         painter = painterResource(id = rightIconId),
-                        contentDescription = rightIconContentDescription?.let { stringResource(id = it) }
+                        contentDescription = rightIconContentDescription?.let { stringResource(id = it) },
+                        modifier = Modifier.testTag(TEST_TAG_TEXT_FIELD_RIGHT_ICON)
                     )
                 }
             }
