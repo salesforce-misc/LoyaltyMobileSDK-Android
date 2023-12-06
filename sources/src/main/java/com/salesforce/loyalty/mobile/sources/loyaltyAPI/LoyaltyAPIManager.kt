@@ -323,7 +323,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
      */
     private fun getStringOfArrayItems(items: Array<String>?): String? = items?.reduce { acc, item -> "$acc,$item" }
 
-    suspend fun getGameReward(gameParticipantRewardId: String, mockResponse: Boolean): Result<GameRewardResponse> {
+/*    suspend fun getGameReward(gameParticipantRewardId: String, mockResponse: Boolean): Result<GameRewardResponse> {
         Logger.d(TAG, "getGameReward()")
 
         if (mockResponse) {
@@ -362,5 +362,5 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
                 ), gameParticipantRewardId = gameParticipantRewardId
             )
         }
-    }
+    }*/
 }

@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.sources.loyaltyModels
+package com.salesforce.gamification.model
 
 import com.google.gson.annotations.SerializedName
 

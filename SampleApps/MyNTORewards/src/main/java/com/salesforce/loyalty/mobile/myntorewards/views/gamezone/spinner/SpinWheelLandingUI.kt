@@ -20,7 +20,6 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerDefaultColour
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameReward
 import kotlinx.coroutines.launch
 
 data class GameNameIDDataModel(
