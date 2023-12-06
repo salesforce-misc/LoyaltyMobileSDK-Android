@@ -268,4 +268,10 @@
     <string name="friends_email_address_placeholder">Friend\'s Email Address</string>
     <string name="forward_arrow_content_description">Forward Arrow</string>
     <string name="tap_to_copy">TAP TO COPY</string>
+
+    <string name="referral_signup_button_text">Sign Up</string>
+    <string name="referral_join_button_text">Join</string>
+    <string name="email_address_placeholder">Email Address</string>
+    <string name="refer_a_friend_and_earn_bottom_text">Tap ‘Join and Refer’ to participate. By Joining you agree to the terms and conditions.</string>
+
 </resources>

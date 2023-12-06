@@ -32,9 +32,10 @@ fun TextFieldCustom(
     placeholderText: String,
     keyboardType: KeyboardType = KeyboardType.Email,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    rightIconId: Int? = R.drawable.ic_arrow_forward,
+    rightIconId: Int? = null,
     rightIconContentDescription: Int? = R.string.forward_arrow_content_description,
     modifier: Modifier = Modifier,
+    singleLine: Boolean = false,
     rightIconClick: (() -> Unit)? = null,
     updateTextField: (updatedValue: TextFieldValue) -> Unit
 ) {
@@ -76,6 +77,7 @@ fun TextFieldCustom(
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        visualTransformation = visualTransformation
+        visualTransformation = visualTransformation,
+        singleLine = singleLine
     )
 }
