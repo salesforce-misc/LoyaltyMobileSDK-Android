@@ -136,7 +136,10 @@ class Common {
             }
         }
 
-        fun formatGameDateTime(apiDateTime: String, context: Context): String {
+        fun formatGameDateTime(apiDateTime: String?, context: Context): String {
+            if (apiDateTime == null) {
+                return context.getString(R.string.game_never_expires)
+            }
             val sdf = SimpleDateFormat(GAME_DATETIME_FORMAT, Locale.getDefault())
             val endDate = sdf.parse(apiDateTime)
             if (DateUtils.isToday(endDate.time)) {
