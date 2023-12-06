@@ -60,9 +60,9 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.RoundedIconButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
 
 const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
 
 @Composable
 fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction: () -> Unit) {
@@ -83,9 +83,6 @@ fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction
 
 @Composable
 fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: ReferralProgramType = SIGNUP, closeAction: () -> Unit) {
-    val referralCode = "845FFF907ZX6"
-    val context = LocalContext.current
-    val extraText = context.getString(R.string.share_referral_message, referralCode)
     Column(
         modifier = Modifier
             .fillMaxHeight(0.88F)
@@ -160,6 +157,9 @@ fun JoinReferralProgramUi(viewModel: ReferFriendViewModel) {
 
 @Composable
 private fun StartReferUi(viewModel: ReferFriendViewModel, doneAction: () -> Unit) {
+    val referralCode = "845FFF907ZX6"
+    val context = LocalContext.current
+    val extraText = context.getString(R.string.share_referral_message, referralCode)
     val focusManager = LocalFocusManager.current
     var textField by remember { mutableStateOf(TextFieldValue("")) }
     TextFieldCustom(
@@ -185,8 +185,8 @@ private fun StartReferUi(viewModel: ReferFriendViewModel, doneAction: () -> Unit
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.ExtraBold
     )
-    SocialMediaRow()
-    ReferralCodeView("845FFF907ZX6") // TODO: REPLACE THIS WITH ACTUAL VALUES
+    SocialMediaRow(extraText)
+    ReferralCodeView(referralCode)
     BodyTextSmall(
         text = stringResource(R.string.share_referral_code_label),
         color = TextGray,
