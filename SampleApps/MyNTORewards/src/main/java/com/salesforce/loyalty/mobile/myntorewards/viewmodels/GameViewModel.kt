@@ -73,7 +73,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
             val membershipNumber = member.membershipNumber ?: ""
-            val result = loyaltyAPIManager.getGames(membershipNumber, true)
+            val result = loyaltyAPIManager.getGames(membershipNumber, mock)
             result.onSuccess {
                 games.value = it
                 viewState.postValue(GamesViewState.GamesFetchSuccess)

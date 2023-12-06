@@ -130,7 +130,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                         if (notPlayedGames != null) {
                             val (activeGames, expiredGames) = notPlayedGames.partition {
                                 it.participantGameRewards[0].expirationDate.let { expDate ->
-                                    expDate?.let { date -> Common.isGameExpired(date) } == false
+                                    (expDate == null) || (expDate?.let { date -> Common.isGameExpired(date) } == false)
                                 }
                             }
 
@@ -151,12 +151,11 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                 val activeGame = activeGames[activeItem]
                                                 val expirationDate =
                                                     activeGame.participantGameRewards[0].expirationDate
-                                                val expiryDetail = expirationDate?.let {
+                                                val expiryDetail =
                                                     Common.formatGameDateTime(
-                                                        it,
+                                                        expirationDate,
                                                         context
                                                     )
-                                                }
                                                 val gameType =
                                                     if (GameType.SPIN_A_WHEEL.gameType == activeGame.type) {
                                                         GameType.SPIN_A_WHEEL

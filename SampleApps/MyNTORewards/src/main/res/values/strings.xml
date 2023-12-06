@@ -239,6 +239,7 @@
     <string name="game_expired">Expired</string>
     <string name="game_expiring_today">Expiring Today</string>
     <string name="game_expiring_date">Expiry %s</string>
+    <string name="game_never_expires">Never Expires</string>
     <string name="place_order_game_subheader">This order has unlocked a one time chance to win instant rewards</string>
     <string name="place_order_game_header_spin_wheel">Spin a Wheel Game Unlocked!</string>
     <string name="place_order_game_header_scratch_card">Scratch and Win Game Unlocked!</string>
