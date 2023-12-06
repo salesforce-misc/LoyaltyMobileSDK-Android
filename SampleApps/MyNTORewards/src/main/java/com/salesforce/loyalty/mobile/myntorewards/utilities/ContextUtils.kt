@@ -28,10 +28,13 @@ import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
 
-const val LOG_TAG = "ContextUtils"
 const val INTENT_TYPE_TEXT = "text/plain"
 const val INTENT_TYPE_IMAGE = "image/*"
 const val INTENT_TYPE_MAIL = "message/rfc822"
+const val FACEBOOK_APP_PACKAGE = "com.facebook.katana"
+const val WHATSAPP_APP_PACKAGE = "com.whatsapp"
+const val INSTAGRAM_APP_PACKAGE = "com.instagram.android"
+const val TWITTER_APP_PACKAGE = "com.twitter.android"
 
 /**
  * Copy the given text to Clipboard
@@ -48,16 +51,16 @@ fun isValidEmail(target: CharSequence?): Boolean {
 
 fun Context.sendMail(emails: List<String>, subject: String, body: String) {
     if (emails.isEmpty() || emails.any { !isValidEmail(it.trim()) }) {
-        Toast.makeText(this, "Please enter valid E-mails!", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, getString(R.string.emails_warning_message_multiple), Toast.LENGTH_LONG).show()
         return
     }
     val intent = Intent(Intent.ACTION_SEND).apply {
-        type = "message/rfc822"
+        type = INTENT_TYPE_MAIL
         putExtra(Intent.EXTRA_SUBJECT, subject);
         putExtra(Intent.EXTRA_TEXT, body);
         putExtra(Intent.EXTRA_EMAIL, emails.toTypedArray())
     }
-    startActivity(Intent.createChooser(intent, "Share Referral Code"))
+    startActivity(Intent.createChooser(intent, getString(R.string.share_referral_code_intent_chooser)))
 }
 
 fun Context.shareReferralCode(content: String, shareType: ShareType) {
@@ -69,11 +72,11 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
 
     when (shareType) {
         ShareType.FACEBOOK -> {
-            intent.setPackage("com.facebook.katana")
+            intent.setPackage(FACEBOOK_APP_PACKAGE)
         }
         ShareType.INSTAGRAM -> {
             intent.also {
-                it.setPackage("com.instagram.android")
+                it.setPackage(INSTAGRAM_APP_PACKAGE)
                 it.type = INTENT_TYPE_IMAGE
                 it.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 val bitmap = writeTextOnDrawable(this, R.drawable.bg_refer_earn, content).bitmap
@@ -82,10 +85,10 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
             }
         }
         ShareType.WHATSAPP -> {
-            intent.setPackage("com.whatsapp")
+            intent.setPackage(WHATSAPP_APP_PACKAGE)
         }
         ShareType.TWITTER -> {
-            intent.setPackage("com.twitter.android")
+            intent.setPackage(TWITTER_APP_PACKAGE)
         }
         ShareType.SHARE_OTHERS -> {
             // do nothing
@@ -93,9 +96,9 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
     }
 
     if (!isAppInstalled(intent.`package` ?: "")) {
-        Toast.makeText(this, "Selected app is not installed!", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, getString(R.string.selected_app_is_not_installed), Toast.LENGTH_LONG).show()
     }
-    startActivity(Intent.createChooser(intent, "Share Referral Code"))
+    startActivity(Intent.createChooser(intent, getString(R.string.share_referral_code_intent_chooser)))
 }
 
 fun Context.isAppInstalled(packageName: String): Boolean {

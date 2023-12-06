@@ -24,6 +24,9 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.utilities.INSTAGRAM_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.WHATSAPP_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.views.TEST_TAG_TITLE_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TEST_TAG_TAB_VIEW
@@ -60,11 +63,11 @@ class MyReferralsScreenTest {
     @Test
     fun verifyReferralScreen() {
         composeTestRule.run {
-            onNodeWithText("My Referrals").assertIsDisplayed()
+            onNodeWithText(activity.getString(R.string.header_label_my_referrals)).assertIsDisplayed()
             onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
             Thread.sleep(2000)
             onNodeWithTag(TEST_TAG_TITLE_VIEW)
-                .assertTextEquals("My Referrals")
+                .assertTextEquals(activity.getString(R.string.header_label_my_referrals))
                 .assertIsDisplayed()
             onNodeWithTag(TEST_TAG_REFERRAL_CARD).assertIsDisplayed()
             Thread.sleep(2000)
@@ -72,7 +75,7 @@ class MyReferralsScreenTest {
             onNodeWithText(activity.getString(R.string.my_referrals_accepted_label)).assertIsDisplayed()
             onNodeWithText(activity.getString(R.string.my_referrals_vouchers_earned_label)).assertIsDisplayed()
             onNodeWithText(activity.getString(R.string.my_referrals_points_earned_label)).assertIsDisplayed()
-            onNodeWithText("Refer a Friend Now!").assertIsDisplayed()
+            onNodeWithText(activity.getString(R.string.referral_card_button_text)).assertIsDisplayed()
 
             onNodeWithTag(TEST_TAG_TAB_VIEW).assertIsDisplayed()
             // SUCCESS TAB content
@@ -103,7 +106,7 @@ class MyReferralsScreenTest {
 
     private fun verifyReferFriendScreen() {
         composeTestRule.run {
-            onNodeWithText("Refer a Friend Now!").assertIsDisplayed().performClick()
+            onNodeWithText(activity.getString(R.string.referral_card_button_text)).assertIsDisplayed().performClick()
             Thread.sleep(500)
             onNodeWithTag(TEST_TAG_REFER_FRIEND_SCREEN).assertIsDisplayed()
             onNodeWithContentDescription(activity.getString(R.string.refer_friend_banner_content_description)).assertIsDisplayed()
@@ -115,7 +118,7 @@ class MyReferralsScreenTest {
             onNodeWithText(activity.getString(R.string.friends_email_address_placeholder))
                 .performTextInput("abc@xyz.com, abc@xyz2.com")
             onNodeWithTag(TEST_TAG_TEXT_FIELD_RIGHT_ICON, true).assertIsDisplayed()
-            // TODO: TEST Share EMail Functionality
+            // TODO: TEST Share EMail Functionality once API integration is done
 
             // Test Refer Code Row with Copy option
             onNodeWithText(activity.getString(R.string.share_referral_code_label)).assertIsDisplayed()
@@ -145,7 +148,7 @@ class MyReferralsScreenTest {
             // Perform a click and wait until the app is opened.
             val twitterOpened: Boolean = twitter.clickAndWait(Until.newWindow(), 5000)
             assert(twitterOpened)
-            assertEquals("com.twitter.android", uiDevice.currentPackageName)
+            assertEquals(TWITTER_APP_PACKAGE, uiDevice.currentPackageName)
             uiDevice.pressBack()
             uiDevice.pressBack()
             val twitterDelete: UiObject2 = uiDevice.findObject(By.text("Delete"))
@@ -160,13 +163,13 @@ class MyReferralsScreenTest {
             // Perform a click and wait until the app is opened.
             val opened: Boolean = instagram.clickAndWait(Until.newWindow(), 5000)
             assert(opened)
-            assertEquals("com.instagram.android", uiDevice.currentPackageName)
+            assertEquals(INSTAGRAM_APP_PACKAGE, uiDevice.currentPackageName)
             uiDevice.pressBack()
 
             onNodeWithContentDescription(activity.getString(R.string.share_via_whatsapp_icon_description))
                 .assertIsDisplayed().performClick()
             Thread.sleep(1000)
-            assertEquals("com.whatsapp", uiDevice.currentPackageName)
+            assertEquals(WHATSAPP_APP_PACKAGE, uiDevice.currentPackageName)
             uiDevice.pressBack()
         }
     }
