@@ -24,22 +24,16 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
 import com.salesforce.loyalty.mobile.myntorewards.views.TEST_TAG_TITLE_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TEST_TAG_TAB_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TEST_TAG_TEXT_FIELD_RIGHT_ICON
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.MyReferralsListScreen
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFERRALS_LIST
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFERRALS_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFERRAL_CARD
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFER_FRIEND_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import junit.framework.Assert.assertEquals
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -47,11 +41,6 @@ import org.junit.Test
 class MyReferralsScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
-
-    private val activity by lazy { composeTestRule.activity }
-
-    private var viewModel: MyReferralsViewModel = MyReferralsViewModel()
-
     private lateinit var clipboardManager: ClipboardManager
     private lateinit var uiDevice: UiDevice
     private lateinit var context: Context
@@ -62,9 +51,9 @@ class MyReferralsScreenTest {
         clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        // Launch the conversation screen
+        // Launch the screen
         composeTestRule.setContent {
-            MyReferralsListScreen() {}
+            MyReferralsListScreen {}
         }
     }
 
@@ -79,7 +68,6 @@ class MyReferralsScreenTest {
                 .assertIsDisplayed()
             onNodeWithTag(TEST_TAG_REFERRAL_CARD).assertIsDisplayed()
             Thread.sleep(2000)
-//        onNodeWithText("YOUR REFERRALS: Last 90 Days").assertIsDisplayed()
             onNodeWithText(activity.getString(R.string.my_referral_sent_label)).assertIsDisplayed()
             onNodeWithText(activity.getString(R.string.my_referrals_accepted_label)).assertIsDisplayed()
             onNodeWithText(activity.getString(R.string.my_referrals_vouchers_earned_label)).assertIsDisplayed()
@@ -145,7 +133,6 @@ class MyReferralsScreenTest {
             // Perform a click and wait until the app is opened.
             val facebookOpened: Boolean = facebook.clickAndWait(Until.newWindow(), 3000)
             assert(facebookOpened)
-//            assertEquals("com.facebook.katana", uiDevice.currentPackageName)
             uiDevice.pressBack()
             uiDevice.pressBack()
             uiDevice.pressBack()
@@ -182,34 +169,5 @@ class MyReferralsScreenTest {
             assertEquals("com.whatsapp", uiDevice.currentPackageName)
             uiDevice.pressBack()
         }
-    }
-
-    private fun successState() = MyReferralScreenState(
-        tabItems = listOf(ReferralTabs.Success.tabName, ReferralTabs.InProgress.tabName),
-        completedStates = completedItemStates(),
-        inProgressStates = inProgressItemStates(),
-        listOf(Pair(R.string.my_referral_sent_label, "18"),
-            Pair(R.string.my_referrals_accepted_label, "12"),
-            Pair(R.string.my_referrals_vouchers_earned_label, "12"),
-            Pair(R.string.my_referrals_points_earned_label, "1200")),
-        referralsRecentDuration = "90"
-    )
-
-    private fun completedItemStates(): List<ReferralItemState> {
-        return listOf(
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
-            ReferralItemState(R.string.referral_one_month_ago_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
-            ReferralItemState(R.string.referrals_older_than_three_months_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED)
-        )
-    }
-
-    private fun inProgressItemStates(): List<ReferralItemState> {
-        return listOf(
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.PENDING),
-            ReferralItemState(R.string.referral_one_month_ago_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.SIGNED_UP),
-            ReferralItemState(R.string.referrals_older_than_three_months_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.PENDING),
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.SIGNED_UP)
-        )
     }
 }

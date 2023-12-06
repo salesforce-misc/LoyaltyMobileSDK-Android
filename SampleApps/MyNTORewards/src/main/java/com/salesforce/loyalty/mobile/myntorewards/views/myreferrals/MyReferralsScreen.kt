@@ -29,12 +29,14 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgr
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BottomSheetCustomState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ScanningErrorPopup
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
-fun MyReferralsScreen(viewModel: MyReferralsViewModel = viewModel(), showBottomSheet: (Boolean) -> Unit) {
+fun MyReferralsScreen(showBottomSheet: (Boolean) -> Unit) {
+    val viewModel: MyReferralsViewModel = viewModel()
     val viewState by viewModel.uiState.observeAsState(null)
 
     viewState?.let {
@@ -122,7 +124,7 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = viewModel(), showBot
                 .background(Color.White)
         ) {
             TitleView(stringResource(id = R.string.header_label_my_referrals))
-            MyReferralsScreen(viewModel) {
+            MyReferralsScreen {
                 showBottomSheet(true)
             }
         }
