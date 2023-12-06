@@ -77,11 +77,11 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
     var selectedTab by remember { mutableStateOf(0) }
     CustomScrollableTab(uiState.tabItems, selectedTab) { tab -> selectedTab = tab }
     when (selectedTab) {
-        0 -> {
+        ReferralTabs.Success.tabIndex -> {
             ReferralList(itemStates = uiState.completedStates)
         }
 
-        1 -> {
+        ReferralTabs.InProgress.tabIndex -> {
             ReferralList(itemStates = uiState.inProgressStates)
         }
     }

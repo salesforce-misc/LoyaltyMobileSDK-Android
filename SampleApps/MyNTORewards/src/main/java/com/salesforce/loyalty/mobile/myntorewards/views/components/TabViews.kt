@@ -17,17 +17,19 @@ import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.TabBaseItem
 
 const val TEST_TAG_TAB_VIEW = "TEST_TAG_TAB_VIEW"
 
 @Composable
 fun CustomScrollableTab(
-    tabItems: List<Int>,
+    tabItems: List<TabBaseItem>,
     selectedTab: Int,
     updateTab: (Int) -> Unit
 ) {
-    ScrollableTabRow(selectedTabIndex = selectedTab,
-        modifier = Modifier.fillMaxWidth().background(Color.White).testTag(TEST_TAG_TAB_VIEW),
+    ScrollableTabRow(
+        selectedTabIndex = selectedTab,
+        modifier = Modifier.fillMaxWidth().background(Color.White),
         containerColor = Color.White,
         divider = {},
         edgePadding = 0.dp,
@@ -39,13 +41,13 @@ fun CustomScrollableTab(
                 height = 2.dp,
                 color = VibrantPurple40
             )
-        })
-    {
+        }
+    ) {
         tabItems.forEachIndexed { index, it ->
             Tab(
                 selected = selectedTab == index,
                 onClick = { updateTab(index) },
-                text = { Text(text = stringResource(it)) },
+                text = { Text(text = stringResource(it.tabName)) },
                 selectedContentColor = VibrantPurple40,
                 unselectedContentColor = TextGray,
             )
@@ -57,6 +59,6 @@ fun CustomScrollableTab(
 @Composable
 fun CustomScrollableTabPreview() {
     CustomScrollableTab(
-        listOf(ReferralTabs.Success.tabName, ReferralTabs.InProgress.tabName), 0, {}
+        listOf(ReferralTabs.Success, ReferralTabs.InProgress), 0, {}
     )
 }
