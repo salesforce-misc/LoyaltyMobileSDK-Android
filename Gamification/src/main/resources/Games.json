@@ -1,0 +1,488 @@
+{
+  "errorMessage": null,
+  "gameDefinitions": [
+    {
+      "gameDefinitionId":"1",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "01CD6C",
+          "description":"Win\n $12 \n Off",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10% Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "503",
+          "color": "FF4B3A",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "20% Off",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "504",
+          "color": "0099DD",
+          "description": "Win1000 Bonus Points",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50% Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "507",
+          "rewardDefinitionId": "101",
+          "color": "01CD6C",
+          "description":"Win $15 Off",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10% Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "508",
+          "color": "0099DD",
+          "description": "Win300 Bonus Points",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50% Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "509",
+          "color": "FF4B3A",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "510",
+          "color": "FFC501",
+          "description": "ChancetowinFreeEarPod",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": "501",
+          "gameParticipantRewardId": "201",
+          "sourceActivityId": "201",
+          "expirationDate": "2023-11-30T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "active"
+        }
+      ],
+      "name": "Bonnie and Clyde Style Promotion",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "active",
+      "timeoutDuration": 10,
+      "type": "SpintheWheel"
+    },
+
+    {
+      "gameDefinitionId":"8",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+
+
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF5733",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "501",
+          "color": "000000",
+          "description": "Get 50%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "501",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": null,
+          "gameParticipantRewardId": "201",
+          "sourceActivityId": "201",
+          "expirationDate": "2023-12-24T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "active"
+        }
+      ],
+      "name": "Billy the Kid Promotion",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "expired",
+      "timeoutDuration": 10,
+      "type": "SpintheWheel"
+
+    },
+    {
+      "gameDefinitionId":"82",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+
+
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "ff80ed",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "065535",
+          "description": "Get 11%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "11 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "000000",
+          "description": "Get 12%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "12 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "133337",
+          "description": "Get 13%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "13 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "ffc0cb",
+          "description": "Get 14%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "14 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "762E2E",
+          "description": "Get 15%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "15 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "ffe4e1",
+          "description": "Get 16%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "16 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "513",
+          "rewardDefinitionId": "101",
+          "color": "008080",
+          "description": "Get 17%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "17 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "#ff0000",
+          "description": "Get 18%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "18 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "#e6e6fa",
+          "description": "Get 19%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "19 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "555",
+          "rewardDefinitionId": "101",
+          "color": "#ffd700",
+          "description": "Get 20%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "20 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "#00ffff",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "21 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        }
+
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": null,
+          "gameParticipantRewardId": "201",
+          "sourceActivityId": "201",
+          "expirationDate": "2023-12-24T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "active"
+        }
+      ],
+      "name": "Billy the Kid Promotion2",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "expired",
+      "timeoutDuration": 10,
+      "type": "SpintheWheel"
+
+    },
+
+    {
+      "gameDefinitionId":"9",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF5733",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "501",
+          "color": "000000",
+          "description": "Get 50%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "501",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": null,
+          "gameParticipantRewardId": "201",
+          "sourceActivityId": "201",
+          "expirationDate": "2024-11-25T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "active"
+        }
+      ],
+      "name": "Meow Scratch Mouse",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "expired",
+      "timeoutDuration": 10,
+      "type": "ScratchCard"
+    },
+    {
+      "gameDefinitionId":"10",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF5733",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "501",
+          "color": "000000",
+          "description": "Get 50%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "501",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": null,
+          "gameParticipantRewardId": "201",
+          "sourceActivityId": "201",
+          "expirationDate": "2023-11-01T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "active"
+        }
+      ],
+      "name": "Cat Scratch Fever Returns",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "active",
+      "timeoutDuration": 10,
+      "type": "ScratchCard"
+    },
+    {
+      "gameDefinitionId":"18",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF5733",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "501",
+          "color": "000000",
+          "description": "Get 50%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "501",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": null,
+          "gameParticipantRewardId": "201",
+          "sourceActivityId": "201",
+          "expirationDate": "2023-11-1T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "active"
+        }
+      ],
+      "name": "Billy the Kid Promotion",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "expired",
+      "timeoutDuration": 10,
+      "type": "SpintheWheel"
+    }
+  ],
+  "status": true
+}

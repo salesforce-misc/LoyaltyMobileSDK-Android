@@ -1,0 +1,17 @@
+{
+  "errorMessage": null,
+  "gameReward": [
+    {
+      "color": "01CD6C",
+      "description": null,
+      "expirationDate": "2024-01-04T20:00:00.000Z",
+      "imageUrl": null,
+      "issuedRewardReference": "0lVSB000000032j2AA",
+      "name": "1000 Reward Points",
+      "gameRewardId": "3GRSB0000000Caf4AE",
+      "rewardType": "LoyaltyPoints",
+      "rewardValue": "100.0"
+    }
+  ],
+  "status": true
+}
