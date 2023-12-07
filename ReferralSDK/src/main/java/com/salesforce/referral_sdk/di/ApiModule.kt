@@ -6,8 +6,10 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.salesforce.referral_sdk.api.ApiServices
 import com.salesforce.referral_sdk.api.ForceAuthenticator
+import com.salesforce.referral_sdk.api.ForceAuthenticatorImpl
 import com.salesforce.referral_sdk.api.UnauthorizedInterceptor
 import com.salesforce.referral_sdk.utils.API_KEY
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,7 +41,7 @@ object ApiModule {
     @Provides
     fun provideOkHttpClient(unauthorizedInterceptor: UnauthorizedInterceptor): OkHttpClient {
         return OkHttpClient.Builder().apply {
-            addInterceptor(unauthorizedInterceptor)
+//            addInterceptor(unauthorizedInterceptor)
             if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor().apply {
                     setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -51,13 +53,16 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(baseUrl: String, gson: Gson, client: OkHttpClient): ApiServices =
+    fun provideRetrofit(baseUrl: String, gson: Gson, client: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-            .create(ApiServices::class.java)
+
+    @Provides
+    fun provideAPiService(retrofit: Retrofit): ApiServices =
+        retrofit.create(ApiServices::class.java)
 
     @Provides
     @Singleton
@@ -66,5 +71,6 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideForceAuthenticator() = ForceAuthManager
+    fun provideForceAuthenticator(): ForceAuthenticator = ForceAuthenticatorImpl()
+
 }
