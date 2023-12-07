@@ -92,6 +92,7 @@
     <string name="text_add_to_cart"> "Add to Cart"</string>
     <string name="text_order_details"> "Order Details"</string>
     <string name="text_continue_shopping"> "Continue Shopping"</string>
+    <string name="text_play_later"> Play later in the Game Zone</string>
     <string name="text_order_placed">Your Order %s is Placed.</string>
     <string name="text_amount_payble"> "Pay:"</string>
     <string name="text_use_my_points"> "Use my points"</string>
@@ -214,35 +215,37 @@
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
 
-    <string name="game_scratch_card_title">Scratch and win!</string>
-    <string name="game_scratch_card_sub_title">Get a chance to win instant rewards!</string>
+    <string name="game_scratch_card_title">Scratch a Card and Win</string>
+    <string name="game_spin_sub_title">Spin the wheel and unlock instant rewards!</string>
+    <string name="game_scratch_card_sub_title">Unlock instant rewards!</string>
     <string name="game_scratch_card_instruction">Scratch coupon to play</string>
     <string name="game_scratch_card_detail_instruction">This is a one time offer exclusively for you. This offer if declined may not be repeated. Please refer to the terms and conditions for more information. </string>
     <string name="tab_game_zone_active">Active</string>
+    <string name="tab_game_zone_available">Available</string>
     <string name="tab_game_zone_expired">Expired</string>
     <string name="game_expiring_tomorrow">Expiring Tomorrow</string>
     <string name="game_placeholder_title">Bonnie and Clyde Style Promotion</string>
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
     <string name="game_spin_a_wheel">Spin a Wheel</string>
-    <string name="game_scratch_card">Scratch Card</string>
+    <string name="game_scratch_card">Scratch a Card</string>
     <string name="tap_spin_to_play">Tap \'Spin\' to play.</string>
-    <string name="text_spin_a_wheel">Spin a wheel!.</string>
+    <string name="text_spin_a_wheel">Spin a Wheel</string>
     <string name="cd_game_back_button">"game back button".</string>
 
     <!-- Game zone Better luck Screen -->
     <string name="better_luck_next_time">Better luck next time!</string>
-    <string name="better_luck_next_time_sub_header"><![CDATA[Thank you for playing… <br/><br/>Keep a watch out for more such offers.]]></string>
+    <string name="better_luck_next_time_sub_header"><![CDATA[Thank you for playing! Stay tuned for more offers.]]></string>
 
     <!-- Game zone Congratulations Screen -->
-    <string name="game_zone_congrats_header_content">Congratulations!!!</string>
-    <string name="game_zone_congrats_sub_header_content"><![CDATA[You have won A voucher for <b>%s off</b> for your next purchase. Go to the voucher section to claim your reward!]]></string>
+    <string name="game_zone_congrats_header_content">Congratulations!</string>
+    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s discount voucher for your next purchase. To redeem your reward, go to the Voucher section.]]></string>
     <string name="game_expired">Expired</string>
     <string name="game_expiring_today">Expiring Today</string>
     <string name="game_expiring_date">Expiry %s</string>
     <string name="place_order_game_subheader">This order has unlocked a one time chance to win instant rewards</string>
-    <string name="place_order_game_header_spin_wheel">Spin a Wheel Game Unlocked!</string>
-    <string name="place_order_game_header_scratch_card">Scratch and Win Game Unlocked!</string>
-    <string name="play_now_button_text">Play Now</string>
+    <string name="place_order_game_header_spin_wheel">Congratulations! You’ve unlocked a reward. Give it a spin!</string>
+    <string name="place_order_game_header_scratch_card">Congratulations! You’ve unlocked a scratch card.</string>
+    <string name="play_now_button_text">Play</string>
 
     <string name="label_no_games">No Games</string>
     <string name="label_empty_active_games">You have no Active Games.</string>

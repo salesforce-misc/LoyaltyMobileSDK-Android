@@ -133,7 +133,7 @@ fun PromotionCardRow(
             .testTag(TEST_TAG_PROMOTION_CARD),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
-        HomeSubViewHeader(R.string.text_promotions, bottomTabsNavController)
+        HomeSubViewHeader(R.string.text_my_promotions, bottomTabsNavController)
         val context: Context = LocalContext.current
 
         val promoViewState by promotionModel.promotionViewState.observeAsState()

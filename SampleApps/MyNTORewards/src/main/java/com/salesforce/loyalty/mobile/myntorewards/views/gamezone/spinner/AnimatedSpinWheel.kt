@@ -12,10 +12,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerBackground
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.components.ShowErrorDialog
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPageFooter
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelPointer
@@ -36,6 +39,7 @@ fun Wheel(
     gameParticipantRewardId: String
 ) {
     val state = rememberSpinWheelState(gameViewModel, gamesList.size, gameParticipantRewardId)
+    var openAlertDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     Column {
@@ -80,15 +84,35 @@ fun Wheel(
                 )
                 SpinWheelPointer() {
                     isWheelTapClicked= true
-                    scope.launch { state.animate(coroutineScope, rewardList, navController) }
+                    scope.launch { state.animate(coroutineScope, rewardList, navController){
+                        openAlertDialog = true
+                    } }
                 }
             }
             /*if(!isWheelTapClicked)
             {*/
-                SpinWheelLandingPageFooter()
+                //SpinWheelLandingPageFooter()  commenting as
 //            }
 
         }
     }
+
+    if (openAlertDialog) {
+        ShowErrorDialog(
+            onDismiss = {
+                openAlertDialog = false
+                navController.popBackStack()
+            },
+            title = stringResource(id = R.string.game_error),
+            description = stringResource(
+                id = R.string.game_error_desc
+            ),
+            confirmButtonText = stringResource(id = R.string.game_error_dialog_ok),
+            confirmButtonClick = {
+                openAlertDialog = false
+                navController.popBackStack()
+            })
+    }
+
 }
 

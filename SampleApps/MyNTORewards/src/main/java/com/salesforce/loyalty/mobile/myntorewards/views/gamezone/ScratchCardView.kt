@@ -112,31 +112,5 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
                 gameParticipantRewardId = it
             )
         }
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(start = 60.dp, end = 60.dp, bottom = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Text(
-                text = stringResource(id = R.string.game_scratch_card_instruction),
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = font_sf_pro
-            )
-            Text(
-                text = stringResource(id = R.string.game_scratch_card_detail_instruction),
-                color = LightBlack,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = font_sf_pro,
-                modifier = Modifier.padding(top=16.dp)
-            )
-        }
     }
 }

@@ -15,6 +15,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.delay
 import java.io.InputStreamReader
+import java.lang.RuntimeException
 
 /**
  * LoyaltyAPIManager class manages the requests related to loyalty program and it inturn invokes the rest APIs
@@ -332,6 +333,8 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             reader.close()
             val response =
                 Gson().fromJson(content, GameRewardResponse::class.java)
+            delay(2000)
+            //return Result.failure(RuntimeException()) // to test failure scenario
             return Result.success(response)
         } else {
             return mLoyaltyClient.getNetworkClient().getGameReward(
