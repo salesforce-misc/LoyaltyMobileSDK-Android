@@ -125,7 +125,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                     GamesViewState.GamesFetchSuccess -> {
                         isInProgress = false
                         val notPlayedGames = games?.gameDefinitions?.filter {
-                            it.participantGameRewards[0].gameRewardId == null
+                            it.participantGameRewards[0].status == ParticipantRewardStatus.YET_TO_REWARD.status
                         }
                         if (notPlayedGames != null) {
                             val (activeGames, expiredGames) = notPlayedGames.partition {
