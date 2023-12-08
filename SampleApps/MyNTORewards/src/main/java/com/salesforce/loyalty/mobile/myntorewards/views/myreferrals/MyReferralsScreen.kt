@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
@@ -34,7 +35,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
-fun MyReferralsScreen(viewModel: MyReferralsViewModel = viewModel(), showBottomSheet: (Boolean) -> Unit) {
+fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean) -> Unit) {
     val viewState by viewModel.uiState.observeAsState(null)
 
     viewState?.let {
@@ -87,7 +88,7 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyReferralsListScreen(viewModel: MyReferralsViewModel = viewModel(), showBottomBar: (Boolean) -> Unit) {
+fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), showBottomBar: (Boolean) -> Unit) {
     val bottomSheetScaffoldState = BottomSheetCustomState()
     val coroutineScope = rememberCoroutineScope()
 

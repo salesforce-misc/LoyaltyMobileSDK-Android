@@ -16,11 +16,21 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferr
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import com.salesforce.referral_sdk.api.ApiResponse
+import com.salesforce.referral_sdk.entities.QueryResult
+import com.salesforce.referral_sdk.entities.ReferralEntity
+import com.salesforce.referral_sdk.repository.ReferralsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.VisibleForTesting
+import javax.inject.Inject
 
-class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
+@HiltViewModel
+class MyReferralsViewModel @Inject constructor(
+    private val repository: ReferralsRepository
+): BaseViewModel<MyReferralsViewState>() {
 
     var emailFieldState by mutableStateOf(TextFieldValue(""))
         private set
@@ -32,8 +42,19 @@ class MyReferralsViewModel(): BaseViewModel<MyReferralsViewState>() {
     private fun fetchReferralsInfo() {
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
-            delay(2000) // TODO: REMOVE
-            updateSuccessState(successState())
+            when(val result = repository.fetchReferralsInfo()) {
+                is ApiResponse.Success -> {
+                    val data: QueryResult<ReferralEntity> = result.data
+                    Logger.d("Success", "${data.totalSize}")
+                    uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState()))
+                }
+                is ApiResponse.Error -> {
+                    uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure(result.errorMessage))
+                }
+                ApiResponse.NetworkError -> uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure("Network Error"))
+            }
+//            delay(2000) // TODO: REMOVE
+//            updateSuccessState(successState())
         }
     }
 

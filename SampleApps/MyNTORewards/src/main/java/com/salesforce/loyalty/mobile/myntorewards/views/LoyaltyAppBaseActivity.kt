@@ -20,8 +20,10 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
+import dagger.hilt.android.AndroidEntryPoint
 
 //Main Activity Application Entry Point
+@AndroidEntryPoint
 class LoyaltyAppBaseActivity : ComponentActivity() {
     private val TAG = LoyaltyAppBaseActivity::class.java.simpleName
 

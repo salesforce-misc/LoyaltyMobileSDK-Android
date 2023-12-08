@@ -1,7 +1,11 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
+apply(from = "${project.rootDir}/jacoco.gradle")
+apply(plugin = "org.jetbrains.dokka")
 
 android {
     namespace = "com.salesforce.referral_sdk"
@@ -9,18 +13,23 @@ android {
 
     defaultConfig {
         minSdk = 24
+        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("boolean", "LOG_ENABLED", "false")
+            enableUnitTestCoverage = true
+        }
+        getByName("debug") {
+            buildConfigField("boolean", "LOG_ENABLED", "true")
+            isMinifyEnabled = false
+            enableUnitTestCoverage = true
         }
     }
     compileOptions {
@@ -30,12 +39,17 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.android.material:material:1.8.0")
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -43,8 +57,8 @@ dependencies {
     // Gson
     implementation("com.google.code.gson:gson:2.10")
     //Hilt
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    implementation("com.google.dagger:hilt-compiler:2.48.1")
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     // Mock web server
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")

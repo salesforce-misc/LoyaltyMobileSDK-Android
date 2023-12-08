@@ -4,17 +4,15 @@ import com.salesforce.referral_sdk.utils.BASE_URL
 import com.salesforce.referral_sdk.utils.NETWORK_TIMEOUT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.salesforce.referral_sdk.api.ApiServices
+import com.salesforce.referral_sdk.BuildConfig
+import com.salesforce.referral_sdk.api.ApiService
 import com.salesforce.referral_sdk.api.ForceAuthenticator
 import com.salesforce.referral_sdk.api.ForceAuthenticatorImpl
 import com.salesforce.referral_sdk.api.UnauthorizedInterceptor
-import com.salesforce.referral_sdk.utils.API_KEY
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -61,8 +59,8 @@ object ApiModule {
             .build()
 
     @Provides
-    fun provideAPiService(retrofit: Retrofit): ApiServices =
-        retrofit.create(ApiServices::class.java)
+    fun provideAPiService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton
