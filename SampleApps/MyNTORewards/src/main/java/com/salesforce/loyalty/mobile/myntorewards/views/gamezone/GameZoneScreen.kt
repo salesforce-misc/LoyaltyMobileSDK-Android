@@ -4,7 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -34,19 +40,27 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesVie
 import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
     val games by gameViewModel.gamesLiveData.observeAsState()
     val gameViewState by gameViewModel.gamesViewState.observeAsState()
     var isInProgress by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
+    fun refresh() = refreshScope.launch {
+        gameViewModel.getGames(context, false)
+    }
+    val state = rememberPullRefreshState(refreshing, ::refresh)
     LaunchedEffect(true) {
         gameViewModel.getGames(context, false)
     }
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .background(TextPurpleLightBG)
             .fillMaxSize()
@@ -73,6 +87,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .pullRefresh(state)
                     .background(VeryLightPurple)
             ) {
                 var selectedTab by remember { mutableStateOf(0) }
@@ -244,11 +259,17 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
         }
 
         if (isInProgress) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .fillMaxSize(0.1f)
-            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                )
+            }
         }
+        PullRefreshIndicator(refreshing, state)
     }
 }
 
