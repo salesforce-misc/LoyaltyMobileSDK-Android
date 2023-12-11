@@ -32,11 +32,11 @@ class ReferralsRepository @Inject constructor(
             "https://dsb000001oyrq2ai.test1.my.pc-rnd.site.com/NTOInsider/services/data/v59.0/query/",
             referralQuery(),
 //            "Bearer 00DSB000001oyRq!AQEAQDuosoC5VCO.IPNEdkhcWl57txTEOnDgH.4zuRq3MWxPZxOyRhNmOnwS4dUqWMz5na_dizXtJ0xn0AdGzaBcblVle09Q"
-            "Bearer 00DSB000001oyRq!AQEAQKCmpcLFdgcOMKEKv7JlgCnDKC9r6YZnAZ_PKHcrSkGEoGjB2o6z.BfiqaTBPA1AJJrXS.QTojW9mEKQ6xPkKZuUPScn"
+            "Bearer 00DSB000001oyRq!AQEAQKJvdSZXTSFgb0QKD2p.x6x6Ri7Ly7ujdRxM8uNvtgDThWxoP1fiEjCyl07qO6IqTypB_GiwgMVfAVgYtytBwH3TFHOk"
         ) }
     }
 
     private fun referralQuery(): String {
-        return "SELECT Id,Name,Status FROM Referral"
+        return "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate FROM Referral"
     }
 }
