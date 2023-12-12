@@ -48,7 +48,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
                 ScanningErrorPopup(
-                    it.errorMessage,
+                    it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
                     closePopup = { },
                     scanAnotherReceipt = {  }
                 )

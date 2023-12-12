@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.myreferrals
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
+import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils.formatDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmallBold
@@ -34,7 +37,7 @@ fun ReferralList(itemStates: List<ReferralItemState>) {
     val grouped = itemStates.groupBy{ stringResource(id = it.sectionName) }
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
+        modifier = Modifier.fillMaxSize()
             .background(VeryLightPurple)
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .testTag(TEST_TAG_REFERRALS_LIST)
@@ -80,7 +83,7 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
         )
 
         BodyTextSmall(
-            text = duration,
+            text = formatDate(LocalContext.current, duration),
             modifier = Modifier.constrainAs(durationView) {
                 start.linkTo(statusIcon.end)
                 top.linkTo(mailView.bottom)

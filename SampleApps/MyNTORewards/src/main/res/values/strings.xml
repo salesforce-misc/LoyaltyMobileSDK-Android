@@ -272,4 +272,7 @@
     <string name="emails_warning_message_multiple">Please enter valid E-mails!</string>
     <string name="share_referral_code_intent_chooser">Share Referral Code</string>
     <string name="selected_app_is_not_installed">Selected app is not installed!</string>
+    <string name="today_label">Today</string>
+    <string name="yesterday_label">Yesterday</string>
+    <string name="days_ago_label">%s days ago</string>
 </resources>

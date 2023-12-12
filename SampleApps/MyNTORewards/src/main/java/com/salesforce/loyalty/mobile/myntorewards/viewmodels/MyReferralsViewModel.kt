@@ -2,6 +2,8 @@ package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
@@ -13,6 +15,10 @@ import com.salesforce.referral_sdk.entities.ReferralEntity
 import com.salesforce.referral_sdk.repository.ReferralsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 @HiltViewModel
 class MyReferralsViewModel @Inject constructor(
@@ -35,22 +41,22 @@ class MyReferralsViewModel @Inject constructor(
                 is ApiResponse.Error -> {
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure(result.errorMessage))
                 }
-                ApiResponse.NetworkError -> uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure("Network Error"))
+                ApiResponse.NetworkError -> uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure())
             }
-//            delay(2000) // TODO: REMOVE
-//            updateSuccessState(successState())
         }
     }
 
     private fun successState(data: List<ReferralEntity>?): MyReferralScreenState {
         val (successStates, inProgressStates) = successAndInProgressItemStates(data)
+        val sentCount = data?.size ?: 0
+        val acceptedCount = inProgressStates.filter { it.purchaseStatus == ReferralStatusType.SIGNED_UP }.size
         return MyReferralScreenState(
             tabItems = listOf(ReferralTabs.Success.tabName, ReferralTabs.InProgress.tabName),
             completedStates = successStates,
             inProgressStates = inProgressStates,
-            listOf(Pair(R.string.my_referral_sent_label, "${data?.size ?: 0}"),
-                Pair(R.string.my_referrals_accepted_label, "12"),
-                Pair(R.string.my_referrals_vouchers_earned_label, "12")),
+            listOf(Pair(R.string.my_referral_sent_label, "$sentCount"),
+                Pair(R.string.my_referrals_accepted_label, "$acceptedCount"),
+                Pair(R.string.my_referrals_vouchers_earned_label, "${successStates.size}")),
             referralsRecentDuration = "90"
         )
     }
@@ -61,28 +67,20 @@ class MyReferralsViewModel @Inject constructor(
         }
         return data.map {
             ReferralItemState(
-                R.string.recent_referrals_section_name,
+                referralItemSectionName(it.referralDate),
                 it.clientEmail.orEmpty(),
                 it.referralDate.orEmpty(),
-                ReferralStatusType from it.status
+                ReferralStatusType from it.promotionStage?.type
             )
         }.partition { it.purchaseStatus == ReferralStatusType.COMPLETED }
-
-        /*return listOf(
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
-            ReferralItemState(R.string.referral_one_month_ago_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
-            ReferralItemState(R.string.referrals_older_than_three_months_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED),
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.COMPLETED)
-        )*/
     }
 
-    private fun inProgressItemStates(): List<ReferralItemState> {
-        return listOf(
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.PENDING),
-            ReferralItemState(R.string.referral_one_month_ago_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.SIGNED_UP),
-            ReferralItemState(R.string.referrals_older_than_three_months_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.PENDING),
-            ReferralItemState(R.string.recent_referrals_section_name, "strawberry.sheikh@yahoo.com", "2 days ago", ReferralStatusType.SIGNED_UP)
-        )
+    private fun referralItemSectionName(inputDate: String?): Int {
+        return when(DateUtils.datePeriod(inputDate)) {
+            DatePeriodType.WITHIN1MONTH, DatePeriodType.TODAY, DatePeriodType.WITHIN7DAYS, DatePeriodType.YESTERDAY -> R.string.recent_referrals_section_name
+            DatePeriodType.WITHIN3MONTHS -> R.string.referral_one_month_ago_section_name
+            else -> R.string.referrals_older_than_three_months_section_name
+        }
     }
 }
 

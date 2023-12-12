@@ -17,13 +17,13 @@ class ReferralsRepository @Inject constructor(
             if (response.isSuccessful) {
                 ApiResponse.Success(response.body()!!)
             } else {
-                val errorMessage = response.errorBody()?.string() ?: "Generic Error"
+                val errorMessage = response.errorBody()?.string()
                 ApiResponse.Error(errorMessage)
             }
         } catch (exception: IOException) {
             ApiResponse.NetworkError
         }  catch (exception: Exception) {
-            ApiResponse.Error("Generic Error")
+            ApiResponse.Error(exception.message)
         }
     }
 
@@ -32,11 +32,11 @@ class ReferralsRepository @Inject constructor(
             "https://dsb000001oyrq2ai.test1.my.pc-rnd.site.com/NTOInsider/services/data/v59.0/query/",
             referralQuery(),
 //            "Bearer 00DSB000001oyRq!AQEAQDuosoC5VCO.IPNEdkhcWl57txTEOnDgH.4zuRq3MWxPZxOyRhNmOnwS4dUqWMz5na_dizXtJ0xn0AdGzaBcblVle09Q"
-            "Bearer 00DSB000001oyRq!AQEAQKJvdSZXTSFgb0QKD2p.x6x6Ri7Ly7ujdRxM8uNvtgDThWxoP1fiEjCyl07qO6IqTypB_GiwgMVfAVgYtytBwH3TFHOk"
+            "Bearer 00DSB000001oyRq!AQEAQEKSzmVG3YGEznqp0fKcCKdRFTG3UywROfcbDrT6HoJ1S8_WJZkvnKBmA3xEirk3gtN7geT.k9Uwoh.Nb5A1NrVh.xTJ"
         ) }
     }
 
     private fun referralQuery(): String {
-        return "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate FROM Referral"
+        return "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate, CurrentPromotionStage.Type FROM Referral ORDER BY ReferralDate DESC"
     }
 }

@@ -11,8 +11,13 @@ data class ReferralEntity(
     val referrerEmail: String?,
     @SerializedName("ReferralDate")
     val referralDate: String?,
-    @SerializedName("Status")
-    val status: String?
+    @SerializedName("CurrentPromotionStage")
+    val promotionStage: CurrentPromotionStage?
+)
+
+data class CurrentPromotionStage(
+    @SerializedName("Type")
+    val type: String?,
 )
 
 data class Attributes(
