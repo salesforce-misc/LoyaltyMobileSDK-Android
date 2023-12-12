@@ -333,6 +333,7 @@ fun isImageMoreThan5MB(capturedImageBitmap: ImageBitmap): Boolean {
     capturedImageBitmap.asAndroidBitmap().let {
         it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val b: ByteArray = baos.toByteArray()
+        Log.d("CapturedImage", "Captured Image Size: ${b.size}")
         val length = (b.size / 1024)
         return length > (5 * 1024)
     }
