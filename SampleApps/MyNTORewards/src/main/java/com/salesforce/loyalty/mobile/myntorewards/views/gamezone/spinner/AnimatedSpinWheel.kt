@@ -26,6 +26,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerBackground
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPageFooter
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelPointer
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_BORDER_WIDTH
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_FRAME_WIDTH
@@ -146,15 +147,11 @@ fun Wheel(
                         } }
                     }
                 }
-                /*if(!isWheelTapClicked)
-                {*/
-                //SpinWheelLandingPageFooter()  commenting as
-//            }
+                SpinWheelLandingPageFooter()
+
+            }
 
             }
         }
     }
-
-
-}
 

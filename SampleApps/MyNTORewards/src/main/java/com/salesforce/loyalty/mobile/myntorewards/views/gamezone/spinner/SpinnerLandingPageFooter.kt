@@ -29,14 +29,7 @@ fun SpinWheelLandingPageFooter() {
             .padding(start = 60.dp, end = 60.dp, bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id = R.string.tap_spin_to_play),
-            color = Color.White,
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = font_sf_pro
-        )
+
         Text(
             text = stringResource(id = R.string.game_scratch_card_detail_instruction),
             color = Color.White,

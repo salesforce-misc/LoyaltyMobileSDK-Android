@@ -219,7 +219,7 @@
     <string name="game_spin_sub_title">Spin the wheel and unlock instant rewards!</string>
     <string name="game_scratch_card_sub_title">Unlock instant rewards!</string>
     <string name="game_scratch_card_instruction">Scratch coupon to play</string>
-    <string name="game_scratch_card_detail_instruction">This is a one time offer exclusively for you. This offer if declined may not be repeated. Please refer to the terms and conditions for more information. </string>
+    <string name="game_scratch_card_detail_instruction">Grab this exclusive onetime offer and win some exciting rewards.</string>
     <string name="tab_game_zone_active">Active</string>
     <string name="tab_game_zone_available">Available</string>
     <string name="tab_game_zone_expired">Expired</string>
