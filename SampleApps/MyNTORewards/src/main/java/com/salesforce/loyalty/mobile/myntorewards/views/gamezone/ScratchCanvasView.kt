@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -24,7 +23,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.input.pointer.pointerInteropFilter
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -34,19 +32,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
-import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardPerforationColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
-import com.salesforce.loyalty.mobile.myntorewards.views.components.ShowErrorDialog
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 @SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalAnimationApi::class)
 @ExperimentalComposeUiApi
 @Composable
 fun CanvasForScratching(
@@ -58,7 +54,8 @@ fun CanvasForScratching(
     scratchThickness: Float,
     gameViewModel: GameViewModelInterface,
     navController: NavHostController,
-    gameParticipantRewardId: String
+    gameParticipantRewardId: String,
+    showErrorPopup: () -> Unit
 ) {
     val textMeasurer = rememberTextMeasurer()
     var animate by remember { mutableStateOf(false) }
@@ -80,8 +77,6 @@ fun CanvasForScratching(
 
     val alpha: Float by animateFloatAsState(targetValue = if (animate) 0.0f else 1f,
         animationSpec = tween(durationMillis = 700, easing = LinearEasing))
-
-    var openAlertDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -233,7 +228,8 @@ fun CanvasForScratching(
         GameRewardViewState.GameRewardFetchFailure -> {
             if (isInProgress) {
                 isInProgress = false
-                openAlertDialog = true
+                showErrorPopup()
+
             }
         }
         else -> {}
@@ -250,21 +246,5 @@ fun CanvasForScratching(
                 }
             }
         }
-    }
-    if (openAlertDialog) {
-        ShowErrorDialog(
-            onDismiss = {
-                openAlertDialog = false
-                navController.popBackStack()
-            },
-            title = stringResource(id = R.string.game_error),
-            description = stringResource(
-                id = R.string.game_error_desc
-            ),
-            confirmButtonText = stringResource(id = R.string.game_error_dialog_ok),
-            confirmButtonClick = {
-                openAlertDialog = false
-                navController.popBackStack()
-            })
     }
 }

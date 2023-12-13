@@ -64,7 +64,7 @@ fun SpinnerLandingPageHeader(navController: NavHostController) {
             fontFamily = font_sf_pro
         )
         Text(
-            text = stringResource(id = R.string.game_scratch_card_sub_title),
+            text = stringResource(id = R.string.game_spin_sub_title),
             color = Color.White,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,

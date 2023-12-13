@@ -148,7 +148,7 @@ fun FooterButtonsView(
 
         TextButtonCustom(
             modifier = Modifier.padding(top = 16.dp),
-            textContent = stringResource(id = R.string.text_continue_shopping),
+            textContent = stringResource(id = R.string.text_play_later),
             onClick = { continueCheckOutFlow() }
         )
         Spacer(modifier = Modifier.height(40.dp))

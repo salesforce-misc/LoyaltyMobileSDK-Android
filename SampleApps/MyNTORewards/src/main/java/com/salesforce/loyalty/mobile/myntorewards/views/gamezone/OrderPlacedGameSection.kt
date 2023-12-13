@@ -29,10 +29,6 @@ fun OrderConfirmationGameSection(gameType: GameType) {
         verticalArrangement = Arrangement.Center
     ) {
         BodyTextBold(text = stringResource(headerId))
-        BodyTextSmall(
-            text = stringResource(R.string.place_order_game_subheader),
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
         ImageComponent(
             drawableId = gameType.placeHolderId,
             contentDescription = stringResource(headerId),

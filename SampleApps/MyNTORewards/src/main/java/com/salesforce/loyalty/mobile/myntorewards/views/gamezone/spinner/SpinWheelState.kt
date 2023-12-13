@@ -7,6 +7,7 @@ import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
@@ -32,12 +33,15 @@ data class SpinWheelState(
     suspend fun animate(
         coroutineScope: CoroutineScope,
         rewardList: MutableList<GameNameIDDataModel>,
-        navController: NavHostController
+        navController: NavHostController,
+        spinFailure: () -> Unit
     ) {
         when (spinAnimationState) {
             SpinAnimationState.STOPPED -> {
 
-                spin(coroutineScope, rewardList, navController)
+                spin(coroutineScope, rewardList, navController){
+                    spinFailure()
+                }
             }
 
             SpinAnimationState.SPINNING -> {
@@ -49,7 +53,8 @@ data class SpinWheelState(
     fun spin(
         coroutineScope: CoroutineScope,
         rewardList: MutableList<GameNameIDDataModel>,
-        navController: NavHostController
+        navController: NavHostController,
+        spinFailure: () -> Unit
     ) {
         if (spinAnimationState == SpinAnimationState.STOPPED) {
 
@@ -90,7 +95,8 @@ data class SpinWheelState(
                         }
                     }
                 }.onFailure {
-
+                    rotation.snapTo(360f)
+                    spinFailure()
                 }
 
 

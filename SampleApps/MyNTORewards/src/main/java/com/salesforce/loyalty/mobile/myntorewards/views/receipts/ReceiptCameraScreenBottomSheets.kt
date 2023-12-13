@@ -63,17 +63,17 @@ fun OpenReceiptBottomSheetContent(
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR -> {
-            ScanningErrorPopup(errorMessage, closePopup = {
+            ErrorPopup(errorMessage, textButtonClicked = {
                 closeSheet()
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
-            }, scanAnotherReceipt = { closeSheet() })
+            }, tryAgainClicked = { closeSheet() }, stringResource(id = R.string.button_home))
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR_IMAGEMORETHAN5MB -> {
-            ScanningErrorPopup(stringResource(id = R.string.receipt_scanning_error_desc_image), closePopup = {
+            ErrorPopup(stringResource(id = R.string.receipt_scanning_error_desc_image), textButtonClicked = {
                 closeSheet()
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
-            }, scanAnotherReceipt = { closeSheet() })
+            }, tryAgainClicked = { closeSheet() }, stringResource(id = R.string.button_home))
         }
     }
 }
