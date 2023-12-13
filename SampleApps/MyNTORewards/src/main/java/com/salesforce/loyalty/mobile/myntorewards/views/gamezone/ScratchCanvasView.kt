@@ -55,7 +55,7 @@ fun CanvasForScratching(
     gameViewModel: GameViewModelInterface,
     navController: NavHostController,
     gameParticipantRewardId: String,
-    closePopup: () -> Unit,
+    showErrorPopup: () -> Unit
 ) {
     val textMeasurer = rememberTextMeasurer()
     var animate by remember { mutableStateOf(false) }
@@ -228,7 +228,7 @@ fun CanvasForScratching(
         GameRewardViewState.GameRewardFetchFailure -> {
             if (isInProgress) {
                 isInProgress = false
-                closePopup()
+                showErrorPopup()
 
             }
         }
