@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -57,7 +56,6 @@ fun Wheel(
     )
 
     val coroutineScope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
     val openBottomSheet = {
         coroutineScope.launch {
             if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
@@ -69,11 +67,9 @@ fun Wheel(
     if (openBottomsheet) {
         openBottomSheet()
     }
-    keyboardController?.hide()
 
     val closeBottomSheet = {
         //showBottomBar(true)
-        keyboardController?.hide()
         //blurBG = AppConstants.NO_BLUR_BG // need confirmation if background blur is needed
         coroutineScope.launch {
             if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {

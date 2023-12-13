@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,7 +55,6 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
     )
 
     val coroutineScope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
     val openBottomSheet = {
         coroutineScope.launch {
             if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
@@ -68,11 +66,9 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
     if (openBottomsheet) {
         openBottomSheet()
     }
-    keyboardController?.hide()
 
     val closeBottomSheet = {
         //showBottomBar(true)
-        keyboardController?.hide()
         //blurBG = AppConstants.NO_BLUR_BG // need confirmation if background blur is needed
         coroutineScope.launch {
             if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
