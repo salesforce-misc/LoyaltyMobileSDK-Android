@@ -3,6 +3,8 @@ package com.salesforce.referral_sdk.repository
 import com.salesforce.referral_sdk.api.ApiResponse
 import com.salesforce.referral_sdk.api.ApiService
 import com.salesforce.referral_sdk.entities.QueryResult
+import com.salesforce.referral_sdk.entities.ReferralEnrollmentRequestBody
+import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
 import com.salesforce.referral_sdk.entities.ReferralEntity
 import retrofit2.Response
 import java.io.IOException
@@ -34,6 +36,20 @@ class ReferralsRepository @Inject constructor(
 //            "Bearer 00DSB000001oyRq!AQEAQDuosoC5VCO.IPNEdkhcWl57txTEOnDgH.4zuRq3MWxPZxOyRhNmOnwS4dUqWMz5na_dizXtJ0xn0AdGzaBcblVle09Q"
             "Bearer 00DSB000001oyRq!AQEAQEKSzmVG3YGEznqp0fKcCKdRFTG3UywROfcbDrT6HoJ1S8_WJZkvnKBmA3xEirk3gtN7geT.k9Uwoh.Nb5A1NrVh.xTJ"
         ) }
+    }
+
+    suspend fun enrollToReferralProgram(
+        membershipNumber: String,
+        promotionName: String,
+        promotionCode: String
+    ): ApiResponse<ReferralEnrollmentResponse> {
+        return safeApiCall {
+            apiService.enrollToReferralProgram(
+                "https://hutl.my.salesforce.com/services/data/v59.0/referral-programs/Referral%20Promotions/promotions/0c8B0000000CwW2IAK/member-enrollments",
+                ReferralEnrollmentRequestBody(membershipNumber),
+                "Bearer 00DSB000001oyRq!AQEAQEKSzmVG3YGEznqp0fKcCKdRFTG3UywROfcbDrT6HoJ1S8_WJZkvnKBmA3xEirk3gtN7geT.k9Uwoh.Nb5A1NrVh.xTJ"
+            )
+        }
     }
 
     private fun referralQuery(): String {
