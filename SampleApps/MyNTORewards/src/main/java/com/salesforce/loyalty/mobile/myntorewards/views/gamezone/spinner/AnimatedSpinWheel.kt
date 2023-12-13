@@ -14,7 +14,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -31,11 +30,12 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.Spinner
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_FRAME_WIDTH
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.WHEEL_SIZE
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerLandingPageHeader
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Wheel(
     navController: NavHostController,
@@ -83,11 +83,10 @@ fun Wheel(
 
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
-            GamificationErrorPopup(stringResource(id = R.string.game_error_msg), closePopup = {
-                    openBottomsheet = false
-                closeBottomSheet()
-                navController.popBackStack()
-            })
+            ErrorPopup(stringResource(id = R.string.game_error_msg), textButtonClicked = {},
+                tryAgainClicked = { openBottomsheet = false
+                    closeBottomSheet()
+                    navController.popBackStack() })
         },
         sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE, AppConstants.POPUP_ROUNDED_CORNER_SIZE, 0.dp, 0.dp),
         sheetPeekHeight = 0.dp,

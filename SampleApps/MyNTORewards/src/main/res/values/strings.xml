@@ -202,7 +202,7 @@
     <string name="header_receipt_detail">Receipt Details</string>
     <string name="cd_camera_flash_icon">camera flash icon</string>
     <string name="image_more_than_5mb_msg">Image is more than 5 MB please try again.</string>
-    <string name="error_cd">Error while scanning</string>
+    <string name="error_cd">Error Popup</string>
     <string name="receipt_scanning_error_desc">Something went wrong. Try again.</string>
     <string name="receipt_scanning_error_desc_image">Image size exceeds 5 MB. Either resize the image or recapture with a lower resolution.</string>
     <string name="button_home">Home</string>

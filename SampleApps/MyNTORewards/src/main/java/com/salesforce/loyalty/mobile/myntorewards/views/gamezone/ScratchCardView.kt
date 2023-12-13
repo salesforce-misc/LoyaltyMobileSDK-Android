@@ -27,6 +27,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 import kotlinx.coroutines.launch
 
 data class ScratchedPath(
@@ -82,11 +83,10 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
 
           sheetContent = {
               Spacer(modifier = Modifier.height(1.dp))
-              GamificationErrorPopup(stringResource(id = R.string.game_error_msg), closePopup = {
-                  openBottomsheet = false
+              ErrorPopup(stringResource(id = R.string.game_error_msg), textButtonClicked = {},
+                  tryAgainClicked = { openBottomsheet = false
                   closeBottomSheet()
-                  navController.popBackStack()
-              })
+                  navController.popBackStack() })
           },
           sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE, AppConstants.POPUP_ROUNDED_CORNER_SIZE, 0.dp, 0.dp),
           sheetPeekHeight = 0.dp,
