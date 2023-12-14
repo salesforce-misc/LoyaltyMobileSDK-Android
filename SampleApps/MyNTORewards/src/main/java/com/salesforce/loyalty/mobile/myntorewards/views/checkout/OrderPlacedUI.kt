@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.OrderScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
@@ -32,6 +33,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.TextButtonCus
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameType
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.OrderConfirmationGameSection
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 
 @Composable
 fun OrderPlacedUI(
@@ -112,7 +114,8 @@ fun OrderPlacedUI(
 
         //TODO: Move these 2 fields to view model when API is ready
         val isGameUnlocked = true
-        val gameType: GameType = listOf(GameType.SPIN_A_WHEEL, GameType.SCRATCH_CARD).random()
+        // TODO: Load the right game once API is ready.
+        val gameType: GameType = /*listOf(GameType.SPIN_A_WHEEL, GameType.SCRATCH_CARD).random()*/GameType.SCRATCH_CARD
         if (isGameUnlocked) {
             OrderConfirmationGameSection(gameType)
             FooterButtonsView(navCheckOutFlowController, gameType) { continueCheckOutFlow() }
@@ -120,7 +123,9 @@ fun OrderPlacedUI(
             PrimaryButton(
                 textContent = stringResource(R.string.text_continue_shopping),
                 onClick = { continueCheckOutFlow() },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 40.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 40.dp)
             )
         }
     }
@@ -133,14 +138,17 @@ fun FooterButtonsView(
     continueCheckOutFlow: () -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp).fillMaxHeight(),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
         PrimaryButton(
             textContent = stringResource(R.string.play_now_button_text),
             onClick = {
-                navCheckOutFlowController.navigate(gameType.routeName) {
+                // TODO: Load the right game once Order Placed API gives details about the participantRewardId.
+                navCheckOutFlowController.navigate(MoreScreens.ScratchCardScreen.route) {
                     popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
                 }
             }

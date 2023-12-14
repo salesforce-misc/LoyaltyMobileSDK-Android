@@ -171,5 +171,7 @@ class AppConstants {
         const val REWARD_STATUS_NO_REWARD = "NoReward"
         const val REWARD_STATUS_EXPIRED = "Expired"
 
+        const val ROUTE_GAME_ZONE = "route_open_game_zone"
+
     }
 }

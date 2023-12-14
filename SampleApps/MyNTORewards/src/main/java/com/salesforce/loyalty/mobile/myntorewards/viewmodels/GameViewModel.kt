@@ -43,8 +43,8 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     private val rewardViewState = MutableLiveData<GameRewardViewState>()
 
     override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
-        rewardViewState.value = GameRewardViewState.GameRewardFetchInProgress
         viewModelScope.launch {
+            rewardViewState.postValue(GameRewardViewState.GameRewardFetchInProgress)
             val result = loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
             result.onSuccess {
                 Logger.d(TAG, "API Result SUCCESS: ${it}")

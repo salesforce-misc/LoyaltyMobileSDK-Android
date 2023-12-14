@@ -255,4 +255,5 @@
     <string name="game_error_desc">Something went wrong. Please try again.</string>
     <string name="game_error_dialog_ok">OK</string>
     <string name="game_error_msg">Oops! Something went wrong \u2028 while processing the request. Try again.</string>
+    <string name="play_more_text">Play More</string>
 </resources>
