@@ -1,7 +1,12 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
@@ -9,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferr
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
+import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.referral_sdk.api.ApiResponse
 import com.salesforce.referral_sdk.entities.ReferralEntity
@@ -42,6 +48,30 @@ class MyReferralsViewModel @Inject constructor(
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure(result.errorMessage))
                 }
                 ApiResponse.NetworkError -> uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure())
+            }
+        }
+    }
+
+    fun enrollToReferralProgram(context: Context) {
+        viewModelScope.launch {
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Logger.d("enrollToReferralProgram", "failed: member promotion Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            var membershipNumber = member.membershipNumber ?: ""
+
+            val accessToken = ForceAuthManager(context).getForceAuth()?.accessToken ?: ""
+            when(val result = repository.enrollToReferralProgram(accessToken, membershipNumber, "null", "")) {
+                is ApiResponse.Success -> {
+                    Logger.d("enrollToReferralProgram Success", "${result.data}")
+                }
+                is ApiResponse.Error -> {
+                    Logger.d("enrollToReferralProgram Error", "${result.errorMessage}")
+                }
+                ApiResponse.NetworkError -> Logger.d("enrollToReferralProgram Error", "N/W error")
             }
         }
     }

@@ -16,6 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,6 +45,8 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
                 MyReferralsScreenView(it.uiState) {
                     showBottomSheet(true)
                 }
+
+                viewModel.enrollToReferralProgram(LocalContext.current)
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
@@ -52,6 +55,8 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
                     closePopup = { },
                     scanAnotherReceipt = {  }
                 )
+                viewModel.enrollToReferralProgram(LocalContext.current)
+
             }
 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
