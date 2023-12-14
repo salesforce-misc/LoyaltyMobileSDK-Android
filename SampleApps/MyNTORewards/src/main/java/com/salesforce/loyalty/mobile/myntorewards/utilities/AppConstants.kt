@@ -165,5 +165,11 @@ class AppConstants {
 
         const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
 
+        //Reward status
+        const val REWARD_STATUS_YET_TO_REWARD = "YetToReward"
+        const val REWARD_STATUS_REWARDED = "Rewarded"
+        const val REWARD_STATUS_NO_REWARD = "NoReward"
+        const val REWARD_STATUS_EXPIRED = "Expired"
+
     }
 }
