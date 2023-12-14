@@ -278,18 +278,12 @@ fun ShowEmptyView(selectedTab: Int){
     when (selectedTab) {
         TAB_ACTIVE_GAMES -> {
             EmptyView(
-                header = stringResource(id = R.string.label_no_games),
-                description = stringResource(
-                    id = R.string.label_empty_active_games
-                )
+                header = stringResource(id = R.string.label_empty_active_games)
             )
         }
         TAB_EXPIRED_GAMES -> {
             EmptyView(
-                header = stringResource(id = R.string.label_no_games),
-                description = stringResource(
-                    id = R.string.label_empty_expired_games
-                )
+                header = stringResource(id = R.string.label_empty_expired_games)
             )
         }
     }

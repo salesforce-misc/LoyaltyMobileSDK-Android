@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 
 @Composable
-fun EmptyView(header: String, description: String) {
+fun EmptyView(header: String, description: String? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize().verticalScroll(rememberScrollState())
@@ -28,6 +28,8 @@ fun EmptyView(header: String, description: String) {
             contentDescription = header
         )
         BodyTextBold(text = header,  modifier = Modifier.padding(top = 4.dp))
-        BodyTextSmall(text = description,  modifier = Modifier.padding(top = 4.dp))
+        description?.let {
+            BodyTextSmall(text = it, modifier = Modifier.padding(top = 4.dp))
+        }
     }
 }
