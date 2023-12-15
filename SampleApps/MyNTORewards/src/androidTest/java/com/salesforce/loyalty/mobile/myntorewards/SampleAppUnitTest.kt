@@ -111,7 +111,8 @@ class SampleAppUnitTest {
 
     @Before
     fun init() {
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        //might needed in future
+        //val appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
         composeTestRule.setContent {
             Navigation(
@@ -126,17 +127,6 @@ class SampleAppUnitTest {
                 getGameViewModel()
             )
         }
-        /*     composeTestRule.setContent {
-                 CheckOutFlowOrderSelectScreen(
-                     NavController(appContext)
-                 )
-             }*/
-
-        /* loginTestRule.setContent {
-             LoginForm(NavController(appContext),   openPopup = {  }){
-
-             }
-         }*/
 
     }
 
@@ -146,14 +136,6 @@ class SampleAppUnitTest {
         verify_login_button()
     }
 
-    /* @Test
-     fun join_app_flow()
-     {
-         verify_join_button()
-     }*/
-
-
-    @OptIn(ExperimentalTestApi::class)
     private fun verify_login_button() {
         app_has_swipe_images()
         verifyLoginTesting()
@@ -171,20 +153,15 @@ class SampleAppUnitTest {
     private fun verify_gamification_testing() {
 
         composeTestRule.onNodeWithText("More").performClick()
-      //  Thread.sleep(2000)
         composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Game Zone").assertIsDisplayed()
         composeTestRule.onNodeWithText("Game Zone").performClick()
         composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
-        //Thread.sleep(2000)
         composeTestRule.onNodeWithText("More").performClick()
         composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Game Zone").assertIsDisplayed()
-    //    Thread.sleep(2000)
         composeTestRule.onNodeWithText("Game Zone").performClick()
-      //  Thread.sleep(2000)
         composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
-      //  Thread.sleep(2000)
         composeTestRule.onNodeWithText("Available").assertIsDisplayed()
         composeTestRule.onNodeWithText("Expired").assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(3)
@@ -192,18 +169,15 @@ class SampleAppUnitTest {
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(2)
         composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(1)
         composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
-      //  Thread.sleep(2000)
 
         composeTestRule.onNodeWithText("Available").performClick()
         composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(2)
         composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
-      //  Thread.sleep(2000)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).assertCountEquals(3)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TITLE), useUnmergedTree=true).assertCountEquals(3)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TYPE),useUnmergedTree=true).assertCountEquals(3)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_EXPIRY), useUnmergedTree=true).assertCountEquals(3)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
-      //  Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_BG).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_HEADER).assertIsDisplayed()
         composeTestRule.onNodeWithText("Spin a Wheel").assertIsDisplayed()
@@ -211,10 +185,8 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("game back button").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("game back button").performClick()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_GAME_ZONE_SCREEN).assertIsDisplayed()
-       // Thread.sleep(2000)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_BG).assertIsDisplayed()
-      //  Thread.sleep(2000)
 
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_CIRCLE).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_FRAME).assertIsDisplayed()
@@ -227,7 +199,6 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_FOOTER).assertIsDisplayed()
         composeTestRule.onNodeWithText("Grab this exclusive onetime offer and win some exciting rewards.").assertIsDisplayed()
         Thread.sleep(2000)
-        //composeTestRule.mainClock.autoAdvance = true
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_POINTER).performClick()
 
         composeTestRule.waitUntilExactlyOneExists(hasTestTag(TestTags.TEST_TAG_GAME_PLAYED_CONFIRMATION_SCREEN), 10000)
@@ -255,6 +226,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("game_back_button").performClick()
         composeTestRule.onNodeWithText("Home").performClick()
 
+        //will need in future
      /*   composeTestRule.onNodeWithTag(TestTags.TEST_TAG_SCRATCH_CARD).performTouchInput {
             longClick()
             advanceEventTime(100)
@@ -263,22 +235,6 @@ class SampleAppUnitTest {
 
 
     }
-
-
-    /*   @Test
-      fun verify_login_then_join()
-       {
-           composeTestRule.onNodeWithText("Already a Member? Log In").performClick()
-           Thread.sleep(3000)
-
-           composeTestRule.onNodeWithText("Not a Member?Join Now").assertIsDisplayed()
-           Thread.sleep(3000)
-           composeTestRule.onNodeWithText("Not a Member?Join Now").performClick()
-           composeTestRule.onNodeWithTag(TEST_TAG_JOIN_UI).assertIsDisplayed()
-           Thread.sleep(3000)
-           composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP).performClick()
-           Thread.sleep(2000)
-       }*/
 
 
     private fun verifyLoginTesting() {
@@ -332,22 +288,17 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Available to Opt In").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
 
-        //composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
 
         composeTestRule.onNodeWithText("Opted In").performClick()
 
-//        composeTestRule.onNodeWithTag("promotion_popup").assertIsDisplayed()
-//      composeTestRule.onNodeWithContentDescription("promotion popup image").assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).onFirst().performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_NAME).assertIsDisplayed()
-//         composeTestRule.onNodeWithTag("detail_heading").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNodeWithTag("expiration_date").assertIsDisplayed()
         composeTestRule.onNodeWithTag("expiration_date").assertIsDisplayed()
         composeTestRule.onNodeWithText("Shop").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).performClick()
-        //composeTestRule.onNodeWithContentDescription("close_button").performClick()
 
 
         Thread.sleep(2000)
@@ -364,7 +315,6 @@ class SampleAppUnitTest {
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_CLOSE_POPUP_PROMOTION).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_NAME).assertIsDisplayed()
-        //   composeTestRule.onNodeWithTag("detail_heading").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_EXPIRATION_DATE).assertIsDisplayed()
         composeTestRule.onNodeWithText("Shop").assertIsDisplayed()
@@ -469,7 +419,6 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
 
-        //Thread.sleep(3000)
 
         composeTestRule.onNodeWithText("Generating preview…").assertIsDisplayed()
 
@@ -662,15 +611,6 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_PAYMENT_UI_CONTAINER).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT).performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT).performClick()
-        //composeTestRule.onNodeWithTag(TEST_TAG_CHECKOUT_FLOW_CONTAINER).performMouseInput { scroll(-5F) }
-        //composeTestRule.onNodeWithTag(TEST_TAG_BACK_BUTTON_CHECKOUT_FIRST_SCREEN).performClick()
-//        composeTestRule.onNodeWithTag(TEST_TAG_PAYMENT_UI_CONTAINER).performMouseInput { scroll(10F) }
-
-
-//        composeTestRule.onNodeWithText("Confirm Order").assertIsDisplayed()
-        //composeTestRule.onNodeWithTag(TEST_TAG_CONFIRM_ORDER_BUTTON).performClick()
-
-
         Thread.sleep(5000)
     }
 
@@ -734,7 +674,6 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_JOIN_UI).assertIsDisplayed()
         Thread.sleep(1000)
 
-        //composeTestRule.onNodeWithTag("closePopup").performClick()
         Thread.sleep(1000)
 
         composeTestRule.onNodeWithTag(TEST_TAG_JOIN_BUTTON).assertIsNotEnabled()
@@ -1196,7 +1135,6 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 val mockResponse= MockResponseFileReader("GameRewards.json").content
                 val response =
                     Gson().fromJson(mockResponse, GameRewardResponse::class.java)
-                //delay(2000)
 
                 return Result.success(response)
             }
