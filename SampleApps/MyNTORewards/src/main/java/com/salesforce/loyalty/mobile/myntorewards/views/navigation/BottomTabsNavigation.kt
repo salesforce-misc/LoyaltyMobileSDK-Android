@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
@@ -42,7 +43,8 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
         Column(
             modifier = Modifier
                 .padding(padding)
-                .background(TextPurpleLightBG).testTag(TEST_TAG_HOME_SCREEN)
+                .background(TextPurpleLightBG)
+                .testTag(TEST_TAG_HOME_SCREEN)
         ) {
             TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel, loyaltyAPIManager) {
                 bottomBarState.value = it
@@ -76,7 +78,7 @@ fun TabNavigation(
             }
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            PromotionScreenAndCheckOutFlowNavigation(promotionModel, voucherModel, checkOutFlowViewModel, profileModel, gameViewModel) {
+            PromotionScreenAndCheckOutFlowNavigation(bottomTabsNavController, promotionModel, voucherModel, checkOutFlowViewModel, profileModel, gameViewModel) {
                 showBottomBar(it)
             }
         }
@@ -90,6 +92,12 @@ fun TabNavigation(
         composable(route = BottomNavTabs.More.route) {
             MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel, loyaltyAPIManager){
                 showBottomBar(it)
+            }
+        }
+        composable(route = BottomNavTabs.More.route+ "/{openGameZone}") {
+            val gameZone = it.arguments?.getString("openGameZone")
+            if (gameZone.equals(ROUTE_GAME_ZONE)) {
+                GameZoneNavigation(gameViewModel = gameViewModel) { showBottomBar(it) }
             }
         }
     }

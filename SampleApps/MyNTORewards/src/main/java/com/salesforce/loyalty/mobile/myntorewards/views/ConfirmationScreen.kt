@@ -141,7 +141,7 @@ fun BetterLuckScreen(onClick: () -> Unit) {
     ConfirmationScreen(
         headerContent = stringResource(id = R.string.better_luck_next_time),
         subHeaderContent = stringResource(id = R.string.better_luck_next_time_sub_header),
-        buttonText = stringResource(id = R.string.back_text),
+        buttonText = stringResource(id = R.string.play_more_text),
         imageContentDescription = stringResource(id = R.string.better_luck_next_time),
         bannerContentDescription = stringResource(id = R.string.better_luck_next_time_sub_header),
         imageDrawableId = R.drawable.game_no_voucher_icon,
@@ -153,7 +153,7 @@ fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
     ConfirmationScreen(
         headerContent = stringResource(id = R.string.game_zone_congrats_header_content),
         subHeaderContent = stringResource(id = R.string.game_zone_congrats_sub_header_content, offerPercent),
-        buttonText = stringResource(id = R.string.back_text),
+        buttonText = stringResource(id = R.string.play_more_text),
         imageContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         bannerContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         requireAnimation = true,

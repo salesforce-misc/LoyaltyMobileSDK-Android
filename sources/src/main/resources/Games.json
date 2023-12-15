@@ -89,9 +89,9 @@
           "gameRewardId": "501",
           "gameParticipantRewardId": "201",
           "sourceActivityId": "201",
-          "expirationDate": "2023-11-30T19:00:00.000Z",
+          "expirationDate": "2023-12-30T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active"
+          "status": "YetToReward"
         }
       ],
       "name": "Bonnie and Clyde Style Promotion",
@@ -149,7 +149,7 @@
           "sourceActivityId": "201",
           "expirationDate": "2023-12-24T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active"
+          "status": "YetToReward"
         }
       ],
       "name": "Billy the Kid Promotion",
@@ -307,7 +307,7 @@
           "sourceActivityId": "201",
           "expirationDate": "2023-12-24T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active"
+          "status": "YetToReward"
         }
       ],
       "name": "Billy the Kid Promotion2",
@@ -364,7 +364,7 @@
           "sourceActivityId": "201",
           "expirationDate": "2024-11-25T19:00:00.000Z",
           "issuedRewardReference": "12344",
-          "status": "active"
+          "status": "YetToReward"
         }
       ],
       "name": "Meow Scratch Mouse",
