@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -127,7 +130,7 @@ fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction
 fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: ReferralProgramType = JOIN_PROGRAM, closeAction: () -> Unit) {
     Column(
         modifier = Modifier
-            .fillMaxHeight(0.88F)
+            .wrapContentHeight()
             .fillMaxWidth()
             .background(Color.White)
             .testTag(TEST_TAG_REFER_FRIEND_SCREEN)
@@ -149,7 +152,7 @@ fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: Re
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .wrapContentSize()
                 .verticalScroll(rememberScrollState())
                 .padding(top = 16.dp, bottom = 48.dp, start = 24.dp, end = 24.dp)
         ) {

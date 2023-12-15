@@ -12,19 +12,17 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs.Companion.sortedTabs
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.referral_sdk.api.ApiResponse
 import com.salesforce.referral_sdk.entities.ReferralEntity
 import com.salesforce.referral_sdk.repository.ReferralsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
 @HiltViewModel
 class MyReferralsViewModel @Inject constructor(
@@ -32,7 +30,17 @@ class MyReferralsViewModel @Inject constructor(
 ): BaseViewModel<MyReferralsViewState>() {
 
     init {
-        fetchReferralsInfo()
+        fetchReferralProgramStatus()
+    }
+
+    private fun fetchReferralProgramStatus() {
+        uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
+        viewModelScope.launch {
+            delay(2000)
+            uiMutableState.postValue(MyReferralsViewState.MyReferralsProgramStatus(
+                ReferralProgramType.JOIN_PROGRAM, successState(null)
+            ))
+        }
     }
 
     private fun fetchReferralsInfo() {
@@ -81,7 +89,7 @@ class MyReferralsViewModel @Inject constructor(
         val sentCount = data?.size ?: 0
         val acceptedCount = inProgressStates.filter { it.purchaseStatus == ReferralStatusType.SIGNED_UP }.size
         return MyReferralScreenState(
-            tabItems = listOf(ReferralTabs.Success.tabName, ReferralTabs.InProgress.tabName),
+            tabItems = sortedTabs(),
             completedStates = successStates,
             inProgressStates = inProgressStates,
             listOf(Pair(R.string.my_referral_sent_label, "$sentCount"),

@@ -39,8 +39,7 @@ class ReferralsRepository @Inject constructor(
             apiService.fetchReferralsInfo(
                 "https://dsb000001oyrq2ai.test1.my.pc-rnd.site.com/NTOInsider/services/data/v59.0/query/",
                 referralQuery(),
-//            "Bearer 00DSB000001oyRq!AQEAQDuosoC5VCO.IPNEdkhcWl57txTEOnDgH.4zuRq3MWxPZxOyRhNmOnwS4dUqWMz5na_dizXtJ0xn0AdGzaBcblVle09Q"
-                "Bearer 00DSB000001oyRq!AQEAQOgm_BAh0kCxvYvyT5wWG0Yxn._6eBSngmKPEErpF3TU187WM0xYIXkPsS4DfpuMKHZFsNMMES02hTjpJjyBMZLPNtU_"
+                "Bearer 00DSB000001oyRq!AQEAQPZ.MQEf0vQfskeS1XleR.d5XrBQNusiI99NCV.bytZawAO8JZ8a9WOvUDUiIQhg.77yChQ2BXxA11lWIHb4mgYxz0Bp"
             )
         }
     }

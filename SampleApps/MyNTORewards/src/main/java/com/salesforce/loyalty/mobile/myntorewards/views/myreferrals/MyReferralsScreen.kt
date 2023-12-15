@@ -63,6 +63,13 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
                 CircularProgress()
             }
+
+            is MyReferralsViewState.MyReferralsProgramStatus -> {
+                showBottomSheet(true)
+                MyReferralsScreenView(it.emptyState) {
+                    showBottomSheet(true)
+                }
+            }
         }
     }
 }

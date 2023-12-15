@@ -1,19 +1,24 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates
 
 import androidx.annotation.StringRes
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 
 sealed class MyReferralsViewState {
     data class MyReferralsFetchSuccess(val uiState: MyReferralScreenState) : MyReferralsViewState()
+    data class MyReferralsProgramStatus(
+        val programType: ReferralProgramType,
+        val emptyState: MyReferralScreenState
+    ) : MyReferralsViewState()
     data class MyReferralsFetchFailure(val errorMessage: String? = null): MyReferralsViewState()
     object MyReferralsFetchInProgress : MyReferralsViewState()
 }
 
 data class MyReferralScreenState(
-    val tabItems: List<ReferralTabs>,
-    val completedStates: List<ReferralItemState>,
-    val inProgressStates: List<ReferralItemState>,
+    val tabItems: List<ReferralTabs> = emptyList(),
+    val completedStates: List<ReferralItemState> = emptyList(),
+    val inProgressStates: List<ReferralItemState> = emptyList(),
     val referralsCountList: List<Pair<Int, String>>,
     val referralsRecentDuration: String
 )
