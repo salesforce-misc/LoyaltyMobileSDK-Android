@@ -3,6 +3,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.components
 import android.text.method.LinkMovementMethod
 import android.view.Gravity
 import android.widget.TextView
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

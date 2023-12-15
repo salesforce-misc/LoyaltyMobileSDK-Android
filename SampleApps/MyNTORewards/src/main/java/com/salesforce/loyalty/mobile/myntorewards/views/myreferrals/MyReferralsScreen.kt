@@ -30,7 +30,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrolla
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BottomSheetCustomState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
-import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ScanningErrorPopup
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -48,10 +48,10 @@ fun MyReferralsScreen(showBottomSheet: (Boolean) -> Unit) {
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
-                ScanningErrorPopup(
+                ErrorPopup(
                     it.errorMessage,
-                    closePopup = { },
-                    scanAnotherReceipt = {  }
+                    tryAgainClicked = { },
+                    textButtonClicked = {  }
                 )
             }
 
