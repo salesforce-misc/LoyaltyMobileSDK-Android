@@ -331,8 +331,10 @@ fun ImagePreviewScreen(
 fun isImageMoreThan5MB(capturedImageBitmap: ImageBitmap): Boolean {
     val baos = ByteArrayOutputStream()
     capturedImageBitmap.asAndroidBitmap().let {
-        it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        // Compress image to upto 80% quality.
+        it.compress(Bitmap.CompressFormat.JPEG, 80, baos)
         val b: ByteArray = baos.toByteArray()
+        Log.d("CapturedImage", "Captured Image Size: ${b.size}")
         val length = (b.size / 1024)
         return length > (5 * 1024)
     }
