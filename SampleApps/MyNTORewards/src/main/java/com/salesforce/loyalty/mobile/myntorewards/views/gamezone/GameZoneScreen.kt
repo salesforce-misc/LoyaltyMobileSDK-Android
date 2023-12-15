@@ -183,7 +183,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     title = activeGame.name ?: "",
                                                     gameType
                                                 ) {
-                                                    val gamePartRewardId = activeGame.participantGameRewards[0].gameParticipantRewardId
+                                                    val gamePartRewardId = activeGame.participantGameRewards.firstOrNull()?.gameParticipantRewardId
 
                                                     if (gameType == GameType.SPIN_A_WHEEL) {
                                                         navController.navigate(

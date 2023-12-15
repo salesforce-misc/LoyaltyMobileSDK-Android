@@ -88,21 +88,10 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     }
 
     override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
-        gamesLiveData.value?.let {
-            val gameDefinitions = it.gameDefinitions
-            if (gameDefinitions.isNotEmpty()) {
-                for (gameDef in gameDefinitions) {
-                    val participantGameRewards = gameDef.participantGameRewards
-                    if (participantGameRewards.isNotEmpty()) {
-                        for (partGameReward in participantGameRewards) {
-                            if (partGameReward.gameParticipantRewardId == gameParticipantRewardId) {
-                                return gameDef.gameRewards
-                            }
-                        }
-                    }
-                }
+        return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
+            gameDefinition.participantGameRewards.any { partGameReward ->
+                partGameReward.gameParticipantRewardId == gameParticipantRewardId
             }
-        }
-        return mutableListOf()
+        }?.gameRewards ?: emptyList()
     }
 }
