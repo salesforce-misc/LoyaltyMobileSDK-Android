@@ -92,6 +92,7 @@
     <string name="text_add_to_cart"> "Add to Cart"</string>
     <string name="text_order_details"> "Order Details"</string>
     <string name="text_continue_shopping"> "Continue Shopping"</string>
+    <string name="text_play_later"> Play later in the Game Zone</string>
     <string name="text_order_placed">Your Order %s is Placed.</string>
     <string name="text_amount_payble"> "Pay:"</string>
     <string name="text_use_my_points"> "Use my points"</string>
@@ -202,7 +203,7 @@
     <string name="header_receipt_detail">Receipt Details</string>
     <string name="cd_camera_flash_icon">camera flash icon</string>
     <string name="image_more_than_5mb_msg">Image is more than 5 MB please try again.</string>
-    <string name="error_cd">Error while scanning</string>
+    <string name="error_cd">Error Popup</string>
     <string name="receipt_scanning_error_desc">Something went wrong. Try again.</string>
     <string name="receipt_scanning_error_desc_image">Image size exceeds 5 MB. Either resize the image or recapture with a lower resolution.</string>
     <string name="button_home">Home</string>
@@ -215,28 +216,47 @@
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
 
-    <string name="game_scratch_card_title">Scratch and win!</string>
-    <string name="game_scratch_card_sub_title">Get a chance to win instant rewards!</string>
+    <string name="game_scratch_card_title">Scratch a Card and Win</string>
+    <string name="game_spin_sub_title">Spin the wheel and unlock instant rewards!</string>
+    <string name="game_scratch_card_sub_title">Unlock instant rewards!</string>
     <string name="game_scratch_card_instruction">Scratch coupon to play</string>
-    <string name="game_scratch_card_detail_instruction">This is a one time offer exclusively for you. This offer if declined may not be repeated. Please refer to the terms and conditions for more information. </string>
+    <string name="game_scratch_card_detail_instruction">Grab this exclusive onetime offer and win some exciting rewards.</string>
     <string name="tab_game_zone_active">Active</string>
+    <string name="tab_game_zone_available">Available</string>
     <string name="tab_game_zone_expired">Expired</string>
     <string name="game_expiring_tomorrow">Expiring Tomorrow</string>
     <string name="game_placeholder_title">Bonnie and Clyde Style Promotion</string>
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
     <string name="game_spin_a_wheel">Spin a Wheel</string>
-    <string name="game_scratch_card">Scratch Card</string>
+    <string name="game_scratch_card">Scratch a Card</string>
+    <string name="tap_spin_to_play">Tap \'Spin\' to play.</string>
+    <string name="text_spin_a_wheel">Spin a Wheel</string>
+    <string name="cd_game_back_button">"game back button".</string>
 
     <!-- Game zone Better luck Screen -->
     <string name="better_luck_next_time">Better luck next time!</string>
-    <string name="better_luck_next_time_sub_header">Thank you for playing… \n\nKeep a watch out for more such offers.</string>
+    <string name="better_luck_next_time_sub_header"><![CDATA[Thank you for playing! Stay tuned for more offers.]]></string>
 
     <!-- Game zone Congratulations Screen -->
-    <string name="game_zone_congrats_header_content">Congratulations!!!</string>
-    <string name="game_zone_congrats_sub_header_content">You have won A voucher for %s off for your next purchase. Go to the voucher section to claim your reward!</string>
+    <string name="game_zone_congrats_header_content">Congratulations!</string>
+    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s discount voucher for your next purchase. To redeem your reward, go to the Voucher section.]]></string>
     <string name="game_expired">Expired</string>
     <string name="game_expiring_today">Expiring Today</string>
     <string name="game_expiring_date">Expiry %s</string>
+    <string name="game_never_expires">Never Expires</string>
+    <string name="place_order_game_subheader">This order has unlocked a one time chance to win instant rewards</string>
+    <string name="place_order_game_header_spin_wheel">Congratulations! You’ve unlocked a reward. Give it a spin!</string>
+    <string name="place_order_game_header_scratch_card">Congratulations! You’ve unlocked a scratch card.</string>
+    <string name="play_now_button_text">Play</string>
+
+    <string name="label_no_games">No Games</string>
+    <string name="label_empty_active_games">When you have games available, you’ll see them here.</string>
+    <string name="label_empty_expired_games">When your games expire, you’ll see them here.</string>
+    <string name="game_error">Error</string>
+    <string name="game_error_desc">Something went wrong. Please try again.</string>
+    <string name="game_error_dialog_ok">OK</string>
+    <string name="game_error_msg">Oops! Something went wrong \u2028 while processing the request. Try again.</string>
+    <string name="play_more_text">Play More</string>
 
     <!-- My Referrals Screen -->
     <string name="referral_card_content_description">Referral Card</string>

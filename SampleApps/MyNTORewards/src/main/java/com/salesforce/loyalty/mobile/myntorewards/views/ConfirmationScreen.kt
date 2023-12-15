@@ -1,8 +1,10 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,8 +19,10 @@ import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
+import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
+import com.salesforce.loyalty.mobile.myntorewards.views.components.animation.ConfettiAnimationView
 
 /**
  * Common composable screen for Better Luck and Congratulations screen as most of the look and feel is same
@@ -87,13 +91,15 @@ fun ConfirmationScreen(
                 }
         )
 
-        BodyText(
+        HtmlText(
             text = subHeaderContent,
+            size = 16f,
+            textGravity = Gravity.CENTER,
             modifier = Modifier.constrainAs(subText) {
                 top.linkTo(headerText.bottom)
                 start.linkTo(guideLineStart)
                 end.linkTo(guideLineEnd)
-            }
+            }.padding(horizontal = 32.dp)
         )
     }
 }
@@ -115,6 +121,7 @@ private fun ConstraintLayoutScope.AnimatedView(
                 top.linkTo(parent.top)
             }.fillMaxWidth()
         )
+        ConfettiAnimationView()
     } else {
         ImageComponent(
             drawableId = R.drawable.game_better_luck_line,
@@ -134,7 +141,7 @@ fun BetterLuckScreen(onClick: () -> Unit) {
     ConfirmationScreen(
         headerContent = stringResource(id = R.string.better_luck_next_time),
         subHeaderContent = stringResource(id = R.string.better_luck_next_time_sub_header),
-        buttonText = stringResource(id = R.string.back_text),
+        buttonText = stringResource(id = R.string.play_more_text),
         imageContentDescription = stringResource(id = R.string.better_luck_next_time),
         bannerContentDescription = stringResource(id = R.string.better_luck_next_time_sub_header),
         imageDrawableId = R.drawable.game_no_voucher_icon,
@@ -146,7 +153,7 @@ fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
     ConfirmationScreen(
         headerContent = stringResource(id = R.string.game_zone_congrats_header_content),
         subHeaderContent = stringResource(id = R.string.game_zone_congrats_sub_header_content, offerPercent),
-        buttonText = stringResource(id = R.string.back_text),
+        buttonText = stringResource(id = R.string.play_more_text),
         imageContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         bannerContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         requireAnimation = true,

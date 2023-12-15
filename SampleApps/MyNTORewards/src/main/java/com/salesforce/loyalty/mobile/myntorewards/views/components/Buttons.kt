@@ -9,6 +9,7 @@ import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,6 +66,22 @@ fun SecondaryButton(
         colors = colors,
         shape = shape,
         border = border,
+        enabled = enabled
+    ) {
+        ButtonText(textContent, VibrantPurple40)
+    }
+}
+
+@Composable
+fun TextButtonCustom(
+    onClick: () -> Unit,
+    textContent: String,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    enabled: Boolean = true
+) {
+    TextButton(
+        modifier = modifier,
+        onClick = { onClick() },
         enabled = enabled
     ) {
         ButtonText(textContent, VibrantPurple40)
