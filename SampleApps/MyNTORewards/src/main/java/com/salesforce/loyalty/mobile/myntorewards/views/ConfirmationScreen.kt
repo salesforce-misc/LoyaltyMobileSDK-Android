@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,6 +18,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_PLAYED_CONFIRMATION_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
@@ -42,7 +45,7 @@ fun ConfirmationScreen(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color.White).testTag(TEST_TAG_GAME_PLAYED_CONFIRMATION_SCREEN)
     ) {
         val (image, topBanner, lineImage, headerText, subText, button) = createRefs()
 
@@ -67,7 +70,7 @@ fun ConfirmationScreen(
                 bottom.linkTo(parent.bottom)
                 start.linkTo(guideLineStart)
                 end.linkTo(guideLineEnd)
-            }
+            }.testTag(TEST_TAG_SUBHEADER_CONGRATS_SCREEN)
         )
 
         AnimatedView(

@@ -9,7 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_COLOUR_SEGMENT
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.PADDING_ANGLE_BETWEEN_WHEEL_SEGMENT
 
 @Composable
@@ -25,7 +27,7 @@ fun SpinWheelColourSegment(
 
     Canvas(
         modifier = Modifier
-            .size(spinSize)
+            .size(spinSize).testTag(TEST_TAG_SPIN_WHEEL_COLOUR_SEGMENT)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,

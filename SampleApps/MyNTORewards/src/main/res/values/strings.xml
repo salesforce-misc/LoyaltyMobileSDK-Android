@@ -2,6 +2,7 @@
     <string name="app_name">LoyaltyMobileSDK-Sample</string>
     <string name="cd_onboard_screen_onboard_image">"onboarding screen Image"</string>
     <string name="cd_onboard_screen_bottom_fade">"onboarding screen bottom fading"</string>
+    <string name="spin_wheel_pointer">spin_wheel_pointer</string>
     <string name="cd_close_popup">"Close Popup"</string>
     <string name="cd_app_logo">"Application Logo"</string>
 
@@ -230,7 +231,7 @@
     <string name="game_scratch_card">Scratch a Card</string>
     <string name="tap_spin_to_play">Tap \'Spin\' to play.</string>
     <string name="text_spin_a_wheel">Spin a Wheel</string>
-    <string name="cd_game_back_button">"game back button".</string>
+    <string name="cd_game_back_button">game back button</string>
 
     <!-- Game zone Better luck Screen -->
     <string name="better_luck_next_time">Better luck next time!</string>

@@ -273,7 +273,6 @@ fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModelInterface,
-    loyaltyAPIManager: LoyaltyAPIManager,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()

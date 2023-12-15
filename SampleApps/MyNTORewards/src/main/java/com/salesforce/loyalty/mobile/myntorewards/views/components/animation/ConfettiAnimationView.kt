@@ -6,6 +6,8 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -52,7 +54,8 @@ fun ConfettiAnimationView(
     val drawables = drawableIdToDrawables(drawableIds = drawableIds)
     LaunchedEffect(Unit) {
         partySystems = confettiDrawables(drawables).map { PartySystem(it) }
-        while (true) {
+        var running =true
+        while (running) {
             withFrameMillis { frameMs ->
                 // Calculate time between frames, fallback to 0 when previous frame doesn't exist
                 val deltaMs = if (frameTime.value > 0) (frameMs - frameTime.value) else 0
@@ -65,6 +68,10 @@ fun ConfettiAnimationView(
                     particleSystem.render(deltaMs.div(1000f), drawArea.value)
                 }.flatten()
             }
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                running= false
+            }, 5000)
         }
     }
 

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -27,6 +28,11 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardBackground
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_EXPIRY
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_IMAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_TITLE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_TYPE
 
 @Composable
 fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType: GameType, onClicked: () -> Unit) {
@@ -38,11 +44,11 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
             .padding(bottom = 8.dp)
             .clickable {
                 onClicked()
-            }
+            }.testTag(TEST_TAG_GAME_ZONE_ITEM)
     )
 
     {
-        Box() {
+
             val thumbnailId = when (gameType) {
                 GameType.SPIN_A_WHEEL -> {
                     if (isExpired) {
@@ -66,10 +72,9 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                     .fillMaxWidth()
                     .height(90.dp)
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .background(ScratchCardBackground),
+                    .background(ScratchCardBackground).testTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE),
                 contentScale = ContentScale.Crop
             )
-        }
         Box(
             modifier = Modifier
                 .fillMaxWidth().fillMaxHeight()
@@ -83,7 +88,7 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
                 modifier = Modifier
-                    .fillMaxWidth().align(Alignment.TopStart)
+                    .fillMaxWidth().align(Alignment.TopStart).testTag(TEST_TAG_GAME_ZONE_ITEM_TITLE)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -101,7 +106,7 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                     textAlign = TextAlign.Start,
                     fontSize = 12.sp,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().testTag(TEST_TAG_GAME_ZONE_ITEM_TYPE)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 var expirationTextColor = Color.White
@@ -128,7 +133,7 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                         modifier = Modifier
                             .height(24.dp)
                             .background(expirationBgColor, shape = RoundedCornerShape(4.dp))
-                            .padding(start = 12.dp, end = 12.dp, bottom = 4.dp)
+                            .padding(start = 12.dp, end = 12.dp, bottom = 4.dp).testTag(TEST_TAG_GAME_ZONE_ITEM_EXPIRY)
                     )
                 }
             }
