@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
@@ -31,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWhe
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.MyReferralsListScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
@@ -52,6 +54,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
+    gameViewModel: GameViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -116,16 +119,45 @@ fun HomeScreenAndCheckOutFlowNavigation(
             showBottomBar(false)
 //            ScanningProgress(navCheckOutFlowController)
         }
+        composable(route = MoreScreens.GameZoneScreen.route) {
+            showBottomBar(true)
+            GameZoneScreen(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.ScratchCardScreen.route) {
+            ScratchCardView(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route) {
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+            val offerPercent = "20%" // TODO: Replace this with the actual value
+            CongratulationsScreen(offerPercent) {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
     }
 }
 
 
 @Composable
 fun PromotionScreenAndCheckOutFlowNavigation(
+    bottomTabsNavController: NavController,
     promotionViewModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
+    gameViewModel: GameViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -160,7 +192,33 @@ fun PromotionScreenAndCheckOutFlowNavigation(
             showBottomBar(false)
             OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel, profileModel)
         }
-
+        composable(route = MoreScreens.ScratchCardScreen.route) {
+            ScratchCardView(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route) {
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.GameZoneScreen.route) {
+            showBottomBar(true)
+            GameZoneScreen(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+            val offerPercent = "20%" // TODO: Replace this with the actual value
+            CongratulationsScreen(offerPercent) {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
     }
 }
 
@@ -266,6 +324,51 @@ fun MoreScreenNavigation(
 //            ScanningProgress(navController)
         }
         composable(route = MoreScreens.GameZoneScreen.route) {
+            GameZoneNavigation(gameViewModel = gameViewModel, showBottomBar = showBottomBar)
+        }
+        composable(route = MoreScreens.ScratchCardScreen.route) {
+            showBottomBar(true)
+            ScratchCardView(navController, gameViewModel)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route) {
+            showBottomBar(true)
+            SpinWheelLandingPage(navController, gameViewModel)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+            val offerPercent = "20%" // TODO: Replace this with the actual value
+            CongratulationsScreen(offerPercent) {
+                navController.popBackStack(
+                    MoreScreens.GameZoneScreen.route,
+                    false
+                )
+            }
+        }
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                navController.popBackStack(
+                    MoreScreens.GameZoneScreen.route,
+                    false
+                )
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.P)
+@Composable
+fun GameZoneNavigation(
+    gameViewModel: GameViewModelInterface,
+    showBottomBar: (bottomBarVisible: Boolean) -> Unit
+) {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = MoreScreens.GameZoneScreen.route
+    )
+    {
+        composable(route = MoreScreens.GameZoneScreen.route) {
             showBottomBar(true)
             GameZoneScreen(navController, gameViewModel)
         }
@@ -280,11 +383,21 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)
             val offerPercent = "20%" // TODO: Replace this with the actual value
-            CongratulationsScreen(offerPercent) { navController.popBackStack() }
+            CongratulationsScreen(offerPercent) {
+                navController.popBackStack(
+                    MoreScreens.GameZoneScreen.route,
+                    false
+                )
+            }
         }
         composable(route = MoreScreens.GameBetterLuckScreen.route) {
             showBottomBar(false)
-            BetterLuckScreen { navController.popBackStack() }
+            BetterLuckScreen {
+                navController.popBackStack(
+                    MoreScreens.GameZoneScreen.route,
+                    false
+                )
+            }
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
             MyReferralsListScreen {

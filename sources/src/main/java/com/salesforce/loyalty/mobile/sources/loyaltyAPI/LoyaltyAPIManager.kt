@@ -15,6 +15,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import kotlinx.coroutines.delay
 import java.io.InputStreamReader
+import java.lang.RuntimeException
 
 /**
  * LoyaltyAPIManager class manages the requests related to loyalty program and it inturn invokes the rest APIs
@@ -322,7 +323,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
      */
     private fun getStringOfArrayItems(items: Array<String>?): String? = items?.reduce { acc, item -> "$acc,$item" }
 
-    suspend fun getGameReward(mockResponse: Boolean): Result<GameRewardResponse> {
+    suspend fun getGameReward(gameParticipantRewardId: String, mockResponse: Boolean): Result<GameRewardResponse> {
         Logger.d(TAG, "getGameReward()")
 
         if (mockResponse) {
@@ -332,15 +333,17 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             reader.close()
             val response =
                 Gson().fromJson(content, GameRewardResponse::class.java)
+            delay(2000)
+            //return Result.failure(RuntimeException()) // to test failure scenario
             return Result.success(response)
         } else {
             return mLoyaltyClient.getNetworkClient().getGameReward(
-                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.GameReward()),
+                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.GameReward(gameParticipantRewardId)),
             )
         }
     }
 
-    suspend fun getGames(mockResponse: Boolean): Result<Games> {
+    suspend fun getGames(participantId: String, mockResponse: Boolean): Result<Games> {
         Logger.d(TAG, "getGames")
 
         if (mockResponse) {
@@ -350,12 +353,10 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             reader.close()
             val response =
                 Gson().fromJson(content, Games::class.java)
-            Logger.d("getGames", "before delay")
-            delay(2000)
             return Result.success(response)
         } else {
             return mLoyaltyClient.getNetworkClient().getGames(
-                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.Games()),
+                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.Games(participantId)),
             )
         }
     }

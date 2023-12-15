@@ -4,7 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -24,25 +30,37 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_GAME_PARTICIPANT_REWARD_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ACTIVE_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_EXPIRED_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
+import kotlinx.coroutines.launch
+import java.io.Serializable
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
     val games by gameViewModel.gamesLiveData.observeAsState()
     val gameViewState by gameViewModel.gamesViewState.observeAsState()
     var isInProgress by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
+    fun refresh() = refreshScope.launch {
+        gameViewModel.getGames(context, false)
+    }
+    val state = rememberPullRefreshState(refreshing, ::refresh)
     LaunchedEffect(true) {
-        gameViewModel.getGames(true)
+        gameViewModel.getGames(context, false)
     }
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .background(TextPurpleLightBG)
             .fillMaxSize()
@@ -69,6 +87,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .pullRefresh(state)
                     .background(VeryLightPurple)
             ) {
                 var selectedTab by remember { mutableStateOf(0) }
@@ -121,18 +140,18 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                     GamesViewState.GamesFetchSuccess -> {
                         isInProgress = false
                         val notPlayedGames = games?.gameDefinitions?.filter {
-                            it.participantGameRewards[0].gameRewardId == null
+                            it.participantGameRewards[0].status == ParticipantRewardStatus.YET_TO_REWARD.status
                         }
                         if (notPlayedGames != null) {
                             val (activeGames, expiredGames) = notPlayedGames.partition {
                                 it.participantGameRewards[0].expirationDate.let { expDate ->
-                                    expDate?.let { date -> Common.isGameExpired(date) } == false
+                                    (expDate == null) || (expDate?.let { date -> Common.isGameExpired(date) } == false)
                                 }
                             }
 
                             when (selectedTab) {
                                 TAB_ACTIVE_GAMES -> {
-                                    activeGames?.let {
+                                    if (activeGames.isNotEmpty()) {
                                         LazyVerticalGrid(
                                             columns = GridCells.Fixed(2),
                                             modifier = Modifier
@@ -147,12 +166,11 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                 val activeGame = activeGames[activeItem]
                                                 val expirationDate =
                                                     activeGame.participantGameRewards[0].expirationDate
-                                                val expiryDetail = expirationDate?.let {
+                                                val expiryDetail =
                                                     Common.formatGameDateTime(
-                                                        it,
+                                                        expirationDate,
                                                         context
                                                     )
-                                                }
                                                 val gameType =
                                                     if (GameType.SPIN_A_WHEEL.gameType == activeGame.type) {
                                                         GameType.SPIN_A_WHEEL
@@ -165,7 +183,18 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     title = activeGame.name ?: "",
                                                     gameType
                                                 ) {
+                                                    navController.currentBackStackEntry?.arguments?.putString(
+                                                        KEY_GAME_PARTICIPANT_REWARD_ID,
+                                                        activeGame.participantGameRewards[0].gameParticipantRewardId
+                                                    )
                                                     if (gameType == GameType.SPIN_A_WHEEL) {
+                                                        val gamesData =
+                                                            activeGame.gameRewards as ArrayList
+                                                        navController.currentBackStackEntry?.arguments?.putParcelableArrayList(
+                                                            AppConstants.KEY_GAME_REWARD,
+                                                            gamesData
+                                                        )
+
                                                         navController.navigate(MoreScreens.SpinWheelScreen.route)
                                                     } else {
                                                         navController.navigate(MoreScreens.ScratchCardScreen.route)
@@ -173,10 +202,12 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                 }
                                             }
                                         }
+                                    } else {
+                                        ShowEmptyView(selectedTab = selectedTab)
                                     }
                                 }
                                 TAB_EXPIRED_GAMES -> {
-                                    expiredGames?.let {
+                                    if (expiredGames.isNotEmpty()) {
                                         LazyVerticalGrid(
                                             columns = GridCells.Fixed(2),
                                             modifier = Modifier
@@ -203,15 +234,20 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                 ) {}
                                             }
                                         }
+                                    } else {
+                                        ShowEmptyView(selectedTab = selectedTab)
                                     }
                                 }
                             }
                         } else {
-                            // Show empty tab view
+                            ShowEmptyView(selectedTab = selectedTab)
                         }
                     }
                     GamesViewState.GamesFetchFailure -> {
-                        isInProgress = false
+                        if (isInProgress) {
+                            isInProgress = false
+                            ShowEmptyView(selectedTab = selectedTab)
+                        }
                     }
                     GamesViewState.GamesFetchInProgress -> {
                         isInProgress = true
@@ -223,9 +259,31 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
         }
 
         if (isInProgress) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .fillMaxSize(0.1f)
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                )
+            }
+        }
+        PullRefreshIndicator(refreshing, state)
+    }
+}
+
+@Composable
+fun ShowEmptyView(selectedTab: Int){
+    when (selectedTab) {
+        TAB_ACTIVE_GAMES -> {
+            EmptyView(
+                header = stringResource(id = R.string.label_empty_active_games)
+            )
+        }
+        TAB_EXPIRED_GAMES -> {
+            EmptyView(
+                header = stringResource(id = R.string.label_empty_expired_games)
             )
         }
     }
