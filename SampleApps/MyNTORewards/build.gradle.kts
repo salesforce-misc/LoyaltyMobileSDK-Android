@@ -67,6 +67,15 @@ android {
         abortOnError = false
         lintConfig = file("$rootDir/lint-baseline.xml")
     }
+
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
+
+
 }
 
 

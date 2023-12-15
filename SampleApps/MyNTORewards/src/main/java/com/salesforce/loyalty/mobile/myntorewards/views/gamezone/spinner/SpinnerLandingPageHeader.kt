@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 
 @Composable
 fun SpinnerLandingPageHeader(navController: NavHostController) {
@@ -31,7 +33,7 @@ fun SpinnerLandingPageHeader(navController: NavHostController) {
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .background(color = Color.White)
-            .fillMaxWidth()
+            .fillMaxWidth().testTag(TestTags.TEST_TAG_SPIN_WHEEL_HEADER)
             .padding(start = 16.dp, end = 16.dp)
     ) {
         Spacer(modifier = Modifier.height(50.dp))

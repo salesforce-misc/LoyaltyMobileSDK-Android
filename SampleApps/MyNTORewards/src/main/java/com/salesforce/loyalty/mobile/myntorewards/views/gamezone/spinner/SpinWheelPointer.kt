@@ -26,10 +26,10 @@ fun SpinWheelPointer(onClick: () -> Unit) {
     var isClickedBefore by remember { mutableStateOf(false) }
     Image(
         painter = painterResource(wheelTapPointer),
-        contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+        contentDescription = stringResource(R.string.spin_wheel_pointer),
         modifier = Modifier
             .padding(bottom = 60.dp)
-            .testTag(TestTags.TEST_TAG_APP_LOGO_HOME_SCREEN)
+            .testTag(TestTags.TEST_TAG_SPIN_WHEEL_POINTER)
             .clickable(
                 enabled= !isClickedBefore,
                 interactionSource = remember { MutableInteractionSource() },

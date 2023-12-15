@@ -16,12 +16,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerBackground
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_BG
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPageFooter
@@ -106,7 +108,7 @@ fun Wheel(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(SpinnerBackground)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState()).testTag(TEST_TAG_SPIN_WHEEL_BG),
             ) {
                 SpinnerLandingPageHeader(navController)
                 Box(
