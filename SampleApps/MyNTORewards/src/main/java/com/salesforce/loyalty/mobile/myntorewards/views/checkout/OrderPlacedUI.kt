@@ -148,7 +148,8 @@ fun FooterButtonsView(
             textContent = stringResource(R.string.play_now_button_text),
             onClick = {
                 // TODO: Load the right game once Order Placed API gives details about the participantRewardId.
-                navCheckOutFlowController.navigate(MoreScreens.ScratchCardScreen.route) {
+                val gamePartRewardId = ""
+                navCheckOutFlowController.navigate(MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId=$gamePartRewardId"){
                     popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
                 }
             }

@@ -37,13 +37,10 @@ data class ScratchedPath(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewModelInterface) {
+fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewModelInterface, gameParticipantRewardId: String) {
     val overlayImage = ImageBitmap.imageResource(id = R.drawable.overlay_img)
     val currentState = remember { mutableStateOf(ScratchedPath(path = Path())) }
     val movedState = remember { mutableStateOf<Offset?>(null) }
-    val gameParticipantRewardId =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_GAME_PARTICIPANT_REWARD_ID)
-
 
     var openBottomsheet by remember { mutableStateOf(false) }
 

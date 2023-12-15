@@ -16,9 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
@@ -122,11 +124,21 @@ fun HomeScreenAndCheckOutFlowNavigation(
             showBottomBar(true)
             GameZoneScreen(navCheckOutFlowController, gameViewModel)
         }
-        composable(route = MoreScreens.ScratchCardScreen.route) {
-            ScratchCardView(navCheckOutFlowController, gameViewModel)
+        composable(route = MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            ScratchCardView(navCheckOutFlowController, gameViewModel, gamePartRewardId)
         }
-        composable(route = MoreScreens.SpinWheelScreen.route) {
-            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel)
+        composable(route = MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel, gamePartRewardId)
         }
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)
@@ -191,15 +203,25 @@ fun PromotionScreenAndCheckOutFlowNavigation(
             showBottomBar(false)
             OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel, profileModel)
         }
-        composable(route = MoreScreens.ScratchCardScreen.route) {
-            ScratchCardView(navCheckOutFlowController, gameViewModel)
-        }
-        composable(route = MoreScreens.SpinWheelScreen.route) {
-            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel)
-        }
         composable(route = MoreScreens.GameZoneScreen.route) {
             showBottomBar(true)
             GameZoneScreen(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            ScratchCardView(navCheckOutFlowController, gameViewModel, gamePartRewardId)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel, gamePartRewardId)
         }
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)
@@ -325,33 +347,6 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.GameZoneScreen.route) {
             GameZoneNavigation(gameViewModel = gameViewModel, showBottomBar = showBottomBar)
         }
-        composable(route = MoreScreens.ScratchCardScreen.route) {
-            showBottomBar(true)
-            ScratchCardView(navController, gameViewModel)
-        }
-        composable(route = MoreScreens.SpinWheelScreen.route) {
-            showBottomBar(true)
-            SpinWheelLandingPage(navController, gameViewModel)
-        }
-        composable(route = MoreScreens.GameCongratsScreen.route) {
-            showBottomBar(false)
-            val offerPercent = "20%" // TODO: Replace this with the actual value
-            CongratulationsScreen(offerPercent) {
-                navController.popBackStack(
-                    MoreScreens.GameZoneScreen.route,
-                    false
-                )
-            }
-        }
-        composable(route = MoreScreens.GameBetterLuckScreen.route) {
-            showBottomBar(false)
-            BetterLuckScreen {
-                navController.popBackStack(
-                    MoreScreens.GameZoneScreen.route,
-                    false
-                )
-            }
-        }
     }
 }
 
@@ -371,13 +366,21 @@ fun GameZoneNavigation(
             showBottomBar(true)
             GameZoneScreen(navController, gameViewModel)
         }
-        composable(route = MoreScreens.ScratchCardScreen.route) {
+        composable(route = MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
             showBottomBar(true)
-            ScratchCardView(navController, gameViewModel)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            ScratchCardView(navController, gameViewModel, gamePartRewardId)
         }
-        composable(route = MoreScreens.SpinWheelScreen.route) {
+        composable(route = MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+        arguments = listOf(navArgument("gameParticipantRewardId"){
+            type = NavType.StringType
+        })) {
             showBottomBar(true)
-            SpinWheelLandingPage(navController, gameViewModel)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            SpinWheelLandingPage(navController, gameViewModel, gamePartRewardId)
         }
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)

@@ -183,21 +183,14 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     title = activeGame.name ?: "",
                                                     gameType
                                                 ) {
-                                                    navController.currentBackStackEntry?.arguments?.putString(
-                                                        KEY_GAME_PARTICIPANT_REWARD_ID,
-                                                        activeGame.participantGameRewards[0].gameParticipantRewardId
-                                                    )
-                                                    if (gameType == GameType.SPIN_A_WHEEL) {
-                                                        val gamesData =
-                                                            activeGame.gameRewards as ArrayList
-                                                        navController.currentBackStackEntry?.arguments?.putParcelableArrayList(
-                                                            AppConstants.KEY_GAME_REWARD,
-                                                            gamesData
-                                                        )
+                                                    val gamePartRewardId = activeGame.participantGameRewards[0].gameParticipantRewardId
 
-                                                        navController.navigate(MoreScreens.SpinWheelScreen.route)
+                                                    if (gameType == GameType.SPIN_A_WHEEL) {
+                                                        navController.navigate(
+                                                            MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId=$gamePartRewardId"
+                                                        )
                                                     } else {
-                                                        navController.navigate(MoreScreens.ScratchCardScreen.route)
+                                                        navController.navigate(MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId=$gamePartRewardId")
                                                     }
                                                 }
                                             }
