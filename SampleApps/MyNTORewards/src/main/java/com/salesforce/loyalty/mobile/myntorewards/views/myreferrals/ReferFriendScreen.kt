@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,8 +26,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
@@ -36,6 +40,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
@@ -47,23 +53,78 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
 import com.salesforce.loyalty.mobile.myntorewards.utilities.sendMail
 import com.salesforce.loyalty.mobile.myntorewards.utilities.shareReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
+import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
+import com.salesforce.loyalty.mobile.myntorewards.utilities.showToast
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReferFriendViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferFriendViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBold
+import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextLargeBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
+import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
+import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.RoundedIconButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
 
 const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
 
 @Composable
-fun ReferFriendScreen(closeAction: () -> Unit) {
-    val referralCode = "845FFF907ZX6"
+fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction: () -> Unit) {
+    val programState by viewModel.programState.observeAsState(null)
+    val viewState by viewModel.uiState.observeAsState(null)
     val context = LocalContext.current
-    val extraText = context.getString(R.string.share_referral_message, referralCode)
+    var showDialog by remember { mutableStateOf(false) }
+
+    programState?.let {
+        ReferFriendScreenUI(viewModel, it) {
+            closeAction()
+        }
+    }
+
+    viewState?.let {
+        when (it) {
+            is ReferFriendViewState.ReferFriendProgramState ->
+                ReferFriendScreenUI(viewModel, it.referralProgramType) {
+                    closeAction()
+                }
+
+            ReferFriendViewState.ShowSignupInvalidEmailMessage -> context.showToast("Please enter valid E-mails!")
+            ReferFriendViewState.ReferFriendInProgress -> {
+                Dialog(
+                    onDismissRequest = { showDialog = false },
+                    DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+                ) {
+                    /*Box(
+                        contentAlignment= Center,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(White, shape = RoundedCornerShape(8.dp))
+                    ) {
+                        CircularProgressIndicator()
+                    }*/
+                    Box(modifier = Modifier.wrapContentSize()) {
+                        androidx.compose.material3.CircularProgressIndicator(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .align(Center)
+                                .testTag(CIRCULAR_PROGRESS_TEST_TAG),
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+            is ReferFriendViewState.ReferFriendSendMailsSuccess -> context.showToast("Emails sent Successfully!")
+        }
+    }
+}
+
+@Composable
+fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: ReferralProgramType = JOIN_PROGRAM, closeAction: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight(0.88F)
@@ -94,29 +155,93 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
         ) {
             BodyTextBold(text = stringResource(R.string.refer_a_friend_and_earn_header))
             BodyText(text = stringResource(R.string.refer_a_friend_and_earn_sub_header))
-            val focusManager = LocalFocusManager.current
-            var textField by remember { mutableStateOf(TextFieldValue("")) }
-            TextFieldCustom(
-                textField,
-                stringResource(R.string.friends_email_address_placeholder),
-                modifier = Modifier.padding(top = 16.dp),
-                singleLine = true,
-                rightIconClick = {
-                    focusManager.clearFocus()
-                    context.sendMail(textField.text.split(","), "Subject", extraText)
-                },
-                updateTextField = { textField = it }
-            )
-
-            BodyTextSmall(text = stringResource(R.string.separate_emails_with_commas), color = TextGray, modifier = Modifier.padding(8.dp))
-            CommonText(text = stringResource(R.string.share_via), fontSize = 16.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold)
-            SocialMediaRow(extraText)
-            ReferralCodeView(referralCode)
-            BodyTextSmall(text = stringResource(R.string.share_referral_code_label), color = TextGray, modifier = Modifier.padding(8.dp))
-            Spacer(modifier = Modifier.height(24.dp))
-            PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { closeAction() })
+            when(referralProgramType) {
+                SIGNUP -> SignupToReferUi(viewModel)
+                JOIN_PROGRAM -> JoinReferralProgramUi(viewModel)
+                START_REFERRING -> StartReferUi(viewModel) { closeAction() }
+            }
         }
     }
+}
+
+@Composable
+fun SignupToReferUi(viewModel: ReferFriendViewModel) {
+    var textField by remember { mutableStateOf(TextFieldValue("")) }
+    val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    TextFieldCustom(
+        textField,
+        stringResource(R.string.email_address_placeholder),
+        modifier = Modifier.padding(vertical = 16.dp),
+        rightIconId = null,
+        updateTextField = { textField = it }
+    )
+    BodyText(text = stringResource(R.string.refer_a_friend_and_earn_bottom_text))
+    Spacer(modifier = Modifier.height(24.dp))
+    PrimaryButton(textContent = stringResource(id = R.string.referral_signup_button_text), onClick = {
+        if (!isValidEmail(textField.text.trim())) {
+            context.showToast("Please enter valid E-mails!")
+            return@PrimaryButton
+        }
+        focusManager.clearFocus()
+        viewModel.onSignUpToReferClicked(textField.text)
+    })
+}
+
+@Composable
+fun JoinReferralProgramUi(viewModel: ReferFriendViewModel) {
+    BodyText(text = stringResource(R.string.refer_a_friend_and_earn_bottom_text))
+    Spacer(modifier = Modifier.height(24.dp))
+    PrimaryButton(textContent = stringResource(id = R.string.referral_join_button_text), onClick = {
+        viewModel.onReferralProgramJoinClicked()
+    })
+}
+
+@Composable
+private fun StartReferUi(viewModel: ReferFriendViewModel, doneAction: () -> Unit) {
+    val referralCode = "845FFF907ZX6"
+    val context = LocalContext.current
+    val extraText = context.getString(R.string.share_referral_message, referralCode)
+    val focusManager = LocalFocusManager.current
+    var textField by remember { mutableStateOf(TextFieldValue("")) }
+    TextFieldCustom(
+        textField,
+        stringResource(R.string.friends_email_address_placeholder),
+        modifier = Modifier.padding(top = 16.dp),
+        rightIconId = R.drawable.ic_arrow_forward,
+        singleLine = true,
+        rightIconClick = {
+            val emails = textField.text.split(",")
+            if (emails.isEmpty() || emails.any { !isValidEmail(it.trim()) }) {
+                context.showToast("Please enter valid E-mails!")
+                return@TextFieldCustom
+            }
+            textField = TextFieldValue("")
+            focusManager.clearFocus()
+            viewModel.sendReferralMail(emails)
+        },
+        updateTextField = { textField = it }
+    )
+    BodyTextSmall(
+        text = stringResource(R.string.separate_emails_with_commas),
+        color = TextGray,
+        modifier = Modifier.padding(8.dp)
+    )
+    CommonText(
+        text = stringResource(R.string.share_via),
+        fontSize = 16.sp,
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.ExtraBold
+    )
+    SocialMediaRow(extraText)
+    ReferralCodeView(referralCode)
+    BodyTextSmall(
+        text = stringResource(R.string.share_referral_code_label),
+        color = TextGray,
+        modifier = Modifier.padding(8.dp)
+    )
+    Spacer(modifier = Modifier.height(24.dp))
+    PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { doneAction() })
 }
 
 @Composable
@@ -128,21 +253,31 @@ fun SocialMediaRow(referralContent: String) {
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         val context = LocalContext.current
-        ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier.weight(1f).clickable {
-            context.shareReferralCode(referralContent, ShareType.FACEBOOK)
-        })
-        ImageComponent(drawableId = R.drawable.ic_instagram, contentDescription = stringResource(R.string.share_via_instagram_icon_description), modifier = Modifier.weight(1f).clickable {
-            context.shareReferralCode(referralContent, ShareType.INSTAGRAM)
-        })
-        ImageComponent(drawableId = R.drawable.ic_whatsapp, contentDescription = stringResource(R.string.share_via_whatsapp_icon_description), modifier = Modifier.weight(1f).clickable {
-            context.shareReferralCode(referralContent, ShareType.WHATSAPP)
-        })
-        ImageComponent(drawableId = R.drawable.ic_twitter, contentDescription = stringResource(R.string.share_via_twitter_icon_description), modifier = Modifier.weight(1f).clickable {
-            context.shareReferralCode(referralContent, ShareType.TWITTER)
-        })
-        ImageComponent(drawableId = R.drawable.ic_share, contentDescription = stringResource(R.string.share_via_icon_description), modifier = Modifier.weight(1f).clickable {
-            context.shareReferralCode(referralContent, ShareType.SHARE_OTHERS)
-        })
+        ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier
+            .weight(1f)
+            .clickable {
+                context.shareReferralCode(referralContent, ShareType.FACEBOOK)
+            })
+        ImageComponent(drawableId = R.drawable.ic_instagram, contentDescription = stringResource(R.string.share_via_instagram_icon_description), modifier = Modifier
+            .weight(1f)
+            .clickable {
+                context.shareReferralCode(referralContent, ShareType.INSTAGRAM)
+            })
+        ImageComponent(drawableId = R.drawable.ic_whatsapp, contentDescription = stringResource(R.string.share_via_whatsapp_icon_description), modifier = Modifier
+            .weight(1f)
+            .clickable {
+                context.shareReferralCode(referralContent, ShareType.WHATSAPP)
+            })
+        ImageComponent(drawableId = R.drawable.ic_twitter, contentDescription = stringResource(R.string.share_via_twitter_icon_description), modifier = Modifier
+            .weight(1f)
+            .clickable {
+                context.shareReferralCode(referralContent, ShareType.TWITTER)
+            })
+        ImageComponent(drawableId = R.drawable.ic_share, contentDescription = stringResource(R.string.share_via_icon_description), modifier = Modifier
+            .weight(1f)
+            .clickable {
+                context.shareReferralCode(referralContent, ShareType.SHARE_OTHERS)
+            })
     }
 }
 
@@ -157,7 +292,9 @@ fun ReferralCodeView(referralCode: String) {
         val context = LocalContext.current
         BodyTextBold(
             text = referralCode,
-            modifier = Modifier.wrapContentSize().padding(12.dp)
+            modifier = Modifier
+                .wrapContentSize()
+                .padding(12.dp)
         )
         CommonText(
             text = stringResource(R.string.tap_to_copy), textAlign = TextAlign.End,

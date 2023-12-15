@@ -31,6 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgr
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BottomSheetCustomState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ScanningErrorPopup
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -81,11 +82,11 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
     var selectedTab by remember { mutableStateOf(0) }
     CustomScrollableTab(uiState.tabItems, selectedTab) { tab -> selectedTab = tab }
     when (selectedTab) {
-        0 -> {
+        ReferralTabs.Success.tabIndex -> {
             ReferralList(itemStates = uiState.completedStates)
         }
 
-        1 -> {
+        ReferralTabs.InProgress.tabIndex -> {
             ReferralList(itemStates = uiState.inProgressStates)
         }
     }

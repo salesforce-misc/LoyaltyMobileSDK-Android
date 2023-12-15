@@ -191,6 +191,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.31.3-beta")
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation(kotlin("reflect"))
 
 }
 
