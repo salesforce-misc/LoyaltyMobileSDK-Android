@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,14 +29,18 @@ data class GameNameIDDataModel(
 )
 
 @Composable
-fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameViewModelInterface) {
+fun SpinWheelLandingPage(
+    navController: NavHostController,
+    gameViewModel: GameViewModelInterface,
+    gameParticipantRewardId: String
+) {
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
-    val gameRewards = navController.previousBackStackEntry?.arguments?.getParcelableArrayList(AppConstants.KEY_GAME_REWARD, GameReward::class.java)
-    val gameParticipantRewardId =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_GAME_PARTICIPANT_REWARD_ID)?:""
-
-
+    var gameRewards: List<GameReward> = mutableListOf()
+    LaunchedEffect(key1 = true) {
+        gameRewards =
+            gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)
+    }
     Box(contentAlignment = Alignment.TopCenter) {
         val gamesList = remember {
             mutableListOf<GameNameIDDataModel>()
@@ -48,7 +53,7 @@ fun SpinWheelLandingPage(navController: NavHostController, gameViewModel: GameVi
 
         LaunchedEffect(true) {
             coroutineScope.launch {
-                if(gameRewards!=null)
+                if(gameRewards.isNotEmpty())
                 {
                     for (reward in gameRewards) {
                         reward.name?.let { name -> gamesList.add(GameNameIDDataModel(name, reward.gameRewardId))}
