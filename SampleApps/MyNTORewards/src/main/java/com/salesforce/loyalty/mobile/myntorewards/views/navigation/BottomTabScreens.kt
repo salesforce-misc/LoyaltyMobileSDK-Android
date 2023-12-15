@@ -353,6 +353,11 @@ fun MoreScreenNavigation(
                 )
             }
         }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            MyReferralsListScreen(backAction = { navController.popBackStack() }) {
+                showBottomBar(it)
+            }
+        }
     }
 }
 
@@ -400,7 +405,7 @@ fun GameZoneNavigation(
             }
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
-            MyReferralsListScreen {
+            MyReferralsListScreen(backAction = { navController.popBackStack() }) {
                 showBottomBar(it)
             }
         }

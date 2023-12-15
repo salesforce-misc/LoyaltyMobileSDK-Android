@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.myreferrals
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,20 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
@@ -53,23 +45,19 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
-import com.salesforce.loyalty.mobile.myntorewards.utilities.sendMail
 import com.salesforce.loyalty.mobile.myntorewards.utilities.shareReferralCode
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
-import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
 import com.salesforce.loyalty.mobile.myntorewards.utilities.showToast
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ReferFriendViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferFriendViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBold
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextLargeBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
-import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.RoundedIconButton
+import com.salesforce.loyalty.mobile.myntorewards.views.components.TextButtonCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
@@ -77,14 +65,14 @@ import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProg
 const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
 
 @Composable
-fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction: () -> Unit) {
+fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), backAction: () -> Boolean, closeAction: () -> Unit) {
     val programState by viewModel.programState.observeAsState(null)
     val viewState by viewModel.uiState.observeAsState(null)
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
 
     programState?.let {
-        ReferFriendScreenUI(viewModel, it) {
+        ReferFriendScreenUI(viewModel, it, backAction) {
             closeAction()
         }
     }
@@ -92,7 +80,7 @@ fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction
     viewState?.let {
         when (it) {
             is ReferFriendViewState.ReferFriendProgramState ->
-                ReferFriendScreenUI(viewModel, it.referralProgramType) {
+                ReferFriendScreenUI(viewModel, it.referralProgramType, backAction) {
                     closeAction()
                 }
 
@@ -127,7 +115,7 @@ fun ReferFriendScreen(viewModel: ReferFriendViewModel = viewModel(), closeAction
 }
 
 @Composable
-fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: ReferralProgramType = JOIN_PROGRAM, closeAction: () -> Unit) {
+fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: ReferralProgramType = JOIN_PROGRAM, backAction: () -> Boolean, closeAction: () -> Unit) {
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -160,7 +148,7 @@ fun ReferFriendScreenUI(viewModel: ReferFriendViewModel, referralProgramType: Re
             BodyText(text = stringResource(R.string.refer_a_friend_and_earn_sub_header))
             when(referralProgramType) {
                 SIGNUP -> SignupToReferUi(viewModel)
-                JOIN_PROGRAM -> JoinReferralProgramUi(viewModel)
+                JOIN_PROGRAM -> JoinReferralProgramUi(viewModel, backAction)
                 START_REFERRING -> StartReferUi(viewModel) { closeAction() }
             }
         }
@@ -192,12 +180,16 @@ fun SignupToReferUi(viewModel: ReferFriendViewModel) {
 }
 
 @Composable
-fun JoinReferralProgramUi(viewModel: ReferFriendViewModel) {
-    BodyText(text = stringResource(R.string.refer_a_friend_and_earn_bottom_text))
+fun JoinReferralProgramUi(viewModel: ReferFriendViewModel, backAction: () -> Boolean) {
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.referral_join_button_text), onClick = {
         viewModel.onReferralProgramJoinClicked()
     })
+    TextButtonCustom(
+        modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+        textContent = stringResource(id = R.string.back_text),
+        onClick = { backAction() }
+    )
 }
 
 @Composable
@@ -314,5 +306,5 @@ fun ReferralCodeView(referralCode: String) {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun ReferFriendScreenPreview() {
-    ReferFriendScreen {  }
+    ReferFriendScreen(backAction = { true }) {  }
 }

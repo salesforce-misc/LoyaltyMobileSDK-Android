@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
@@ -101,7 +100,7 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), showBottomBar: (Boolean) -> Unit) {
+fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), backAction: () -> Boolean, showBottomBar: (Boolean) -> Unit) {
     val bottomSheetScaffoldState = BottomSheetCustomState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -124,7 +123,7 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), sho
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            ReferFriendScreen { showBottomSheet(false) }
+            ReferFriendScreen(backAction = backAction) { showBottomSheet(false) }
         },
         sheetShape = bottomSheetShape,
         sheetPeekHeight = 0.dp,
