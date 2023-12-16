@@ -7,10 +7,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 
 sealed class MyReferralsViewState {
     data class MyReferralsFetchSuccess(val uiState: MyReferralScreenState) : MyReferralsViewState()
-    data class MyReferralsProgramStatus(
-        val programType: ReferralProgramType,
-        val emptyState: MyReferralScreenState
-    ) : MyReferralsViewState()
     data class MyReferralsFetchFailure(val errorMessage: String? = null): MyReferralsViewState()
     object MyReferralsFetchInProgress : MyReferralsViewState()
 }

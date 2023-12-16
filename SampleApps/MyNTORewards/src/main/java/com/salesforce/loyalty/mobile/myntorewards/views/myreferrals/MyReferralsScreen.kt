@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
@@ -32,13 +35,30 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.BottomSheetCu
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
 fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean) -> Unit) {
     val viewState by viewModel.uiState.observeAsState(null)
+    val programState by viewModel.programState.observeAsState()
+    val context = LocalContext.current
+    val referralProgramJoined = PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED, false]
+    LaunchedEffect(key1 = true) {
+        if (referralProgramJoined == true) {
+            viewModel.fetchReferralsInfo(context)
+        } else {
+            viewModel.fetchReferralProgramStatus()
+        }
+    }
 
+    programState?.let {
+        if (viewModel.programState.value!! == ReferralProgramType.JOIN_PROGRAM) {
+            showBottomSheet(true)
+        }
+    }
     viewState?.let {
         when(it) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
@@ -46,7 +66,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
                     showBottomSheet(true)
                 }
 
-                viewModel.enrollToReferralProgram(LocalContext.current)
+                viewModel.enrollToReferralProgram(context)
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
@@ -55,19 +75,12 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
                     tryAgainClicked = { },
                     textButtonClicked = {  }
                 )
-                viewModel.enrollToReferralProgram(LocalContext.current)
+                viewModel.enrollToReferralProgram(context)
 
             }
 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
                 CircularProgress()
-            }
-
-            is MyReferralsViewState.MyReferralsProgramStatus -> {
-                showBottomSheet(true)
-                MyReferralsScreenView(it.emptyState) {
-                    showBottomSheet(true)
-                }
             }
         }
     }
@@ -103,6 +116,7 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
 fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), backAction: () -> Boolean, showBottomBar: (Boolean) -> Unit) {
     val bottomSheetScaffoldState = BottomSheetCustomState()
     val coroutineScope = rememberCoroutineScope()
+    var blurBG by remember { mutableStateOf(0.dp) }
 
     // Show Bottom Bar on screen load and hide it when bottom sheet is opened
     showBottomBar(true)
@@ -112,8 +126,10 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
             bottomSheetScaffoldState.bottomSheetState.run {
                 showBottomBar(!it)
                 if (it && isCollapsed) {
+                    blurBG = 3.dp
                     expand()
                 } else {
+                    blurBG = 0.dp
                     collapse()
                 }
             }
@@ -123,7 +139,7 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            ReferFriendScreen(backAction = backAction) { showBottomSheet(false) }
+            ReferFriendScreen(viewModel, backAction = backAction) { showBottomSheet(false) }
         },
         sheetShape = bottomSheetShape,
         sheetPeekHeight = 0.dp,
@@ -133,6 +149,7 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
+                .blur(blurBG)
         ) {
             TitleView(stringResource(id = R.string.header_label_my_referrals))
             MyReferralsScreen(viewModel) {

@@ -16,8 +16,8 @@ class ReferFriendViewModel(): BaseViewModel<ReferFriendViewState>() {
     private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData()
     val programState: LiveData<ReferralProgramType> = _programState
 
-    init {
-        _programState.value = JOIN_PROGRAM
+    fun updateInitialState(referralProgramType: ReferralProgramType) {
+        _programState.value = referralProgramType
     }
 
     fun onSignUpToReferClicked(email: String) {

@@ -174,5 +174,7 @@ class AppConstants {
 
         const val ROUTE_GAME_ZONE = "route_open_game_zone"
 
+        // Referral
+        const val REFERRAL_PROGRAM_JOINED = "REFERRAL_PROGRAM_JOINED"
     }
 }

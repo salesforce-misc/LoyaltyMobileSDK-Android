@@ -34,12 +34,12 @@ class ReferralsRepository @Inject constructor(
         }
     }
 
-    suspend fun fetchReferralsInfo(): ApiResponse<QueryResult<ReferralEntity>> {
+    suspend fun fetchReferralsInfo(accessToken: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
         return safeApiCall {
             apiService.fetchReferralsInfo(
                 "https://dsb000001oyrq2ai.test1.my.pc-rnd.site.com/NTOInsider/services/data/v59.0/query/",
-                referralQuery(),
-                "Bearer 00DSB000001oyRq!AQEAQPZ.MQEf0vQfskeS1XleR.d5XrBQNusiI99NCV.bytZawAO8JZ8a9WOvUDUiIQhg.77yChQ2BXxA11lWIHb4mgYxz0Bp"
+                referralQuery(durationInDays),
+                "Bearer 00DSB000001oyRq!AQEAQAeCBW3bzRHPu_B34Jz5fr0uispyr3R4AXwZE9RgC9vHfjHZFJOehBfpvxfHEPat2n4i0JGcGPlJSsyh6NRMXJPOg5KE"
             )
         }
     }
@@ -68,12 +68,12 @@ class ReferralsRepository @Inject constructor(
                     "Monthly",
                     "Mail"
                 ),
-                "Bearer $accessToken"
+                "Bearer 00DSB000001oyRq!AQEAQAeCBW3bzRHPu_B34Jz5fr0uispyr3R4AXwZE9RgC9vHfjHZFJOehBfpvxfHEPat2n4i0JGcGPlJSsyh6NRMXJPOg5KE"
             )
         }
     }
 
-    private fun referralQuery(): String {
-        return "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate, CurrentPromotionStage.Type FROM Referral WHERE ReferralDate = LAST_N_DAYS:90 ORDER BY ReferralDate DESC"
+    private fun referralQuery(durationInDays: Int): String {
+        return "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate, CurrentPromotionStage.Type FROM Referral WHERE ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
     }
 }

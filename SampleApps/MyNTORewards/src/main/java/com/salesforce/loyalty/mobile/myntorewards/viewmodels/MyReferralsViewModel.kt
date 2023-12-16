@@ -1,6 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -11,6 +13,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferFriendViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
@@ -29,24 +32,57 @@ class MyReferralsViewModel @Inject constructor(
     private val repository: ReferralsRepository
 ): BaseViewModel<MyReferralsViewState>() {
 
-    init {
-        fetchReferralProgramStatus()
+    private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData(null)
+    val programState: LiveData<ReferralProgramType> = _programState
+
+    private val _viewState: MutableLiveData<ReferFriendViewState> = MutableLiveData()
+    val viewState: LiveData<ReferFriendViewState> = _viewState
+
+    companion object {
+        private const val REFERRAL_DURATION = 90
     }
 
-    private fun fetchReferralProgramStatus() {
-        uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
+    fun onSignUpToReferClicked(email: String) {
+        // TODO: Signup to Referral Program with mail id
+        _programState.value = ReferralProgramType.JOIN_PROGRAM
+    }
+
+    fun onReferralProgramJoinClicked() {
+        _programState.value = ReferralProgramType.START_REFERRING
+    }
+
+    fun sendReferralMail(emails: List<String>) {
+        /*if (emails.isEmpty() || emails.any { !isValidEmail(it.trim()) }) {
+            uiMutableState.value = ReferFriendViewState.ShowSignupInvalidEmailMessage
+//            Toast.makeText(this, getString(R.string.emails_warning_message_multiple), Toast.LENGTH_LONG).show()
+            return
+        }*/
+        _viewState.value = ReferFriendViewState.ReferFriendInProgress
         viewModelScope.launch {
-            delay(2000)
-            uiMutableState.postValue(MyReferralsViewState.MyReferralsProgramStatus(
-                ReferralProgramType.JOIN_PROGRAM, successState(null)
-            ))
+            delay(2000) // TODO: REMOVE
+            _viewState.value = ReferFriendViewState.ReferFriendSendMailsSuccess("")
         }
     }
 
-    private fun fetchReferralsInfo() {
+    init {
+//        fetchReferralProgramStatus()
+    }
+
+    fun fetchReferralProgramStatus() {
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
-            when(val result = repository.fetchReferralsInfo()) {
+            delay(2000)
+            uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(null)))
+            _programState.value = ReferralProgramType.JOIN_PROGRAM
+        }
+    }
+
+    fun fetchReferralsInfo(context: Context) {
+        uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
+        val accessToken = ForceAuthManager(context).getForceAuth()?.accessToken ?: ""
+
+        viewModelScope.launch {
+            when(val result = repository.fetchReferralsInfo(accessToken, REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
                     val data: List<ReferralEntity>? = result.data.records
                     Logger.d("Success", "$data")
@@ -120,4 +156,5 @@ class MyReferralsViewModel @Inject constructor(
             else -> R.string.referrals_older_than_three_months_section_name
         }
     }
+
 }
