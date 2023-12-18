@@ -55,7 +55,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
     }
 
     programState?.let {
-        if (viewModel.programState.value!! == ReferralProgramType.JOIN_PROGRAM) {
+        if (viewModel.programState.value!! == ReferralProgramType.JOIN_PROGRAM && viewModel.showDefaultPopup) {
             showBottomSheet(true)
         }
     }
@@ -64,6 +64,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
                 MyReferralsScreenView(it.uiState) {
                     showBottomSheet(true)
+                    viewModel.showDefaultPopup = true
                 }
 
                 viewModel.enrollToReferralProgram(context)
@@ -136,10 +137,17 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
         }
     }
 
+    val context = LocalContext.current
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            ReferFriendScreen(viewModel, backAction = backAction) { showBottomSheet(false) }
+            ReferFriendScreen(viewModel, backAction = backAction) {
+                if (viewModel.programState.value!! == ReferralProgramType.START_REFERRING) {
+                    viewModel.fetchReferralsInfo(context)
+                }
+                viewModel.showDefaultPopup = false
+                showBottomSheet(false)
+            }
         },
         sheetShape = bottomSheetShape,
         sheetPeekHeight = 0.dp,

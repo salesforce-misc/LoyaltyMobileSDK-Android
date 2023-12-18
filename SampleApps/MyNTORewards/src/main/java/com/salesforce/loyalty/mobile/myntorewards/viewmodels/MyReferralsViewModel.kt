@@ -38,6 +38,8 @@ class MyReferralsViewModel @Inject constructor(
     private val _viewState: MutableLiveData<ReferFriendViewState> = MutableLiveData()
     val viewState: LiveData<ReferFriendViewState> = _viewState
 
+    var showDefaultPopup = true
+
     companion object {
         private const val REFERRAL_DURATION = 90
     }

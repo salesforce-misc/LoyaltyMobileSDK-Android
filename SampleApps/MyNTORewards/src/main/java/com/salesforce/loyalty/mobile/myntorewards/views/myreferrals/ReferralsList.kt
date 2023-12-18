@@ -26,6 +26,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.Referral
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmallBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
+import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 
 const val TEST_TAG_REFERRALS_LIST = "TEST_TAG_REFERRALS_LIST"
@@ -33,6 +34,10 @@ const val TEST_TAG_REFERRALS_LIST_ITEM = "TEST_TAG_REFERRALS_LIST_ITEM"
 
 @Composable
 fun ReferralList(itemStates: List<ReferralItemState>) {
+    if (itemStates.isEmpty()) {
+        EmptyView(header = "No Referrals")
+        return
+    }
     // Group Items based on section name to show items under the respective section header
     val grouped = itemStates.groupBy{ stringResource(id = it.sectionName) }
     LazyColumn(
