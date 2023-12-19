@@ -242,7 +242,8 @@ fun CanvasForScratching(
             delay(3000)
             rewardLiveDataValue?.let {
                 val rewardType = it.gameRewards[0].rewardType
-                val rewardValue = it.gameRewards[0].rewardValue
+                // Using reward name as rewardValue can come as null in some cases.
+                val rewardValue = /*it.gameRewards[0].rewardValue*/it.gameRewards[0].name
 
                 if (RewardType.NO_VOUCHER.rewardType.equals(rewardType)) {
                     navController.navigate(MoreScreens.GameBetterLuckScreen.route)

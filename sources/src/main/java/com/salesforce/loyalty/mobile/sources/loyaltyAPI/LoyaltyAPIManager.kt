@@ -343,8 +343,8 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         }
     }
 
-    suspend fun getGames(participantId: String, mockResponse: Boolean): Result<Games> {
-        Logger.d(TAG, "getGames")
+    suspend fun getGames(participantId: String, gameParticipantRewardId: String? = null, mockResponse: Boolean): Result<Games> {
+        Logger.d(TAG, "getGames() participantId: $participantId gameParticipantRewardId: $gameParticipantRewardId")
 
         if (mockResponse) {
             val reader =
@@ -356,7 +356,10 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             return Result.success(response)
         } else {
             return mLoyaltyClient.getNetworkClient().getGames(
-                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.Games(participantId)),
+                LoyaltyConfig.getRequestUrl(
+                    mInstanceUrl,
+                    LoyaltyConfig.Resource.Games(participantId)
+                ), gameParticipantRewardId = gameParticipantRewardId
             )
         }
     }

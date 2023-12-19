@@ -88,7 +88,9 @@ class AppConstants {
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
-        const val ORDER_ID = "orderID"
+        const val KEY_ORDER_ID = "key_orderID"
+        const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
+        const val KEY_GAME_TYPE = "key_game_type"
         const val PROMOTION_NAME = "promotionName"
 
         const val TAP_COUNT_OPEN_ADMIN_SETTINGS = 6
@@ -153,7 +155,7 @@ class AppConstants {
 
         // Game types
         const val SPIN_A_WHEEL_GAME = "SpintheWheel"
-        const val SCRATCH_CARD_GAME = "ScratchCard"
+        const val SCRATCH_CARD_GAME = "Scratchcard"
         const val GAME_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val TAB_ACTIVE_GAMES = 0
         const val TAB_EXPIRED_GAMES = 1
@@ -166,8 +168,6 @@ class AppConstants {
         const val REWARD_TYPE_VOUCHER =   "Voucher"
         const val REWARD_TYPE_POINTS =   "LoyaltyPoints"
         const val REWARD_TYPE_CUSTOM =   "Custom"
-
-        const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
 
         //Reward status
         const val REWARD_STATUS_YET_TO_REWARD = "YetToReward"

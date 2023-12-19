@@ -239,8 +239,8 @@
 
     <!-- Game zone Congratulations Screen -->
     <string name="game_zone_congrats_header_content">Congratulations!</string>
-    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s discount voucher for your next purchase. To redeem your reward, go to the Voucher section.]]></string>
-    <string name="game_zone_congrats_msg_loyalty_points"><![CDATA[You\'ve won %s loyalty points that you can redeem on your next purchase.]]></string>
+    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s for your next purchase. To redeem your reward, go to the Voucher section.]]></string>
+    <string name="game_zone_congrats_msg_loyalty_points"><![CDATA[You\'ve won %s that you can redeem on your next purchase.]]></string>
     <string name="game_zone_congrats_msg_custom">You’ve won a reward.</string>
     <string name="game_expired">Expired</string>
     <string name="game_expiring_today">Expiring Today</string>

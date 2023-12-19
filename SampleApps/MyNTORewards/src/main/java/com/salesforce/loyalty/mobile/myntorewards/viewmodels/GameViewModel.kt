@@ -62,7 +62,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
         return loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
     }
 
-    override fun getGames(context: Context, mock: Boolean) {
+    override fun getGames(context: Context, gameParticipantRewardId: String?, mock: Boolean) {
         viewState.value = GamesViewState.GamesFetchInProgress
         viewModelScope.launch {
             val memberJson =
@@ -75,7 +75,11 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
             val loyaltyProgramMemberId = member.loyaltyProgramMemberId ?: ""
-            val result = loyaltyAPIManager.getGames(loyaltyProgramMemberId, mock)
+            val result = loyaltyAPIManager.getGames(
+                participantId = loyaltyProgramMemberId,
+                gameParticipantRewardId = gameParticipantRewardId,
+                mockResponse = mock
+            )
 
             result.onSuccess {
                 games.value = it
