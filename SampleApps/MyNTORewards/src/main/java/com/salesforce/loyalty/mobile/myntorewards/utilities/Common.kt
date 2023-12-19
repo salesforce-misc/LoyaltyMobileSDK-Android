@@ -3,15 +3,17 @@ package com.salesforce.loyalty.mobile.myntorewards.utilities
 import android.content.Context
 import android.text.format.DateUtils
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_APP_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_API_FORMAT
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DATE_API_FORMAT
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT2
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.REWARD_TYPE_CUSTOM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.REWARD_TYPE_POINTS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.REWARD_TYPE_VOUCHER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import java.text.SimpleDateFormat
@@ -151,6 +153,19 @@ class Common {
                     SimpleDateFormat(getApplicationDateFormat(context), Locale.getDefault())
                 val formattedDate = appDateFormat.format(endDate)
                 return context.getString(R.string.game_expiring_date, formattedDate)
+            }
+        }
+
+
+
+        @Composable
+        fun confirmationScreenMsg(rewardType: String, offerValue:String): String {
+
+            return when (rewardType) {
+                REWARD_TYPE_VOUCHER -> stringResource(id = R.string.game_zone_congrats_sub_header_content, offerValue)
+                REWARD_TYPE_POINTS -> stringResource(id = R.string.game_zone_congrats_msg_loyalty_points, offerValue)
+                REWARD_TYPE_CUSTOM -> stringResource(id = R.string.game_zone_congrats_msg_custom)
+                else -> stringResource(id = R.string.game_zone_congrats_msg_custom)
             }
         }
 

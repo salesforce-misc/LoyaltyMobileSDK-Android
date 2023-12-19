@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.INITIAL_ROTATION_DURATION
@@ -86,11 +87,19 @@ data class SpinWheelState(
                     withContext(Dispatchers.Main) {
                         delay(3000)
                         it?.let {
-                            val rewardType = it.gameRewards?.get(0)?.rewardType
+                            val rewardType = it.gameRewards[0].rewardType
+                            val rewardValue = it.gameRewards[0].rewardValue
                             if (RewardType.NO_VOUCHER.rewardType.equals(rewardType)) {
                                 navController.navigate(MoreScreens.GameBetterLuckScreen.route)
                             } else {
                                 navController.navigate(MoreScreens.GameCongratsScreen.route)
+
+                                navController.currentBackStackEntry?.arguments?.putString(
+                                    AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE,rewardType
+                                )
+                                navController.currentBackStackEntry?.arguments?.putString(
+                                    AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE,rewardValue
+                                )
                             }
                         }
                     }
@@ -137,12 +146,13 @@ data class SpinWheelState(
         // 45 degree(middle of element)+ 180 degree
         //45+ ((4-1)-1)*90= =45+ 180 degree rotation
 
-        val returnFactor = eachSegmentOccupiedAngle/2 + ((pieCount - 1) - stopAtWheelIndex) * eachSegmentOccupiedAngle
+        var returnFactor = 0
+        if(stopAtWheelIndex!=-1){
+            returnFactor = eachSegmentOccupiedAngle/2 + ((pieCount - 1) - stopAtWheelIndex) * eachSegmentOccupiedAngle
+        }
         Log.d("returnFactor", "" + returnFactor)
         return returnFactor.toFloat()
-
     }
-
 }
 
 enum class SpinAnimationState {

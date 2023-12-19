@@ -18,9 +18,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.confirmationScreenMsg
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_PLAYED_CONFIRMATION_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
@@ -152,10 +152,10 @@ fun BetterLuckScreen(onClick: () -> Unit) {
 }
 
 @Composable
-fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
+fun CongratulationsScreen(rewardType: String="", rewardValue: String="", onClick: () -> Unit) {
     ConfirmationScreen(
         headerContent = stringResource(id = R.string.game_zone_congrats_header_content),
-        subHeaderContent = stringResource(id = R.string.game_zone_congrats_sub_header_content, offerPercent),
+        subHeaderContent = confirmationScreenMsg(rewardType, rewardValue),
         buttonText = stringResource(id = R.string.play_more_text),
         imageContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         bannerContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),

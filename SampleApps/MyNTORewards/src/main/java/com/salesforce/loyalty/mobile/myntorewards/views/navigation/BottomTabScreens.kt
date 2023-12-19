@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
@@ -142,8 +143,10 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)
-            val offerPercent = "20%" // TODO: Replace this with the actual value
-            CongratulationsScreen(offerPercent) {
+            val rewardType = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE)?:""
+            val rewardValue = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE)?:""
+
+            CongratulationsScreen(rewardType, rewardValue) {
                 bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
                     popUpTo(0)
                 }
@@ -225,8 +228,10 @@ fun PromotionScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)
-            val offerPercent = "20%" // TODO: Replace this with the actual value
-            CongratulationsScreen(offerPercent) {
+            val rewardType = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE)?:""
+            val rewardValue = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE)?:""
+
+            CongratulationsScreen(rewardType, rewardValue ) {
                 bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
                     popUpTo(0)
                 }
@@ -383,8 +388,12 @@ fun GameZoneNavigation(
         }
         composable(route = MoreScreens.GameCongratsScreen.route) {
             showBottomBar(false)
-            val offerPercent = "20%" // TODO: Replace this with the actual value
-            CongratulationsScreen(offerPercent) {
+
+            val rewardType = navController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE)?:""
+            val rewardValue = navController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE)?:""
+
+
+            CongratulationsScreen(rewardType,rewardValue ) {
                 navController.popBackStack(
                     MoreScreens.GameZoneScreen.route,
                     false

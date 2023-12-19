@@ -120,6 +120,8 @@ class AppConstants {
         const val KEY_RECEIPT_STATUS = "key_receipt_status"
         const val KEY_RECEIPT_TOTAL_POINTS = "key_receipt_total_points"
         const val KEY_RECEIPT_IMAGE_URL = "key_receipt_image_url"
+        const val KEY_CONFIRMARION_SCREEN_REWARD_TYPE = "key_confirmation_screen_reward_type"
+        const val KEY_CONFIRMARION_SCREEN_REWARD_VALUE = "key_confirmation_reward_value"
         const val TAB_ELIGIBLE_ITEM = 0
         const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
 
@@ -172,6 +174,12 @@ class AppConstants {
         const val REWARD_STATUS_EXPIRED = "Expired"
 
         const val ROUTE_GAME_ZONE = "route_open_game_zone"
+
+        //reward type
+        const val REWARD_TYPE_VOUCHER =   "Voucher"
+        const val REWARD_TYPE_POINTS =   "LoyaltyPoints"
+        const val REWARD_TYPE_CUSTOM =   "Custom"
+
 
     }
 }
