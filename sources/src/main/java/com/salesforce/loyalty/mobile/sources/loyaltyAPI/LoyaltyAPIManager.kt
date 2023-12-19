@@ -117,15 +117,6 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
     ): Result<MemberProfileResponse> {
         Logger.d(TAG, "getMemberProfile() $memberId $memberShipNumber")
 
-/*
-        val reader =
-            InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("MemberInfo.json"))
-        val content: String = reader.readText()
-        reader.close()
-        val response =
-            Gson().fromJson(content, MemberProfileResponse::class.java)
-        delay(1000)
-        return Result.success(response)*/
         return mLoyaltyClient.getNetworkClient().getMemberProfile(
             LoyaltyConfig.getRequestUrl(
                 mInstanceUrl,
