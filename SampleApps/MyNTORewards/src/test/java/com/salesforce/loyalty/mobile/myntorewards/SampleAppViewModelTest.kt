@@ -1837,10 +1837,7 @@ class SampleAppViewModelTest {
             GameRewardViewState.GameRewardFetchInProgress,
             rewardViewState[0]
         )
-        Assert.assertEquals(
-            GameRewardViewState.GameRewardFetchInProgress,
-            rewardViewState[0]
-        )
+
         Assert.assertEquals(gameViewModel.rewardLiveData.value, null)
 
         Assert.assertEquals(
@@ -1892,11 +1889,6 @@ class SampleAppViewModelTest {
         var results: Result<GameRewardResponse>? = null
         var response: Throwable? = null
 
-        val mockGameResponse =
-            Gson().fromJson(
-                MockResponseFileReader("GameRewards.json").content,
-                GameRewardResponse::class.java
-            )
         coEvery {
             loyaltyAPIManager.getGameReward("12345", false)
         } returns Result.failure(RuntimeException("run time exception"))
@@ -1965,11 +1957,6 @@ class SampleAppViewModelTest {
     @Test
     fun `for get game failure, data must be available`() {
 
-        val mockGameResponse =
-            Gson().fromJson(
-                MockResponseFileReader("Games.json").content,
-                Games::class.java
-            )
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         val mockResponse = MockResponseFileReader("MemberInfo.json").content
