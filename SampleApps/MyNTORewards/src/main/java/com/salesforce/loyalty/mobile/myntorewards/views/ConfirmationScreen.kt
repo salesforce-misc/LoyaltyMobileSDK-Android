@@ -18,7 +18,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.confirmationScreenMsg
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_PLAYED_CONFIRMATION_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
@@ -26,6 +25,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.animation.ConfettiAnimationView
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.RewardType
 
 /**
  * Common composable screen for Better Luck and Congratulations screen as most of the look and feel is same
@@ -163,6 +163,20 @@ fun CongratulationsScreen(rewardType: String="", rewardValue: String="", onClick
         imageDrawableId = R.drawable.gift_gamezone,
         bannerDrawableId = R.drawable.congratulations
     ) { onClick() }
+}
+
+@Composable
+fun confirmationScreenMsg(rewardType: String, offerValue:String): String {
+
+    if(offerValue.isEmpty()){
+        return stringResource(id = R.string.game_zone_congrats_msg_custom)
+    }
+    return when (rewardType) {
+        RewardType.REWARD_VOUCHER.rewardType -> stringResource(id = R.string.game_zone_congrats_sub_header_content, offerValue)
+        RewardType.REWARD_TYPE_POINTS.rewardType -> stringResource(id = R.string.game_zone_congrats_msg_loyalty_points, offerValue)
+        RewardType.REWARD_TYPE_CUSTOM.rewardType -> stringResource(id = R.string.game_zone_congrats_msg_custom)
+        else -> stringResource(id = R.string.game_zone_congrats_msg_custom)
+    }
 }
 
 @Preview(showSystemUi = true)

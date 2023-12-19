@@ -162,8 +162,10 @@ class AppConstants {
         const val KEY_GAME_REWARD= "game_reward"
 
         //Reward Types
-        const val VOUCHER = "Voucher"
         const val NO_REWARD = "NoReward"
+        const val REWARD_TYPE_VOUCHER =   "Voucher"
+        const val REWARD_TYPE_POINTS =   "LoyaltyPoints"
+        const val REWARD_TYPE_CUSTOM =   "Custom"
 
         const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
 
@@ -174,11 +176,6 @@ class AppConstants {
         const val REWARD_STATUS_EXPIRED = "Expired"
 
         const val ROUTE_GAME_ZONE = "route_open_game_zone"
-
-        //reward type
-        const val REWARD_TYPE_VOUCHER =   "Voucher"
-        const val REWARD_TYPE_POINTS =   "LoyaltyPoints"
-        const val REWARD_TYPE_CUSTOM =   "Custom"
 
 
     }

@@ -244,20 +244,14 @@ fun CanvasForScratching(
                 val rewardType = it.gameRewards[0].rewardType
                 val rewardValue = it.gameRewards[0].rewardValue
 
-
                 if (RewardType.NO_VOUCHER.rewardType.equals(rewardType)) {
                     navController.navigate(MoreScreens.GameBetterLuckScreen.route)
                 } else {
                     navController.navigate(MoreScreens.GameCongratsScreen.route)
-
-                    navController.currentBackStackEntry?.arguments?.putString(
-                        AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE,rewardType
-                    )
-                    navController.currentBackStackEntry?.arguments?.putString(
-                        AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE,rewardValue
-                    )
-
-
+                    navController.currentBackStackEntry?.arguments?.apply {
+                        putString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE,rewardType)
+                        putString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE,rewardValue)
+                    }
                 }
             }
         }
