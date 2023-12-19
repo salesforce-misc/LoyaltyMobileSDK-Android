@@ -20,12 +20,12 @@ import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_PLAYED_CONFIRMATION_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HeaderText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 import com.salesforce.loyalty.mobile.myntorewards.views.components.animation.ConfettiAnimationView
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.RewardType
 
 /**
  * Common composable screen for Better Luck and Congratulations screen as most of the look and feel is same
@@ -152,10 +152,10 @@ fun BetterLuckScreen(onClick: () -> Unit) {
 }
 
 @Composable
-fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
+fun CongratulationsScreen(rewardType: String="", rewardValue: String="", onClick: () -> Unit) {
     ConfirmationScreen(
         headerContent = stringResource(id = R.string.game_zone_congrats_header_content),
-        subHeaderContent = stringResource(id = R.string.game_zone_congrats_sub_header_content, offerPercent),
+        subHeaderContent = confirmationScreenMsg(rewardType, rewardValue),
         buttonText = stringResource(id = R.string.play_more_text),
         imageContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
         bannerContentDescription = stringResource(id = R.string.game_zone_congrats_header_content),
@@ -163,6 +163,20 @@ fun CongratulationsScreen(offerPercent: String, onClick: () -> Unit) {
         imageDrawableId = R.drawable.gift_gamezone,
         bannerDrawableId = R.drawable.congratulations
     ) { onClick() }
+}
+
+@Composable
+fun confirmationScreenMsg(rewardType: String, offerValue:String): String {
+
+    if(offerValue.isEmpty()){
+        return stringResource(id = R.string.game_zone_congrats_msg_custom)
+    }
+    return when (rewardType) {
+        RewardType.REWARD_VOUCHER.rewardType -> stringResource(id = R.string.game_zone_congrats_sub_header_content, offerValue)
+        RewardType.REWARD_TYPE_POINTS.rewardType -> stringResource(id = R.string.game_zone_congrats_msg_loyalty_points, offerValue)
+        RewardType.REWARD_TYPE_CUSTOM.rewardType -> stringResource(id = R.string.game_zone_congrats_msg_custom)
+        else -> stringResource(id = R.string.game_zone_congrats_msg_custom)
+    }
 }
 
 @Preview(showSystemUi = true)
