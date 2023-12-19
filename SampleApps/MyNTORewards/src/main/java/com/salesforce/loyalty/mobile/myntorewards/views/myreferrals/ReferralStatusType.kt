@@ -11,7 +11,7 @@ enum class ReferralStatusType(val status: String, @StringRes val content: Int, @
     COMPLETED("Friend Completes First Purchase", R.string.purchase_status_completed, R.drawable.ic_success, TextGreen),
     PENDING("Advocate Refers Friend", R.string.purchase_status_pending, R.drawable.ic_pending_referral, Color.Black),
     SIGNED_UP("Friend Signs Up", R.string.purchase_status_signed_up, R.drawable.ic_signed_up_referral, Color.Black),
-    UNKNOWN("", R.string.purchase_status_pending, R.drawable.ic_signed_up_referral, Color.Black);
+    UNKNOWN("", R.string.purchase_status_pending, R.drawable.ic_pending_referral, Color.Black);
 
     companion object {
         infix fun from(value: String?): ReferralStatusType
