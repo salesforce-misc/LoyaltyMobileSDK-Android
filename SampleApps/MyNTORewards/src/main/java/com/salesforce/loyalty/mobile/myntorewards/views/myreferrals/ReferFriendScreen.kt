@@ -119,8 +119,6 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                 .verticalScroll(rememberScrollState())
                 .padding(top = 16.dp, bottom = 48.dp, start = 24.dp, end = 24.dp)
         ) {
-            BodyTextBold(text = stringResource(R.string.refer_a_friend_and_earn_header))
-            BodyText(text = stringResource(R.string.refer_a_friend_and_earn_sub_header))
             when(referralProgramType) {
                 SIGNUP -> SignupToReferUi(viewModel)
                 JOIN_PROGRAM -> JoinReferralProgramUi(viewModel, backAction)
@@ -157,6 +155,8 @@ fun SignupToReferUi(viewModel: MyReferralsViewModel) {
 @Composable
 fun JoinReferralProgramUi(viewModel: MyReferralsViewModel, backAction: () -> Boolean) {
     val context = LocalContext.current
+    BodyTextBold(text = stringResource(R.string.join_referral_program_header))
+    BodyText(text = stringResource(R.string.join_referral_program_description))
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.referral_join_button_text), onClick = {
         viewModel.onReferralProgramJoinClicked()
@@ -178,6 +178,9 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit
     val extraText = context.getString(R.string.share_referral_message, referralCode)
     val focusManager = LocalFocusManager.current
     var textField by remember { mutableStateOf(TextFieldValue("")) }
+
+    BodyTextBold(text = stringResource(R.string.refer_a_friend_and_earn_header))
+    BodyText(text = stringResource(R.string.refer_a_friend_and_earn_sub_header))
     TextFieldCustom(
         textField,
         stringResource(R.string.friends_email_address_placeholder),
@@ -209,11 +212,6 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit
     )
     SocialMediaRow(extraText)
     ReferralCodeView(referralCode)
-    BodyTextSmall(
-        text = stringResource(R.string.share_referral_code_label),
-        color = TextGray,
-        modifier = Modifier.padding(8.dp)
-    )
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { doneAction() })
 }

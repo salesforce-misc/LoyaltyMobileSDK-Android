@@ -133,7 +133,7 @@ class MyReferralsViewModel @Inject constructor(
             listOf(Pair(R.string.my_referral_sent_label, "$sentCount"),
                 Pair(R.string.my_referrals_accepted_label, "$acceptedCount"),
                 Pair(R.string.my_referrals_vouchers_earned_label, "${successStates.size}")),
-            referralsRecentDuration = "90"
+            referralsRecentDuration = "$REFERRAL_DURATION"
         )
     }
 

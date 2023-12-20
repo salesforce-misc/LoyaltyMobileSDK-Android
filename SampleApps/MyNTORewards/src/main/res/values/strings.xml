@@ -264,12 +264,12 @@
     <string name="referral_tab_success">Completed</string>
     <string name="referral_tab_in_progress">In Progress</string>
     <string name="recent_referrals_section_name">Recent</string>
-    <string name="referral_one_month_ago_section_name">Referral One month ago</string>
-    <string name="referrals_older_than_three_months_section_name">Referrals Older than Three months</string>
+    <string name="referral_one_month_ago_section_name">One Month Ago</string>
+    <string name="referrals_older_than_three_months_section_name">Three Months Ago</string>
     <string name="purchase_status_completed">Purchase Completed</string>
     <string name="purchase_status_pending">Invitations Sent</string>
     <string name="purchase_status_signed_up">Signed Up</string>
-    <string name="my_referral_card_header"><![CDATA[<b>YOUR REFERRALS:</b> Last %s Days]]></string>
+    <string name="my_referral_card_header"><![CDATA[Your Referrals in Last <b>%s</b> Days]]></string>
     <string name="my_referral_sent_label">Invitations Sent</string>
     <string name="my_referrals_accepted_label">Invitations Accepted</string>
     <string name="my_referrals_vouchers_earned_label">Vouchers Earned</string>
@@ -297,6 +297,8 @@
     <string name="refer_a_friend_and_earn_bottom_text">Tap ‘Join and Refer’ to participate. By Joining you agree to the terms and conditions.</string>
 
     <string name="today_label">Today</string>
-    <string name="yesterday_label">Yesterday</string>
-    <string name="days_ago_label">%s days ago</string>
+    <string name="yesterday_label">One Day Ago</string>
+    <string name="days_ago_label">%s Days Ago</string>
+    <string name="join_referral_program_header">Join Referral Program</string>
+    <string name="join_referral_program_description">Join our referral program and share your referral code with friends to get rewarded.</string>
 </resources>
