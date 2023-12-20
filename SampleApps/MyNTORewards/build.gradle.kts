@@ -70,6 +70,15 @@ android {
         lintConfig = file("$rootDir/lint-baseline.xml")
     }
 
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
+
+
+
     packagingOptions {
         resources.excludes.add("META-INF/DEPENDENCIES")
         resources.excludes.add("META-INF/LICENSE")

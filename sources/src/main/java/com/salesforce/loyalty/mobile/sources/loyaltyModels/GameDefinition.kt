@@ -29,7 +29,7 @@ data class GameDefinition(
     val status: String?,
 
     @SerializedName("timeoutDuration")
-    val timeoutDuration: String?,
+    val timeoutDuration: Int?,
 
     @SerializedName("type")
     val type: String

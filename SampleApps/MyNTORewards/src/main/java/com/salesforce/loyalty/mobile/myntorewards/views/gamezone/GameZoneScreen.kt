@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +36,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ACTIVE_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_EXPIRED_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
@@ -63,7 +65,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .background(TextPurpleLightBG)
-            .fillMaxSize()
+            .fillMaxSize().testTag(TEST_TAG_GAME_ZONE_SCREEN)
     ) {
         Column(
             modifier = Modifier
@@ -183,21 +185,14 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     title = activeGame.name ?: "",
                                                     gameType
                                                 ) {
-                                                    navController.currentBackStackEntry?.arguments?.putString(
-                                                        KEY_GAME_PARTICIPANT_REWARD_ID,
-                                                        activeGame.participantGameRewards[0].gameParticipantRewardId
-                                                    )
-                                                    if (gameType == GameType.SPIN_A_WHEEL) {
-                                                        val gamesData =
-                                                            activeGame.gameRewards as ArrayList
-                                                        navController.currentBackStackEntry?.arguments?.putParcelableArrayList(
-                                                            AppConstants.KEY_GAME_REWARD,
-                                                            gamesData
-                                                        )
+                                                    val gamePartRewardId = activeGame.participantGameRewards.firstOrNull()?.gameParticipantRewardId
 
-                                                        navController.navigate(MoreScreens.SpinWheelScreen.route)
+                                                    if (gameType == GameType.SPIN_A_WHEEL) {
+                                                        navController.navigate(
+                                                            MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId=$gamePartRewardId"
+                                                        )
                                                     } else {
-                                                        navController.navigate(MoreScreens.ScratchCardScreen.route)
+                                                        navController.navigate(MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId=$gamePartRewardId")
                                                     }
                                                 }
                                             }

@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_PLAYED_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
@@ -24,7 +26,7 @@ fun OrderConfirmationGameSection(gameType: GameType) {
         R.string.place_order_game_header_spin_wheel
     }
     Column(
-        modifier = Modifier.fillMaxWidth().padding(top = 40.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 40.dp).testTag(TEST_TAG_GAME_PLAYED_SCREEN),
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

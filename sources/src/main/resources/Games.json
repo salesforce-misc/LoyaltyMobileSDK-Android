@@ -25,7 +25,7 @@
           "expirationDate": "2023-11-15T19:00:00.000Z",
           "imageUrl": null,
           "name": "20% Off",
-          "rewardType": "NoReward",
+          "rewardType": "LoyaltyPoints",
           "rewardValue": null
         },
         {
@@ -288,14 +288,14 @@
           "rewardValue": null
         },
         {
+          "rewardDefinitionId": "3GRSB0000000Caf4AE",
           "gameRewardId": "501",
-          "rewardDefinitionId": "101",
-          "color": "#00ffff",
-          "description": "Get 10%  Off Voucher",
-          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
           "imageUrl": null,
-          "name": "21 % Off",
-          "rewardType": "Voucher",
+          "name": "No Reward",
+          "rewardType": "NoReward",
           "rewardValue": null
         }
 

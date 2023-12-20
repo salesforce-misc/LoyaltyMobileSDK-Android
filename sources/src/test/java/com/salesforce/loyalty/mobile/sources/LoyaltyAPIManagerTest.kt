@@ -8,6 +8,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import io.mockk.*
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -309,6 +310,138 @@ class LoyaltyAPIManagerTest {
                 promotionName = "health"
             )
             assertEquals(result.isSuccess, true)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get Games success mock response`() {
+        runBlocking {
+            coEvery { loyaltyClient.getNetworkClient() } returns loyaltyApiInterface
+            val mockResponse = MockResponseFileReader("Games.json").content
+            val mockGamesResponse =
+                Gson().fromJson(mockResponse, Games::class.java)
+            coEvery {
+                loyaltyClient.getNetworkClient().getGames(any())
+            } returns Result.success(mockGamesResponse)
+
+            val result = loyaltyAPIManager.getGames(
+                participantId = "MRI706",
+                mockResponse = true
+            )
+            assertEquals(result.isSuccess, true)
+            result.onSuccess {
+                assertEquals(it.gameDefinitions.size , 6)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get Games success response`() {
+        runBlocking {
+            coEvery { loyaltyClient.getNetworkClient() } returns loyaltyApiInterface
+            val mockResponse = MockResponseFileReader("Games.json").content
+            val mockGamesResponse =
+                Gson().fromJson(mockResponse, Games::class.java)
+            coEvery {
+                loyaltyClient.getNetworkClient().getGames(any())
+            } returns Result.success(mockGamesResponse)
+
+            val result = loyaltyAPIManager.getGames(
+                participantId = "MRI706",
+                mockResponse = false
+            )
+            assertEquals(result.isSuccess, true)
+            result.onSuccess {
+                assertEquals(it.gameDefinitions.size , 6)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get Games failure response`() {
+        runBlocking {
+            coEvery { loyaltyClient.getNetworkClient() } returns loyaltyApiInterface
+            coEvery {
+                loyaltyClient.getNetworkClient().getGames(any())
+            } returns Result.failure(Exception("HTTP 401 Unauthorized"))
+
+            val result = loyaltyAPIManager.getGames(
+                participantId = "MRI706",
+                mockResponse = true
+            )
+            result.onFailure {
+                assertEquals(result.isFailure, true)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get Games Reward success mock response`() {
+        runBlocking {
+            coEvery { loyaltyClient.getNetworkClient() } returns loyaltyApiInterface
+            val mockResponse = MockResponseFileReader("GameRewards.json").content
+            val mockGameRewardsResponse =
+                Gson().fromJson(mockResponse, GameRewardResponse::class.java)
+            coEvery {
+                loyaltyClient.getNetworkClient().getGameReward(any())
+            } returns Result.success(mockGameRewardsResponse)
+
+            val result = loyaltyAPIManager.getGameReward(
+                gameParticipantRewardId = "MRI706",
+                mockResponse = true
+            )
+            assertEquals(result.isSuccess, true)
+            result.onSuccess {
+                assertNotNull(it.gameRewards)
+                assertEquals(it.gameRewards.size , 1)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get Games Reward success response`() {
+        runBlocking {
+            coEvery { loyaltyClient.getNetworkClient() } returns loyaltyApiInterface
+            val mockResponse = MockResponseFileReader("GameRewards.json").content
+            val mockGameRewardsResponse =
+                Gson().fromJson(mockResponse, GameRewardResponse::class.java)
+            coEvery {
+                loyaltyClient.getNetworkClient().getGameReward(any())
+            } returns Result.success(mockGameRewardsResponse)
+
+            val result = loyaltyAPIManager.getGameReward(
+                gameParticipantRewardId = "MRI706",
+                mockResponse = false
+            )
+            assertEquals(result.isSuccess, true)
+            result.onSuccess {
+                assertNotNull(it.gameRewards)
+                assertEquals(it.gameRewards.size , 1)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get Game Reward failure response`() {
+        runBlocking {
+            coEvery { loyaltyClient.getNetworkClient() } returns loyaltyApiInterface
+            coEvery {
+                loyaltyClient.getNetworkClient().getGameReward(any())
+            } returns Result.failure(Exception("HTTP 401 Unauthorized"))
+
+            val result = loyaltyAPIManager.getGameReward(
+                gameParticipantRewardId = "MRI706",
+                mockResponse = true
+            )
+            result.onFailure {
+                assertEquals(result.isFailure, true)
+            }
         }
     }
 }

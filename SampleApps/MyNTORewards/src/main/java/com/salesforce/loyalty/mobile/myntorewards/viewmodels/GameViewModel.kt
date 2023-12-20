@@ -14,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesVie
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameReward
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameRewardResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
 import kotlinx.coroutines.launch
@@ -86,4 +87,11 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
         }
     }
 
+    override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+        return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
+            gameDefinition.participantGameRewards.any { partGameReward ->
+                partGameReward.gameParticipantRewardId == gameParticipantRewardId
+            }
+        }?.gameRewards ?: emptyList()
+    }
 }

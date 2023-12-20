@@ -1,8 +1,10 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoyaltyAppBaseActivity : ComponentActivity() {
     private val TAG = LoyaltyAppBaseActivity::class.java.simpleName
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -109,7 +112,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel,
-                    gameViewModel, loyaltyAPIManager
+                    gameViewModel
                 )
             } else {
                 MainScreenStart(
@@ -121,8 +124,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     transactionModel,
                     checkoutFlowModel,
                     scanningViewModel,
-                    gameViewModel,
-                    loyaltyAPIManager
+                    gameViewModel
                 )
                 // Added for testing purpose.
                 //ScratchCardView(loyaltyAPIManager)
@@ -140,7 +142,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             transactionModel,
             checkoutFlowModel,
             scanningViewModel,
-            gameViewModel, loyaltyAPIManager
+            gameViewModel
         )
 
     }
@@ -154,6 +156,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
                                    promotionModel: MyPromotionViewModelInterface,
                                    voucherModel: VoucherViewModelInterface,
@@ -161,7 +164,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                                    benefitModel: BenefitViewModelInterface,
                                    transactionModel: TransactionViewModelInterface,
                                    checkoutFlowModel: CheckOutFlowViewModelInterface,
-                                   scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface, loyaltyAPIManager: LoyaltyAPIManager
+                                   scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface
     ) {
         onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
             run {
@@ -178,7 +181,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                             transactionModel,
                             checkoutFlowModel,
                             scanningViewModel,
-                            gameViewModel, loyaltyAPIManager
+                            gameViewModel
                         )
                     }
                 }

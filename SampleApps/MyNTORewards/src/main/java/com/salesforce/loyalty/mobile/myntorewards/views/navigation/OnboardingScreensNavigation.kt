@@ -1,5 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,6 +10,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
                     promotionModel: MyPromotionViewModelInterface,
@@ -16,7 +19,7 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
                     benefitModel: BenefitViewModelInterface,
                     transactionModel: TransactionViewModelInterface,
                     checkoutFlowModel: CheckOutFlowViewModelInterface,
-                    scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface, loyaltyAPIManager: LoyaltyAPIManager) {
+                    scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface) {
 
     Navigation(
         profileModel,
@@ -28,10 +31,10 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
         checkoutFlowModel,
         scanningViewModel,
         gameViewModel,
-        loyaltyAPIManager
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun Navigation(
     profileModel: MembershipProfileViewModelInterface,
@@ -43,7 +46,6 @@ fun Navigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModelInterface,
-    loyaltyAPIManager: LoyaltyAPIManager
 
 ) {
     val navController = rememberNavController()
@@ -54,7 +56,7 @@ fun Navigation(
             OnboardingScreenBox(navController, onboardingModel)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel, loyaltyAPIManager)
+            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel)
         }
     }
 }

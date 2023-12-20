@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_FOOTER
 
 @Composable
 fun SpinWheelLandingPageFooter() {
@@ -25,7 +27,7 @@ fun SpinWheelLandingPageFooter() {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().testTag(TEST_TAG_SPIN_WHEEL_FOOTER)
             .padding(start = 60.dp, end = 60.dp, bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

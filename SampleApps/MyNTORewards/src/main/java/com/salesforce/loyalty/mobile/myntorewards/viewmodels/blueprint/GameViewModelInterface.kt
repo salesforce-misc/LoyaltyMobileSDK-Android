@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameReward
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameRewardResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
 
@@ -17,4 +18,6 @@ interface GameViewModelInterface {
     val gamesLiveData: LiveData<Games>
     suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse>
     val gameRewardsViewState: LiveData<GameRewardViewState>
+
+    fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward>
 }

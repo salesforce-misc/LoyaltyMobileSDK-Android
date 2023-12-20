@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -35,6 +36,8 @@ import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardPerforationColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
@@ -82,7 +85,7 @@ fun CanvasForScratching(
         modifier = modifier
             .height(199.dp)
             .width(343.dp)
-            .background(VibrantPurple40)
+            .background(VibrantPurple40).testTag(TEST_TAG_SCRATCH_CARD)
             .drawBehind {
                 val dotSize = Size(width = 16.dp.toPx(), height = 16.dp.toPx())
                 val spacing = 8.dp.toPx()
@@ -238,11 +241,17 @@ fun CanvasForScratching(
         LaunchedEffect(key1 = true) {
             delay(3000)
             rewardLiveDataValue?.let {
-                val rewardType = it.gameRewards?.get(0)?.rewardType
+                val rewardType = it.gameRewards[0].rewardType
+                val rewardValue = it.gameRewards[0].rewardValue
+
                 if (RewardType.NO_VOUCHER.rewardType.equals(rewardType)) {
                     navController.navigate(MoreScreens.GameBetterLuckScreen.route)
                 } else {
                     navController.navigate(MoreScreens.GameCongratsScreen.route)
+                    navController.currentBackStackEntry?.arguments?.apply {
+                        putString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE,rewardType)
+                        putString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE,rewardValue)
+                    }
                 }
             }
         }
