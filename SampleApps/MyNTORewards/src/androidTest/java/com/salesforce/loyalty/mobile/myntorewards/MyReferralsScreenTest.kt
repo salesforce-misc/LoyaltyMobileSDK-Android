@@ -56,7 +56,7 @@ class MyReferralsScreenTest {
 
         // Launch the screen
         composeTestRule.setContent {
-            MyReferralsListScreen {}
+            MyReferralsListScreen(backAction = {true}) {}
         }
     }
 

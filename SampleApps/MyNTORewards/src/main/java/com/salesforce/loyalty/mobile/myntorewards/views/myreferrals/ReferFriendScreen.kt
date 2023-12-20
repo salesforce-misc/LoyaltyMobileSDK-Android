@@ -105,10 +105,12 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                     .size(150.dp)
             )
 
-            RoundedIconButton(
-                onClick = { closeAction() },
-                modifier = Modifier.align(Alignment.TopEnd)
-            )
+            if (referralProgramType == START_REFERRING) {
+                RoundedIconButton(
+                    onClick = { closeAction() },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
+            }
         }
 
         Column(

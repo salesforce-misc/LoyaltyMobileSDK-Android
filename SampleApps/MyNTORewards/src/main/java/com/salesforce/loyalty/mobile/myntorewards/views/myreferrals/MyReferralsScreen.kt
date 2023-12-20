@@ -66,8 +66,6 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
                     showBottomSheet(true)
                     viewModel.showDefaultPopup = true
                 }
-
-                viewModel.enrollToReferralProgram(context)
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
@@ -76,8 +74,6 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
                     tryAgainClicked = { },
                     textButtonClicked = {  }
                 )
-                viewModel.enrollToReferralProgram(context)
-
             }
 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
