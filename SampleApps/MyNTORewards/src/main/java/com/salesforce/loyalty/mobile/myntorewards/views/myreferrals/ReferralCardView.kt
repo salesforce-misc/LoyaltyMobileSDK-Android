@@ -133,7 +133,7 @@ fun CategoryCount(header: String, value: String, modifier: Modifier) {
 @Composable
 fun ReferralCardPreview() {
     ReferralCard(
-        listOf(Pair(R.string.my_referral_sent_label, "100"), Pair(R.string.my_referrals_accepted_label, "18"), Pair(R.string.my_referrals_vouchers_earned_label, "18"), Pair(R.string.my_referrals_points_earned_label, "18")),
+        listOf(Pair(R.string.my_referral_sent_label, "100"), Pair(R.string.my_referrals_accepted_label, "18"), Pair(R.string.my_referrals_vouchers_earned_label, "18")),
         "90"
     ) {}
 }

@@ -112,7 +112,6 @@ fun ReferFriendScreen(closeAction: () -> Unit) {
             CommonText(text = stringResource(R.string.share_via), fontSize = 16.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold)
             SocialMediaRow(extraText)
             ReferralCodeView(referralCode)
-            BodyTextSmall(text = stringResource(R.string.share_referral_code_label), color = TextGray, modifier = Modifier.padding(8.dp))
             Spacer(modifier = Modifier.height(24.dp))
             PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { closeAction() })
         }

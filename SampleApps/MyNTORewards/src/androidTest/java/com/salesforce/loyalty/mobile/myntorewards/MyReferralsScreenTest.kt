@@ -63,42 +63,41 @@ class MyReferralsScreenTest {
     @Test
     fun verifyReferralScreen() {
         composeTestRule.run {
-            onNodeWithText(activity.getString(R.string.header_label_my_referrals)).assertIsDisplayed()
+            onNodeWithText("My Referrals").assertIsDisplayed()
             onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
             Thread.sleep(2000)
             onNodeWithTag(TEST_TAG_TITLE_VIEW)
-                .assertTextEquals(activity.getString(R.string.header_label_my_referrals))
+                .assertTextEquals("My Referrals")
                 .assertIsDisplayed()
             onNodeWithTag(TEST_TAG_REFERRAL_CARD).assertIsDisplayed()
             Thread.sleep(2000)
-            onNodeWithText(activity.getString(R.string.my_referral_sent_label)).assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.my_referrals_accepted_label)).assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.my_referrals_vouchers_earned_label)).assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.my_referrals_points_earned_label)).assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.referral_card_button_text)).assertIsDisplayed()
+            onNodeWithText("Invitations Sent").assertIsDisplayed()
+            onNodeWithText("Invitations Accepted").assertIsDisplayed()
+            onNodeWithText("Vouchers Earned").assertIsDisplayed()
+            onNodeWithText("Refer Now").assertIsDisplayed()
 
             onNodeWithTag(TEST_TAG_TAB_VIEW).assertIsDisplayed()
             // SUCCESS TAB content
-            onNodeWithText(activity.getString(R.string.referral_tab_success)).assertIsDisplayed().performClick()
+            onNodeWithText("Completed").assertIsDisplayed().performClick()
             val successList = onNodeWithTag(TEST_TAG_REFERRALS_LIST).onChildren()
             successList.assertCountEquals(6)
-            successList.onFirst().assert(hasText(activity.getString(R.string.recent_referrals_section_name)))
+            successList.onFirst().assert(hasText("Recent"))
 
             successList[1].assert(hasTestTag(TEST_TAG_REFERRALS_LIST_ITEM))
             val successListItem = successList[1].onChildren()
             successListItem.onFirst().assert(hasText("strawberry.sheikh@yahoo.com"))
-            successListItem.onLast().assert(hasText(activity.getString(R.string.purchase_status_completed)))
+            successListItem.onLast().assert(hasText("Purchase Completed"))
 
             // InProgress TAB content
-            onNodeWithText(activity.getString(R.string.referral_tab_in_progress)).assertIsDisplayed().performClick()
+            onNodeWithText("In Progress").assertIsDisplayed().performClick()
             val inProgressList = onNodeWithTag(TEST_TAG_REFERRALS_LIST).onChildren()
             inProgressList.assertCountEquals(6)
-            inProgressList.onFirst().assert(hasText(activity.getString(R.string.recent_referrals_section_name)))
+            inProgressList.onFirst().assert(hasText("Recent"))
 
             inProgressList[1].assert(hasTestTag(TEST_TAG_REFERRALS_LIST_ITEM))
             val inProgressListItem = successList[1].onChildren()
             inProgressListItem.onFirst().assert(hasText("strawberry.sheikh@yahoo.com"))
-            successListItem.onLast().assert(hasText(activity.getString(R.string.purchase_status_pending)))
+            successListItem.onLast().assert(hasText("Invitations Sent"))
         }
         Thread.sleep(500)
         verifyReferFriendScreen()
@@ -106,29 +105,28 @@ class MyReferralsScreenTest {
 
     private fun verifyReferFriendScreen() {
         composeTestRule.run {
-            onNodeWithText(activity.getString(R.string.referral_card_button_text)).assertIsDisplayed().performClick()
+            onNodeWithText("Refer Now").assertIsDisplayed().performClick()
             Thread.sleep(500)
             onNodeWithTag(TEST_TAG_REFER_FRIEND_SCREEN).assertIsDisplayed()
             onNodeWithContentDescription(activity.getString(R.string.refer_friend_banner_content_description)).assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.refer_a_friend_and_earn_header)).assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.refer_a_friend_and_earn_sub_header)).assertIsDisplayed()
+            onNodeWithText("Start Referring").assertIsDisplayed()
+            onNodeWithText("Your referral code is ready! Share the referral code with your friends and get rewarded when they place their first order.").assertIsDisplayed()
 
             // Test Email input Field
-            onNodeWithText(activity.getString(R.string.separate_emails_with_commas)).assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.friends_email_address_placeholder))
+            onNodeWithText("Add a comma after each email address.").assertIsDisplayed()
+            onNodeWithText("Enter the email addresses of your friends…")
                 .performTextInput("abc@xyz.com, abc@xyz2.com")
             onNodeWithTag(TEST_TAG_TEXT_FIELD_RIGHT_ICON, true).assertIsDisplayed()
             // TODO: TEST Share EMail Functionality once API integration is done
 
             // Test Refer Code Row with Copy option
-            onNodeWithText(activity.getString(R.string.share_referral_code_label)).assertIsDisplayed()
             onNodeWithText("845FFF907ZX6").assertIsDisplayed()
-            onNodeWithText(activity.getString(R.string.tap_to_copy)).assertIsDisplayed().performClick()
+            onNodeWithText("Copy").assertIsDisplayed().performClick()
             assertEquals("845FFF907ZX6", clipboardManager.text)
             Thread.sleep(2000)
 
             // Test Social Media Share Icons
-            onNodeWithText(activity.getString(R.string.share_via)).assertIsDisplayed()
+            onNodeWithText("Share Invite").assertIsDisplayed()
             onNodeWithContentDescription(activity.getString(R.string.share_via_facebook_icon_description))
                 .assertIsDisplayed().performClick()
             Thread.sleep(1000)
