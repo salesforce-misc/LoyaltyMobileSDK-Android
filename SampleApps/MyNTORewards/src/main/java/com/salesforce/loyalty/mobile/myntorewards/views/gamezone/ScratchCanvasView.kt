@@ -37,6 +37,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardPerforatio
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
@@ -239,7 +240,7 @@ fun CanvasForScratching(
     }
     if (animate) {
         LaunchedEffect(key1 = true) {
-            delay(3000)
+            delay(GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC)
             rewardLiveDataValue?.let {
                 val rewardType = it.gameRewards[0].rewardType
                 // Using reward name as rewardValue can come as null in some cases.

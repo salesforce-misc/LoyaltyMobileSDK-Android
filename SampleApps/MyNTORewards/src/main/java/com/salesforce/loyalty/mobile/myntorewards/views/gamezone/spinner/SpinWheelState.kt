@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinnerConfiguration.Companion.INITIAL_ROTATION_DURATION
@@ -85,7 +86,7 @@ data class SpinWheelState(
                         ), 10f
                     )
                     withContext(Dispatchers.Main) {
-                        delay(3000)
+                        delay(GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC)
                         it?.let {
                             val rewardType = it.gameRewards[0].rewardType
                             // Using reward name as rewardValue can come as null in some cases.
