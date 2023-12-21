@@ -4,8 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -41,8 +39,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
-import java.io.Serializable
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
@@ -237,9 +233,10 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                         }
                     }
                     GamesViewState.GamesFetchFailure -> {
+                        ShowEmptyView(selectedTab = selectedTab)
                         if (isInProgress) {
                             isInProgress = false
-                            ShowEmptyView(selectedTab = selectedTab)
+
                         }
                     }
                     GamesViewState.GamesFetchInProgress -> {
