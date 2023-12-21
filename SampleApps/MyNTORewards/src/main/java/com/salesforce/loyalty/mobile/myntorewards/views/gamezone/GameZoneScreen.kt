@@ -4,8 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -31,8 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_GAME_PARTICIPANT_REWARD_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ACTIVE_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_EXPIRED_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
@@ -43,8 +39,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
-import java.io.Serializable
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
@@ -239,9 +233,10 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                         }
                     }
                     GamesViewState.GamesFetchFailure -> {
+                        ShowEmptyView(selectedTab = selectedTab)
                         if (isInProgress) {
                             isInProgress = false
-                            ShowEmptyView(selectedTab = selectedTab)
+
                         }
                     }
                     GamesViewState.GamesFetchInProgress -> {
