@@ -123,8 +123,6 @@ fun PaymentsUI(
                         val gameParticipantRewardId =
                             orderCreationResponse?.gameParticipantRewardId
                         checkOutFlowViewModel.resetOrderPlacedStatusDefault()
-                        isInProgress = false
-                        isGameQueryInProgress = false
                         navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
                             set(AppConstants.KEY_ORDER_ID, orderID)
                             if (gameType != null) {
@@ -136,6 +134,8 @@ fun PaymentsUI(
                             }
                         }
                         navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
+                        isInProgress = false
+                        isGameQueryInProgress = false
                     }
                 }
                 GamesViewState.GamesFetchFailure -> {
@@ -143,12 +143,13 @@ fun PaymentsUI(
                         val orderID =
                             checkOutFlowViewModel.orderCreationResponseLiveData.value?.orderId
                         checkOutFlowViewModel.resetOrderPlacedStatusDefault()
-                        isInProgress = false
-                        isGameQueryInProgress = false
+
                         navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
                             set(AppConstants.KEY_ORDER_ID, orderID)
                         }
                         navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
+                        isInProgress = false
+                        isGameQueryInProgress = false
                     }
                 }
                 else -> {}
