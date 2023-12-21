@@ -12,6 +12,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
@@ -931,6 +932,10 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
         override val shippingDetailsLiveData: LiveData<List<ShippingMethod>>
             get() = shippingDetails
+        override val orderCreationResponseLiveData: LiveData<OrderCreationResponse>
+            get() = orderCreationResponse
+
+        private val orderCreationResponse = MutableLiveData<OrderCreationResponse>()
 
         private val shippingDetails = MutableLiveData<List<ShippingMethod>>()
 
@@ -948,6 +953,11 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
         override fun fetchShippingDetails() {
 
+        }
+
+        override fun placeOrderAndGetParticipantReward() {
+            orderCreationResponse.value = OrderCreationResponse(orderId = "1234", gameParticipantRewardId = "1234abcd")
+            orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_SUCCESS
         }
 
 
@@ -1099,6 +1109,10 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             override val gameRewardsViewState: LiveData<GameRewardViewState>
                 get() = rewardViewState
 
+            override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+                return mutableListOf()
+            }
+
             private val rewardViewState = MutableLiveData<GameRewardViewState>()
 
             override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
@@ -1115,7 +1129,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 viewState.postValue(GamesViewState.GamesFetchSuccess)
             }
 
-            override fun getGames(context: Context, mock: Boolean) {
+            override fun getGames(context: Context, gameParticipantRewardId: String?, mock: Boolean) {
                 viewState.value = GamesViewState.GamesFetchInProgress
                 val gson = Gson()
                 val mockResponse = MockResponseFileReader("Games.json").content

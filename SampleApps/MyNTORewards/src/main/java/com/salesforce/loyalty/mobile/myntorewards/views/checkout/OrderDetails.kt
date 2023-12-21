@@ -27,6 +27,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PAYMENT_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavigationTabs
@@ -35,7 +36,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavig
 fun OrderDetails(navCheckOutFlowController: NavController,
                  voucherModel: VoucherViewModelInterface,
                  checkOutFlowViewModel: CheckOutFlowViewModelInterface,
-                 profileModel: MembershipProfileViewModelInterface
+                 profileModel: MembershipProfileViewModelInterface,
+                 gameViewModel: GameViewModelInterface
                  ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -145,7 +147,7 @@ fun OrderDetails(navCheckOutFlowController: NavController,
             0 -> OrderAddressUI {
                 selectedTab = 1
             }
-            1 -> PaymentsUI(navCheckOutFlowController, voucherModel, checkOutFlowViewModel, profileModel)
+            1 -> PaymentsUI(navCheckOutFlowController, voucherModel, checkOutFlowViewModel, profileModel, gameViewModel)
         }
 
 

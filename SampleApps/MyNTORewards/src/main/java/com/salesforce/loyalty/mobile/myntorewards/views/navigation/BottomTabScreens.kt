@@ -86,7 +86,8 @@ fun HomeScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 voucherModel,
                 checkOutFlowViewModel,
-                profileModel
+                profileModel,
+                gameViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
@@ -199,7 +200,8 @@ fun PromotionScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 voucherModel,
                 checkOutFlowViewModel,
-                profileModel
+                profileModel,
+                gameViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {

@@ -14,7 +14,7 @@ interface GameViewModelInterface {
 
     val gamesViewState: LiveData<GamesViewState>
     fun getGameReward(gameParticipantRewardId: String, mock: Boolean)
-    fun getGames(context: Context, mock: Boolean)
+    fun getGames(context: Context, gameParticipantRewardId: String? = null, mock: Boolean)
     val gamesLiveData: LiveData<Games>
     suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse>
     val gameRewardsViewState: LiveData<GameRewardViewState>

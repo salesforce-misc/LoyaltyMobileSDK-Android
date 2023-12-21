@@ -31,8 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_GAME_PARTICIPANT_REWARD_ID
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ACTIVE_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_EXPIRED_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
@@ -55,11 +53,11 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
     fun refresh() = refreshScope.launch {
-        gameViewModel.getGames(context, false)
+        gameViewModel.getGames(context, mock = false)
     }
     val state = rememberPullRefreshState(refreshing, ::refresh)
     LaunchedEffect(true) {
-        gameViewModel.getGames(context, false)
+        gameViewModel.getGames(context, mock = false)
     }
     Box(
         contentAlignment = Alignment.TopCenter,

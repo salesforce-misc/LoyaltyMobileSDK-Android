@@ -25,7 +25,6 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.OrderScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
@@ -44,18 +43,23 @@ fun OrderPlacedUI(
 
     val orderDetails by checkOutFlowViewModel.orderDetailLiveData.observeAsState() // collecting livedata as state
     val orderID = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
-        ORDER_ID
+        AppConstants.KEY_ORDER_ID
     )
-
+    val gameParticipantRewardId = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
+        AppConstants.KEY_GAME_PARTICIPANT_REWARD_ID
+    )
+    val gameTypeValue = navCheckOutFlowController.previousBackStackEntry?.savedStateHandle?.get<String>(
+        AppConstants.KEY_GAME_TYPE
+    )
     //refreshing profile information and reward points. fresh rewards points will be pulled and cache will be
     //updated
     val context: Context = LocalContext.current
     LaunchedEffect(key1 = true) {
         profileModel.loadProfile(context, true)
     }
-    orderID?.let {
+/*    orderID?.let {
         checkOutFlowViewModel.fetchOrderDetails(orderID)
-    }
+    }*/
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -83,7 +87,7 @@ fun OrderPlacedUI(
             Spacer(modifier = Modifier.height(11.dp))
             Text(
                 text = stringResource(
-                    id = R.string.text_order_placed, orderDetails?.orderNumber
+                    id = R.string.text_order_placed, orderID
                         ?: ""
                 ),
                 fontFamily = font_sf_pro,
@@ -111,14 +115,10 @@ fun OrderPlacedUI(
                 popUpTo(0)
             }
         }
-
-        //TODO: Move these 2 fields to view model when API is ready
-        val isGameUnlocked = true
-        // TODO: Load the right game once API is ready.
-        val gameType: GameType = /*listOf(GameType.SPIN_A_WHEEL, GameType.SCRATCH_CARD).random()*/GameType.SCRATCH_CARD
-        if (isGameUnlocked) {
+        val gameType = gameTypeValue?.let { GameType.from(gameTypeValue) }
+        if (gameParticipantRewardId != null && gameType != null) {
             OrderConfirmationGameSection(gameType)
-            FooterButtonsView(navCheckOutFlowController, gameType) { continueCheckOutFlow() }
+            FooterButtonsView(navCheckOutFlowController, gameType, gamePartRewardId = gameParticipantRewardId) { continueCheckOutFlow() }
         } else {
             PrimaryButton(
                 textContent = stringResource(R.string.text_continue_shopping),
@@ -135,6 +135,7 @@ fun OrderPlacedUI(
 fun FooterButtonsView(
     navCheckOutFlowController: NavController,
     gameType: GameType,
+    gamePartRewardId: String,
     continueCheckOutFlow: () -> Unit
 ) {
     Column(
@@ -147,10 +148,14 @@ fun FooterButtonsView(
         PrimaryButton(
             textContent = stringResource(R.string.play_now_button_text),
             onClick = {
-                // TODO: Load the right game once Order Placed API gives details about the participantRewardId.
-                val gamePartRewardId = ""
-                navCheckOutFlowController.navigate(MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId=$gamePartRewardId"){
-                    popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
+                if (gameType == GameType.SCRATCH_CARD) {
+                    navCheckOutFlowController.navigate(MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId=$gamePartRewardId") {
+                        popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
+                    }
+                } else if (gameType == GameType.SPIN_A_WHEEL){
+                    navCheckOutFlowController.navigate(MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId=$gamePartRewardId") {
+                        popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
+                    }
                 }
             }
         )
