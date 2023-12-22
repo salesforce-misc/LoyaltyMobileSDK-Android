@@ -24,5 +24,6 @@ interface GameAPIInterface {
     @GET()
     suspend fun getGames(
         @Url url: String,
+        @Query("gameParticipantRewardId") gameParticipantRewardId: String?
     ): Result<Games>
 }

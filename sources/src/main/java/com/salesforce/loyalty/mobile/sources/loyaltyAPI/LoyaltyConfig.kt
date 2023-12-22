@@ -43,9 +43,6 @@ object LoyaltyConfig {
         class TransactionsHistory(val programName: String, val membershipNumber: String): Resource()
         class LoyaltyProgramProcess(val programName: String, val programProcessName: ProgramProcessName) : Resource()
         class Vouchers(val programName: String, val membershipNumber: String): Resource()
-
-        class GameReward(val gameParticipantRewardId: String): Resource()
-        class Games(val participantId: String): Resource()
     }
 
     /**
@@ -75,13 +72,6 @@ object LoyaltyConfig {
             }
             is Resource.Vouchers -> {
                 instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_58 + "/loyalty/programs/" + resource.programName + "/members/" + resource.membershipNumber + "/vouchers"
-            }
-            is Resource.GameReward -> {
-                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_60 + "/game/gameParticipantReward/" + resource.gameParticipantRewardId + "/game-reward"
-            }
-
-            is Resource.Games -> {
-                instanceUrl + MEMBER_API_SERVICES_PATH + API_VERSION_60 + "/game/participant/" + resource.participantId + "/games"
             }
         }
     }

@@ -24,7 +24,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerBackground
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_BG
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.GameNameIDDataModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPageFooter
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelPointer
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Wheel(
     navController: NavHostController,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     gamesList: MutableList<GameNameIDDataModel>,
     colourList: MutableList<Color>,
     gameParticipantRewardId: String

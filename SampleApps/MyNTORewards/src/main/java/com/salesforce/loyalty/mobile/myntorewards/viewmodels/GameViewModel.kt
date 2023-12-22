@@ -6,46 +6,49 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.salesforce.gamification.model.GameReward
+import com.salesforce.gamification.model.GameRewardResponse
+import com.salesforce.gamification.model.Games
+import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameReward
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameRewardResponse
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(),
-    GameViewModelInterface {
+@HiltViewModel
+class GameViewModel @Inject constructor(
+    private val repository: GamificationRemoteRepository) : ViewModel() {
     private val TAG = GameViewModel::class.java.simpleName
 
     private var rewardMutableLiveData = MutableLiveData<GameRewardResponse>()
 
-    override val rewardLiveData: LiveData<GameRewardResponse>
+    val rewardLiveData: LiveData<GameRewardResponse>
         get() = rewardMutableLiveData
 
-    override val gamesLiveData: LiveData<Games>
+    val gamesLiveData: LiveData<Games>
         get() = games
 
     private val games = MutableLiveData<Games>()
 
-    override val gamesViewState: LiveData<GamesViewState>
+    val gamesViewState: LiveData<GamesViewState>
         get() = viewState
 
     private val viewState = MutableLiveData<GamesViewState>()
 
-    override val gameRewardsViewState: LiveData<GameRewardViewState>
+    val gameRewardsViewState: LiveData<GameRewardViewState>
         get() = rewardViewState
 
     private val rewardViewState = MutableLiveData<GameRewardViewState>()
 
-    override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
+    fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
         viewModelScope.launch {
             rewardViewState.postValue(GameRewardViewState.GameRewardFetchInProgress)
-            val result = loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
+            val result = repository.getGameReward(gameParticipantRewardId, mock)
             result.onSuccess {
                 Logger.d(TAG, "API Result SUCCESS: ${it}")
                 rewardMutableLiveData.postValue(it)
@@ -57,11 +60,11 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
         }
     }
 
-    override suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse> {
-        return loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
+    suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse> {
+        return repository.getGameReward(gameParticipantRewardId, mock)
     }
 
-    override fun getGames(context: Context, gameParticipantRewardId: String?, mock: Boolean) {
+    fun getGames(context: Context, gameParticipantRewardId: String? = null, mock: Boolean) {
         viewState.value = GamesViewState.GamesFetchInProgress
         viewModelScope.launch {
             val memberJson =
@@ -74,7 +77,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
             val loyaltyProgramMemberId = member.loyaltyProgramMemberId ?: ""
-            val result = loyaltyAPIManager.getGames(
+            val result = repository.getGames(
                 participantId = loyaltyProgramMemberId,
                 gameParticipantRewardId = gameParticipantRewardId,
                 mockResponse = mock
@@ -90,7 +93,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
         }
     }
 
-    override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+    fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
         return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
             gameDefinition.participantGameRewards.any { partGameReward ->
                 partGameReward.gameParticipantRewardId == gameParticipantRewardId

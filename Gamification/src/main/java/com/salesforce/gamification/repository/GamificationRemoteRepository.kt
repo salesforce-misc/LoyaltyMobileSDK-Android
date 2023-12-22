@@ -1,12 +1,15 @@
-package com.salesforce.gamification.api
+package com.salesforce.gamification.repository
 
 import android.util.Log
 import com.google.gson.Gson
+import com.salesforce.gamification.api.GameAPIConfig
+import com.salesforce.gamification.api.GameAuthenticator
+import com.salesforce.gamification.api.NetworkClient
 import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import java.io.InputStreamReader
 
-class GamificationAPIManager constructor(auth: GameAuthenticator, instanceUrl: String, gameClient: NetworkClient){
+class GamificationRemoteRepository constructor(auth: GameAuthenticator, instanceUrl: String, gameClient: NetworkClient){
 
     companion object {
         private const val TAG = "GamificationAPIManager"
@@ -37,13 +40,16 @@ class GamificationAPIManager constructor(auth: GameAuthenticator, instanceUrl: S
             return Result.success(response)
         } else {
             return mGameClient.getNetworkClient().getGameReward(
-                GameAPIConfig.getRequestUrl(mInstanceUrl, GameAPIConfig.Resource.GameReward(gameParticipantRewardId)),
+                GameAPIConfig.getRequestUrl(
+                    mInstanceUrl,
+                    GameAPIConfig.Resource.GameReward(gameParticipantRewardId)
+                ),
             )
         }
     }
 
-    suspend fun getGames(participantId: String, mockResponse: Boolean): Result<Games> {
-        Log.d(TAG, "getGames")
+    suspend fun getGames(participantId: String, gameParticipantRewardId: String? = null, mockResponse: Boolean): Result<Games> {
+        Log.d(TAG, "getGames() participantId: $participantId gameParticipantRewardId: $gameParticipantRewardId")
 
         if (mockResponse) {
             val reader =
@@ -55,7 +61,10 @@ class GamificationAPIManager constructor(auth: GameAuthenticator, instanceUrl: S
             return Result.success(response)
         } else {
             return mGameClient.getNetworkClient().getGames(
-                GameAPIConfig.getRequestUrl(mInstanceUrl, GameAPIConfig.Resource.Games(participantId)),
+                GameAPIConfig.getRequestUrl(
+                    mInstanceUrl,
+                    GameAPIConfig.Resource.Games(participantId)
+                ), gameParticipantRewardId = gameParticipantRewardId
             )
         }
     }
