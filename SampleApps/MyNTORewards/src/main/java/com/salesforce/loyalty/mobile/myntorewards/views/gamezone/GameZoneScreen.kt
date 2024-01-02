@@ -241,8 +241,6 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                 gameReward
                                             ) {
                                                 openBottomsheet = true
-                                                Log.d("Akash", "Bottom sheet true")
-
                                                playedGame.gameRewards.filter{
                                                    it.gameRewardId==playedGame.participantGameRewards[0].gameRewardId
                                                }[0].let {
