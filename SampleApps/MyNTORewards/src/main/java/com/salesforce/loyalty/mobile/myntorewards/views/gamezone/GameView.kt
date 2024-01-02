@@ -35,11 +35,13 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_TYPE
 
 @Composable
-fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType: GameType, onClicked: () -> Unit) {
+fun GameView(isExpired: Boolean, gamePlayingStatus: String?, title: String, gameType: GameType, gameReward:String= "", onClicked: () -> Unit) {
+
+    val GAME_STATUS_PLAYED= "Played"
     Column(
         modifier = Modifier
             .width(165.dp)
-            .height(203.dp)
+            .height(210.dp)
             .background(Color.White, RoundedCornerShape(16.dp))
             .padding(bottom = 8.dp)
             .clickable {
@@ -116,7 +118,7 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                     expirationBgColor = ScratchCardBackground
                 }
 
-                expiryDetail ?.let {
+                gamePlayingStatus ?.let {
                     Text(
                         text = buildAnnotatedString {
                                 withStyle(
@@ -135,6 +137,18 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                             .background(expirationBgColor, shape = RoundedCornerShape(4.dp))
                             .padding(start = 12.dp, end = 12.dp, bottom = 4.dp).testTag(TEST_TAG_GAME_ZONE_ITEM_EXPIRY)
                     )
+                    if(gamePlayingStatus== GAME_STATUS_PLAYED){
+                        Text(
+                            text = gameReward,
+                            fontFamily = font_sf_pro,
+                            color = LightBlack,
+                            textAlign = TextAlign.Start,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    }
+
                 }
             }
         }

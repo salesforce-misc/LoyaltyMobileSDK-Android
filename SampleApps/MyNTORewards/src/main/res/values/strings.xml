@@ -224,6 +224,7 @@
     <string name="tab_game_zone_active">Active</string>
     <string name="tab_game_zone_available">Available</string>
     <string name="tab_game_zone_expired">Expired</string>
+    <string name="tab_game_zone_played">Played</string>
     <string name="game_expiring_tomorrow">Expiring Tomorrow</string>
     <string name="game_placeholder_title">Bonnie and Clyde Style Promotion</string>
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
@@ -259,4 +260,9 @@
     <string name="game_error_dialog_ok">OK</string>
     <string name="game_error_msg">Oops! Something went wrong \u2028 while processing the request. Try again.</string>
     <string name="play_more_text">Play More</string>
+
+    <string name="text_go_to_voucher_section">Go to the Voucher Section"</string>
+    <string name="text_better_luck_reward">You did not win anything in this game.</string>
+    <string name="text_congratulations">Congratulations!!!</string>
+    <string name="text_played">Played</string>
 </resources>
