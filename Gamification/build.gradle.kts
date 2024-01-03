@@ -31,6 +31,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -41,7 +47,6 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    testImplementation("junit:junit:4.13.2")
     androidTestImplementation("com.android.support.test:runner:1.0.2")
     androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2")
 
@@ -53,4 +58,21 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("io.reactivex.rxjava2:rxjava:2.2.12")
     implementation("com.squareup.retrofit2:adapter-rxjava2:2.6.1")
+
+    // Mock web server
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.9.0")
+
+    // Coroutine test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+
+    // Google truth for assertion
+    testImplementation("com.google.truth:truth:1.1.3")
+
+    testImplementation("org.mockito:mockito-core:3.3.3")
+
+    //Mockk
+    testImplementation("io.mockk:mockk:1.12.4")
 }

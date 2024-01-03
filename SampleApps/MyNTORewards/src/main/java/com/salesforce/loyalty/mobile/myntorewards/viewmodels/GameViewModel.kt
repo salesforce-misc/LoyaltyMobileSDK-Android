@@ -12,6 +12,7 @@ import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
@@ -22,30 +23,30 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val repository: GamificationRemoteRepository) : ViewModel() {
+    private val repository: GamificationRemoteRepository) : ViewModel(), GameViewModelInterface {
     private val TAG = GameViewModel::class.java.simpleName
 
     private var rewardMutableLiveData = MutableLiveData<GameRewardResponse>()
 
-    val rewardLiveData: LiveData<GameRewardResponse>
+    override val rewardLiveData: LiveData<GameRewardResponse>
         get() = rewardMutableLiveData
 
-    val gamesLiveData: LiveData<Games>
+    override val gamesLiveData: LiveData<Games>
         get() = games
 
     private val games = MutableLiveData<Games>()
 
-    val gamesViewState: LiveData<GamesViewState>
+    override val gamesViewState: LiveData<GamesViewState>
         get() = viewState
 
     private val viewState = MutableLiveData<GamesViewState>()
 
-    val gameRewardsViewState: LiveData<GameRewardViewState>
+    override val gameRewardsViewState: LiveData<GameRewardViewState>
         get() = rewardViewState
 
     private val rewardViewState = MutableLiveData<GameRewardViewState>()
 
-    fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
+    override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
         viewModelScope.launch {
             rewardViewState.postValue(GameRewardViewState.GameRewardFetchInProgress)
             val result = repository.getGameReward(gameParticipantRewardId, mock)
@@ -60,11 +61,11 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse> {
+    override suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse> {
         return repository.getGameReward(gameParticipantRewardId, mock)
     }
 
-    fun getGames(context: Context, gameParticipantRewardId: String? = null, mock: Boolean) {
+    override fun getGames(context: Context, gameParticipantRewardId: String?, mock: Boolean) {
         viewState.value = GamesViewState.GamesFetchInProgress
         viewModelScope.launch {
             val memberJson =
@@ -93,7 +94,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+    override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
         return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
             gameDefinition.participantGameRewards.any { partGameReward ->
                 partGameReward.gameParticipantRewardId == gameParticipantRewardId

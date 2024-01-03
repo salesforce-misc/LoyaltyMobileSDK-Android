@@ -1276,4 +1276,4 @@ fun grantRuntimePermission() {
     if (allowPermission.exists()) {
         allowPermission.click()
     }
-}g
+}
