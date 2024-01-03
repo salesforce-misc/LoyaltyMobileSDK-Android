@@ -155,8 +155,8 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                         val tabItems =
                             listOf(
                                 GameZoneTabs.ActiveGames,
-                                GameZoneTabs.ExpiredGames,
-                                GameZoneTabs.PlayedGames
+                                GameZoneTabs.PlayedGames,
+                                GameZoneTabs.ExpiredGames
                             )
                         ScrollableTabRow(selectedTabIndex = selectedTab,
                             modifier = Modifier

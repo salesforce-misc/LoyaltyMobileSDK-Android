@@ -92,14 +92,14 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel){
+            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel, voucherModel){
                 showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.More.route+ "/{openGameZone}") {
             val gameZone = it.arguments?.getString("openGameZone")
             if (gameZone.equals(ROUTE_GAME_ZONE)) {
-                GameZoneNavigation(gameViewModel = gameViewModel) { showBottomBar(it) }
+                GameZoneNavigation(gameViewModel = gameViewModel, voucherModel) { showBottomBar(it) }
             }
         }
     }
