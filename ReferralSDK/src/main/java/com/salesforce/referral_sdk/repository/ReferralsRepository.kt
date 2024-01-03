@@ -12,12 +12,10 @@ import com.salesforce.referral_sdk.api.safeApiCall
 import com.salesforce.referral_sdk.entities.ATTRIBUTES_COUNTRY
 import com.salesforce.referral_sdk.entities.ATTRIBUTES_STATE
 import com.salesforce.referral_sdk.entities.AssociatedPersonAccountDetails
-import com.salesforce.referral_sdk.entities.QueryResult
 import com.salesforce.referral_sdk.entities.ReferralAttributes
-import com.salesforce.referral_sdk.entities.ReferralNewEnrollmentRequestBody
 import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
-import com.salesforce.referral_sdk.entities.ReferralEntity
 import com.salesforce.referral_sdk.entities.ReferralExistingEnrollmentRequest
+import com.salesforce.referral_sdk.entities.ReferralNewEnrollmentRequestBody
 import com.salesforce.referral_sdk.entities.referral_event.ReferralEventRequest
 import com.salesforce.referral_sdk.entities.referral_event.ReferralEventResponse
 import com.salesforce.referral_sdk.utils.getCurrentDateTime
@@ -27,16 +25,6 @@ import javax.inject.Inject
 open class ReferralsRepository @Inject constructor(
     private val apiService: ApiService
 ) {
-
-    suspend fun fetchReferralsInfo(accessToken: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
-        return safeApiCall {
-            apiService.fetchReferralsInfo(
-                "https://dsb000001oyrq2ai.test1.my.pc-rnd.site.com/NTOInsider/services/data/v59.0/query/",
-                referralQuery(durationInDays),
-                "Bearer 00DSB000001oyRq!AQEAQLxnVEfUL.qmZZDGHysZTSqDArSW9yHRSo7Pj.yJpn9Zc6Ne7ieJ9iENwhpE8jsRTprt6lH0m9X05DjL6SbogeLDwY6L"
-            )
-        }
-    }
 
     suspend fun enrollNewCustomerAsAdvocateOfPromotion(
         firstName: String,
@@ -73,10 +61,6 @@ open class ReferralsRepository @Inject constructor(
                 "Bearer $accessToken"
             )
         }
-    }
-
-    private fun referralQuery(durationInDays: Int): String {
-        return "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate, CurrentPromotionStage.Type FROM Referral WHERE ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
     }
 
     suspend fun enrollExistingAdvocateToPromotionWithMembershipNumber(
@@ -119,7 +103,7 @@ open class ReferralsRepository @Inject constructor(
             apiService.sendReferrals(
                 getRequestUrl(ReferralAPIConfig.Resource.ReferralEvent),
                 ReferralEventRequest(
-                    referralCode = "FV1MEANB-TestPromo1",
+                    referralCode = "FV1MEANB-Promo100",
                     joiningDate = getCurrentDateTime().orEmpty(),
                     email = emails,
                     firstName = "siva",

@@ -33,6 +33,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class MyReferralsViewModel @Inject constructor(
     private val repository: ReferralsRepository,
@@ -51,7 +52,7 @@ class MyReferralsViewModel @Inject constructor(
     companion object {
         private const val REFERRAL_DURATION = 90
         // TODO: Check if we need to remove hard coded and use dynamically instead
-        private const val PROMO_CODE = "TestPromo1"
+        private const val PROMO_CODE = "Promo100"
     }
 
     init {
@@ -61,6 +62,10 @@ class MyReferralsViewModel @Inject constructor(
     fun onSignUpToReferClicked(email: String) {
         // TODO: Signup to Referral Program with mail id
         _programState.value = ReferralProgramType.JOIN_PROGRAM
+    }
+
+    fun startReferring() {
+        _programState.value = ReferralProgramType.START_REFERRING
     }
 
     fun sendReferralMail(context: Context, emails: String) {
@@ -105,7 +110,7 @@ class MyReferralsViewModel @Inject constructor(
         val accessToken = ForceAuthManager(context).getForceAuth()?.accessToken ?: ""
 
         viewModelScope.launch {
-            when(val result = repository.fetchReferralsInfo(accessToken, REFERRAL_DURATION)) {
+            when(val result = localRepository.fetchReferralsInfo(accessToken, REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
                     val data: List<ReferralEntity>? = result.data.records
                     Logger.d("Success", "$data")
@@ -124,7 +129,7 @@ class MyReferralsViewModel @Inject constructor(
         viewModelScope.launch {
             when(val result = localRepository.fetchMemberReferralCode(accessToken, getMember(context)?.membershipNumber.orEmpty())) {
                 is ApiResponse.Success -> {
-                    result.data.records?.firstOrNull()?.referralcode?.let {
+                    result.data.records?.firstOrNull()?.referralCode?.let {
                         setReferralCode(context, "$it-$PROMO_CODE")
                     } ?: Logger.d("fetchReferralAndPromotionCode", "Failed while fetching referral code")
                 }
@@ -157,9 +162,12 @@ class MyReferralsViewModel @Inject constructor(
                 is ApiResponse.Success -> {
                     val enrollmentResponse = result.data
                     val status = enrollmentResponse.transactionJournals.firstOrNull()?.status
+                    _programState.value = ReferralProgramType.START_REFERRING
+                    setReferralCode(context, enrollmentResponse.promotionReferralCode)
+                    PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
+
                     if (status == EnrollmentStatus.PROCESSED.status) {
-                        _programState.value = ReferralProgramType.START_REFERRING
-                        setReferralCode(context, enrollmentResponse.promotionReferralCode)
+
                     } else {
                         // TODO: What to do if enrollment is not processed
                     }
@@ -202,34 +210,6 @@ class MyReferralsViewModel @Inject constructor(
             null
         }
     }
-
-    /*private fun enrollExistingAdvocateToPromotion(membershipNumber: String) {
-        Logger.d("enrollToReferralProgram using Membership number: ", "$membershipNumber")
-        viewModelScope.launch {
-            when (val result = ) {
-                is ApiResponse.Success -> {
-                    _programState.value = ReferralProgramType.START_REFERRING
-                    _viewState.value =
-                        ReferFriendViewState.ReferFriendSendMailsSuccess("Enrollment Success!")
-
-                    Logger.d("enrollToReferralProgram Success", "${result.data}")
-                }
-
-                is ApiResponse.Error -> {
-                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsSuccess("Error!")
-
-                    Logger.d("enrollToReferralProgram Error", "${result.errorMessage}")
-                }
-
-                ApiResponse.NetworkError -> {
-                    _viewState.value =
-                        ReferFriendViewState.ReferFriendSendMailsSuccess("Network error!")
-
-                    Logger.d("enrollToReferralProgram Error", "N/W error")
-                }
-            }
-        }
-    }*/
 
     private fun successState(data: List<ReferralEntity>?): MyReferralScreenState {
         val (successStates, inProgressStates) = successAndInProgressItemStates(data)
