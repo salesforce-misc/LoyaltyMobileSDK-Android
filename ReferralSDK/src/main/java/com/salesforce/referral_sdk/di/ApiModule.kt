@@ -23,9 +23,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
-    @Provides
-    @Singleton
-    fun provideBaseUrl() = BASE_URL
+//    @Provides
+//    @Singleton
+//    fun provideBaseUrl() = BASE_URL
 
     @Provides
     @Singleton

@@ -2,14 +2,9 @@ package com.salesforce.loyalty.mobile.myntorewards.utilities
 
 import android.content.Context
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 object DateUtils {
 

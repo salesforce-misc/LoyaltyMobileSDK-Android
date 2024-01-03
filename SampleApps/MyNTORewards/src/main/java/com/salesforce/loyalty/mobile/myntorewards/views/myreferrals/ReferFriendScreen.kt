@@ -39,7 +39,6 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
@@ -59,8 +58,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.TextButtonCus
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
-import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 
 const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
 
@@ -82,13 +79,13 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
             ReferFriendViewState.ReferFriendInProgress -> {
                 ProgressDialogComposable(Color.White) { } // Do nothing on progress dismiss
             }
-            is ReferFriendViewState.ReferFriendSendMailsSuccess -> context.showToast("Emails sent Successfully!")
+            is ReferFriendViewState.ReferFriendSendMailsSuccess -> context.showToast(it.data)
         }
     }
 }
 
 @Composable
-fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: ReferralProgramType = JOIN_PROGRAM, backAction: () -> Boolean, closeAction: () -> Unit) {
+fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: ReferralProgramType, backAction: () -> Boolean, closeAction: () -> Unit) {
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -159,8 +156,8 @@ fun JoinReferralProgramUi(viewModel: MyReferralsViewModel, backAction: () -> Boo
     BodyText(text = stringResource(R.string.join_referral_program_description))
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.referral_join_button_text), onClick = {
-        viewModel.onReferralProgramJoinClicked()
-        PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
+        viewModel.enrollToReferralPromotion(context)
+//        PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
     })
     TextButtonCustom(
         modifier = Modifier
@@ -173,8 +170,8 @@ fun JoinReferralProgramUi(viewModel: MyReferralsViewModel, backAction: () -> Boo
 
 @Composable
 private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit) {
-    val referralCode = "845FFF907ZX6"
     val context = LocalContext.current
+    val referralCode = viewModel.referralCode(context)
     val extraText = context.getString(R.string.share_referral_message, referralCode)
     val focusManager = LocalFocusManager.current
     var textField by remember { mutableStateOf(TextFieldValue("")) }
@@ -195,7 +192,7 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit
             }
             textField = TextFieldValue("")
             focusManager.clearFocus()
-            viewModel.sendReferralMail(emails)
+            viewModel.sendReferralMail(context, emails.joinToString(","))
         },
         updateTextField = { textField = it }
     )

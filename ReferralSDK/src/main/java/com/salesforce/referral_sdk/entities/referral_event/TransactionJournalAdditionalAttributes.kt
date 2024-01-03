@@ -1,0 +1,3 @@
+package com.salesforce.referral_sdk.entities.referral_event
+
+class TransactionJournalAdditionalAttributes

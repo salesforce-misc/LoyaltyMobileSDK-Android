@@ -1,5 +1,6 @@
-package com.salesforce.referral_sdk.api
+package com.salesforce.loyalty.mobile.myntorewards.referrals.api
 
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.referral_sdk.entities.QueryResult
 import com.salesforce.referral_sdk.entities.ReferralNewEnrollmentRequestBody
 import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
@@ -15,7 +16,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Url
 
-interface ApiService {
+interface ReferralsLocalApiService {
     @GET
     suspend fun fetchReferralsInfo(
         @Url url: String,
@@ -23,24 +24,10 @@ interface ApiService {
         @Header("Authorization") bearerToken: String
     ): Response<QueryResult<ReferralEntity>>
 
-    @POST
-    suspend fun enrollNewCustomerAsAdvocateOfPromotion(
+    @GET
+    suspend fun fetchMemberReferralId(
         @Url url: String,
-        @Body requestBody: ReferralNewEnrollmentRequestBody,
+        @Query("q") query: String?,
         @Header("Authorization") bearerToken: String
-    ): Response<ReferralEnrollmentResponse>
-
-    @POST
-    suspend fun enrollExistingAdvocateToPromotion(
-        @Url url: String,
-        @Body requestBody: ReferralExistingEnrollmentRequest,
-        @Header("Authorization") bearerToken: String
-    ): Response<ReferralEnrollmentResponse>
-
-    @POST
-    suspend fun sendReferrals(
-        @Url url: String,
-        @Body requestBody: ReferralEventRequest,
-        @Header("Authorization") bearerToken: String
-    ): Response<ReferralEventResponse>
+    ): Response<QueryResult<ReferralCode>>
 }

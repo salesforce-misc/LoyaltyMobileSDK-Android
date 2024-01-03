@@ -1,79 +1,136 @@
 package com.salesforce.referral_sdk.repository
 
+import com.salesforce.referral_sdk.EnrollmentChannel
+import com.salesforce.referral_sdk.MemberStatus
+import com.salesforce.referral_sdk.TransactionalJournalStatementFrequency
+import com.salesforce.referral_sdk.TransactionalJournalStatementMethod
 import com.salesforce.referral_sdk.api.ApiResponse
 import com.salesforce.referral_sdk.api.ApiService
-import com.salesforce.referral_sdk.entities.AdditionalMemberFieldValues
-import com.salesforce.referral_sdk.entities.AdditionalPersonAccountFieldValues
+import com.salesforce.referral_sdk.api.ReferralAPIConfig
+import com.salesforce.referral_sdk.api.ReferralAPIConfig.getRequestUrl
+import com.salesforce.referral_sdk.api.safeApiCall
+import com.salesforce.referral_sdk.entities.ATTRIBUTES_COUNTRY
+import com.salesforce.referral_sdk.entities.ATTRIBUTES_STATE
 import com.salesforce.referral_sdk.entities.AssociatedPersonAccountDetails
-import com.salesforce.referral_sdk.entities.AttributesX
 import com.salesforce.referral_sdk.entities.QueryResult
 import com.salesforce.referral_sdk.entities.ReferralAttributes
-import com.salesforce.referral_sdk.entities.ReferralEnrollmentRequestBody
+import com.salesforce.referral_sdk.entities.ReferralNewEnrollmentRequestBody
 import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
 import com.salesforce.referral_sdk.entities.ReferralEntity
-import retrofit2.Response
-import java.io.IOException
+import com.salesforce.referral_sdk.entities.ReferralExistingEnrollmentRequest
+import com.salesforce.referral_sdk.entities.referral_event.ReferralEventRequest
+import com.salesforce.referral_sdk.entities.referral_event.ReferralEventResponse
+import com.salesforce.referral_sdk.utils.getCurrentDateTime
+import com.salesforce.referral_sdk.utils.getRandomString
 import javax.inject.Inject
 
-class ReferralsRepository @Inject constructor(
+open class ReferralsRepository @Inject constructor(
     private val apiService: ApiService
 ) {
-    private suspend fun <T: Any> safeApiCall(call: suspend () -> Response<T>): ApiResponse<T> {
-        return try {
-            val response = call.invoke()
-            if (response.isSuccessful) {
-                ApiResponse.Success(response.body()!!)
-            } else {
-                val errorMessage = response.errorBody()?.string()
-                ApiResponse.Error(errorMessage)
-            }
-        } catch (exception: IOException) {
-            ApiResponse.NetworkError
-        }  catch (exception: Exception) {
-            ApiResponse.Error(exception.message)
-        }
-    }
 
     suspend fun fetchReferralsInfo(accessToken: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
         return safeApiCall {
             apiService.fetchReferralsInfo(
                 "https://dsb000001oyrq2ai.test1.my.pc-rnd.site.com/NTOInsider/services/data/v59.0/query/",
                 referralQuery(durationInDays),
-                "Bearer 00DSB000001oyRq!AQEAQBhBDPFrYFtmtV4zIconsegFpyJ0qHkLgCWXNf2dLoQsItZCyHBUJUQ9MXcCBD9oqHJLeZHh85qP7T6mrsU3p7DScExW"
+                "Bearer 00DSB000001oyRq!AQEAQLxnVEfUL.qmZZDGHysZTSqDArSW9yHRSo7Pj.yJpn9Zc6Ne7ieJ9iENwhpE8jsRTprt6lH0m9X05DjL6SbogeLDwY6L"
             )
         }
     }
 
-    suspend fun enrollToReferralProgram(
+    suspend fun enrollNewCustomerAsAdvocateOfPromotion(
+        firstName: String,
+        lastName: String,
+        email: String,
+        state: String? = null,
+        country: String? = null,
+        enrollmentChannel: EnrollmentChannel = EnrollmentChannel.EMAIL,
+        memberStatus: MemberStatus = MemberStatus.ACTIVE,
+        transactionalJournalFrequency: TransactionalJournalStatementFrequency = TransactionalJournalStatementFrequency.MONTHLY,
+        transactionalJournalMethod: TransactionalJournalStatementMethod = TransactionalJournalStatementMethod.EMAIL,
         accessToken: String,
-        membershipNumber: String,
         promotionName: String,
         promotionCode: String
     ): ApiResponse<ReferralEnrollmentResponse> {
         return safeApiCall {
-            apiService.enrollToReferralProgram(
-                "https://dsb000001oyrq2ai.test1.my.pc-rnd.site.com/NTOInsider/services/data/v59.0/referral-programs/NTO%20Insider/promotions/Test1009/member-enrollments",
-                ReferralEnrollmentRequestBody(
-                    AdditionalMemberFieldValues(ReferralAttributes("California")),
+            apiService.enrollNewCustomerAsAdvocateOfPromotion(
+                getRequestUrl(ReferralAPIConfig.Resource.ReferralMemberEnrolment(promotionName, promotionCode)),
+                ReferralNewEnrollmentRequestBody(
+                    state?.let { ReferralAttributes(mapOf(ATTRIBUTES_STATE to state)) },
                     AssociatedPersonAccountDetails(
-                        AdditionalPersonAccountFieldValues(AttributesX("US")),
+                        country?.let { ReferralAttributes(mapOf(ATTRIBUTES_COUNTRY to country)) },
                         "false",
-                        "testmember@salesforce.com",
-                        "Test",
-                        "PS"
+                        email,
+                        firstName,
+                        lastName
                     ),
-                    "Email",
-                    "Active",
-                    membershipNumber,
-                    "Monthly",
-                    "Mail"
+                    enrollmentChannel.channel,
+                    memberStatus.status,
+                    getRandomString(8),
+                    transactionalJournalFrequency.frequency,
+                    transactionalJournalMethod.method
                 ),
-                "Bearer 00DSB000001oyRq!AQEAQAeCBW3bzRHPu_B34Jz5fr0uispyr3R4AXwZE9RgC9vHfjHZFJOehBfpvxfHEPat2n4i0JGcGPlJSsyh6NRMXJPOg5KE"
+                "Bearer $accessToken"
             )
         }
     }
 
     private fun referralQuery(durationInDays: Int): String {
         return "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate, CurrentPromotionStage.Type FROM Referral WHERE ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
+    }
+
+    suspend fun enrollExistingAdvocateToPromotionWithMembershipNumber(
+        promotionName: String,
+        promotionCode: String,
+        accessToken: String,
+        membershipNumber: String
+    ): ApiResponse<ReferralEnrollmentResponse> {
+        return enrollExistingAdvocateToNewPromotion(promotionName, promotionCode, accessToken, ReferralExistingEnrollmentRequest(membershipNumber = membershipNumber))
+    }
+
+    suspend fun enrollExistingAdvocateToPromotionWithContactId(
+        promotionName: String,
+        promotionCode: String,
+        accessToken: String,
+        contactId: String
+    ): ApiResponse<ReferralEnrollmentResponse> {
+        return enrollExistingAdvocateToNewPromotion(promotionName, promotionCode, accessToken, ReferralExistingEnrollmentRequest(contactId = contactId))
+    }
+
+    private suspend fun enrollExistingAdvocateToNewPromotion(
+        promotionName: String,
+        promotionCode: String,
+        accessToken: String,
+        existingMemberRequest: ReferralExistingEnrollmentRequest
+    ) = safeApiCall {
+        apiService.enrollExistingAdvocateToPromotion(
+            getRequestUrl(ReferralAPIConfig.Resource.ReferralMemberEnrolment(promotionName, promotionCode)),
+            existingMemberRequest,
+            "Bearer $accessToken"
+        )
+    }
+
+    suspend fun sendReferrals(
+        referralCode: String,
+        emails: String,
+        accessToken: String
+    ): ApiResponse<ReferralEventResponse> {
+        return safeApiCall {
+            apiService.sendReferrals(
+                getRequestUrl(ReferralAPIConfig.Resource.ReferralEvent),
+                ReferralEventRequest(
+                    referralCode = "FV1MEANB-TestPromo1",
+                    joiningDate = getCurrentDateTime().orEmpty(),
+                    email = emails,
+                    firstName = "siva",
+                    lastName = "polam"
+                ),
+                "Bearer $accessToken"
+            )
+        }
+    }
+
+    fun setInstanceUrl(instanceUrl: String) {
+        ReferralAPIConfig.instanceUrl = instanceUrl
     }
 }

@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.di
 
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.referral_sdk.repository.ReferralsRepository
 import dagger.Module
@@ -15,6 +16,8 @@ object ViewModelModule {
     @Provides
     @ViewModelScoped
     fun provideReferralViewModel(
-        referralsRepository: ReferralsRepository
-    ) = MyReferralsViewModel(referralsRepository)
+        referralsRepository: ReferralsRepository,
+        localRepository: ReferralsLocalRepository,
+        instanceUr: String
+    ) = MyReferralsViewModel(referralsRepository, localRepository, instanceUr)
 }

@@ -1099,6 +1099,10 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             override val gameRewardsViewState: LiveData<GameRewardViewState>
                 get() = rewardViewState
 
+            override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+                TODO("Not yet implemented")
+            }
+
             private val rewardViewState = MutableLiveData<GameRewardViewState>()
 
             override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
