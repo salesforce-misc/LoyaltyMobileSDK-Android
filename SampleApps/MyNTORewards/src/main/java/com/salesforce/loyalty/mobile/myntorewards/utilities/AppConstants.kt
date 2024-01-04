@@ -180,6 +180,7 @@ class AppConstants {
         const val ROUTE_GAME_ZONE = "route_open_game_zone"
 
         const val GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC = 1500L // 1.5 sec
+        const val GAME_STATUS_PLAYED= "Played"
 
     }
 }

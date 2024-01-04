@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -101,26 +100,35 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
 
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
-            PlayedGamePopup(playedGameRewardType, playedGameRewardValue, textButtonClicked = {  navController.navigate(
-                CheckOutFlowScreen.VoucherFullScreen.route)},
-                crossButtonClicked={
-                openBottomsheet = false
-                closeBottomSheet()
-            }, backClicked = {
+            PlayedGamePopup(playedGameRewardType, playedGameRewardValue, textButtonClicked = {
+                navController.navigate(
+                    CheckOutFlowScreen.VoucherFullScreen.route
+                )
+            },
+                crossButtonClicked = {
                     openBottomsheet = false
                     closeBottomSheet()
-            }
+                }, backClicked = {
+                    openBottomsheet = false
+                    closeBottomSheet()
+                }
             )
         },
-        sheetShape = RoundedCornerShape(AppConstants.POPUP_ROUNDED_CORNER_SIZE, AppConstants.POPUP_ROUNDED_CORNER_SIZE, 0.dp, 0.dp),
+        sheetShape = RoundedCornerShape(
+            AppConstants.POPUP_ROUNDED_CORNER_SIZE,
+            AppConstants.POPUP_ROUNDED_CORNER_SIZE,
+            0.dp,
+            0.dp
+        ),
         sheetPeekHeight = 0.dp,
         sheetGesturesEnabled = false
-    ){
+    ) {
         Box(
             contentAlignment = Alignment.TopCenter,
             modifier = Modifier
                 .background(TextPurpleLightBG)
-                .fillMaxSize().testTag(TEST_TAG_GAME_ZONE_SCREEN)
+                .fillMaxSize()
+                .testTag(TEST_TAG_GAME_ZONE_SCREEN)
         ) {
             Column(
                 modifier = Modifier

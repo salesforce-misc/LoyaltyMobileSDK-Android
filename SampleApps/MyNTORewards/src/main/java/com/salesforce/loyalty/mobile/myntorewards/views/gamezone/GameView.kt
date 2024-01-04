@@ -29,6 +29,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardBackground
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_STATUS_PLAYED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_EXPIRY
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_IMAGE
@@ -38,7 +39,6 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 @Composable
 fun GameView(isExpired: Boolean, gamePlayingStatus: String?, title: String, gameType: GameType, gameReward:String= "", onClicked: () -> Unit) {
 
-    val GAME_STATUS_PLAYED= "Played"
     Column(
         modifier = Modifier
             .width(165.dp)
