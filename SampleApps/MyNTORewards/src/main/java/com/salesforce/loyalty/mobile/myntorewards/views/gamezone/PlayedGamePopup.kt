@@ -52,7 +52,6 @@ fun PlayedGamePopup(
     else{
         playedGamePopupupImage= R.drawable.played_game_rewarded
         playedGamePopupupHeading= stringResource(id = R.string.text_congratulations)
-        playedGamePopupupMsg= "You won\u2028A voucher for 20% off on Sports Shoes.\u2028Go to the voucher section to claim your reward!"
         playedGamePopupupMsg= confirmationScreenMsg(playedGameRewardType, rewardValue)
     }
     Column(
@@ -144,21 +143,22 @@ fun PlayedGamePopup(
                         .padding(top = 3.dp, bottom = 3.dp)
                 )
             }
-            if(playedGameRewardType!= RewardType.NO_VOUCHER.rewardType)
-            Text(
-                text = stringResource(id = R.string.text_go_to_voucher_section),
-                fontFamily = font_sf_pro,
-                modifier = Modifier
-                    .padding(top = 12.dp, bottom = 3.dp)
-                    .clickable {
-                        textButtonClicked()
-                    },
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                color = LighterBlack,
-                fontWeight = FontWeight.Normal,
+            if(playedGameRewardType!= RewardType.NO_VOUCHER.rewardType){
+                Text(
+                    text = stringResource(id = R.string.text_go_to_voucher_section),
+                    fontFamily = font_sf_pro,
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 3.dp)
+                        .clickable {
+                            textButtonClicked()
+                        },
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    color = LighterBlack,
+                    fontWeight = FontWeight.Normal,
 
-                )
+                    )
+            }
 
         }
     }

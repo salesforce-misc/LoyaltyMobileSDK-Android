@@ -168,7 +168,7 @@ fun CongratulationsScreen(rewardType: String="", rewardValue: String="", onClick
 @Composable
 fun confirmationScreenMsg(rewardType: String, offerValue:String): String {
 
-    if(offerValue.isEmpty()){
+    if(offerValue.isNullOrEmpty() || offerValue== "null" ){   //false suggestion from kotlil. offerValue can be null.
         return stringResource(id = R.string.game_zone_congrats_msg_custom)
     }
     return when (rewardType) {

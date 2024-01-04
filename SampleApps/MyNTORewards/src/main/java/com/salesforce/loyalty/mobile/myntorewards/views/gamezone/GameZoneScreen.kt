@@ -106,11 +106,9 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                 crossButtonClicked={
                 openBottomsheet = false
                 closeBottomSheet()
-                navController.popBackStack()
             }, backClicked = {
                     openBottomsheet = false
                     closeBottomSheet()
-                    navController.popBackStack()
             }
             )
         },
@@ -203,7 +201,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                 it.participantGameRewards[0].status == ParticipantRewardStatus.YET_TO_REWARD.status
                             }
                             val playedGames = games?.gameDefinitions?.filter {
-                                it.participantGameRewards[0].status == ParticipantRewardStatus.REWARDED.status && it.participantGameRewards[0].gameRewardId != null
+                                ( it.participantGameRewards[0].status == ParticipantRewardStatus.REWARDED.status ||  it.participantGameRewards[0].status == ParticipantRewardStatus.NO_REWARD.status ) && it.participantGameRewards[0].gameRewardId != null
                             }
 
 
