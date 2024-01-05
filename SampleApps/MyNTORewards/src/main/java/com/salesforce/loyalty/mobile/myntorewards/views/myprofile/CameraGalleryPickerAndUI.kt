@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
@@ -52,11 +53,11 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun CameraGalleryPickerAndUI(navController: NavHostController, cameraController: LifecycleCameraController, context: Context, onPhotoCaptured: (Bitmap) -> Unit, flashEnabled: (Boolean)-> Unit)
+fun CameraGalleryPickerAndUI(navController: NavHostController, cameraController: LifecycleCameraController, context: Context, lifecycleOwner: LifecycleOwner, onPhotoCaptured: (Bitmap) -> Unit, flashEnabled: (Boolean)-> Unit)
 {
     var isFlashEnabled by remember { mutableStateOf(false) }
 
-    val lifecycleOwner = LocalLifecycleOwner.current
+//    val lifecycleOwner = LocalLifecycleOwner.current
     Box() {
         var imageUri by remember {
             mutableStateOf<Uri?>(Uri.EMPTY)
@@ -79,7 +80,10 @@ fun CameraGalleryPickerAndUI(navController: NavHostController, cameraController:
                         .createSource(context.contentResolver, it)
                     bitmap.value = ImageDecoder.decodeBitmap(source)
                 }
-                bitmap.value?.let { onPhotoCaptured(it) }
+                bitmap.value?.let {
+                cameraController.unbind()
+                    onPhotoCaptured(it)
+                }
             }
             catch (imageDecodeException: ImageDecoder.DecodeException){
                 val errorMsg= stringResource(id = R.string.not_supported_image_msg)
@@ -118,6 +122,7 @@ fun CameraGalleryPickerAndUI(navController: NavHostController, cameraController:
                     scaleType = PreviewView.ScaleType.FILL_CENTER
                 }.also { previewView ->
                     previewView.controller = cameraController
+                    cameraController.unbind()
                     cameraController.bindToLifecycle(lifecycleOwner)
                 }
             }

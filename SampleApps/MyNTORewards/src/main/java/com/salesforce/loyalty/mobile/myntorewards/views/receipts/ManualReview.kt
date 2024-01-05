@@ -55,7 +55,7 @@ fun ManualReview(
     scanningViewModel: ScanningViewModelInterface,
     receiptId: String,
     purchase_date: String?,
-    processedAWSReponse: String?,
+    analyzeExpenseResponse: AnalyzeExpenseResponse?,
     totalPoints: String?,
     closePopup: (ReceiptListScreenPopupState) -> Unit,
     isSubmittedForManualReview: (Boolean) -> Unit
@@ -64,14 +64,7 @@ fun ManualReview(
         mutableStateOf(false)
     }
     val context: Context = LocalContext.current
-    var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
-    processedAWSReponse?.let {
-        val gson = Gson()
-        analyzeExpenseResponse = gson.fromJson<AnalyzeExpenseResponse>(
-            it,
-            AnalyzeExpenseResponse::class.java
-        )
-    }
+
     Column(
         modifier = Modifier
             .background(MyProfileScreenBG, RoundedCornerShape(22.dp, 22.dp, 0.dp, 0.dp))
@@ -170,13 +163,15 @@ fun ManualReview(
                     textAlign = TextAlign.End,
                     fontSize = 13.sp,
                 )
-                Text(
-                    text = totalPoints + " " + stringResource(R.string.receipt_points),
-                    fontFamily = font_sf_pro,
-                    color = LighterBlack,
-                    textAlign = TextAlign.Start,
-                    fontSize = 13.sp,
-                )
+                totalPoints?.let {
+                    Text(
+                        text = it + " " + stringResource(R.string.receipt_points),
+                        fontFamily = font_sf_pro,
+                        color = LighterBlack,
+                        textAlign = TextAlign.Start,
+                        fontSize = 13.sp,
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(8.dp))

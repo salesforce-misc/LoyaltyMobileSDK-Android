@@ -6,12 +6,19 @@ import retrofit2.http.*
 
 interface ReceiptScanningNetworkInterface {
 
-    @PUT()
+    @POST()
     suspend fun analyzeExpense(
+        @Url url: String,
+        @Query("filename") fileName: String,
+        @Query("membershipnumber") membershipNumber: String
+    ): AnalyzeExpenseResponse
+
+    @PUT()
+    suspend fun uploadReceipt(
         @Url url: String,
         @Body requestBody: RequestBody,
         @Query("membershipnumber") membershipNumber: String
-    ): AnalyzeExpenseResponse
+    ): UploadReceiptResponse
 
     @GET()
     suspend fun receiptList(

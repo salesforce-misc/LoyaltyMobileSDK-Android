@@ -51,3 +51,5 @@ val SearchIconColor = Color(0xFFAEAEAE)
 
 val ReceiptPointColourWarning = Color(0xFFDD7A01)
 val ReceiptPointColourError = Color(0xFFBA0517)
+val ReceiptProgressProgress = Color(0xFFE0E0E0)
+val ReceiptProgressTrackColor = Color(0xFFBA01FF)

@@ -21,6 +21,8 @@ data class AnalyzeExpenseResponse(
     val lineItems: List<LineItem> = mutableListOf(),
     @SerializedName("dateFormat")
     val dateFormat: String?,
+    @SerializedName("confidenceStatus")
+    val confidenceStatus: String?,
 )
 
 data class LineItem(

@@ -210,8 +210,14 @@
 
     <string name="not_supported_image_msg">Image is not supported please try with different receipt.</string>
 
+    <string name="no_eligible_items_message">No Eligible Items found in the Receipt!</string>
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
-
-
+    <string name="receipt_progress_subheading">Hang in there! This may take a minute.</string>
+    <string name="receipt_progress_step_1">Uploading receipt image…</string>
+    <string name="receipt_progress_step_2">Reading receipt information… </string>
+    <string name="receipt_progress_step_3">Processing receipt information…</string>
+    <string name="receipt_progress_step_4">Receipt Scanning Process Completed</string>
+    <string name="receipt_error_confidence_status_failure">Oops! The required information in the receipt could not be read and processed. \n\nTry scanning the receipt again.</string>
+    <string name="receipt_error_confidence_status_partial">Oops! Some items in the receipt could not be read and processed.\n\n\nTry scanning the receipt again or submit it for a manual review.</string>
 </resources>

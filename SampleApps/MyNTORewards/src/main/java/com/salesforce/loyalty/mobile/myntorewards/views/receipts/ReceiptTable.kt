@@ -95,6 +95,18 @@ fun ReceiptDetailTable(itemLists: List<LineItem>?) {
                 DrawDashLine()
                 Spacer(modifier = Modifier.height(24.dp))
             }
+        } else {
+            // Show message indicating there are no eligible items in the receipt
+            item {
+                Text(text = stringResource(id = R.string.no_eligible_items_message),
+                    modifier = Modifier.fillMaxWidth().padding(top = 36.dp, bottom = 24.dp),
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = font_sf_pro,
+                        fontWeight = FontWeight.Normal,
+                        color = LighterBlack))
+            }
         }
 
         // Non-eligible items

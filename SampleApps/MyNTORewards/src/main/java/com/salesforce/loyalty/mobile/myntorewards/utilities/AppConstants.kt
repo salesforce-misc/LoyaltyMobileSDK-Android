@@ -88,6 +88,10 @@ class AppConstants {
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
+        const val RECEIPT_PROGRESS_STARTED = "progress_started"
+        const val RECEIPT_PROGRESS_FIRST_STEP = "progress_first_step_completed"
+        const val RECEIPT_PROGRESS_SECOND_STEP = "progress_second_step_completed"
+        const val RECEIPT_PROGRESS_COMPLETED = "progress_completed"
         const val ORDER_ID = "orderID"
         const val PROMOTION_NAME = "promotionName"
 
@@ -115,6 +119,7 @@ class AppConstants {
         val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
 
         const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
+        const val KEY_ANALYZED_AWS_RESPONSE = "key_analyzed_aws_response"
         const val KEY_PURCHASE_DATE= "key_purchase_date"
         const val KEY_RECEIPT_ID = "key_receipt_id"
         const val KEY_RECEIPT_STATUS = "key_receipt_status"
