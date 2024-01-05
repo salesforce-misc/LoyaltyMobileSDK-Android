@@ -313,6 +313,7 @@ fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -351,7 +352,7 @@ fun MoreScreenNavigation(
 //            ScanningProgress(navController)
         }
         composable(route = MoreScreens.GameZoneScreen.route) {
-            GameZoneNavigation(gameViewModel = gameViewModel, showBottomBar = showBottomBar)
+            GameZoneNavigation(gameViewModel = gameViewModel, voucherModel, showBottomBar = showBottomBar)
         }
     }
 }
@@ -360,6 +361,7 @@ fun MoreScreenNavigation(
 @Composable
 fun GameZoneNavigation(
     gameViewModel: GameViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -402,6 +404,12 @@ fun GameZoneNavigation(
                 )
             }
         }
+
+        composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
+            showBottomBar(true)
+            VoucherFullScreen(navController, voucherModel)
+        }
+
         composable(route = MoreScreens.GameBetterLuckScreen.route) {
             showBottomBar(false)
             BetterLuckScreen {

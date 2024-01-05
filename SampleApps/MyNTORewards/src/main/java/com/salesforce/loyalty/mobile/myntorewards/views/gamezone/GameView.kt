@@ -19,6 +19,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardBackground
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_STATUS_PLAYED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_EXPIRY
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_IMAGE
@@ -35,11 +37,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_TYPE
 
 @Composable
-fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType: GameType, onClicked: () -> Unit) {
+fun GameView(isExpired: Boolean, gamePlayingStatus: String?, title: String, gameType: GameType, gameReward:String= "", onClicked: () -> Unit) {
+
     Column(
         modifier = Modifier
             .width(165.dp)
-            .height(203.dp)
+            .height(210.dp)
             .background(Color.White, RoundedCornerShape(16.dp))
             .padding(bottom = 8.dp)
             .clickable {
@@ -116,7 +119,7 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                     expirationBgColor = ScratchCardBackground
                 }
 
-                expiryDetail ?.let {
+                gamePlayingStatus ?.let {
                     Text(
                         text = buildAnnotatedString {
                                 withStyle(
@@ -135,6 +138,20 @@ fun GameView(isExpired: Boolean, expiryDetail: String?, title: String, gameType:
                             .background(expirationBgColor, shape = RoundedCornerShape(4.dp))
                             .padding(start = 12.dp, end = 12.dp, bottom = 4.dp).testTag(TEST_TAG_GAME_ZONE_ITEM_EXPIRY)
                     )
+                    if(gamePlayingStatus== GAME_STATUS_PLAYED){
+                        Text(
+                            text = gameReward,
+                            fontFamily = font_sf_pro,
+                            color = LightBlack,
+                            textAlign = TextAlign.Start,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+
                 }
             }
         }
