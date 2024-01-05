@@ -80,13 +80,10 @@ fun ErrorPopup(
         ) {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(), onClick = {
-                    tryAgainClicked()
                     .fillMaxWidth()
-                    .testTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN),
-                onClick = {
-                    scanAnotherReceipt()
-                },
+                    .testTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN)
+                    .fillMaxWidth(), onClick = {
+                    tryAgainClicked()},
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)
 
