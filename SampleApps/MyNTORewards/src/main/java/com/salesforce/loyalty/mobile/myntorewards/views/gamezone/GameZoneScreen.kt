@@ -257,6 +257,9 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                         }
                                     }
                                 }
+                                    else {
+                                        ShowEmptyView(selectedTab = selectedTab)
+                                    }
                             }
                             if (notPlayedGames != null) {
                                 val (activeGames, expiredGames) = notPlayedGames.partition {
@@ -396,6 +399,11 @@ fun ShowEmptyView(selectedTab: Int){
         TAB_EXPIRED_GAMES -> {
             EmptyView(
                 header = stringResource(id = R.string.label_empty_expired_games)
+            )
+        }
+        TAB_PLAYED_GAMES -> {
+            EmptyView(
+                header = stringResource(id = R.string.label_empty_played_games)
             )
         }
     }
