@@ -61,6 +61,7 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptSca
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_POINT_STATUS_PROCESSED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ELIGIBLE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_ORIGINAL_RECEIPT_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatReceiptListAPIDate
@@ -85,19 +86,19 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
     var blurBG by remember { mutableStateOf(0.dp) }
     val context: Context = LocalContext.current
 
-    val processedAWSReponse =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE)
+    val processedAWSReponse by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PROCESSED_AWS_RESPONSE))}
 
-    val purchaseDate =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PURCHASE_DATE)
+    val purchaseDate by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_PURCHASE_DATE))}
     val receiptId =
         navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_ID)
-    val receiptStatus =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_STATUS)
-    val totalPoints =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_TOTAL_POINTS)
-    val imageUrl =
-        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_IMAGE_URL)
+    val receiptStatus by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_STATUS))}
+    val totalPoints by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_TOTAL_POINTS))}
+    val imageUrl by remember { mutableStateOf(
+        navController.previousBackStackEntry?.arguments?.getString(AppConstants.KEY_RECEIPT_IMAGE_URL))}
     var isSubmittedForManualReview by remember {
         mutableStateOf(
             receiptStatus.equals(
@@ -153,8 +154,14 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
         sheetContent = {
             Spacer(modifier = Modifier.height(1.dp))
             receiptId?.let {
-                processedAWSReponse?.let { it1 ->
-                    ManualReview(scanningViewModel, it, purchaseDate, it1, totalPoints, closePopup = {
+                processedAWSReponse?.let { awsResponse ->
+                    var analyzeExpenseResponse: AnalyzeExpenseResponse? = null
+                        val gson = Gson()
+                        analyzeExpenseResponse = gson.fromJson<AnalyzeExpenseResponse>(
+                            awsResponse,
+                            AnalyzeExpenseResponse::class.java
+                        )
+                    ManualReview(scanningViewModel, it, purchaseDate, analyzeExpenseResponse, totalPoints, closePopup = {
                         openBottomsheet = false
                         closeBottomSheet()
                         openReceiptDetail = it
@@ -249,22 +256,19 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                        Text(
-                            text = analyzeExpenseResponse?.totalAmount ?: "",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black,
-                            textAlign = TextAlign.End,
-                            fontSize = 13.sp,
-                            modifier = Modifier
-                        )
                         if (receiptStatus != null) {
                             if (isSubmittedForManualReview) {
+                                // If points are already available and user has requested for the manual review, show points as well with status
+                                if (!totalPoints.isNullOrEmpty()) {
+                                    ReceiptStatusText(totalPoints, RECEIPT_POINT_STATUS_PROCESSED)
+                                }
+
                                 ReceiptStatusText(
                                     totalPoints = totalPoints,
                                     status = RECEIPT_STATUS_MANUAL_REVIEW
                                 )
                             } else {
-                                ReceiptStatusText(totalPoints, receiptStatus)
+                                ReceiptStatusText(totalPoints, receiptStatus!!)
                             }
                         }
                     }
@@ -344,7 +348,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                     }
                     TAB_ORIGINAL_RECEIPT_IMAGE -> {
                         if (imageUrl != null) {
-                            ZoomableImage(imageUrl) {
+                            ZoomableImage(imageUrl!!) {
                                 bitmap.value = it
                             }
                         }

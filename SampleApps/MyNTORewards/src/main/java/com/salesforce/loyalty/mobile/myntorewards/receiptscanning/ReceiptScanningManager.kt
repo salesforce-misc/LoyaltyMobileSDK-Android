@@ -32,29 +32,25 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     suspend fun analyzeExpense(
+        fileName: String,
         membershipNumber: String,
-        encodedImage: ByteArray
     ): Result<AnalyzeExpenseResponse> {
         Logger.d(TAG, "analyzeExpense()")
 
-        /*val requestBody =
-            AnalyzeExpenseRequest(membershipNumber = membershipNumber, base64image = encodedImage)*/
-        var requestBody: RequestBody =
-            encodedImage.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, encodedImage.size)
         try {
             val success = receiptClient.receiptApi.analyzeExpense(
-                getAnalyzeExpenseUrl(),
-                requestBody, membershipNumber
+                getAnalyzeExpenseUrl(), fileName,
+                membershipNumber
             )
             return Result.success(success)
         } catch (e: HttpException) {
             val responseBody = e.response()?.errorBody()?.string()
             Logger.d(TAG, "Analyze Expense exception : $responseBody")
             val errorMessageBody = Gson().fromJson(responseBody, AnalyzeExpenseErrorResponse::class.java)
-            errorMessageBody?.message?.let{
-                return Result.failure(Throwable(it))
-            }
-            return Result.failure(Throwable(""))
+            return Result.failure(Throwable(errorMessageBody?.message))
+        } catch (e: Exception) {
+            Logger.d(TAG, "Analyze Expense generic exception : ${e.message}")
+            return Result.failure(Throwable())
         }
     }
 
@@ -94,6 +90,42 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
         )
     }
 
+    suspend fun uploadReceipt(
+        membershipNumber: String,
+        encodedImage: ByteArray
+    ): Result<UploadReceiptResponse> {
+        Logger.d(TAG, "uploadReceipt()")
+        try {
+            var requestBody: RequestBody =
+                encodedImage.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, encodedImage.size)
+            val success =  receiptClient.receiptApi.uploadReceipt(
+                getUploadReceiptUrl(),
+                requestBody, membershipNumber
+            )
+            return Result.success(success)
+        } catch (e: HttpException) {
+            val responseBody = e.response()?.errorBody()?.string()
+            Logger.d(TAG, "uploadReceipt exception : $responseBody")
+            var errorMessage: String?
+            try {
+                val forceError: List<AnalyzeExpenseErrorResponse> = Gson().fromJson(responseBody, Array<AnalyzeExpenseErrorResponse>::class.java).toList()
+                errorMessage = forceError.firstOrNull()?.message
+                Logger.d(TAG, "uploadReceipt exception : $errorMessage")
+                // Passing null as error message as default error message has to be shown in the UI in this case.
+                errorMessage = null
+            } catch (e: Exception) {
+                Logger.d(TAG, "uploadReceipt exception : $e")
+                errorMessage =
+                    (Gson().fromJson(responseBody, AnalyzeExpenseErrorResponse::class.java))?.message
+            }
+
+            return Result.failure(Throwable(errorMessage))
+        } catch (e: Exception) {
+            Logger.d(TAG, "uploadReceipt generic exception : ${e.message}")
+            return Result.failure(Throwable())
+        }
+    }
+
     private fun getAnalyzeExpenseUrl(): String {
         return mInstanceUrl + ReceiptScanningConfig.RECEIPT_ANALYZE_EXPENSE
     }
@@ -116,5 +148,9 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
 
     private fun fetchReceiptStatusSOQLQuery(membershipKey: String, receiptId: String): String {
         return "select Id,Status__c,TotalRewardPoints__c from Receipts__c WHERE LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' AND Id = '${receiptId}'"
+    }
+
+    private fun getUploadReceiptUrl(): String {
+        return mInstanceUrl + ReceiptScanningConfig.RECEIPT_UPLOAD_RECEIPT
     }
 }

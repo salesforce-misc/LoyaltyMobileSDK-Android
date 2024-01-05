@@ -5,7 +5,7 @@
     "receiptNumber" : "#0529-0123",
     "receiptDate" : "2020-01-10",
     "memberShipNumber" : "24345678",
-    "confidenceStatus": "Success",
+    "confidenceStatus": "Partial",
     "lineItem" : [ {
         "quantity" : "5",
         "productName" : "Alpine-Bran Cereal",
@@ -17,6 +17,6 @@
         "productName" : "Alpine-Oat Cereal",
         "price" : "$7.99",
         "lineItemPrice" : "$15.98",
-        "isEligible" : true
+        "isEligible" : false
     } ]
 }
