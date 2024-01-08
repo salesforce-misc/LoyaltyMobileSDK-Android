@@ -96,7 +96,7 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(project(":Sources"))
-    implementation(project(":Gamification"))
+    implementation(project(":GamificationMobileSDK-Android:GamificationMobileSDK"))
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.0")
