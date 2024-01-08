@@ -36,7 +36,6 @@ open class ReferralsRepository @Inject constructor(
         memberStatus: MemberStatus = MemberStatus.ACTIVE,
         transactionalJournalFrequency: TransactionalJournalStatementFrequency = TransactionalJournalStatementFrequency.MONTHLY,
         transactionalJournalMethod: TransactionalJournalStatementMethod = TransactionalJournalStatementMethod.EMAIL,
-        accessToken: String,
         promotionName: String,
         promotionCode: String
     ): ApiResponse<ReferralEnrollmentResponse> {
@@ -57,8 +56,7 @@ open class ReferralsRepository @Inject constructor(
                     getRandomString(8),
                     transactionalJournalFrequency.frequency,
                     transactionalJournalMethod.method
-                ),
-                "Bearer $accessToken"
+                )
             )
         }
     }
@@ -66,50 +64,54 @@ open class ReferralsRepository @Inject constructor(
     suspend fun enrollExistingAdvocateToPromotionWithMembershipNumber(
         promotionName: String,
         promotionCode: String,
-        accessToken: String,
         membershipNumber: String
     ): ApiResponse<ReferralEnrollmentResponse> {
-        return enrollExistingAdvocateToNewPromotion(promotionName, promotionCode, accessToken, ReferralExistingEnrollmentRequest(membershipNumber = membershipNumber))
+        return enrollExistingAdvocateToNewPromotion(promotionName, promotionCode, ReferralExistingEnrollmentRequest(membershipNumber = membershipNumber))
     }
 
     suspend fun enrollExistingAdvocateToPromotionWithContactId(
         promotionName: String,
         promotionCode: String,
-        accessToken: String,
         contactId: String
     ): ApiResponse<ReferralEnrollmentResponse> {
-        return enrollExistingAdvocateToNewPromotion(promotionName, promotionCode, accessToken, ReferralExistingEnrollmentRequest(contactId = contactId))
+        return enrollExistingAdvocateToNewPromotion(promotionName, promotionCode, ReferralExistingEnrollmentRequest(contactId = contactId))
     }
 
     private suspend fun enrollExistingAdvocateToNewPromotion(
         promotionName: String,
         promotionCode: String,
-        accessToken: String,
         existingMemberRequest: ReferralExistingEnrollmentRequest
     ) = safeApiCall {
         apiService.enrollExistingAdvocateToPromotion(
             getRequestUrl(ReferralAPIConfig.Resource.ReferralMemberEnrolment(promotionName, promotionCode)),
-            existingMemberRequest,
-            "Bearer $accessToken"
+            existingMemberRequest
         )
     }
 
     suspend fun sendReferrals(
         referralCode: String,
-        emails: String,
-        accessToken: String
+        emails: List<String>
     ): ApiResponse<ReferralEventResponse> {
         return safeApiCall {
+            var firstName: String? = null
+            var lastName: String? = null
+            val (email, multipleMails) = if (emails.size == 1) {
+                firstName = "siva"
+                lastName = "polam"
+                Pair(emails.first(), null)
+            } else {
+                Pair(null, emails.joinToString(","))
+            }
             apiService.sendReferrals(
                 getRequestUrl(ReferralAPIConfig.Resource.ReferralEvent),
                 ReferralEventRequest(
-                    referralCode = "FV1MEANB-Promo100",
+                    referralCode = referralCode,
                     joiningDate = getCurrentDateTime().orEmpty(),
-                    email = emails,
-                    firstName = "siva",
-                    lastName = "polam"
-                ),
-                "Bearer $accessToken"
+                    email = email,
+                    referralEmails = multipleMails,
+                    firstName = firstName,
+                    lastName = lastName
+                )
             )
         }
     }

@@ -11,6 +11,8 @@ data class ReferralEventRequest(
     val eventType: String = ReferralEventType.REFER.eventType,
     @SerializedName("email")
     val email: String?,
+    @SerializedName("referralEmails")
+    val referralEmails: String?,
     @SerializedName("firstName")
     val firstName: String? = null,
     @SerializedName("lastName")

@@ -7,6 +7,7 @@
 
 package com.salesforce.referral_sdk.api
 
+import com.salesforce.referral_sdk.Logger
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -22,6 +23,7 @@ class UnauthorizedInterceptor(private val authenticator: ForceAuthenticator) : I
         const val HEADER_AUTHORIZATION = "Authorization"
     }
     override fun intercept(chain: Interceptor.Chain): Response {
+        Logger.d("UnauthorizedInterceptor", "intercept")
         val request = chain.request()
         val response = authenticator.getAccessToken()?.let {
             chain.proceed(newRequestWithAccessToken(it, request))

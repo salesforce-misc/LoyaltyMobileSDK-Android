@@ -39,7 +39,7 @@ object ApiModule {
     @Provides
     fun provideOkHttpClient(unauthorizedInterceptor: UnauthorizedInterceptor): OkHttpClient {
         return OkHttpClient.Builder().apply {
-//            addInterceptor(unauthorizedInterceptor)
+            addInterceptor(unauthorizedInterceptor)
             if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor().apply {
                     setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -67,8 +67,8 @@ object ApiModule {
     fun provideUnauthorizedInterceptor(authenticator: ForceAuthenticator)
         = UnauthorizedInterceptor(authenticator)
 
-    @Provides
-    @Singleton
-    fun provideForceAuthenticator(): ForceAuthenticator = ForceAuthenticatorImpl()
+//    @Provides
+//    @Singleton
+//    fun provideForceAuthenticator(): ForceAuthenticator = ForceAuthenticatorImpl()
 
 }

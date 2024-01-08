@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals
 
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 class ReferralsLocalRepository @Inject constructor(
     private val apiService: ReferralsLocalApiService,
-    private val instanceUrl: String
+    private val instanceUrl: String,
+    private val forceAuthManager: ForceAuthManager
 ) {
 
     companion object {
@@ -27,7 +29,7 @@ class ReferralsLocalRepository @Inject constructor(
             apiService.fetchReferralsInfo(
                 sObjectUrl(),
                 referralListQuery(durationInDays),
-                "Bearer 00DSB000001oyRq!AQEAQKoL57FHmXhDjHkKusYINqe1YLuDCK.R.jJytSdtAthekOtlPsdRPaoqITEWpG5EiH0DyVmga2ijTn451SV9MgfTi._g"
+                "Bearer 00DSB000001oyRq!AQEAQJClhjD46LhznJwapQRjHS164SEQpgzW9TTMh3tW.8bZC2eONjo3e2Rgu3.DekH01elLNjVoGjHVmTOAgJVf2ngz._eQ"
             )
         }
     }
@@ -37,10 +39,12 @@ class ReferralsLocalRepository @Inject constructor(
             apiService.fetchMemberReferralId(
                 sObjectUrl(),
                 memberReferralCodeQuery(membershipNumber),
-                "Bearer $accessToken"
+                "Bearer ${accessToken()}"
             )
         }
     }
+
+    private fun accessToken() = forceAuthManager.getForceAuth()?.accessToken.orEmpty()
 
     private fun memberReferralCodeQuery(membershipNumber: String) =
         "SELECT MembershipNumber, referralcode from loyaltyprogrammember where MembershipNumber =\'$membershipNumber\'"

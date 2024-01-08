@@ -34,6 +34,7 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator {
 
     var auth: ForceAuth? = null
     override fun getAccessToken(): String? {
+        Logger.d(TAG, "getAccessToken()")
         val forceAuth = getForceAuth()
         forceAuth?.let {
             return it.accessToken

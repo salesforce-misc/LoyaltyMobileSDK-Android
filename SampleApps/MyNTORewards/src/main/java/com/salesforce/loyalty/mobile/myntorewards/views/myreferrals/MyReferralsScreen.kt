@@ -54,16 +54,21 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
         }
     }
 
+
     programState?.let {
-        if (viewModel.programState.value!! == ReferralProgramType.JOIN_PROGRAM && viewModel.showDefaultPopup) {
-            showBottomSheet(true)
+        LaunchedEffect(key1 = true) {
+            if (it == ReferralProgramType.JOIN_PROGRAM) {
+                showBottomSheet(true)
+            }
         }
     }
+
     viewState?.let {
         when(it) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
                 MyReferralsScreenView(it.uiState) {
                     showBottomSheet(true)
+                    viewModel.startReferring()
                     viewModel.showDefaultPopup = true
                 }
             }
@@ -114,14 +119,17 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
     val bottomSheetScaffoldState = BottomSheetCustomState()
     val coroutineScope = rememberCoroutineScope()
     var blurBG by remember { mutableStateOf(0.dp) }
-
-    // Show Bottom Bar on screen load and hide it when bottom sheet is opened
-    showBottomBar(true)
+//    var bottomBarState by remember { mutableStateOf(true) }
+//
+//    LaunchedEffect(key1 = bottomBarState) {
+// Show Bottom Bar on screen load and hide it when bottom sheet is opened
+        showBottomBar(true)
+//    }
 
     val showBottomSheet: (Boolean) -> Job = {
         coroutineScope.launch {
             bottomSheetScaffoldState.bottomSheetState.run {
-                showBottomBar(!it)
+//                showBottomBar(!it)
                 if (it && isCollapsed) {
                     blurBG = 3.dp
                     expand()
@@ -129,6 +137,9 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
                     blurBG = 0.dp
                     collapse()
                 }
+//                bottomBarState = !it
+//                showBottomBar(!it)
+
             }
         }
     }

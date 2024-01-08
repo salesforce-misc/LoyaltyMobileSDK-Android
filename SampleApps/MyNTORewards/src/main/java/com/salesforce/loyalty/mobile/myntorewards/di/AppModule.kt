@@ -3,14 +3,16 @@ package com.salesforce.loyalty.mobile.myntorewards.di
 import android.content.Context
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralForceAuthenticatorImpl
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
-import com.salesforce.referral_sdk.api.ApiService
+import com.salesforce.referral_sdk.api.ForceAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,4 +31,9 @@ object AppModule {
     @Provides
     fun provideAPiService(retrofit: Retrofit): ReferralsLocalApiService =
         retrofit.create(ReferralsLocalApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReferralForceAuthenticatorImpl(forceAuthManager: ForceAuthManager): ForceAuthenticator =
+        ReferralForceAuthenticatorImpl(forceAuthManager)
 }

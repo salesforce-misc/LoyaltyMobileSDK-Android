@@ -75,7 +75,9 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
             intent.setPackage(FACEBOOK_APP_PACKAGE)
         }
         ShareType.INSTAGRAM -> {
-            intent.also {
+            intent.setPackage(INSTAGRAM_APP_PACKAGE)
+
+            /*intent.also {
                 it.setPackage(INSTAGRAM_APP_PACKAGE)
                 it.type = INTENT_TYPE_IMAGE
                 it.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -84,7 +86,7 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
                     intent.putExtra(Intent.EXTRA_STREAM, getImageUriFromBitmap(this, bitmap))
                 }
                 it.putExtra(Intent.EXTRA_TEXT, content)
-            }
+            }*/
         }
         ShareType.WHATSAPP -> {
             intent.setPackage(WHATSAPP_APP_PACKAGE)

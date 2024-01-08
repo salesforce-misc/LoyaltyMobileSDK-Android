@@ -1,7 +1,7 @@
 package com.salesforce.referral_sdk.api
 
 object ReferralAPIConfig {
-    const val REFERRAL_PROGRAM_NAME = "NTO Insider"
+    const val REFERRAL_PROGRAM_NAME = "Referral Program"
     const val HEADER_AUTHORIZATION = "Authorization"
 
     private const val MEMBER_API_SERVICES_PATH = "/services/data/"

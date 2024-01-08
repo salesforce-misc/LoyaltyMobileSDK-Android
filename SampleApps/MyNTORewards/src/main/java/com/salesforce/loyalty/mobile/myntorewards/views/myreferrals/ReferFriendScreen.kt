@@ -58,6 +58,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.TextButtonCus
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
+import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 
 const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
 
@@ -68,8 +69,15 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
     val context = LocalContext.current
 
     programState?.let {
-        ReferFriendScreenUI(viewModel, it, backAction) {
-            closeAction()
+        when(it) {
+            is ERROR -> ErrorPopup(
+                it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                tryAgainClicked = { viewModel.enrollToReferralPromotion(context) },
+                textButtonClicked = {  }
+            )
+            else -> ReferFriendScreenUI(viewModel, it, backAction) {
+                closeAction()
+            }
         }
     }
 
@@ -79,7 +87,10 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
             ReferFriendViewState.ReferFriendInProgress -> {
                 ProgressDialogComposable(Color.White) { } // Do nothing on progress dismiss
             }
-            is ReferFriendViewState.ReferFriendSendMailsSuccess -> context.showToast(it.data)
+            is ReferFriendViewState.ReferFriendSendMailsSuccess -> {}// context.showToast(it.data)
+            is ReferFriendViewState.EnrollmentFailed -> {
+                // Do nothing
+            }
         }
     }
 }
@@ -120,6 +131,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                 SIGNUP -> SignupToReferUi(viewModel)
                 JOIN_PROGRAM -> JoinReferralProgramUi(viewModel, backAction)
                 START_REFERRING -> StartReferUi(viewModel) { closeAction() }
+                else -> {}
             }
         }
     }
@@ -192,7 +204,7 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit
             }
             textField = TextFieldValue("")
             focusManager.clearFocus()
-            viewModel.sendReferralMail(context, emails.joinToString(","))
+            viewModel.sendReferralMail(context, emails)
         },
         updateTextField = { textField = it }
     )
