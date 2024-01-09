@@ -323,44 +323,4 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
      */
     private fun getStringOfArrayItems(items: Array<String>?): String? = items?.reduce { acc, item -> "$acc,$item" }
 
-    suspend fun getGameReward(gameParticipantRewardId: String, mockResponse: Boolean): Result<GameRewardResponse> {
-        Logger.d(TAG, "getGameReward()")
-
-        if (mockResponse) {
-            val reader =
-                InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("GameRewards.json"))
-            val content: String = reader.readText()
-            reader.close()
-            val response =
-                Gson().fromJson(content, GameRewardResponse::class.java)
-            delay(2000)
-            //return Result.failure(RuntimeException()) // to test failure scenario
-            return Result.success(response)
-        } else {
-            return mLoyaltyClient.getNetworkClient().getGameReward(
-                LoyaltyConfig.getRequestUrl(mInstanceUrl, LoyaltyConfig.Resource.GameReward(gameParticipantRewardId)),
-            )
-        }
-    }
-
-    suspend fun getGames(participantId: String, gameParticipantRewardId: String? = null, mockResponse: Boolean): Result<Games> {
-        Logger.d(TAG, "getGames() participantId: $participantId gameParticipantRewardId: $gameParticipantRewardId")
-
-        if (mockResponse) {
-            val reader =
-                InputStreamReader(this.javaClass.classLoader?.getResourceAsStream("Games.json"))
-            val content: String = reader.readText()
-            reader.close()
-            val response =
-                Gson().fromJson(content, Games::class.java)
-            return Result.success(response)
-        } else {
-            return mLoyaltyClient.getNetworkClient().getGames(
-                LoyaltyConfig.getRequestUrl(
-                    mInstanceUrl,
-                    LoyaltyConfig.Resource.Games(participantId)
-                ), gameParticipantRewardId = gameParticipantRewardId
-            )
-        }
-    }
 }

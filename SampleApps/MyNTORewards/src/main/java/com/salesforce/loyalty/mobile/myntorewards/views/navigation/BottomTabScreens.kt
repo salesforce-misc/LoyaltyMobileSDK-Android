@@ -25,6 +25,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
@@ -56,7 +57,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -172,7 +173,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
     voucherModel: VoucherViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -312,7 +313,7 @@ fun RedeemScreen() {
 fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     scanningViewModel: ScanningViewModelInterface,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
@@ -360,7 +361,7 @@ fun MoreScreenNavigation(
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun GameZoneNavigation(
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {

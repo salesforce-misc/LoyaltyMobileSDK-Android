@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
@@ -38,7 +39,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TAB_PLAYED_GAMES
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
@@ -47,7 +48,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModelInterface) {
+fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewModel) {
     val games by gameViewModel.gamesLiveData.observeAsState()
     val gameViewState by gameViewModel.gamesViewState.observeAsState()
     var isInProgress by remember { mutableStateOf(false) }

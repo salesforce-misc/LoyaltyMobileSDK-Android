@@ -23,13 +23,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 import kotlinx.coroutines.launch
 
@@ -40,7 +40,7 @@ data class ScratchedPath(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewModelInterface, gameParticipantRewardId: String) {
+fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewModel, gameParticipantRewardId: String) {
     val overlayImage = ImageBitmap.imageResource(id = R.drawable.overlay_img)
     val currentState = remember { mutableStateOf(ScratchedPath(path = Path())) }
     val movedState = remember { mutableStateOf<Offset?>(null) }
@@ -95,7 +95,8 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
          Box(
              modifier = Modifier
                  .fillMaxSize()
-                 .background(LightPurple).testTag(TEST_TAG_SCRATCH_CARD_SCREEN)
+                 .background(LightPurple)
+                 .testTag(TEST_TAG_SCRATCH_CARD_SCREEN)
          ) {
              Column(
                  verticalArrangement = Arrangement.Top,
@@ -169,7 +170,8 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
              }
              Column(
                  verticalArrangement = Arrangement.spacedBy(16.dp),
-                 modifier = Modifier.align(Alignment.BottomCenter)
+                 modifier = Modifier
+                     .align(Alignment.BottomCenter)
                      .fillMaxWidth()
                      .padding(start = 60.dp, end = 60.dp, bottom = 100.dp),
                  horizontalAlignment = Alignment.CenterHorizontally
