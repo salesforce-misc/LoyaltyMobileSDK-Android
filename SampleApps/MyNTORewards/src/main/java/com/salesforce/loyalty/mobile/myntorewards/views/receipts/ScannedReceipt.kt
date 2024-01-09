@@ -313,7 +313,7 @@ fun ShowScannedReceiptScreen(
 
                         if (manualReviewOption) {
                             Text(
-                                text = stringResource(id = R.string.manual_review_option),
+                                text = stringResource(id = R.string.receipt_submit_manual_review),
                                 fontFamily = font_sf_pro,
                                 modifier = Modifier
                                     .padding(top = 12.dp, bottom = 3.dp)
