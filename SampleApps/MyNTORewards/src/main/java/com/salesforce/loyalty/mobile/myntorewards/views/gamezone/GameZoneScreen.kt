@@ -202,6 +202,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                         }
 
                     }
+
                     when (gameViewState) {
                         GamesViewState.GamesFetchSuccess -> {
                             isInProgress = false
@@ -216,11 +217,25 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                             if(playedGames!=null  && selectedTab== TAB_PLAYED_GAMES) {
 
                                 if(playedGames.isNotEmpty()){
+                                    Text(
+                                        text = stringResource(id = R.string.text_played_90_days),
+                                        fontFamily = font_sf_pro,
+                                        textAlign = TextAlign.Start,
+                                        fontSize = 12.sp,
+                                        color = LightBlack,
+                                        modifier = Modifier
+                                            .padding(top = 10.dp, start = 16.dp)
+                                    )
                                     LazyVerticalGrid(
                                         columns = GridCells.Fixed(2),
                                         modifier = Modifier
                                             .background(VeryLightPurple)
-                                            .padding(16.dp)
+                                            .padding(
+                                                start = 16.dp,
+                                                end = 16.dp,
+                                                bottom = 16.dp,
+                                                top = 10.dp
+                                            )
                                             .fillMaxWidth()
                                             .fillMaxHeight(),
                                         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -275,7 +290,12 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                 columns = GridCells.Fixed(2),
                                                 modifier = Modifier
                                                     .background(VeryLightPurple)
-                                                    .padding(16.dp)
+                                                    .padding(
+                                                        start = 16.dp,
+                                                        end = 16.dp,
+                                                        bottom = 16.dp,
+                                                        top = 10.dp
+                                                    )
                                                     .fillMaxWidth()
                                                     .fillMaxHeight(),
                                                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -320,11 +340,26 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                     }
                                     TAB_EXPIRED_GAMES -> {
                                         if (expiredGames.isNotEmpty()) {
+
+                                            Text(
+                                                text = stringResource(id = R.string.text_expired_90_days),
+                                                fontFamily = font_sf_pro,
+                                                textAlign = TextAlign.Start,
+                                                fontSize = 12.sp,
+                                                color = LightBlack,
+                                                modifier = Modifier
+                                                    .padding(top = 10.dp, start = 16.dp)
+                                            )
                                             LazyVerticalGrid(
                                                 columns = GridCells.Fixed(2),
                                                 modifier = Modifier
                                                     .background(VeryLightPurple)
-                                                    .padding(16.dp)
+                                                    .padding(
+                                                        start = 16.dp,
+                                                        end = 16.dp,
+                                                        bottom = 16.dp,
+                                                        top = 10.dp
+                                                    )
                                                     .fillMaxWidth()
                                                     .fillMaxHeight(),
                                                 verticalArrangement = Arrangement.spacedBy(16.dp),

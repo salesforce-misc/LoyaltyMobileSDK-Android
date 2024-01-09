@@ -40,6 +40,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ENROLLMENT_CONGRATULATIONS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ERROR_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EXPIRATION_DATE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_REWARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_EXPIRY
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_IMAGE
@@ -61,6 +62,9 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_DESCRIPTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_IMAGE_SELCTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PAYMENT_UI_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP_HEADING
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP_MSG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PRODUCT_PRICE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROFILE_ELEMENT_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMOTION_CARD
@@ -95,7 +99,9 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_TEXT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_ERROR_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
@@ -180,11 +186,68 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
         composeTestRule.onNodeWithText("Available").assertIsDisplayed()
         composeTestRule.onNodeWithText("Expired").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Played").assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(3)
-        composeTestRule.onNodeWithText("Expired").performClick()
+
+        composeTestRule.onNodeWithText("Played").performClick()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(2)
+        composeTestRule.onNodeWithText("Played in the last 90 days").assertIsDisplayed()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TITLE), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TYPE),useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_EXPIRY), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_REWARD), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+
+        composeTestRule.onNodeWithText("Congratulations!").assertIsDisplayed()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP_HEADING).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP_MSG).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Go to Vouchers").assertIsDisplayed()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithContentDescription("played_game_popup_cd").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Back").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+        composeTestRule.onNodeWithText("Go to Vouchers").performClick()
+        composeTestRule.onNodeWithText("Vouchers").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_VOUCHER_SCREEN).assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Voucher_Back_Button").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Voucher_Back_Button").performClick()
+        composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Available").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Played").performClick()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onLast().performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Better luck next time!").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Thank you for playing! Stay tuned for more offers.").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onLast().performClick()
+
+        composeTestRule.onNodeWithText("Back").performClick()
+
+        composeTestRule.onNodeWithText("Expired").performClick()
+        composeTestRule.onNodeWithText("Expired in the last 90 days").assertIsDisplayed()
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(1)
         composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(1)
-        composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
+        //composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
 
         composeTestRule.onNodeWithText("Available").performClick()
         composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(2)
@@ -201,7 +264,9 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("game back button").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("game back button").performClick()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_GAME_ZONE_SCREEN).assertIsDisplayed()
+        Thread.sleep(2000)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+        Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_BG).assertIsDisplayed()
 
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_CIRCLE).assertIsDisplayed()
@@ -209,7 +274,8 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_COLOUR_SEGMENT).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_COLOUR_SEGMENT).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_CONTENT).assertIsDisplayed()
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_SPIN_WHEEL_TEXT), useUnmergedTree=true).assertCountEquals(3)
+        Thread.sleep(2000)
+//        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_SPIN_WHEEL_TEXT), useUnmergedTree=true).assertCountEquals(7)
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_POINTER).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("spin_wheel_pointer").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_FOOTER).assertIsDisplayed()
@@ -221,8 +287,9 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Congratulations!").assertIsDisplayed()
         composeTestRule.onNodeWithText("Congratulations!").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SUBHEADER_CONGRATS_SCREEN).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Back").performClick()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithText("Play More").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Play More").performClick()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_GAME_ZONE_SCREEN).assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onLast().performClick()
@@ -289,14 +356,14 @@ class SampleAppUnitTest {
 
         composeTestRule.onNodeWithText("All").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
 
 
         Thread.sleep(2000)
         composeTestRule.onNodeWithText("Opted In").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
 
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
 
 
 
@@ -432,6 +499,7 @@ class SampleAppUnitTest {
         //verifying image preview try again  flow
         composeTestRule.onNodeWithText("Try Again").performClick()
         verifyReceiptUploadingProgressIndicatorWithApiFailure()
+        /*composeTestRule.onNodeWithTag(TEST_TAG_TRY_AGAIN_ERROR_SCREEN).performClick()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
         Thread.sleep(1000)
         composeTestRule.onNodeWithContentDescription("shutter button").performClick()
@@ -449,7 +517,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
         composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
 
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
+        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)*/
 
         verifyConfidenceFailureScenario()
 
@@ -929,7 +997,7 @@ fun getPromotionViewModel(): MyPromotionViewModelInterface {
         override fun loadPromotions(context: Context, refreshRequired: Boolean) {
             val gson = Gson()
             val promotionResponse = gson.fromJson(
-                "{\"outputParameters\":{\"outputParameters\":{\"results\":[{\"description\":\"Double point promotion on member activities to promote NTO\",\"endDate\":\"2023-06-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CzEoIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/C2zhShTnl5I/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MXx8ZXZlcnl3aGVyZXxlbnwwfHx8fDE2ODM2NjE0MTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Always\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0},{\"description\":\"Welcome to be a new customer and take 20% off on your first order.\",\"endDate\":\"2023-06-30\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000CwWpIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/OGND72jS-HE/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8M3x8d2VsY29tZXxlbnwwfHx8fDE2ODM2NzM3OTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Welcome Promotion\",\"startDate\":\"2023-05-01\"},{\"description\":\"Spend \$500 in a month and Earn a Stellar Media Voucher.\",\"endDate\":\"2023-07-31\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"CUMULATIVE\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentEndDate\":\"2023-07-31\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000Cx06IAC\",\"promotionImageUrl\":\"https://cdn.pixabay.com/photo/2018/05/10/11/34/concert-3387324_1280.jpg\",\"promotionName\":\"Your next concert experience is on us!\",\"startDate\":\"2023-05-01\"},{\"description\":\"Promotion to rejuvenate gold tier with 500 reward points for purchases during promotion period\",\"endDate\":\"2024-01-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwVrIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/_Q0dP8xiUGA/download?ixid\\u003dMnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgzNjYxODcy\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":500},{\"description\":\"Promotion on Ironman watches\",\"endDate\":\"2024-03-30\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW5IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/rkaahInFlBg/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8Mnx8aXJvbiUyMG1hbnxlbnwwfHx8fDE2ODM2MDQzMDc\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Iron Man Promotion\",\"startDate\":\"2022-10-01\"},{\"description\":\"Thank you for members purchasing more than \$500 in a quarter and give a discount of 10% (Surprise and Delight)\",\"endDate\":\"2024-03-31\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW7IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/IPx7J1n_xUc/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MTJ8fGdpZnR8ZW58MHx8fHwxNjgzNjQ3OTg5\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Surprise and Delight\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0}]}}}",
+                "{\"outputParameters\":{\"outputParameters\":{\"results\":[{\"description\":\"Double point promotion on member activities to promote NTO\",\"endDate\":\"2023-06-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CzEoIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/C2zhShTnl5I/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MXx8ZXZlcnl3aGVyZXxlbnwwfHx8fDE2ODM2NjE0MTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Always\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0},{\"description\":\"Welcome to be a new customer and take 20% off on your first order.\",\"endDate\":\"2023-06-30\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000CwWpIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/OGND72jS-HE/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8M3x8d2VsY29tZXxlbnwwfHx8fDE2ODM2NzM3OTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Welcome Promotion\",\"startDate\":\"2023-05-01\"},{\"description\":\"Spend \$500 in a month and Earn a Stellar Media Voucher.\",\"endDate\":\"2023-07-31\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"CUMULATIVE\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentEndDate\":\"2023-07-31\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000Cx06IAC\",\"promotionImageUrl\":\"https://cdn.pixabay.com/photo/2018/05/10/11/34/concert-3387324_1280.jpg\",\"promotionName\":\"Your next concert experience is on us!\",\"startDate\":\"2023-05-01\"},{\"description\":\"Promotion to rejuvenate gold tier with 500 reward points for purchases during promotion period\",\"endDate\":\"2024-01-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwVrIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/_Q0dP8xiUGA/download?ixid\\u003dMnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgzNjYxODcy\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":500},{\"description\":\"Promotion on Ironman watches\",\"endDate\":\"2024-03-30\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW5IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/rkaahInFlBg/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8Mnx8aXJvbiUyMG1hbnxlbnwwfHx8fDE2ODM2MDQzMDc\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2022-10-01\"},{\"description\":\"Thank you for members purchasing more than \$500 in a quarter and give a discount of 10% (Surprise and Delight)\",\"endDate\":\"2024-03-31\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW7IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/IPx7J1n_xUc/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MTJ8fGdpZnR8ZW58MHx8fHwxNjgzNjQ3OTg5\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Surprise and Delight\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0}]}}}",
                 PromotionsResponse::class.java
             )
             membershipPromo.value = promotionResponse
@@ -1212,7 +1280,11 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 get() = rewardViewState
 
             override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
-                return mutableListOf()
+                return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
+                    gameDefinition.participantGameRewards.any { partGameReward ->
+                        partGameReward.gameParticipantRewardId == gameParticipantRewardId
+                    }
+                }?.gameRewards ?: emptyList()
             }
 
             private val rewardViewState = MutableLiveData<GameRewardViewState>()

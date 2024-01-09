@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +33,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP
 import com.salesforce.loyalty.mobile.myntorewards.views.confirmationScreenMsg
 
 @Composable
@@ -56,8 +60,8 @@ fun PlayedGamePopup(
     }
     Column(
         modifier = Modifier
-            .fillMaxHeight(0.7f)
-            .fillMaxWidth()
+            .fillMaxHeight(0.75f)
+            .fillMaxWidth().testTag(TEST_TAG_PLAYED_GAME_PUPUP)
             .background(Color.White, RoundedCornerShape(22.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -88,7 +92,7 @@ fun PlayedGamePopup(
 
             Image(
                 painter = painterResource(id = playedGamePopupupImage),
-                contentDescription = stringResource(R.string.error_cd),
+                contentDescription = stringResource(R.string.played_game_popup_cd),
                 modifier = Modifier
                     .width(220.dp)
                     .height(220.dp),
@@ -101,7 +105,7 @@ fun PlayedGamePopup(
                 fontFamily = font_sf_pro,
                 color = LighterBlack,
                 fontSize = 24.sp,
-                modifier = Modifier.padding(start = 32.dp, end = 32.dp),
+                modifier = Modifier.padding(start = 32.dp, end = 32.dp).testTag(TestTags.TEST_TAG_PLAYED_GAME_PUPUP_HEADING),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -111,7 +115,7 @@ fun PlayedGamePopup(
                 fontFamily = font_sf_pro,
                 color = LightBlack,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(start = 32.dp, end = 32.dp),
+                modifier = Modifier.padding(start = 32.dp, end = 32.dp).testTag(TestTags.TEST_TAG_PLAYED_GAME_PUPUP_MSG),
                 textAlign = TextAlign.Center
             )
         }
@@ -159,6 +163,7 @@ fun PlayedGamePopup(
 
                     )
             }
+            Spacer(modifier = Modifier.height(20.dp))
 
         }
     }

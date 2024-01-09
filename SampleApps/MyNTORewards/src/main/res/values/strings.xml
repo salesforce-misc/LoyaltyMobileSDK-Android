@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">LoyaltyMobileSDK-Sample</string>
     <string name="cd_onboard_screen_onboard_image">"onboarding screen Image"</string>
+    <string name="voucher_back_button">"Voucher_Back_Button"</string>
     <string name="cd_onboard_screen_bottom_fade">"onboarding screen bottom fading"</string>
     <string name="spin_wheel_pointer">spin_wheel_pointer</string>
     <string name="cd_close_popup">"Close Popup"</string>
@@ -204,6 +205,7 @@
     <string name="cd_camera_flash_icon">camera flash icon</string>
     <string name="image_more_than_5mb_msg">Image is more than 5 MB please try again.</string>
     <string name="error_cd">Error while scanning</string>
+    <string name="played_game_popup_cd">played_game_popup_cd</string>
     <string name="receipt_scanning_error_desc">Something went wrong. Try again.</string>
     <string name="receipt_scanning_error_desc_image">Image size exceeds 5 MB. Either resize the image or recapture with a lower resolution.</string>
     <string name="button_home">Home</string>
@@ -241,7 +243,7 @@
 
     <!-- Game zone Congratulations Screen -->
     <string name="game_zone_congrats_header_content">Congratulations!</string>
-    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s for your next purchase. To redeem your reward, go to the Voucher section.]]></string>
+    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s for your next purchase. To redeem your reward, go to the Voucher.]]></string>
     <string name="game_zone_congrats_msg_loyalty_points"><![CDATA[You\'ve won %s that you can redeem on your next purchase.]]></string>
     <string name="game_zone_congrats_msg_custom">You’ve won a reward.</string>
     <string name="game_expired">Expired</string>
@@ -256,16 +258,18 @@
     <string name="label_no_games">No Games</string>
     <string name="label_empty_active_games">When you have games available, you’ll see them here.</string>
     <string name="label_empty_expired_games">When your games expire, you’ll see them here.</string>
-    <string name="label_empty_played_games">When you have played games, you’ll see them here.</string>
+    <string name="label_empty_played_games">After you play a game, you’ll see it here.</string>
     <string name="game_error">Error</string>
     <string name="game_error_desc">Something went wrong. Please try again.</string>
     <string name="game_error_dialog_ok">OK</string>
     <string name="game_error_msg">Oops! Something went wrong \u2028 while processing the request. Try again.</string>
     <string name="play_more_text">Play More</string>
 
-    <string name="text_go_to_voucher_section">Go to the Voucher Section"</string>
-    <string name="text_better_luck_reward">You did not win anything in this game.</string>
-    <string name="text_congratulations">Congratulations!!!</string>
+    <string name="text_go_to_voucher_section">Go to Vouchers</string>
+    <string name="text_better_luck_reward">Thank you for playing! Stay tuned for more offers.</string>
+    <string name="text_congratulations">Congratulations!</string>
+    <string name="text_played_90_days">Played in the last 90 days</string>
+    <string name="text_expired_90_days">Expired in the last 90 days</string>
     <string name="text_played">Played</string>
     <string name="receipt_progress_subheading">Hang in there! This may take a minute.</string>
     <string name="receipt_progress_step_1">Uploading receipt image…</string>

@@ -87,9 +87,9 @@
       "participantGameRewards":[
         {
           "gameRewardId": "501",
-          "gameParticipantRewardId": "201",
-          "sourceActivityId": "201",
-          "expirationDate": "2023-12-30T19:00:00.000Z",
+          "gameParticipantRewardId": "555",
+          "sourceActivityId": "555",
+          "expirationDate": "2024-12-30T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "YetToReward"
         }
@@ -145,8 +145,8 @@
       "participantGameRewards":[
         {
           "gameRewardId": null,
-          "gameParticipantRewardId": "201",
-          "sourceActivityId": "201",
+          "gameParticipantRewardId": "444",
+          "sourceActivityId": "444",
           "expirationDate": "2023-12-24T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "YetToReward"
@@ -158,6 +158,122 @@
       "timeoutDuration": 10,
       "type": "SpintheWheel"
 
+    },
+
+    {
+      "gameDefinitionId":"8",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+
+
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF5733",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "102",
+          "color": "000000",
+          "description": "Get 50%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": "50 % Off"
+        },
+        {
+          "rewardDefinitionId": "103",
+          "gameRewardId": "501",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": 102,
+          "gameParticipantRewardId": "989",
+          "sourceActivityId": "989",
+          "expirationDate": "2025-12-24T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "Rewarded"
+        }
+      ],
+      "name": "Billy the Kid Promotion Played",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "active",
+      "timeoutDuration": 10,
+      "type": "SpintheWheel"
+    },
+
+    {
+      "gameDefinitionId":"8",
+      "description": "Play Spin The Wheel to Get Amazing Rewards",
+      "endDate": "2023-10-31T19:00:00.000Z",
+
+
+      "gameRewards": [
+        {
+          "gameRewardId": "501",
+          "rewardDefinitionId": "101",
+          "color": "FF5733",
+          "description": "Get 10%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "10 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": null
+        },
+        {
+          "rewardDefinitionId": "102",
+          "gameRewardId": "102",
+          "color": "000000",
+          "description": "Get 50%  Off Voucher",
+          "expirationDate": "2023-10-31T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "50 % Off",
+          "rewardType": "Voucher",
+          "rewardValue": "50 % Off"
+        },
+        {
+          "rewardDefinitionId": "567",
+          "gameRewardId": "567",
+          "color": "762E2E",
+          "description": "Better Luck Next Time",
+          "expirationDate": "2023-11-15T19:00:00.000Z",
+          "imageUrl": null,
+          "name": "No Reward",
+          "rewardType": "NoReward",
+          "rewardValue": null
+        }
+      ],
+      "participantGameRewards":[
+        {
+          "gameRewardId": 567,
+          "gameParticipantRewardId": "989",
+          "sourceActivityId": "989",
+          "expirationDate": "2025-12-24T19:00:00.000Z",
+          "issuedRewardReference": "12344",
+          "status": "NoReward"
+        }
+      ],
+      "name": "Billy the Kid Promotion Better Luck",
+      "startDate": "2023-10-01T19:00:00.000Z",
+      "status": "active",
+      "timeoutDuration": 10,
+      "type": "SpintheWheel"
     },
     {
       "gameDefinitionId":"82",
@@ -303,9 +419,9 @@
       "participantGameRewards":[
         {
           "gameRewardId": null,
-          "gameParticipantRewardId": "201",
-          "sourceActivityId": "201",
-          "expirationDate": "2023-12-24T19:00:00.000Z",
+          "gameParticipantRewardId": "666",
+          "sourceActivityId": "666",
+          "expirationDate": "2024-12-24T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "YetToReward"
         }
@@ -360,8 +476,8 @@
       "participantGameRewards":[
         {
           "gameRewardId": null,
-          "gameParticipantRewardId": "201",
-          "sourceActivityId": "201",
+          "gameParticipantRewardId": "777",
+          "sourceActivityId": "777",
           "expirationDate": "2024-11-25T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "YetToReward"
@@ -415,8 +531,8 @@
       "participantGameRewards":[
         {
           "gameRewardId": null,
-          "gameParticipantRewardId": "201",
-          "sourceActivityId": "201",
+          "gameParticipantRewardId": "888",
+          "sourceActivityId": "888",
           "expirationDate": "2023-11-01T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "active"
@@ -470,8 +586,8 @@
       "participantGameRewards":[
         {
           "gameRewardId": null,
-          "gameParticipantRewardId": "201",
-          "sourceActivityId": "201",
+          "gameParticipantRewardId": "999",
+          "sourceActivityId": "999",
           "expirationDate": "2023-11-1T19:00:00.000Z",
           "issuedRewardReference": "12344",
           "status": "active"
