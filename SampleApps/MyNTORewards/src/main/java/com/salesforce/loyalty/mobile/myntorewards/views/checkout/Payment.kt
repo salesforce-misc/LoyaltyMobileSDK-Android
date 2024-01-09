@@ -27,15 +27,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONFIRM_ORDER_BUTTON
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PAYMENT_UI_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
@@ -50,7 +51,7 @@ fun PaymentsUI(
     voucherModel: VoucherViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
-    gameViewModel: GameViewModelInterface
+    gameViewModel: GameViewModel
 ) {
     val membershipProfile by profileModel.membershipProfileLiveData.observeAsState()
     val context: Context = LocalContext.current

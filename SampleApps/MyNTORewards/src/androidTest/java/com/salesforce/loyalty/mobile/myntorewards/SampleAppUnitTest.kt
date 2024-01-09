@@ -15,6 +15,9 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mockReceiptResponse
+import com.salesforce.gamification.model.GameReward
+import com.salesforce.gamification.model.GameRewardResponse
+import com.salesforce.gamification.model.Games
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
@@ -146,7 +149,7 @@ class SampleAppUnitTest {
                 getTransactionViewModel(),
                 getCheckoutFlowViewModel(),
                 getScanningViewModel(),
-                getGameViewModel()
+                getGameViewModel() as GameViewModel
             )
         }
 
@@ -1260,6 +1263,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
         }
 }
+
 
     fun getGameViewModel(): GameViewModelInterface{
         return object : GameViewModelInterface{

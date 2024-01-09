@@ -21,13 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SHIPPING_PAYMENT_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ShippingNavigationTabs
@@ -37,14 +38,15 @@ fun OrderDetails(navCheckOutFlowController: NavController,
                  voucherModel: VoucherViewModelInterface,
                  checkOutFlowViewModel: CheckOutFlowViewModelInterface,
                  profileModel: MembershipProfileViewModelInterface,
-                 gameViewModel: GameViewModelInterface
+                 gameViewModel: GameViewModel
                  ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
-            .background(OrderScreenBG).testTag(TEST_TAG_SHIPPING_PAYMENT_SCREEN)
+            .background(OrderScreenBG)
+            .testTag(TEST_TAG_SHIPPING_PAYMENT_SCREEN)
     )
     {
         //default tab selected as 0 which is ShippingNavigationTabs.TabShipping
@@ -70,7 +72,8 @@ fun OrderDetails(navCheckOutFlowController: NavController,
                         } else {
                             selectedTab = 0
                         }
-                    }.testTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT)
+                    }
+                    .testTag(TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT)
             )
         }
 

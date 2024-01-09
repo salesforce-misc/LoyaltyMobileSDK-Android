@@ -1,3 +1,4 @@
+
 {
   "errorMessage": null,
   "gameDefinitions": [
@@ -431,7 +432,6 @@
       "status": "expired",
       "timeoutDuration": 10,
       "type": "SpintheWheel"
-
     },
 
     {

@@ -39,7 +39,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.delay
@@ -56,7 +56,7 @@ fun CanvasForScratching(
     onCursorMovedOffset: (Float, Float) -> Unit,
     path: Path,
     scratchThickness: Float,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     navController: NavHostController,
     gameParticipantRewardId: String,
     showErrorPopup: () -> Unit
