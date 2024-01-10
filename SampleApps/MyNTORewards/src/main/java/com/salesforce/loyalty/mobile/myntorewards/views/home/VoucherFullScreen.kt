@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +41,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.voucherEmptyViewMsg
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
@@ -73,7 +75,7 @@ fun VoucherFullScreen(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .background(Color.White)
-                .pullRefresh(state)
+                .pullRefresh(state).testTag(TEST_TAG_VOUCHER_SCREEN)
                 .blur(blurBG)
         )
         {
@@ -82,7 +84,7 @@ fun VoucherFullScreen(
             Spacer(modifier = Modifier.height(50.dp))
             Image(
                 painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                contentDescription = stringResource(R.string.voucher_back_button),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)

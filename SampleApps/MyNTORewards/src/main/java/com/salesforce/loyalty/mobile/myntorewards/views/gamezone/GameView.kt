@@ -30,6 +30,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ScratchCardBackground
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_STATUS_PLAYED
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_REWARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_EXPIRY
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_IMAGE
@@ -146,7 +147,7 @@ fun GameView(isExpired: Boolean, gamePlayingStatus: String?, title: String, game
                             textAlign = TextAlign.Start,
                             fontSize = 12.sp,
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth().testTag(TEST_TAG_GAME_REWARD),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
