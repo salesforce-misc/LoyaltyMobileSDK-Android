@@ -38,7 +38,7 @@ data class Record(
     val processedAWSResponse: String?,
 
     @SerializedName("TotalRewardPoints__c")
-    val total_points: Any,
+    val total_points: Double?,
 
     @SerializedName("attributes")
     val attributes: Attributes
