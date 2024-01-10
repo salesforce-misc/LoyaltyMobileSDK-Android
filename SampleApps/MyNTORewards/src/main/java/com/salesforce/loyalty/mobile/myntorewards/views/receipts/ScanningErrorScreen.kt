@@ -102,7 +102,7 @@ fun ScanningErrorPopup(
             }
 
             Text(
-                text = stringResource(id = R.string.button_home),
+                text = stringResource(id = R.string.back_text),
                 fontFamily = font_sf_pro,
                 modifier = Modifier
                     .padding(top = 12.dp, bottom = 3.dp)
