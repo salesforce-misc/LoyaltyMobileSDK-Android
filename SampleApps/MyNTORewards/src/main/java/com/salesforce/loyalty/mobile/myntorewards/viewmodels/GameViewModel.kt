@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GameViewModel @Inject constructor(
+open class GameViewModel @Inject constructor(
     private val repository: GamificationRemoteRepository) : ViewModel(), GameViewModelInterface {
     private val TAG = GameViewModel::class.java.simpleName
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper.*
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.LiveData
@@ -14,14 +13,18 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
+import com.salesforce.gamification.api.GameAPIClient
+import com.salesforce.gamification.api.GameAuthenticator
 import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mockReceiptResponse
 import com.salesforce.gamification.model.GameReward
 import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
+import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
@@ -111,14 +114,11 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
-import kotlinx.coroutines.delay
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.*
-import java.io.InputStreamReader
-import java.lang.RuntimeException
 
 
 @RunWith(AndroidJUnit4::class)
@@ -1266,7 +1266,15 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
 
     fun getGameViewModel(): GameViewModelInterface{
-        return object : GameViewModelInterface{
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
+          var gameRemoteRepository: GamificationRemoteRepository
+          var authenticator: GameAuthenticator= ForceAuthManager(appContext)
+          var gameAPIClient= GameAPIClient(authenticator, "https://instanceUrl")
+
+        gameRemoteRepository = GamificationRemoteRepository(authenticator, "https://instanceUrl", gameAPIClient)
+
+        return object : GameViewModel(gameRemoteRepository){
 
             private var rewardMutableLiveData = MutableLiveData<GameRewardResponse>()
             override val rewardLiveData: LiveData<GameRewardResponse>
