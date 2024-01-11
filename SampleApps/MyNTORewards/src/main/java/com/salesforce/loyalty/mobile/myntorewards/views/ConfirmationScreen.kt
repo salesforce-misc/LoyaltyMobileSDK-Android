@@ -179,6 +179,16 @@ fun confirmationScreenMsg(rewardType: String, offerValue:String): String {
     }
 }
 
+@Composable
+fun PlayedGamePopupScreenMsg(rewardType: String, offerValue:String): String {
+    return when (rewardType) {
+        RewardType.REWARD_VOUCHER.rewardType -> stringResource(id = R.string.game_zone_played_sub_header_content, offerValue)
+        RewardType.REWARD_TYPE_POINTS.rewardType -> stringResource(id = R.string.game_zone_played_msg_loyalty_points, offerValue)
+        RewardType.REWARD_TYPE_CUSTOM.rewardType -> stringResource(id = R.string.game_zone_congrats_msg_custom)
+        else -> stringResource(id = R.string.game_zone_congrats_msg_custom)
+    }
+}
+
 @Preview(showSystemUi = true)
 @Composable
 fun BetterLuckScreenPreview() {

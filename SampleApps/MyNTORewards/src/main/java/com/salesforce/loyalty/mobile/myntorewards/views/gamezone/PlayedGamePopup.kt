@@ -30,13 +30,11 @@ import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP
-import com.salesforce.loyalty.mobile.myntorewards.views.confirmationScreenMsg
-
+import com.salesforce.loyalty.mobile.myntorewards.views.PlayedGamePopupScreenMsg
 @Composable
 fun PlayedGamePopup(
     playedGameRewardType: String,
@@ -56,7 +54,7 @@ fun PlayedGamePopup(
     else{
         playedGamePopupupImage= R.drawable.played_game_rewarded
         playedGamePopupupHeading= stringResource(id = R.string.text_congratulations)
-        playedGamePopupupMsg= confirmationScreenMsg(playedGameRewardType, rewardValue)
+        playedGamePopupupMsg= PlayedGamePopupScreenMsg(playedGameRewardType, rewardValue)
     }
     Column(
         modifier = Modifier
@@ -147,7 +145,7 @@ fun PlayedGamePopup(
                         .padding(top = 3.dp, bottom = 3.dp)
                 )
             }
-            if(playedGameRewardType!= RewardType.NO_VOUCHER.rewardType){
+            if(playedGameRewardType== RewardType.REWARD_VOUCHER.rewardType){
                 Text(
                     text = stringResource(id = R.string.text_go_to_voucher_section),
                     fontFamily = font_sf_pro,

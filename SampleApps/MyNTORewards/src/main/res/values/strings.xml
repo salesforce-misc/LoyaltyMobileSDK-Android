@@ -245,6 +245,10 @@
     <string name="game_zone_congrats_header_content">Congratulations!</string>
     <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s for your next purchase. To redeem your reward, go to the Voucher.]]></string>
     <string name="game_zone_congrats_msg_loyalty_points"><![CDATA[You\'ve won %s that you can redeem on your next purchase.]]></string>
+
+    <string name="game_zone_played_sub_header_content"><![CDATA[Here’s your reward: %s \n To redeem your reward, go to Vouchers.]]></string>
+    <string name="game_zone_played_msg_loyalty_points"><![CDATA[Here’s your reward: %s]]></string>
+
     <string name="game_zone_congrats_msg_custom">You’ve won a reward.</string>
     <string name="game_expired">Expired</string>
     <string name="game_expiring_today">Expiring Today</string>
@@ -268,8 +272,8 @@
     <string name="text_go_to_voucher_section">Go to Vouchers</string>
     <string name="text_better_luck_reward">Thank you for playing! Stay tuned for more offers.</string>
     <string name="text_congratulations">Congratulations!</string>
-    <string name="text_played_90_days">Played in the last 90 days</string>
-    <string name="text_expired_90_days">Expired in the last 90 days</string>
+    <string name="text_played_90_days">Games Played in the last 90 days</string>
+    <string name="text_expired_90_days">No longer available</string>
     <string name="text_played">Played</string>
     <string name="receipt_progress_subheading">Hang in there! This may take a minute.</string>
     <string name="receipt_progress_step_1">Uploading receipt image…</string>
