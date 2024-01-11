@@ -272,8 +272,8 @@
     <string name="text_go_to_voucher_section">Go to Vouchers</string>
     <string name="text_better_luck_reward">Thank you for playing! Stay tuned for more offers.</string>
     <string name="text_congratulations">Congratulations!</string>
-    <string name="text_played_90_days">Played in the last 90 days</string>
-    <string name="text_expired_90_days">Expired in the last 90 days</string>
+    <string name="text_played_90_days">Games Played in the last 90 days</string>
+    <string name="text_expired_90_days">No longer available</string>
     <string name="text_played">Played</string>
     <string name="receipt_progress_subheading">Hang in there! This may take a minute.</string>
     <string name="receipt_progress_step_1">Uploading receipt image…</string>
