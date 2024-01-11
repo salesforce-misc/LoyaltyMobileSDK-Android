@@ -267,7 +267,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                    it.gameRewardId==playedGame.participantGameRewards[0].gameRewardId
                                                }[0].let {
                                                    playedGameRewardType= it.rewardType.toString()
-                                                   playedGameRewardValue= it.rewardValue.toString()
+                                                   playedGameRewardValue= it.name.toString()
                                               }
                                             }
                                         }

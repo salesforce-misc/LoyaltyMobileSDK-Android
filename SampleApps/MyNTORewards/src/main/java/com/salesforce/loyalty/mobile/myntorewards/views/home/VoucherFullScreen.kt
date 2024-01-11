@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -36,6 +38,7 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
@@ -61,6 +64,12 @@ fun VoucherFullScreen(
 
     val context: Context = LocalContext.current
 
+    if(navCheckOutFlowController.previousBackStackEntry?.destination?.route== ROUTE_GAME_ZONE_SCREEN){
+        LaunchedEffect(key1 = true) {
+            voucherModel.loadVoucher(context, true)
+        }
+    }
+
     fun refresh() = refreshScope.launch {
 
         voucherModel.loadVoucher(context, true)
@@ -77,6 +86,7 @@ fun VoucherFullScreen(
                 .background(Color.White)
                 .pullRefresh(state).testTag(TEST_TAG_VOUCHER_SCREEN)
                 .blur(blurBG)
+                .verticalScroll(rememberScrollState())
         )
         {
             var isInProgress by remember { mutableStateOf(true) }
