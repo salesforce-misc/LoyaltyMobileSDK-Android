@@ -17,7 +17,7 @@ class ReferralsLocalRepository @Inject constructor(
 ) {
 
     companion object {
-        const val SOQL_QUERY_PATH = "services/data/v"
+        const val SOQL_QUERY_PATH = "/services/data/v"
         const val SOQL_QUERY_VERSION = "59.0"
         const val QUERY = "/query/"
     }
@@ -29,7 +29,7 @@ class ReferralsLocalRepository @Inject constructor(
             apiService.fetchReferralsInfo(
                 sObjectUrl(),
                 referralListQuery(durationInDays),
-                "Bearer 00DSB000001oyRq!AQEAQJClhjD46LhznJwapQRjHS164SEQpgzW9TTMh3tW.8bZC2eONjo3e2Rgu3.DekH01elLNjVoGjHVmTOAgJVf2ngz._eQ"
+                "Bearer ${accessToken()}"
             )
         }
     }

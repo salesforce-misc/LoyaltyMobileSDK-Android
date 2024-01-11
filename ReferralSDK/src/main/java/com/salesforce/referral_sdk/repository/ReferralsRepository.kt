@@ -43,9 +43,11 @@ open class ReferralsRepository @Inject constructor(
             apiService.enrollNewCustomerAsAdvocateOfPromotion(
                 getRequestUrl(ReferralAPIConfig.Resource.ReferralMemberEnrolment(promotionName, promotionCode)),
                 ReferralNewEnrollmentRequestBody(
-                    state?.let { ReferralAttributes(mapOf(ATTRIBUTES_STATE to state)) },
+//                    state?.let { ReferralAttributes(mapOf(ATTRIBUTES_STATE to state)) },
+                    null,
                     AssociatedPersonAccountDetails(
-                        country?.let { ReferralAttributes(mapOf(ATTRIBUTES_COUNTRY to country)) },
+//                        country?.let { ReferralAttributes(mapOf(ATTRIBUTES_COUNTRY to country)) },
+                        null,
                         "false",
                         email,
                         firstName,
