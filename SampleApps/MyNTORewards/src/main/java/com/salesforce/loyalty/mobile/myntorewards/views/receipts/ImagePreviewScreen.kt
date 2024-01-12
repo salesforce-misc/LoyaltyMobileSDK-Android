@@ -237,7 +237,7 @@ fun ImagePreviewScreen(
                 // Encoding the image to Base 64 and sending it to Analyze API.
                 val baos = ByteArrayOutputStream()
                 capturedImageBitmap?.asAndroidBitmap()?.let {
-                    it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                    it.compress(Bitmap.CompressFormat.JPEG, 80, baos)
                     val b: ByteArray = baos.toByteArray()
 //                    val encImage: String = Base64.encodeToString(b, Base64.NO_WRAP)
 //                    Log.d("ImageCaptureScreen", "Encoded image: $encImage")
