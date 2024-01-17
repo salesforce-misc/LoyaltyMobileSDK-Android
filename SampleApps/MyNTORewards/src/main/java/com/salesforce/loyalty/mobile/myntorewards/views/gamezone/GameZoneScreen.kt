@@ -256,7 +256,8 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                             }.get(0).name.toString()
 
                                             GameView(
-                                                true,
+                                                isExpired = false,
+                                                isPlayed = true,
                                                 gamePlayingStatus = stringResource(id = R.string.text_played),
                                                 title = playedGame.name ?: "",
                                                 gameType,
@@ -318,7 +319,8 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                             GameType.SCRATCH_CARD
                                                         }
                                                     GameView(
-                                                        false,
+                                                        isExpired = false,
+                                                        isPlayed = false,
                                                         gamePlayingStatus = expiryDetail,
                                                         title = activeGame.name ?: "",
                                                         gameType
@@ -375,7 +377,8 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                             GameType.SCRATCH_CARD
                                                         }
                                                     GameView(
-                                                        true,
+                                                        isExpired = true,
+                                                        isPlayed = false,
                                                         gamePlayingStatus = stringResource(id = R.string.game_expired),
                                                         title = activeGame.name ?: "",
                                                         gameType

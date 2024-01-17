@@ -38,7 +38,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_TYPE
 
 @Composable
-fun GameView(isExpired: Boolean, gamePlayingStatus: String?, title: String, gameType: GameType, gameReward:String= "", onClicked: () -> Unit) {
+fun GameView(isExpired: Boolean, isPlayed: Boolean, gamePlayingStatus: String?, title: String, gameType: GameType, gameReward:String= "", onClicked: () -> Unit) {
 
     Column(
         modifier = Modifier
@@ -115,7 +115,7 @@ fun GameView(isExpired: Boolean, gamePlayingStatus: String?, title: String, game
                 Spacer(modifier = Modifier.height(4.dp))
                 var expirationTextColor = Color.White
                 var expirationBgColor = Color.Black
-                if (isExpired) {
+                if (isExpired || isPlayed) {
                     expirationTextColor = Color.Black
                     expirationBgColor = ScratchCardBackground
                 }
@@ -162,5 +162,5 @@ fun GameView(isExpired: Boolean, gamePlayingStatus: String?, title: String, game
 @Preview
 @Composable
 fun previewGameView(){
-    GameView(false, "Expiring Tomorrow", title = "R.string.game_placeholder_title", gameType = GameType.SPIN_A_WHEEL){}
+    GameView(false, false,"Expiring Tomorrow", title = "R.string.game_placeholder_title", gameType = GameType.SPIN_A_WHEEL){}
 }
