@@ -46,6 +46,11 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
     val movedState = remember { mutableStateOf<Offset?>(null) }
 
     var openBottomsheet by remember { mutableStateOf(false) }
+    var gameName by remember { mutableStateOf("") }
+    var gameDescription by remember { mutableStateOf("") }
+
+    gameName = gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)?.name ?: ""
+    gameDescription = gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)?.description ?: ""
 
     val bottomSheetScaffoldState = androidx.compose.material.rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
@@ -124,6 +129,12 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
                              }
                      )
                  }
+
+                 if(gameName.isEmpty())
+                     gameName=stringResource(id = R.string.game_scratch_card_title)
+                 if(gameDescription.isEmpty() )
+                     gameDescription= stringResource(id = R.string.game_scratch_card_sub_title)
+
                  Column(
                      verticalArrangement = Arrangement.spacedBy(4.dp),
                      horizontalAlignment = Alignment.CenterHorizontally,
@@ -132,7 +143,7 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
                          .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                  ){
                      Text(
-                         text = stringResource(id = R.string.game_scratch_card_title),
+                         text =gameName ,
                          color = Color.Black,
                          textAlign = TextAlign.Center,
                          fontSize = 24.sp,
@@ -140,7 +151,7 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
                          fontFamily = font_sf_pro
                      )
                      Text(
-                         text = stringResource(id = R.string.game_scratch_card_sub_title),
+                         text = gameDescription,
                          color = Color.Black,
                          textAlign = TextAlign.Center,
                          fontSize = 18.sp,

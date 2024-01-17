@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.gamification.model.GameReward
+import com.salesforce.gamification.model.GameDefinition
 import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
@@ -94,11 +94,12 @@ open class GameViewModel @Inject constructor(
         }
     }
 
-    override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+    override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition? {
+
         return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
             gameDefinition.participantGameRewards.any { partGameReward ->
                 partGameReward.gameParticipantRewardId == gameParticipantRewardId
             }
-        }?.gameRewards ?: emptyList()
+        }
     }
 }

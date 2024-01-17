@@ -2,7 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.salesforce.gamification.model.GameReward
+import com.salesforce.gamification.model.GameDefinition
 import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
@@ -19,5 +19,5 @@ interface GameViewModelInterface {
     suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse>
     val gameRewardsViewState: LiveData<GameRewardViewState>
 
-    fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward>
+    fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition?
 }

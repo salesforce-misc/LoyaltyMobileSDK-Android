@@ -28,7 +28,11 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 
 @Composable
-fun SpinnerLandingPageHeader(navController: NavHostController) {
+fun SpinnerLandingPageHeader(
+    navController: NavHostController,
+    gameName: String,
+    gameDescription: String
+) {
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -58,7 +62,7 @@ fun SpinnerLandingPageHeader(navController: NavHostController) {
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
         Text(
-            text = stringResource(id = R.string.text_spin_a_wheel),
+            text = gameName,
             color = Color.White,
             textAlign = TextAlign.Center,
             fontSize = 24.sp,
@@ -66,7 +70,7 @@ fun SpinnerLandingPageHeader(navController: NavHostController) {
             fontFamily = font_sf_pro
         )
         Text(
-            text = stringResource(id = R.string.game_spin_sub_title),
+            text = gameDescription,
             color = Color.White,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,

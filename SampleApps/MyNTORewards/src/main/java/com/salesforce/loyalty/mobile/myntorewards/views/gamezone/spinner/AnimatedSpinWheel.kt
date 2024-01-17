@@ -44,7 +44,9 @@ fun Wheel(
     gameViewModel: GameViewModel,
     gamesList: MutableList<GameNameIDDataModel>,
     colourList: MutableList<Color>,
-    gameParticipantRewardId: String
+    gameParticipantRewardId: String,
+    gameName: String,
+    gameDescription: String
 ) {
     val state = rememberSpinWheelState(gameViewModel, gamesList.size, gameParticipantRewardId)
     var openBottomsheet by remember { mutableStateOf(false) }
@@ -110,7 +112,7 @@ fun Wheel(
                     .background(SpinnerBackground)
                     .verticalScroll(rememberScrollState()).testTag(TEST_TAG_SPIN_WHEEL_BG),
             ) {
-                SpinnerLandingPageHeader(navController)
+                SpinnerLandingPageHeader(navController, gameName, gameDescription)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
