@@ -4,10 +4,10 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.referral_sdk.api.ApiResponse
 import com.salesforce.referral_sdk.api.safeApiCall
 import com.salesforce.referral_sdk.entities.QueryResult
-import com.salesforce.referral_sdk.entities.ReferralEntity
 import javax.inject.Inject
 
 class ReferralsLocalRepository @Inject constructor(
