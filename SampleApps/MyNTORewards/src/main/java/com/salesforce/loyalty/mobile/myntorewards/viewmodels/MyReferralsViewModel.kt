@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
@@ -27,7 +28,6 @@ import com.salesforce.referral_sdk.EnrollmentStatus
 import com.salesforce.referral_sdk.api.ApiResponse
 import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_PROGRAM_NAME
 import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
-import com.salesforce.referral_sdk.entities.ReferralEntity
 import com.salesforce.referral_sdk.entities.referral_event.ReferralEventResponse
 import com.salesforce.referral_sdk.repository.ReferralsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,7 +53,7 @@ class MyReferralsViewModel @Inject constructor(
     companion object {
         private const val REFERRAL_DURATION = 90
         // TODO: Check if we need to remove hard coded and use dynamically instead
-        private const val PROMO_CODE = "Promo100"
+        private const val PROMO_CODE = "TESTRM"
     }
 
     init {
