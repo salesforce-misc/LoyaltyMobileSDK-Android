@@ -29,6 +29,7 @@ class ReferralsLocalRepository @Inject constructor(
             apiService.fetchReferralsInfo(
                 sObjectUrl(),
                 referralListQuery(durationInDays),
+                "Bearer 00DB000000FX0aR!ARQAQM0qRWUqU9vwYZf5yVnS8AXiruTKUT2YtpxpyONqgB5CQkkQCzZZOjY8xxBeFRS07YYG5SEwTyfI91g12gC5CMf.utNx"
             )
         }
     }
