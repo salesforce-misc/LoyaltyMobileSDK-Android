@@ -15,6 +15,7 @@ import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
 import com.salesforce.gamification.api.GameAPIClient
 import com.salesforce.gamification.api.GameAuthenticator
+import com.salesforce.gamification.model.GameDefinition
 import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mockReceiptResponse
 import com.salesforce.gamification.model.GameReward
 import com.salesforce.gamification.model.GameRewardResponse
@@ -1291,12 +1292,13 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             override val gameRewardsViewState: LiveData<GameRewardViewState>
                 get() = rewardViewState
 
-            override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+            override fun getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition? {
+
                 return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
                     gameDefinition.participantGameRewards.any { partGameReward ->
                         partGameReward.gameParticipantRewardId == gameParticipantRewardId
                     }
-                }?.gameRewards ?: emptyList()
+                }
             }
 
             private val rewardViewState = MutableLiveData<GameRewardViewState>()

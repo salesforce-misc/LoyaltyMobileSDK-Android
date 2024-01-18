@@ -19,5 +19,5 @@ interface GameViewModelInterface {
     suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse>
     val gameRewardsViewState: LiveData<GameRewardViewState>
 
-    fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition?
+    fun getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition?
 }

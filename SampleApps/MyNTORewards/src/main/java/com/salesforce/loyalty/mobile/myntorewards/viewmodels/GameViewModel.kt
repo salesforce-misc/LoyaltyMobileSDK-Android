@@ -94,7 +94,7 @@ open class GameViewModel @Inject constructor(
         }
     }
 
-    override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition? {
+    override fun getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition? {
 
         return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
             gameDefinition.participantGameRewards.any { partGameReward ->

@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
@@ -49,9 +48,12 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
     var gameName by remember { mutableStateOf("") }
     var gameDescription by remember { mutableStateOf("") }
 
-    gameName = gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)?.name ?: ""
-    gameDescription = gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)?.description ?: ""
-
+    LaunchedEffect(key1 = true) {
+        gameViewModel.getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId).let {
+            gameName= it?.name ?: ""
+            gameDescription= it?.description ?: ""
+        }
+    }
     val bottomSheetScaffoldState = androidx.compose.material.rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
             confirmValueChange = {

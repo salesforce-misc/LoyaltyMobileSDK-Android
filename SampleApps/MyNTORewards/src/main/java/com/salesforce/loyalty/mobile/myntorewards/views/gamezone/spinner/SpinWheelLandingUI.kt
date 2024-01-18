@@ -34,10 +34,12 @@ fun SpinWheelLandingPage(
     var gameName by remember { mutableStateOf("") }
     var gameDescription by remember { mutableStateOf("") }
     LaunchedEffect(key1 = true) {
-        gameRewards = gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)?.gameRewards ?: emptyList()
-        gameName = gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)?.name ?: ""
-        gameDescription = gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)?.description ?: ""
 
+        gameViewModel.getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId).let {
+            gameRewards= it?.gameRewards ?: emptyList()
+            gameName= it?.name ?: ""
+            gameDescription= it?.description ?: ""
+        }
     }
     Box(contentAlignment = Alignment.TopCenter) {
         val gamesList = remember {
