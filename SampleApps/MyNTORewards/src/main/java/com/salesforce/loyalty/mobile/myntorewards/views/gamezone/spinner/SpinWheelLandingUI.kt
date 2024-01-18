@@ -7,9 +7,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
 import com.salesforce.gamification.model.GameReward
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerDefaultColour
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
@@ -29,9 +31,15 @@ fun SpinWheelLandingPage(
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
     var gameRewards: List<GameReward> = mutableListOf()
+    var gameName by remember { mutableStateOf("") }
+    var gameDescription by remember { mutableStateOf("") }
     LaunchedEffect(key1 = true) {
-        gameRewards =
-            gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)
+
+        gameViewModel.getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId).let {
+            gameRewards= it?.gameRewards ?: emptyList()
+            gameName= it?.name ?: ""
+            gameDescription= it?.description ?: ""
+        }
     }
     Box(contentAlignment = Alignment.TopCenter) {
         val gamesList = remember {
@@ -60,8 +68,13 @@ fun SpinWheelLandingPage(
                 wheelValuesLoaded = true
             }
         }
+        if(gameName.isEmpty())
+            gameName= stringResource(id = R.string.text_spin_a_wheel)
+        if(gameDescription.isEmpty() )
+            gameDescription= stringResource(id = R.string.game_spin_sub_title)
+
         if (wheelValuesLoaded) {
-            Wheel(navController, gameViewModel, gamesList, colourList, gameParticipantRewardId)
+            Wheel(navController, gameViewModel, gamesList, colourList, gameParticipantRewardId, gameName, gameDescription)
         } else {
             Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(

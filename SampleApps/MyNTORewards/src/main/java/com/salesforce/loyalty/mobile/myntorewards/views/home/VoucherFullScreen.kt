@@ -86,7 +86,6 @@ fun VoucherFullScreen(
                 .background(Color.White)
                 .pullRefresh(state).testTag(TEST_TAG_VOUCHER_SCREEN)
                 .blur(blurBG)
-                .verticalScroll(rememberScrollState())
         )
         {
             var isInProgress by remember { mutableStateOf(true) }
