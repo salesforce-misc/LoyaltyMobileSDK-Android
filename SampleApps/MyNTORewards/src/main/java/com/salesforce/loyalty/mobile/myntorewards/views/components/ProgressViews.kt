@@ -15,8 +15,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 const val CIRCULAR_PROGRESS_TEST_TAG = "CIRCULAR_PROGRESS_TEST_TAG"
 
 @Composable
-fun CircularProgress(color: Color = VibrantPurple40) {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun CircularProgress(modifier: Modifier = Modifier.fillMaxSize(), color: Color = VibrantPurple40) {
+    Box(modifier = modifier) {
         CircularProgressIndicator(
             color = color,
             modifier = Modifier
@@ -33,6 +33,6 @@ fun ProgressDialogComposable(color: Color = VibrantPurple40, onDismissRequest: (
         onDismissRequest = onDismissRequest,
         DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
-        CircularProgress(color)
+        CircularProgress(color = color)
     }
 }

@@ -5,7 +5,7 @@ object ReferralAPIConfig {
     const val HEADER_AUTHORIZATION = "Authorization"
 
     private const val MEMBER_API_SERVICES_PATH = "/services/data/"
-    private const val API_VERSION_59 = "v59.0"
+    private const val API_VERSION_59 = "v60.0"
     lateinit var instanceUrl: String
 
     /**

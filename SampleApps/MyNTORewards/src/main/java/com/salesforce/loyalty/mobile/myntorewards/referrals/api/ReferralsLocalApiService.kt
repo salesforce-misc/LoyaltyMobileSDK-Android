@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals.api
 
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.referral_sdk.entities.QueryResult
 import retrofit2.Response
@@ -23,4 +24,11 @@ interface ReferralsLocalApiService {
         @Query("q") query: String?,
         @Header("Authorization") bearerToken: String
     ): Response<QueryResult<ReferralCode>>
+
+    @GET
+    suspend fun checkIfMemberEnrolled(
+        @Url url: String,
+        @Query("q") query: String?,
+        @Header("Authorization") bearerToken: String
+    ): Response<QueryResult<ReferralEnrollmentInfo>>
 }

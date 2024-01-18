@@ -99,9 +99,9 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
         }
     }
 
-    if (!isAppInstalled(intent.`package` ?: "")) {
+    /*if (!isAppInstalled(intent.`package` ?: "")) {
         Toast.makeText(this, getString(R.string.selected_app_is_not_installed), Toast.LENGTH_LONG).show()
-    }
+    }*/
     startActivity(Intent.createChooser(intent, getString(R.string.share_referral_code_intent_chooser)))
 }
 

@@ -7,5 +7,6 @@ sealed class ReferralProgramType {
     object SIGNUP : ReferralProgramType()
     object JOIN_PROGRAM : ReferralProgramType()
     object START_REFERRING : ReferralProgramType()
+    object EMPTY_STATE : ReferralProgramType()
     data class ERROR(val errorMessage: String? = null) : ReferralProgramType()
 }

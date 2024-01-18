@@ -8,27 +8,12 @@ data class ReferralEventRequest(
     @SerializedName("joiningDate")
     val joiningDate: String,
     @SerializedName("eventType")
-    val eventType: String = ReferralEventType.REFER.eventType,
-    @SerializedName("email")
-    val email: String?,
+    val eventType: String,
     @SerializedName("referralEmails")
-    val referralEmails: String?,
-    @SerializedName("firstName")
-    val firstName: String? = null,
-    @SerializedName("lastName")
-    val lastName: String? = null,
-    @SerializedName("contactId")
-    val contactId: String? = null,
-    @SerializedName("additionalAttributes")
-    val additionalAttributes: AdditionalAttributes? = null,
-    @SerializedName("orderReferenceId")
-    val orderReferenceId: String? = null,
-    @SerializedName("productId")
-    val productId: String? = null,
-    @SerializedName("purchaseAmount")
-    val purchaseAmount: Int? = null,
-    @SerializedName("purchaseQuantity")
-    val purchaseQuantity: Int? = null,
-    @SerializedName("transactionJournalAdditionalAttributes")
-    val transactionJournalAdditionalAttributes: TransactionJournalAdditionalAttributes? = null
+    val referralEmails: Emails
+)
+
+data class Emails(
+    @SerializedName("emails")
+    val emails: List<String>,
 )

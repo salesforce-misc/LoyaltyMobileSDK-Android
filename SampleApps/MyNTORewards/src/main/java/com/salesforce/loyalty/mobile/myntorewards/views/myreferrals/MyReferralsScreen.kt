@@ -50,7 +50,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
         if (referralProgramJoined == true) {
             viewModel.fetchReferralsInfo(context)
         } else {
-            viewModel.fetchReferralProgramStatus()
+            viewModel.fetchReferralProgramStatus(context)
         }
     }
 
@@ -76,7 +76,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
             is MyReferralsViewState.MyReferralsFetchFailure -> {
                 ErrorPopup(
                     it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
-                    tryAgainClicked = { },
+                    tryAgainClicked = { viewModel.fetchReferralsInfo(context) },
                     textButtonClicked = {  }
                 )
             }
@@ -123,7 +123,7 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
 //
 //    LaunchedEffect(key1 = bottomBarState) {
 // Show Bottom Bar on screen load and hide it when bottom sheet is opened
-        showBottomBar(true)
+        showBottomBar(false)
 //    }
 
     val showBottomSheet: (Boolean) -> Job = {
@@ -138,7 +138,7 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
                     collapse()
                 }
 //                bottomBarState = !it
-//                showBottomBar(!it)
+                showBottomBar(!it)
 
             }
         }

@@ -4,6 +4,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.referral_sdk.api.ApiResponse
 import com.salesforce.referral_sdk.api.safeApiCall
@@ -29,7 +30,17 @@ class ReferralsLocalRepository @Inject constructor(
             apiService.fetchReferralsInfo(
                 sObjectUrl(),
                 referralListQuery(durationInDays),
-                "Bearer 00DB000000FX0aR!ARQAQM0qRWUqU9vwYZf5yVnS8AXiruTKUT2YtpxpyONqgB5CQkkQCzZZOjY8xxBeFRS07YYG5SEwTyfI91g12gC5CMf.utNx"
+                accessToken()
+            )
+        }
+    }
+
+    suspend fun checkIfMemberEnrolled(promoCode: String, memberId: String): ApiResponse<QueryResult<ReferralEnrollmentInfo>> {
+        return safeApiCall {
+            apiService.checkIfMemberEnrolled(
+                sObjectUrl(),
+                memberEnrollmentStatusQuery(promoCode, memberId),
+                accessToken()
             )
         }
     }
@@ -39,12 +50,17 @@ class ReferralsLocalRepository @Inject constructor(
             apiService.fetchMemberReferralId(
                 sObjectUrl(),
                 memberReferralCodeQuery(membershipNumber),
-                "Bearer 00DB000000FX0aR!ARQAQM0qRWUqU9vwYZf5yVnS8AXiruTKUT2YtpxpyONqgB5CQkkQCzZZOjY8xxBeFRS07YYG5SEwTyfI91g12gC5CMf.utNx"
+                accessToken()
             )
         }
     }
 
-    private fun accessToken() = forceAuthManager.getForceAuth()?.accessToken.orEmpty()
+    private fun accessToken() =
+//        "Bearer ${forceAuthManager.getForceAuth()?.accessToken.orEmpty()}"
+        "Bearer 00DB000000FX0aR!ARQAQCq1M5Io1M6LWzWyuXsARwcPp6Q0geoiFltINVya47W2DS1nwDGihssv5oWLtIn3s3qR4BFyQ.on8ju3ItoyVGf6a4Sf"
+
+    private fun memberEnrollmentStatusQuery(promoCode: String, memberId: String) =
+        "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMemberId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
 
     private fun memberReferralCodeQuery(membershipNumber: String) =
         "SELECT MembershipNumber, referralcode from loyaltyprogrammember where MembershipNumber =\'$membershipNumber\'"

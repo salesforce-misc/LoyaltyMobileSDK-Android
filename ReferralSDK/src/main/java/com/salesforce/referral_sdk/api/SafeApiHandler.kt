@@ -1,5 +1,8 @@
 package com.salesforce.referral_sdk.api
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.salesforce.referral_sdk.entities.ApiErrorResponse
 import retrofit2.Response
 import java.io.IOException
 
@@ -10,7 +13,9 @@ suspend fun <T: Any> safeApiCall(call: suspend () -> Response<T>): ApiResponse<T
             ApiResponse.Success(response.body()!!)
         } else {
             val errorMessage = response.errorBody()?.string()
-            ApiResponse.Error(errorMessage)
+            val type = object: TypeToken<List<ApiErrorResponse>>(){}.type
+            val errorMessageBody = Gson().fromJson<List<ApiErrorResponse>>(errorMessage, type)
+            ApiResponse.Error(errorMessageBody?.firstOrNull()?.message)
         }
     } catch (exception: IOException) {
         ApiResponse.NetworkError

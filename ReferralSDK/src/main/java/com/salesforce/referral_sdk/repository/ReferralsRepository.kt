@@ -16,8 +16,10 @@ import com.salesforce.referral_sdk.entities.ReferralAttributes
 import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
 import com.salesforce.referral_sdk.entities.ReferralExistingEnrollmentRequest
 import com.salesforce.referral_sdk.entities.ReferralNewEnrollmentRequestBody
+import com.salesforce.referral_sdk.entities.referral_event.Emails
 import com.salesforce.referral_sdk.entities.referral_event.ReferralEventRequest
 import com.salesforce.referral_sdk.entities.referral_event.ReferralEventResponse
+import com.salesforce.referral_sdk.entities.referral_event.ReferralEventType
 import com.salesforce.referral_sdk.utils.getCurrentDateTime
 import com.salesforce.referral_sdk.utils.getRandomString
 import javax.inject.Inject
@@ -95,24 +97,13 @@ open class ReferralsRepository @Inject constructor(
         emails: List<String>
     ): ApiResponse<ReferralEventResponse> {
         return safeApiCall {
-            var firstName: String? = null
-            var lastName: String? = null
-            val (email, multipleMails) = if (emails.size == 1) {
-                firstName = "siva"
-                lastName = "polam"
-                Pair(emails.first(), null)
-            } else {
-                Pair(null, emails.joinToString(","))
-            }
             apiService.sendReferrals(
                 getRequestUrl(ReferralAPIConfig.Resource.ReferralEvent),
                 ReferralEventRequest(
                     referralCode = referralCode,
                     joiningDate = getCurrentDateTime().orEmpty(),
-                    email = email,
-                    referralEmails = multipleMails,
-                    firstName = firstName,
-                    lastName = lastName
+                    referralEmails = Emails(emails),
+                    eventType = ReferralEventType.REFER.eventType
                 )
             )
         }

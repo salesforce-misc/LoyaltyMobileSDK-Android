@@ -21,6 +21,8 @@ class UnauthorizedInterceptor(private val authenticator: ForceAuthenticator) : I
     companion object {
         const val BEARER_HEADER = "Bearer "
         const val HEADER_AUTHORIZATION = "Authorization"
+        const val HEADER_CONTENT_TYPE = "Content-Type"
+        const val HEADER_CONTENT_TYPE_VALUE = "application/json"
     }
     override fun intercept(chain: Interceptor.Chain): Response {
         Logger.d("UnauthorizedInterceptor", "intercept")
@@ -49,9 +51,10 @@ class UnauthorizedInterceptor(private val authenticator: ForceAuthenticator) : I
      * @return New [Request] with Authorization header added.
      */
     private fun newRequestWithAccessToken(accessToken: String?, request: Request): Request {
-        val bearerTokenValue = BEARER_HEADER + accessToken
+        val bearerTokenValue = BEARER_HEADER + "00DB000000FX0aR!ARQAQCq1M5Io1M6LWzWyuXsARwcPp6Q0geoiFltINVya47W2DS1nwDGihssv5oWLtIn3s3qR4BFyQ.on8ju3ItoyVGf6a4Sf"
         return request.newBuilder()
             .addHeader(HEADER_AUTHORIZATION, bearerTokenValue)
+            .addHeader(HEADER_CONTENT_TYPE, HEADER_CONTENT_TYPE_VALUE)
             .build()
     }
 }

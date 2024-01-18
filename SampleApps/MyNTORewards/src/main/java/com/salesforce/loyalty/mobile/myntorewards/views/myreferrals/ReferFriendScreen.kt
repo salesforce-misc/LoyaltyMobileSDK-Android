@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -49,6 +51,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferFri
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
+import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
@@ -72,9 +75,13 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
         when(it) {
             is ERROR -> ErrorPopup(
                 it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
-                tryAgainClicked = { viewModel.enrollToReferralPromotion(context) },
+                tryAgainClicked = { viewModel.enrollToReferralPromotion(context, true) },
                 textButtonClicked = {  }
             )
+            is EMPTY_STATE -> {
+                CircularProgress(modifier = Modifier.fillMaxHeight(0.92f)
+                    .fillMaxWidth())
+            }
             else -> ReferFriendScreenUI(viewModel, it, backAction) {
                 closeAction()
             }
@@ -85,12 +92,14 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
         when (it) {
             ReferFriendViewState.ShowSignupInvalidEmailMessage -> context.showToast("Please enter valid E-mails!")
             ReferFriendViewState.ReferFriendInProgress -> {
-                ProgressDialogComposable(Color.White) { } // Do nothing on progress dismiss
+                ProgressDialogComposable() { } // Do nothing on progress dismiss
             }
             is ReferFriendViewState.ReferFriendSendMailsSuccess -> {}// context.showToast(it.data)
             is ReferFriendViewState.EnrollmentFailed -> {
                 // Do nothing
             }
+
+            ReferFriendViewState.ReferFriendTryAgainInProgress -> CircularProgress()
         }
     }
 }
@@ -168,7 +177,7 @@ fun JoinReferralProgramUi(viewModel: MyReferralsViewModel, backAction: () -> Boo
     BodyText(text = stringResource(R.string.join_referral_program_description))
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.referral_join_button_text), onClick = {
-        viewModel.enrollToReferralPromotion(context)
+        viewModel.enrollToReferralPromotion(context, false)
 //        PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
     })
     TextButtonCustom(

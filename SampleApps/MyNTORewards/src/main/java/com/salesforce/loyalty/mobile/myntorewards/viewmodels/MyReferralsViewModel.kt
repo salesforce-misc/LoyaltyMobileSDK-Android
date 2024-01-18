@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
@@ -53,7 +54,7 @@ class MyReferralsViewModel @Inject constructor(
     companion object {
         private const val REFERRAL_DURATION = 90
         // TODO: Check if we need to remove hard coded and use dynamically instead
-        private const val PROMO_CODE = "TESTRM"
+        private const val PROMO_CODE = "RTPROMO"
     }
 
     init {
@@ -97,12 +98,29 @@ class MyReferralsViewModel @Inject constructor(
         }
     }
 
-    fun fetchReferralProgramStatus() {
+    fun fetchReferralProgramStatus(context: Context) {
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
-            delay(2000)
-            uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(null)))
-            _programState.value = ReferralProgramType.JOIN_PROGRAM
+            val member = getMember(context)
+            val memberId = member?.loyaltyProgramMemberId.orEmpty()
+            when(val result = localRepository.checkIfMemberEnrolled(PROMO_CODE, memberId)) {
+                is ApiResponse.Success -> {
+                    val data: List<ReferralEnrollmentInfo>? = result.data.records
+                    if (data?.firstOrNull()?.loyaltyProgramMemberId == memberId){
+                        updateReferralEnrollmentStatusInPreferences(context)
+                        Logger.d("Already enrolled", "$data")
+                        fetchReferralsInfo(context)
+                    } else {
+                        Logger.d("Not enrolled", "$data")
+                        uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(null)))
+                        _programState.value = ReferralProgramType.JOIN_PROGRAM
+                    }
+                }
+                is ApiResponse.Error -> {
+                    uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure(result.errorMessage))
+                }
+                ApiResponse.NetworkError -> uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure())
+            }
         }
     }
 
@@ -142,33 +160,35 @@ class MyReferralsViewModel @Inject constructor(
     }
 
 
-    fun enrollToReferralPromotion(context: Context) {
-        _viewState.value = ReferFriendViewState.ReferFriendInProgress
+    fun enrollToReferralPromotion(context: Context, isTryAgain: Boolean) {
+        if (isTryAgain){
+            _programState.value = ReferralProgramType.EMPTY_STATE
+        } else {
+            _viewState.value = ReferFriendViewState.ReferFriendInProgress
+        }
         viewModelScope.launch {
             val member = getMember(context)
             val result = when {
-                member?.membershipNumber != null -> {
-                    repository.enrollExistingAdvocateToPromotionWithMembershipNumber(
-                        REFERRAL_PROGRAM_NAME, PROMO_CODE, member.membershipNumber
-                    )
-                }
-                member?.contactId != null -> {
-                    repository.enrollExistingAdvocateToPromotionWithContactId(
-                        REFERRAL_PROGRAM_NAME, PROMO_CODE, member.contactId
-                    )
-                }
+//                member?.contactId != null -> {
+//                    repository.enrollExistingAdvocateToPromotionWithContactId(
+//                        REFERRAL_PROGRAM_NAME, PROMO_CODE, member.contactId
+//                    )
+//                }
+//                member?.membershipNumber != null -> {
+//                    repository.enrollExistingAdvocateToPromotionWithMembershipNumber(
+//                        REFERRAL_PROGRAM_NAME, PROMO_CODE, "XNEOT84D"
+//                    )
+//                }
                 else -> enrollNewCustomerAsAdvocateOfPromotion(REFERRAL_PROGRAM_NAME, PROMO_CODE, member)
             }
             when(result) {
                 is ApiResponse.Success -> {
                     val enrollmentResponse = result.data
                     val status = enrollmentResponse.transactionJournals.firstOrNull()?.status
-                    _programState.value = ReferralProgramType.START_REFERRING
-                    setReferralCode(context, enrollmentResponse.promotionReferralCode)
-                    PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
-
                     if (status == EnrollmentStatus.PROCESSED.status) {
-
+                        _programState.value = ReferralProgramType.START_REFERRING
+                        setReferralCode(context, enrollmentResponse.promotionReferralCode)
+                        updateReferralEnrollmentStatusInPreferences(context)
                     } else {
                         // TODO: What to do if enrollment is not processed
                     }
@@ -179,9 +199,9 @@ class MyReferralsViewModel @Inject constructor(
                 }
                 is ApiResponse.Error -> {
                     // TODO: REMOVE this line
-                    _programState.value = ReferralProgramType.START_REFERRING
+//                    _programState.value = ReferralProgramType.START_REFERRING
 
-//                    _programState.value = ReferralProgramType.ERROR(result.errorMessage)
+                    _programState.value = ReferralProgramType.ERROR(result.errorMessage)
                     _viewState.value = ReferFriendViewState.EnrollmentFailed(result.errorMessage)
 
                     Logger.d("enrollToReferralProgram Error", "${result.errorMessage}")
@@ -193,6 +213,10 @@ class MyReferralsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun updateReferralEnrollmentStatusInPreferences(context: Context) {
+        PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
     }
 
     private suspend fun enrollNewCustomerAsAdvocateOfPromotion(
