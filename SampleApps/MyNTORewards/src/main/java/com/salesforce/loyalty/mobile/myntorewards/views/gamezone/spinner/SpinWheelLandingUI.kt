@@ -1,26 +1,20 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavHostController
+import com.salesforce.gamification.model.GameReward
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerDefaultColour
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.Wheel
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameReward
 import kotlinx.coroutines.launch
 
 data class GameNameIDDataModel(
@@ -31,15 +25,21 @@ data class GameNameIDDataModel(
 @Composable
 fun SpinWheelLandingPage(
     navController: NavHostController,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     gameParticipantRewardId: String
 ) {
 
     var wheelValuesLoaded by remember { mutableStateOf(false) }
     var gameRewards: List<GameReward> = mutableListOf()
+    var gameName by remember { mutableStateOf("") }
+    var gameDescription by remember { mutableStateOf("") }
     LaunchedEffect(key1 = true) {
-        gameRewards =
-            gameViewModel.getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId)
+
+        gameViewModel.getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId).let {
+            gameRewards= it?.gameRewards ?: emptyList()
+            gameName= it?.name ?: ""
+            gameDescription= it?.description ?: ""
+        }
     }
     Box(contentAlignment = Alignment.TopCenter) {
         val gamesList = remember {
@@ -68,8 +68,13 @@ fun SpinWheelLandingPage(
                 wheelValuesLoaded = true
             }
         }
+        if(gameName.isEmpty())
+            gameName= stringResource(id = R.string.text_spin_a_wheel)
+        if(gameDescription.isEmpty() )
+            gameDescription= stringResource(id = R.string.game_spin_sub_title)
+
         if (wheelValuesLoaded) {
-            Wheel(navController, gameViewModel, gamesList, colourList, gameParticipantRewardId)
+            Wheel(navController, gameViewModel, gamesList, colourList, gameParticipantRewardId, gameName, gameDescription)
         } else {
             Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(

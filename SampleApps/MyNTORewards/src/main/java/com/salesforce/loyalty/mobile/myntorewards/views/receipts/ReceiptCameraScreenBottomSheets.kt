@@ -15,51 +15,17 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 fun OpenReceiptBottomSheetContent(
     bottomSheetType: ReceiptScanningBottomSheetType,
     navController: NavHostController,
-    scannedReceiptLiveData: AnalyzeExpenseResponse?,
-    scanningViewModel: ScanningViewModelInterface,
     errorMessage: String,
-    setBottomSheetState: (bottomSheetState: ReceiptScanningBottomSheetType) -> Unit,
+    currentProgress: String,
     closeSheet: () -> Unit,
 ) {
-    val context = LocalContext.current
-    var totalPoints: String? by remember {
-        mutableStateOf(null)
-    }
     when (bottomSheetType) {
         ReceiptScanningBottomSheetType.POPUP_PROGRESS -> {
-            ScanningProgress(
+            ReceiptProgressScreen(
                 navHostController = navController,
-                closePopup = { closeSheet() })
-        }
-
-        ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT -> {
-            ShowScannedReceiptScreen(
-                navController,
-                scanningViewModel,
-                scannedReceiptLiveData,
-                closePopup = {
-                    closeSheet()
-                },
-                openCongratsPopup = {
-                    setBottomSheetState(it)
-                },
-                setTotalPoints = {
-                    totalPoints = it
-                })
-        }
-
-        ReceiptScanningBottomSheetType.POPUP_CONGRATULATIONS -> {
-            CongratulationsPopup(totalPoints = totalPoints, closePopup = {
-                closeSheet()
-
-                //Invalidate receipt list cache
-                LocalFileManager.clearFolder(context, LocalFileManager.DIRECTORY_RECEIPT_LIST)
-                navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
-            }, scanAnotherReceipt = {
-                closeSheet()
-                //Invalidate receipt list cache
-                LocalFileManager.clearFolder(context, LocalFileManager.DIRECTORY_RECEIPT_LIST)
-            })
+                closePopup = { closeSheet() },
+                currentProgress = currentProgress
+            )
         }
 
         ReceiptScanningBottomSheetType.POPUP_ERROR -> {
@@ -75,5 +41,6 @@ fun OpenReceiptBottomSheetContent(
                 navController.popBackStack(MoreScreens.ReceiptListScreen.route, false)
             }, tryAgainClicked = { closeSheet() }, stringResource(id = R.string.button_home))
         }
+        else -> {}
     }
 }

@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
@@ -94,10 +95,10 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             ViewModelProvider(this, ScanningViewModelFactory(receiptManager)).get(
                 ScanningViewModel::class.java
             )
-        val gameViewModel: GameViewModel =
+/*        val gameViewModel: GameViewModel =
             ViewModelProvider(this, GameViewModelFactory(loyaltyAPIManager)).get(
                 GameViewModel::class.java
-            )
+            )*/
         setContent {
             if (loginSuccess == true) {
 
@@ -111,8 +112,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     benefitModel,
                     transactionModel,
                     checkoutFlowModel,
-                    scanningViewModel,
-                    gameViewModel
+                    scanningViewModel
                 )
             } else {
                 MainScreenStart(
@@ -123,8 +123,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     benefitModel,
                     transactionModel,
                     checkoutFlowModel,
-                    scanningViewModel,
-                    gameViewModel
+                    scanningViewModel
                 )
                 // Added for testing purpose.
                 //ScratchCardView(loyaltyAPIManager)
@@ -141,8 +140,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             benefitModel,
             transactionModel,
             checkoutFlowModel,
-            scanningViewModel,
-            gameViewModel
+            scanningViewModel
         )
 
     }
@@ -164,7 +162,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                                    benefitModel: BenefitViewModelInterface,
                                    transactionModel: TransactionViewModelInterface,
                                    checkoutFlowModel: CheckOutFlowViewModelInterface,
-                                   scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModelInterface
+                                   scanningViewModel: ScanningViewModelInterface
     ) {
         onboardingModel.logoutStateLiveData.observe(this) { logoutState ->
             run {
@@ -180,8 +178,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                             benefitModel,
                             transactionModel,
                             checkoutFlowModel,
-                            scanningViewModel,
-                            gameViewModel
+                            scanningViewModel
                         )
                     }
                 }

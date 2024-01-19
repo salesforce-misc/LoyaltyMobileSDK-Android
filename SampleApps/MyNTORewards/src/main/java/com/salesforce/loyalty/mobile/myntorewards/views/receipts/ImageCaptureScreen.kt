@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -104,6 +106,7 @@ private fun CameraContent(
     val context = LocalContext.current
     val cameraController = remember { LifecycleCameraController(context) }
     var isFlashEnabled by remember { mutableStateOf(false) }
+    val lifecycleOwner = LocalLifecycleOwner.current
     if (isFlashEnabled) {
         //cameraController.enableTorch(true)//incase the auto flash does not work after testing
         cameraController.imageCaptureFlashMode = ImageCapture.FLASH_MODE_AUTO
@@ -117,7 +120,9 @@ private fun CameraContent(
             }
         }
     ) {
-        CameraGalleryPickerAndUI(navController, cameraController, context, { capturedPic ->
+        CameraGalleryPickerAndUI(navController, cameraController, context, lifecycleOwner, { capturedPic ->
+            cameraController.unbind()
+//            (ProcessCameraProvider.unbindAll()
             onPhotoCaptured(capturedPic)
         }, { flashEnableStatus ->
             isFlashEnabled = flashEnableStatus

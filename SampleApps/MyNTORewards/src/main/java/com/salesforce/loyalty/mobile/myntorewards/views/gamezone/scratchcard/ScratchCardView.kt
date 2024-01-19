@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
+package com.salesforce.loyalty.mobile.myntorewards.views.gamezone.scratchcard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,9 +27,8 @@ import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 import kotlinx.coroutines.launch
 
@@ -40,13 +39,21 @@ data class ScratchedPath(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewModelInterface, gameParticipantRewardId: String) {
+fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewModel, gameParticipantRewardId: String) {
     val overlayImage = ImageBitmap.imageResource(id = R.drawable.overlay_img)
     val currentState = remember { mutableStateOf(ScratchedPath(path = Path())) }
     val movedState = remember { mutableStateOf<Offset?>(null) }
 
     var openBottomsheet by remember { mutableStateOf(false) }
+    var gameName by remember { mutableStateOf("") }
+    var gameDescription by remember { mutableStateOf("") }
 
+    LaunchedEffect(key1 = true) {
+        gameViewModel.getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId).let {
+            gameName= it?.name ?: ""
+            gameDescription= it?.description ?: ""
+        }
+    }
     val bottomSheetScaffoldState = androidx.compose.material.rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
             confirmValueChange = {
@@ -95,7 +102,8 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
          Box(
              modifier = Modifier
                  .fillMaxSize()
-                 .background(LightPurple).testTag(TEST_TAG_SCRATCH_CARD_SCREEN)
+                 .background(LightPurple)
+                 .testTag(TEST_TAG_SCRATCH_CARD_SCREEN)
          ) {
              Column(
                  verticalArrangement = Arrangement.Top,
@@ -123,6 +131,12 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
                              }
                      )
                  }
+
+                 if(gameName.isEmpty())
+                     gameName=stringResource(id = R.string.game_scratch_card_title)
+                 if(gameDescription.isEmpty() )
+                     gameDescription= stringResource(id = R.string.game_scratch_card_sub_title)
+
                  Column(
                      verticalArrangement = Arrangement.spacedBy(4.dp),
                      horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,7 +145,7 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
                          .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                  ){
                      Text(
-                         text = stringResource(id = R.string.game_scratch_card_title),
+                         text =gameName ,
                          color = Color.Black,
                          textAlign = TextAlign.Center,
                          fontSize = 24.sp,
@@ -139,7 +153,7 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
                          fontFamily = font_sf_pro
                      )
                      Text(
-                         text = stringResource(id = R.string.game_scratch_card_sub_title),
+                         text = gameDescription,
                          color = Color.Black,
                          textAlign = TextAlign.Center,
                          fontSize = 18.sp,
@@ -169,7 +183,8 @@ fun ScratchCardView(navController: NavHostController, gameViewModel: GameViewMod
              }
              Column(
                  verticalArrangement = Arrangement.spacedBy(16.dp),
-                 modifier = Modifier.align(Alignment.BottomCenter)
+                 modifier = Modifier
+                     .align(Alignment.BottomCenter)
                      .fillMaxWidth()
                      .padding(start = 60.dp, end = 60.dp, bottom = 100.dp),
                  horizontalAlignment = Alignment.CenterHorizontally

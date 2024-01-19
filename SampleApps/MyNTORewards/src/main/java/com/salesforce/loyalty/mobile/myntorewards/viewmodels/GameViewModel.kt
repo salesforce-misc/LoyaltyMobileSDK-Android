@@ -6,6 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.salesforce.gamification.model.GameDefinition
+import com.salesforce.gamification.model.GameRewardResponse
+import com.salesforce.gamification.model.Games
+import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.GameViewModelInterface
@@ -13,14 +17,13 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewa
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameReward
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.GameRewardResponse
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.Games
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(),
-    GameViewModelInterface {
+@HiltViewModel
+open class GameViewModel @Inject constructor(
+    private val repository: GamificationRemoteRepository) : ViewModel(), GameViewModelInterface {
     private val TAG = GameViewModel::class.java.simpleName
 
     private var rewardMutableLiveData = MutableLiveData<GameRewardResponse>()
@@ -46,7 +49,7 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     override fun getGameReward(gameParticipantRewardId: String, mock: Boolean) {
         viewModelScope.launch {
             rewardViewState.postValue(GameRewardViewState.GameRewardFetchInProgress)
-            val result = loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
+            val result = repository.getGameReward(gameParticipantRewardId, mock)
             result.onSuccess {
                 Logger.d(TAG, "API Result SUCCESS: ${it}")
                 rewardMutableLiveData.postValue(it)
@@ -59,10 +62,10 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
     }
 
     override suspend fun getGameRewardResult(gameParticipantRewardId: String, mock: Boolean): Result<GameRewardResponse> {
-        return loyaltyAPIManager.getGameReward(gameParticipantRewardId, mock)
+        return repository.getGameReward(gameParticipantRewardId, mock)
     }
 
-    override fun getGames(context: Context, mock: Boolean) {
+    override fun getGames(context: Context, gameParticipantRewardId: String?, mock: Boolean) {
         viewState.value = GamesViewState.GamesFetchInProgress
         viewModelScope.launch {
             val memberJson =
@@ -75,7 +78,11 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
 
             val loyaltyProgramMemberId = member.loyaltyProgramMemberId ?: ""
-            val result = loyaltyAPIManager.getGames(loyaltyProgramMemberId, mock)
+            val result = repository.getGames(
+                participantId = loyaltyProgramMemberId,
+                gameParticipantRewardId = gameParticipantRewardId,
+                mockResponse = mock
+            )
 
             result.onSuccess {
                 games.value = it
@@ -87,11 +94,12 @@ class GameViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewMode
         }
     }
 
-    override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
+    override fun getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition? {
+
         return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
             gameDefinition.participantGameRewards.any { partGameReward ->
                 partGameReward.gameParticipantRewardId == gameParticipantRewardId
             }
-        }?.gameRewards ?: emptyList()
+        }
     }
 }

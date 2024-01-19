@@ -63,6 +63,8 @@ class TestTags {
         const val TEST_TAG_RECEIPT_TABLE = "receipt_table"
         const val TEST_TAG_CONGRATULATIONS_SCREEN = "congratulations_screen"
         const val TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT = "screened_receipt-try_again_button"
+        const val TEST_TAG_TRY_AGAIN_ERROR_SCREEN = "error_screen_try_again_button"
+        const val TEST_TAG_ERROR_SCREEN = "error_screen_tag"
         const val MY_PROMOTION_FULL_SCREEN_HEADER = "my_promotion_header"
         const val MY_PROFILE_FULL_SCREEN_HEADER = "my_profile_header"
         const val MORE_FULL_SCREEN_HEADER = "more_header"
@@ -88,6 +90,11 @@ class TestTags {
         const val TEST_TAG_GAME_ZONE_ITEM_TITLE= "game_zone_item_title"
         const val TEST_TAG_GAME_ZONE_ITEM_TYPE= "game_zone_item_sub_type"
         const val TEST_TAG_GAME_ZONE_ITEM_EXPIRY= "game_zone_item_sub_expiry"
+        const val TEST_TAG_GAME_REWARD= "game_zone_played_game_reward"
+        const val TEST_TAG_PLAYED_GAME_PUPUP= "game_zone_played_game_popup"
+        const val TEST_TAG_PLAYED_GAME_PUPUP_HEADING= "game_zone_played_game_popup_heading"
+        const val TEST_TAG_PLAYED_GAME_PUPUP_MSG= "game_zone_played_game_popup_msg"
+        const val TEST_TAG_VOUCHER_SCREEN= "voucher_screen"
         const val TEST_TAG_SPIN_WHEEL_BG= "spin_wheel_bg"
         const val TEST_TAG_SPIN_WHEEL_HEADER= "spin_wheel_header"
         const val TEST_TAG_SPIN_WHEEL_CIRCLE= "spin_wheel_circle"
@@ -105,5 +112,7 @@ class TestTags {
         const val TEST_TAG_SCRATCH_CARD="scratch_card"
 
 
+        const val TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED= "first_step_completed"
+        const val TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED= "second_step_completed"
     }
 }

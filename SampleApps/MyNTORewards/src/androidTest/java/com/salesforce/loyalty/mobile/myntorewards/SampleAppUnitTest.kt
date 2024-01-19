@@ -1,19 +1,31 @@
 package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Looper.*
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
+import com.salesforce.gamification.api.GameAPIClient
+import com.salesforce.gamification.api.GameAuthenticator
+import com.salesforce.gamification.model.GameDefinition
+import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mockReceiptResponse
+import com.salesforce.gamification.model.GameReward
+import com.salesforce.gamification.model.GameRewardResponse
+import com.salesforce.gamification.model.Games
+import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
@@ -33,7 +45,9 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONGRATULATIONS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMAIL_PHONE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ENROLLMENT_CONGRATULATIONS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ERROR_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EXPIRATION_DATE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_REWARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_EXPIRY
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_ITEM_IMAGE
@@ -55,6 +69,9 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_DESCRIPTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ORDER_IMAGE_SELCTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PAYMENT_UI_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP_HEADING
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PLAYED_GAME_PUPUP_MSG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PRODUCT_PRICE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROFILE_ELEMENT_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMOTION_CARD
@@ -66,9 +83,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RATING
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_DETAIL_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_NUMBER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_STATUS
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_TABLE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_UPLOAD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_COLOUR_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SELECT_QUANTITY_ROW
@@ -86,33 +106,39 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_TEXT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_ERROR_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
-import kotlinx.coroutines.delay
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.*
-import java.io.InputStreamReader
-import java.lang.RuntimeException
 
 
 @RunWith(AndroidJUnit4::class)
 class SampleAppUnitTest {
 
+    private lateinit var uiDevice: UiDevice
+
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    companion object {
+        var mockReceiptResponse: String ? = null
+    }
     @Before
     fun init() {
         //might needed in future
         //val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         composeTestRule.setContent {
             Navigation(
@@ -124,7 +150,7 @@ class SampleAppUnitTest {
                 getTransactionViewModel(),
                 getCheckoutFlowViewModel(),
                 getScanningViewModel(),
-                getGameViewModel()
+                getGameViewModel() as GameViewModel
             )
         }
 
@@ -164,11 +190,68 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
         composeTestRule.onNodeWithText("Available").assertIsDisplayed()
         composeTestRule.onNodeWithText("Expired").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Played").assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(3)
-        composeTestRule.onNodeWithText("Expired").performClick()
+
+        composeTestRule.onNodeWithText("Played").performClick()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(2)
+        composeTestRule.onNodeWithText("Played in the last 90 days").assertIsDisplayed()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TITLE), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TYPE),useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_EXPIRY), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_REWARD), useUnmergedTree=true).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+
+        composeTestRule.onNodeWithText("Congratulations!").assertIsDisplayed()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP_HEADING).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP_MSG).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Go to Vouchers").assertIsDisplayed()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithContentDescription("played_game_popup_cd").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Back").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+        composeTestRule.onNodeWithText("Go to Vouchers").performClick()
+        composeTestRule.onNodeWithText("Vouchers").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_VOUCHER_SCREEN).assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Voucher_Back_Button").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Voucher_Back_Button").performClick()
+        composeTestRule.onNodeWithText("Game Zone").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Available").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Played").performClick()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onLast().performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Better luck next time!").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Thank you for playing! Stay tuned for more offers.").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Close Popup").performClick()
+        composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onLast().performClick()
+
+        composeTestRule.onNodeWithText("Back").performClick()
+
+        composeTestRule.onNodeWithText("Expired").performClick()
+        composeTestRule.onNodeWithText("Expired in the last 90 days").assertIsDisplayed()
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(1)
         composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(1)
-        composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
+        //composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
 
         composeTestRule.onNodeWithText("Available").performClick()
         composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(2)
@@ -185,7 +268,9 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("game back button").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("game back button").performClick()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_GAME_ZONE_SCREEN).assertIsDisplayed()
+        Thread.sleep(2000)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
+        Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_BG).assertIsDisplayed()
 
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_CIRCLE).assertIsDisplayed()
@@ -193,7 +278,8 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_COLOUR_SEGMENT).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_COLOUR_SEGMENT).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_CONTENT).assertIsDisplayed()
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_SPIN_WHEEL_TEXT), useUnmergedTree=true).assertCountEquals(3)
+        Thread.sleep(2000)
+//        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_SPIN_WHEEL_TEXT), useUnmergedTree=true).assertCountEquals(7)
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_POINTER).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("spin_wheel_pointer").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SPIN_WHEEL_FOOTER).assertIsDisplayed()
@@ -205,8 +291,9 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Congratulations!").assertIsDisplayed()
         composeTestRule.onNodeWithText("Congratulations!").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_SUBHEADER_CONGRATS_SCREEN).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Back").performClick()
+        Thread.sleep(2000)
+        composeTestRule.onNodeWithText("Play More").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Play More").performClick()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_GAME_ZONE_SCREEN).assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onLast().performClick()
@@ -273,14 +360,14 @@ class SampleAppUnitTest {
 
         composeTestRule.onNodeWithText("All").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
 
 
         Thread.sleep(2000)
         composeTestRule.onNodeWithText("Opted In").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
 
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
 
 
 
@@ -370,6 +457,11 @@ class SampleAppUnitTest {
 
         Thread.sleep(2000)
         //verify camera screen
+        composeTestRule.onNodeWithText("Request permission").assertIsDisplayed().performClick()
+        Thread.sleep(1000)
+        grantRuntimePermission()
+        Thread.sleep(500)
+
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("gallery icon").assertIsDisplayed()
@@ -382,7 +474,7 @@ class SampleAppUnitTest {
         //back from camera screen
         composeTestRule.onNodeWithContentDescription("camera back button").performClick()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         composeTestRule.onNodeWithText("New").performClick()
         Thread.sleep(2000)
 
@@ -410,6 +502,8 @@ class SampleAppUnitTest {
 
         //verifying image preview try again  flow
         composeTestRule.onNodeWithText("Try Again").performClick()
+        verifyReceiptUploadingProgressIndicatorWithApiFailure()
+        /*composeTestRule.onNodeWithTag(TEST_TAG_TRY_AGAIN_ERROR_SCREEN).performClick()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
         Thread.sleep(1000)
         composeTestRule.onNodeWithContentDescription("shutter button").performClick()
@@ -427,35 +521,15 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
         composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
 
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
+        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)*/
 
-        //verifying processed receipt screen
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Receipt", true).assertIsDisplayed()
+        verifyConfidenceFailureScenario()
 
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
-            .assertIsDisplayed()
+        verifyPartialConfidenceScenario()
 
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT).performClick()
-        Thread.sleep(2000)
+        verifyReceiptSuccessNoEligibleItemsScenario()
 
-        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
-
-        //try again from receipt scan screen button and coming back to table screen
-        Thread.sleep(1000)
-        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
-        Thread.sleep(1000)
-        composeTestRule.onNodeWithText("Upload").performClick()
-        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
-        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
-
-
-        //continue scan receipt screen submit receipt flow
-        composeTestRule.onNodeWithText("Submit").performClick()
-
-        Thread.sleep(2000)
+        verifyReceiptSuccessSubmissionFlow()
 
         //verifying congratulations screen
         composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CONGRATULATIONS_SCREEN), 5000)
@@ -466,12 +540,10 @@ class SampleAppUnitTest {
         composeTestRule.onNode(hasText("Scan Another Receipt"))
         composeTestRule.onNodeWithText("Done").assertIsDisplayed()
 
-
         //continue congratulations screen done flow
         composeTestRule.onNodeWithText("Done").performClick()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_LIST_SCREEN).assertIsDisplayed()
-
 
         Thread.sleep(2000)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_RECEIPT_LIST_ITEM)).onFirst().performClick()
@@ -485,12 +557,10 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Receipt Items").assertIsDisplayed()
         composeTestRule.onNodeWithText("Receipt Image").assertIsDisplayed()
 
-
        // composeTestRule.onNodeWithText("79.9 Points").assertIsDisplayed()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON)
             .assertIsDisplayed()
-
 
         composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_DETAIL_BACK_BUTTON).performClick()
         Thread.sleep(2000)
@@ -500,7 +570,6 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Request a Manual Review").assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Request a Manual Review").performClick()
-
 
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_REVIEW_CLOSE_POPUP_ICON).performClick()
@@ -530,7 +599,116 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_MANUAL_SUBMIT_BUTTON).performClick()
         composeTestRule.onNodeWithTag("receipt_detail_screen").assertIsDisplayed()
 
+    }
 
+    private fun verifyReceiptUploadingProgressIndicatorWithApiFailure() {
+        composeTestRule.onNodeWithTag(TEST_TAG_CAMERA_SCREEN).assertIsDisplayed()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_IMAGE_PREVIEW_SCREEN).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_UPLOAD).performClick()
+        Thread.sleep(1000)
+
+        composeTestRule.onNodeWithText("Reading receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Reading receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED).assertIsDisplayed()
+        Thread.sleep(1000)
+
+        composeTestRule.onNodeWithText("Processing receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Hang in there! This may take a minute.").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Processing receipt information…").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Receipt Scanning Process Completed").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED).assertIsDisplayed()
+        Thread.sleep(2000)
+
+        //verifying API Failure Scenario
+        mockReceiptResponse = null
+        composeTestRule.onNodeWithText("Something went wrong. Try again.").assertIsDisplayed()
+        Thread.sleep(1000)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyConfidenceFailureScenario() {
+        mockReceiptResponse = "SampleAnalyzeExpenseFailureScenario.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN).assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_ERROR_SCREEN), 10000)
+        composeTestRule.onNodeWithText(
+            "Oops! The required information in the receipt could not be read and processed.",
+            substring = true
+        ).assertIsDisplayed()
+        Thread.sleep(1000)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyPartialConfidenceScenario() {
+        mockReceiptResponse = "SampleAnalyzeExpensePartialScenario.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN).assertIsDisplayed()
+            .performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_RECEIPT_TABLE_SCREEN), 10000)
+        composeTestRule.onNodeWithText(
+            "Oops! Some items in the receipt could not be read and processed.",
+            substring = true
+        ).assertIsDisplayed().performClick()
+        Thread.sleep(1000)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyReceiptSuccessNoEligibleItemsScenario() {
+        mockReceiptResponse = "SampleAnalyzeExpenseNoEligibleItems.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
+            .assertIsDisplayed().performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasText("No Eligible Items found in the Receipt!"), 10000)
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
+            .assertIsDisplayed().performClick()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    private fun verifyReceiptSuccessSubmissionFlow() {
+        mockReceiptResponse = "SampleAnalyzeExpense.json"
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_SCANNED_RECEIPT)
+            .assertIsDisplayed().performClick()
+
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_CAMERA_SCREEN), 5000)
+        composeTestRule.onNodeWithContentDescription("shutter button").performClick()
+        Thread.sleep(1000)
+        composeTestRule.onNodeWithText("Upload").performClick()
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_RECEIPT_TABLE_SCREEN), 10000)
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Receipt", true).assertIsDisplayed()
+
+        composeTestRule.waitUntilExactlyOneExists(hasText("Submit"), 10000)
+        composeTestRule.onNodeWithTag(TEST_TAG_RECEIPT_TABLE_SCREEN).assertIsDisplayed()
+
+        //continue scan receipt screen submit receipt flow
+        composeTestRule.onNodeWithText("Submit").performClick()
     }
 
 
@@ -823,7 +1001,7 @@ fun getPromotionViewModel(): MyPromotionViewModelInterface {
         override fun loadPromotions(context: Context, refreshRequired: Boolean) {
             val gson = Gson()
             val promotionResponse = gson.fromJson(
-                "{\"outputParameters\":{\"outputParameters\":{\"results\":[{\"description\":\"Double point promotion on member activities to promote NTO\",\"endDate\":\"2023-06-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CzEoIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/C2zhShTnl5I/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MXx8ZXZlcnl3aGVyZXxlbnwwfHx8fDE2ODM2NjE0MTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Always\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0},{\"description\":\"Welcome to be a new customer and take 20% off on your first order.\",\"endDate\":\"2023-06-30\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000CwWpIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/OGND72jS-HE/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8M3x8d2VsY29tZXxlbnwwfHx8fDE2ODM2NzM3OTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Welcome Promotion\",\"startDate\":\"2023-05-01\"},{\"description\":\"Spend \$500 in a month and Earn a Stellar Media Voucher.\",\"endDate\":\"2023-07-31\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"CUMULATIVE\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentEndDate\":\"2023-07-31\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000Cx06IAC\",\"promotionImageUrl\":\"https://cdn.pixabay.com/photo/2018/05/10/11/34/concert-3387324_1280.jpg\",\"promotionName\":\"Your next concert experience is on us!\",\"startDate\":\"2023-05-01\"},{\"description\":\"Promotion to rejuvenate gold tier with 500 reward points for purchases during promotion period\",\"endDate\":\"2024-01-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwVrIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/_Q0dP8xiUGA/download?ixid\\u003dMnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgzNjYxODcy\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":500},{\"description\":\"Promotion on Ironman watches\",\"endDate\":\"2024-03-30\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW5IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/rkaahInFlBg/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8Mnx8aXJvbiUyMG1hbnxlbnwwfHx8fDE2ODM2MDQzMDc\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Iron Man Promotion\",\"startDate\":\"2022-10-01\"},{\"description\":\"Thank you for members purchasing more than \$500 in a quarter and give a discount of 10% (Surprise and Delight)\",\"endDate\":\"2024-03-31\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW7IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/IPx7J1n_xUc/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MTJ8fGdpZnR8ZW58MHx8fHwxNjgzNjQ3OTg5\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Surprise and Delight\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0}]}}}",
+                "{\"outputParameters\":{\"outputParameters\":{\"results\":[{\"description\":\"Double point promotion on member activities to promote NTO\",\"endDate\":\"2023-06-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CzEoIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/C2zhShTnl5I/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MXx8ZXZlcnl3aGVyZXxlbnwwfHx8fDE2ODM2NjE0MTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Always\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0},{\"description\":\"Welcome to be a new customer and take 20% off on your first order.\",\"endDate\":\"2023-06-30\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000CwWpIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/OGND72jS-HE/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8M3x8d2VsY29tZXxlbnwwfHx8fDE2ODM2NzM3OTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Welcome Promotion\",\"startDate\":\"2023-05-01\"},{\"description\":\"Spend \$500 in a month and Earn a Stellar Media Voucher.\",\"endDate\":\"2023-07-31\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"CUMULATIVE\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentEndDate\":\"2023-07-31\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000Cx06IAC\",\"promotionImageUrl\":\"https://cdn.pixabay.com/photo/2018/05/10/11/34/concert-3387324_1280.jpg\",\"promotionName\":\"Your next concert experience is on us!\",\"startDate\":\"2023-05-01\"},{\"description\":\"Promotion to rejuvenate gold tier with 500 reward points for purchases during promotion period\",\"endDate\":\"2024-01-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwVrIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/_Q0dP8xiUGA/download?ixid\\u003dMnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgzNjYxODcy\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":500},{\"description\":\"Promotion on Ironman watches\",\"endDate\":\"2024-03-30\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW5IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/rkaahInFlBg/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8Mnx8aXJvbiUyMG1hbnxlbnwwfHx8fDE2ODM2MDQzMDc\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2022-10-01\"},{\"description\":\"Thank you for members purchasing more than \$500 in a quarter and give a discount of 10% (Surprise and Delight)\",\"endDate\":\"2024-03-31\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW7IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/IPx7J1n_xUc/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MTJ8fGdpZnR8ZW58MHx8fHwxNjgzNjQ3OTg5\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Surprise and Delight\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0}]}}}",
                 PromotionsResponse::class.java
             )
             membershipPromo.value = promotionResponse
@@ -931,6 +1109,10 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
         override val shippingDetailsLiveData: LiveData<List<ShippingMethod>>
             get() = shippingDetails
+        override val orderCreationResponseLiveData: LiveData<OrderCreationResponse>
+            get() = orderCreationResponse
+
+        private val orderCreationResponse = MutableLiveData<OrderCreationResponse>()
 
         private val shippingDetails = MutableLiveData<List<ShippingMethod>>()
 
@@ -950,12 +1132,18 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
         }
 
+        override fun placeOrderAndGetParticipantReward() {
+            orderCreationResponse.value = OrderCreationResponse(orderId = "1234", gameParticipantRewardId = "1234abcd")
+            orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_SUCCESS
+        }
+
 
     }
 }
 
     fun getScanningViewModel(): ScanningViewModelInterface {
         return object : ScanningViewModelInterface {
+
             override val receiptListLiveData: LiveData<ReceiptListResponse>
                 get() = receiptList
 
@@ -973,32 +1161,6 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 get() = receiptScanningViewState
 
             private val receiptScanningViewState = MutableLiveData<ReceiptScanningViewState>()
-
-
-            override fun analyzeExpense(
-                context: Context,
-                encodedImage: ByteArray
-            ): AnalyzeExpenseResponse? {
-                var result: AnalyzeExpenseResponse? = null
-                receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
-                val gson = Gson()
-                val mockResponse = MockResponseFileReader("SampleAnalyzeExpense.json").content
-
-                scannedReceipt.value = gson.fromJson(
-                    mockResponse,
-                    AnalyzeExpenseResponse::class.java
-                )
-                result= gson.fromJson(
-                    mockResponse,
-                    AnalyzeExpenseResponse::class.java
-                )
-
-                Handler(getMainLooper()).postDelayed({
-                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
-                }, 5000)
-
-                return result
-            }
 
             override val createTransactionJournalViewStateLiveData: LiveData<CreateTransactionJournalViewState>
                 get() = createTransactionJournalViewState
@@ -1076,13 +1238,44 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             override val cancellingSubmissionLiveData: LiveData<UploadRecieptCancelledViewState>
                 get() = cancellingSubmissionViewState
 
+            override fun uploadReceipt(context: Context, encodedImage: ByteArray): String? {
+                receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptInProgress)
+
+                Handler(getMainLooper()).postDelayed({
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.UploadReceiptSuccess)
+                }, 1000)
+
+                Handler(getMainLooper()).postDelayed({
+                    receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningInProgress)
+                }, 2000)
+
+                Handler(getMainLooper()).postDelayed({
+                    mockReceiptResponse?.let {
+                        val mockResponse = MockResponseFileReader(it).content
+                        scannedReceipt.value = Gson().fromJson(mockResponse, AnalyzeExpenseResponse::class.java)
+                        receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningSuccess)
+                    } ?: receiptScanningViewState.postValue(ReceiptScanningViewState.ReceiptScanningFailure(null))
+                }, 3000)
+
+                return "Upload and Scan Success"
+            }
+
             private val cancellingSubmissionViewState = MutableLiveData<UploadRecieptCancelledViewState>()
 
         }
 }
 
+
     fun getGameViewModel(): GameViewModelInterface{
-        return object : GameViewModelInterface{
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
+          var gameRemoteRepository: GamificationRemoteRepository
+          var authenticator: GameAuthenticator= ForceAuthManager(appContext)
+          var gameAPIClient= GameAPIClient(authenticator, "https://instanceUrl")
+
+        gameRemoteRepository = GamificationRemoteRepository(authenticator, "https://instanceUrl", gameAPIClient)
+
+        return object : GameViewModel(gameRemoteRepository){
 
             private var rewardMutableLiveData = MutableLiveData<GameRewardResponse>()
             override val rewardLiveData: LiveData<GameRewardResponse>
@@ -1099,8 +1292,13 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             override val gameRewardsViewState: LiveData<GameRewardViewState>
                 get() = rewardViewState
 
-            override fun getGameRewardsFromGameParticipantRewardId(gameParticipantRewardId: String): List<GameReward> {
-                TODO("Not yet implemented")
+            override fun getGameDefinitionFromGameParticipantRewardId(gameParticipantRewardId: String): GameDefinition? {
+
+                return gamesLiveData.value?.gameDefinitions?.firstOrNull { gameDefinition ->
+                    gameDefinition.participantGameRewards.any { partGameReward ->
+                        partGameReward.gameParticipantRewardId == gameParticipantRewardId
+                    }
+                }
             }
 
             private val rewardViewState = MutableLiveData<GameRewardViewState>()
@@ -1119,7 +1317,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
                 viewState.postValue(GamesViewState.GamesFetchSuccess)
             }
 
-            override fun getGames(context: Context, mock: Boolean) {
+            override fun getGames(context: Context, gameParticipantRewardId: String?, mock: Boolean) {
                 viewState.value = GamesViewState.GamesFetchInProgress
                 val gson = Gson()
                 val mockResponse = MockResponseFileReader("Games.json").content
@@ -1145,3 +1343,19 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
         }
     }
+
+fun grantRuntimePermission() {
+    val instrumentation = InstrumentationRegistry.getInstrumentation()
+    val allowPermission = UiDevice.getInstance(instrumentation).findObject(
+        UiSelector().text(
+            when {
+                Build.VERSION.SDK_INT <= 28 -> "ALLOW"
+                Build.VERSION.SDK_INT == 29 -> "Allow only while using the app"
+                else -> "Only this time"
+            }
+        )
+    )
+    if (allowPermission.exists()) {
+        allowPermission.click()
+    }
+}

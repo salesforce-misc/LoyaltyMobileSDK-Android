@@ -19,7 +19,7 @@ class SpinnerConfiguration {
         const val PADDING_ANGLE_BETWEEN_WHEEL_SEGMENT = 2f //padding between two segment of wheel
         const val ROTATION_DURATION = 3000 // duration of wheel rotate after API respond
         const val INITIAL_ROTATION_DURATION = 20000 // duration of wheel rotate till API respond
-        const val WHEEL_TEXT_INITIAL_ROTATION = 270f // we can configure the orientation of text
+        const val WHEEL_TEXT_INITIAL_ROTATION = 0f // we can configure the orientation of text
         // inside wheel based on this angle we can make wheel content staright or with angle
     }
 }

@@ -25,12 +25,13 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameZoneScreen
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.ScratchCardView
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.scratchcard.ScratchCardView
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
@@ -57,7 +58,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -87,7 +88,8 @@ fun HomeScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 voucherModel,
                 checkOutFlowViewModel,
-                profileModel
+                profileModel,
+                gameViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
@@ -112,7 +114,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
-//            ShowScannedReceiptScreen(navCheckOutFlowController)
+            ShowScannedReceiptScreen(navCheckOutFlowController, scanningViewModel)
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
@@ -172,7 +174,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
     voucherModel: VoucherViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -200,7 +202,8 @@ fun PromotionScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 voucherModel,
                 checkOutFlowViewModel,
-                profileModel
+                profileModel,
+                gameViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
@@ -311,7 +314,8 @@ fun RedeemScreen() {
 fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     scanningViewModel: ScanningViewModelInterface,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
+    voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -339,7 +343,7 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.ScannedReceiptScreen.route) {
             showBottomBar(false)
-//            ShowScannedReceiptScreen(navController)
+            ShowScannedReceiptScreen(navController, scanningViewModel)
         }
         composable(route = MoreScreens.ScannedCongratsScreen.route) {
             showBottomBar(false)
@@ -350,7 +354,7 @@ fun MoreScreenNavigation(
 //            ScanningProgress(navController)
         }
         composable(route = MoreScreens.GameZoneScreen.route) {
-            GameZoneNavigation(gameViewModel = gameViewModel, showBottomBar = showBottomBar)
+            GameZoneNavigation(gameViewModel = gameViewModel, voucherModel, showBottomBar = showBottomBar)
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
 //            showBottomBar(true)
@@ -364,7 +368,8 @@ fun MoreScreenNavigation(
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun GameZoneNavigation(
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
+    voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -407,6 +412,12 @@ fun GameZoneNavigation(
                 )
             }
         }
+
+        composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
+            showBottomBar(true)
+            VoucherFullScreen(navController, voucherModel)
+        }
+
         composable(route = MoreScreens.GameBetterLuckScreen.route) {
             showBottomBar(false)
             BetterLuckScreen {

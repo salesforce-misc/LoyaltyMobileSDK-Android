@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">LoyaltyMobileSDK-Sample</string>
     <string name="cd_onboard_screen_onboard_image">"onboarding screen Image"</string>
+    <string name="voucher_back_button">"Voucher_Back_Button"</string>
     <string name="cd_onboard_screen_bottom_fade">"onboarding screen bottom fading"</string>
     <string name="spin_wheel_pointer">spin_wheel_pointer</string>
     <string name="cd_close_popup">"Close Popup"</string>
@@ -204,7 +205,8 @@
     <string name="header_receipt_detail">Receipt Details</string>
     <string name="cd_camera_flash_icon">camera flash icon</string>
     <string name="image_more_than_5mb_msg">Image is more than 5 MB please try again.</string>
-    <string name="error_cd">Error Popup</string>
+    <string name="error_cd">Error while scanning</string>
+    <string name="played_game_popup_cd">played_game_popup_cd</string>
     <string name="receipt_scanning_error_desc">Something went wrong. Try again.</string>
     <string name="receipt_scanning_error_desc_image">Image size exceeds 5 MB. Either resize the image or recapture with a lower resolution.</string>
     <string name="button_home">Home</string>
@@ -214,6 +216,7 @@
 
     <string name="not_supported_image_msg">Image is not supported please try with different receipt.</string>
 
+    <string name="no_eligible_items_message">No Eligible Items found in the Receipt!</string>
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
 
@@ -225,6 +228,7 @@
     <string name="tab_game_zone_active">Active</string>
     <string name="tab_game_zone_available">Available</string>
     <string name="tab_game_zone_expired">Expired</string>
+    <string name="tab_game_zone_played">Played</string>
     <string name="game_expiring_tomorrow">Expiring Tomorrow</string>
     <string name="game_placeholder_title">Bonnie and Clyde Style Promotion</string>
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
@@ -240,8 +244,12 @@
 
     <!-- Game zone Congratulations Screen -->
     <string name="game_zone_congrats_header_content">Congratulations!</string>
-    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s discount voucher for your next purchase. To redeem your reward, go to the Voucher section.]]></string>
-    <string name="game_zone_congrats_msg_loyalty_points"><![CDATA[You\'ve won %s loyalty points that you can redeem on your next purchase.]]></string>
+    <string name="game_zone_congrats_sub_header_content"><![CDATA[You\'ve won a %s for your next purchase. To redeem your reward, go to the Voucher.]]></string>
+    <string name="game_zone_congrats_msg_loyalty_points"><![CDATA[You\'ve won %s that you can redeem on your next purchase.]]></string>
+
+    <string name="game_zone_played_sub_header_content"><![CDATA[Here’s your reward: %s \n To redeem your reward, go to Vouchers.]]></string>
+    <string name="game_zone_played_msg_loyalty_points"><![CDATA[Here’s your reward: %s]]></string>
+
     <string name="game_zone_congrats_msg_custom">You’ve won a reward.</string>
     <string name="game_expired">Expired</string>
     <string name="game_expiring_today">Expiring Today</string>
@@ -255,6 +263,7 @@
     <string name="label_no_games">No Games</string>
     <string name="label_empty_active_games">When you have games available, you’ll see them here.</string>
     <string name="label_empty_expired_games">When your games expire, you’ll see them here.</string>
+    <string name="label_empty_played_games">After you play a game, you’ll see it here.</string>
     <string name="game_error">Error</string>
     <string name="game_error_desc">Something went wrong. Please try again.</string>
     <string name="game_error_dialog_ok">OK</string>
@@ -304,4 +313,18 @@
     <string name="days_ago_label">%s Days Ago</string>
     <string name="join_referral_program_header">Join Referral Program</string>
     <string name="join_referral_program_description">Join our referral program and share your referral code with friends to get rewarded.</string>
+
+    <string name="text_go_to_voucher_section">Go to Vouchers</string>
+    <string name="text_better_luck_reward">Thank you for playing! Stay tuned for more offers.</string>
+    <string name="text_congratulations">Congratulations!</string>
+    <string name="text_played_90_days">Games Played in the last 90 days</string>
+    <string name="text_expired_90_days">No longer available</string>
+    <string name="text_played">Played</string>
+    <string name="receipt_progress_subheading">Hang in there! This may take a minute.</string>
+    <string name="receipt_progress_step_1">Uploading receipt image…</string>
+    <string name="receipt_progress_step_2">Reading receipt information… </string>
+    <string name="receipt_progress_step_3">Processing receipt information…</string>
+    <string name="receipt_progress_step_4">Receipt Scanning Process Completed</string>
+    <string name="receipt_error_confidence_status_failure">Oops! The required information in the receipt could not be read and processed. \n\nTry scanning the receipt again.</string>
+    <string name="receipt_error_confidence_status_partial">Oops! Some items in the receipt could not be read and processed.\n\n\nTry scanning the receipt again or submit it for a manual review.</string>
 </resources>

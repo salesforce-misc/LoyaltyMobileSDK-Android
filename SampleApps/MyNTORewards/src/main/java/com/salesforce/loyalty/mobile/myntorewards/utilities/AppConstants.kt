@@ -89,6 +89,13 @@ class AppConstants {
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
+        const val KEY_ORDER_ID = "key_orderID"
+        const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
+        const val KEY_GAME_TYPE = "key_game_type"
+        const val RECEIPT_PROGRESS_STARTED = "progress_started"
+        const val RECEIPT_PROGRESS_FIRST_STEP = "progress_first_step_completed"
+        const val RECEIPT_PROGRESS_SECOND_STEP = "progress_second_step_completed"
+        const val RECEIPT_PROGRESS_COMPLETED = "progress_completed"
         const val ORDER_ID = "orderID"
         const val PROMOTION_NAME = "promotionName"
 
@@ -116,6 +123,7 @@ class AppConstants {
         val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
 
         const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
+        const val KEY_ANALYZED_AWS_RESPONSE = "key_analyzed_aws_response"
         const val KEY_PURCHASE_DATE= "key_purchase_date"
         const val KEY_RECEIPT_ID = "key_receipt_id"
         const val KEY_RECEIPT_STATUS = "key_receipt_status"
@@ -155,10 +163,12 @@ class AppConstants {
 
         // Game types
         const val SPIN_A_WHEEL_GAME = "SpintheWheel"
-        const val SCRATCH_CARD_GAME = "ScratchCard"
+        const val SCRATCH_CARD_GAME = "Scratchcard"
         const val GAME_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         const val TAB_ACTIVE_GAMES = 0
-        const val TAB_EXPIRED_GAMES = 1
+        const val TAB_PLAYED_GAMES = 1
+        const val TAB_EXPIRED_GAMES = 2
+
 
 
         const val KEY_GAME_REWARD= "game_reward"
@@ -168,8 +178,6 @@ class AppConstants {
         const val REWARD_TYPE_VOUCHER =   "Voucher"
         const val REWARD_TYPE_POINTS =   "LoyaltyPoints"
         const val REWARD_TYPE_CUSTOM =   "Custom"
-
-        const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
 
         //Reward status
         const val REWARD_STATUS_YET_TO_REWARD = "YetToReward"
@@ -181,5 +189,8 @@ class AppConstants {
 
         // Referral
         const val REFERRAL_PROGRAM_JOINED = "REFERRAL_PROGRAM_JOINED"
+        const val GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC = 1500L // 1.5 sec
+        const val GAME_STATUS_PLAYED= "Played"
+
     }
 }

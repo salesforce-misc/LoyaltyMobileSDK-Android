@@ -84,6 +84,29 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
         return null
     }
 
+    suspend fun createOrderAndParticipantReward(
+    ): Result<OrderCreationResponse> {
+        Logger.d(TAG, "createOrderAndParticipantReward()")
+
+        val body = OrderCreationRequest(
+            productName = "Men's Rainier L4 Windproof Soft Shell Hoodie",
+            redeemPoints = 0,
+            productPrice = 200,
+            orderTotal = 207,
+            useNTOPoints = false,
+            pointsBalance = 250,
+            shippingStreet = "1520 W 62nd St Cook IL 60636",
+            billingStreet = "1520 W 62nd St Cook IL 60636",
+            voucherCode = "",
+            membershipNumber = "24345671"
+        )
+
+        return checkoutClient.checkoutApi.createOrderAndGetParticipantReward(
+            getOrderCreationAndParticipantRewardUrl(),
+            body
+        )
+    }
+
     private fun getOrderCreationUrl(): String {
         return mInstanceUrl + CheckoutConfig.CHECKOUT_ORDER_CREATION + "/"
     }
@@ -98,5 +121,9 @@ class CheckoutManager constructor(auth: ForceAuthenticator, instanceUrl: String)
 
     private fun getShippingBillingAddressSOQLQuery(): String {
         return "select shippingAddress, billingAddress from account"
+    }
+
+    private fun getOrderCreationAndParticipantRewardUrl(): String {
+        return mInstanceUrl + CheckoutConfig.CHECKOUT_ORDER_CREATION_PARTICIPANT_REWARD + "/"
     }
 }

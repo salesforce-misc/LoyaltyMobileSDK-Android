@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.receipts
 
 import android.graphics.Bitmap
 import android.util.Base64
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ConfidenceStatus
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -56,6 +59,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_RECEIPT_UPLOAD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReceiptScanningViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
@@ -70,6 +74,7 @@ fun ImagePreviewScreen(
 
 ) {
     var currentPopupState: ReceiptScanningBottomSheetType? by remember { mutableStateOf(null) }
+    var currentProgress by remember { mutableStateOf(AppConstants.RECEIPT_PROGRESS_STARTED) }
     val scannedReceiptLiveData by scanningViewModel.scannedReceiptLiveData.observeAsState()
     val scannedReceiptViewState by scanningViewModel.receiptScanningViewStateLiveData.observeAsState()
     var imageMoreThan5MB by remember { mutableStateOf(false) }
@@ -102,7 +107,7 @@ fun ImagePreviewScreen(
                 bottomSheetScaffoldState.bottomSheetState.collapse()
             }
         }
-        currentPopupState = null
+//        currentPopupState = null
         imageClicked(false)
     }
 
@@ -124,12 +129,8 @@ fun ImagePreviewScreen(
                 OpenReceiptBottomSheetContent(
                     bottomSheetType = bottomSheetType,
                     navController = navController,
-                    scannedReceiptLiveData = scannedReceiptLiveData,
-                    scanningViewModel = scanningViewModel,
                     errorMessage = errorMessage,
-                    setBottomSheetState = {
-                        currentPopupState = it
-                    },
+                    currentProgress = currentProgress,
                     closeSheet = { closeBottomSheet() },
                 )
             }
@@ -191,7 +192,8 @@ fun ImagePreviewScreen(
             ) {
 
                 Button(
-                    modifier = Modifier.testTag(TEST_TAG_RECEIPT_UPLOAD)
+                    modifier = Modifier
+                        .testTag(TEST_TAG_RECEIPT_UPLOAD)
                         .fillMaxWidth(), onClick = {
                         processClicked = true
 
@@ -241,17 +243,64 @@ fun ImagePreviewScreen(
 //                    Log.d("ImageCaptureScreen", "Encoded image: $encImage")
                     val context = LocalContext.current
                     LaunchedEffect(key1 = true) {
-                        scanningViewModel.analyzeExpense(context, b)
+//                        scanningViewModel.analyzeExpense(context, b)
+                        scanningViewModel.uploadReceipt(context, b)
+//                        scanningViewModel.analyzeExpense(context, "5f867fb8-edcb-800f-fbdb-3b81788e98f1.jpg")
                     }
                 }
                 processClicked = false
             }
             when (scannedReceiptViewState) {
+                is ReceiptScanningViewState.UploadReceiptInProgress -> {
+                    progressPopupState = true
+                    currentProgress = AppConstants.RECEIPT_PROGRESS_FIRST_STEP
+                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                    openBottomSheet()
+                }
+
+                is ReceiptScanningViewState.UploadReceiptSuccess -> {
+                    if(progressPopupState) {
+                        progressPopupState = true
+                        currentProgress = AppConstants.RECEIPT_PROGRESS_SECOND_STEP
+                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
+                        openBottomSheet()
+                    }
+                }
+
                 is ReceiptScanningViewState.ReceiptScanningSuccess -> {
                     if (progressPopupState) {
-                        progressPopupState = false
-                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
+                        progressPopupState = true
+                        currentProgress = AppConstants.RECEIPT_PROGRESS_COMPLETED
+                        currentPopupState = ReceiptScanningBottomSheetType.POPUP_PROGRESS
                         openBottomSheet()
+                        progressPopupState = false
+                        /*currentPopupState = ReceiptScanningBottomSheetType.POPUP_SCANNED_RECEIPT
+                        openBottomSheet()*/
+                        scannedReceiptLiveData?.let { response ->
+                            val confidenceStatus = response.confidenceStatus
+                            confidenceStatus?.let {
+                                if (ConfidenceStatus.FAILURE.status == it) {
+                                    LaunchedEffect(key1 = true) {
+                                        response.receiptId?.let { id ->
+                                            scanningViewModel.cancellingSubmission(id)
+                                        }
+                                    }
+                                    currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
+                                    errorMessage =
+                                        stringResource(id = R.string.receipt_error_confidence_status_failure)
+                                    openBottomSheet()
+                                } else {
+                                    closeBottomSheet()
+                                    navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                        set(
+                                            AppConstants.KEY_ANALYZED_AWS_RESPONSE,
+                                            Gson().toJson(response)
+                                        )
+                                    }
+                                    navController.navigate(MoreScreens.ScannedReceiptScreen.route)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -265,9 +314,9 @@ fun ImagePreviewScreen(
                     if (progressPopupState) {
                         progressPopupState = false
                         currentPopupState = ReceiptScanningBottomSheetType.POPUP_ERROR
-                        (scannedReceiptViewState as ReceiptScanningViewState.ReceiptScanningFailure).message?.let {
-                            errorMessage = it
-                        }
+                        errorMessage = (scannedReceiptViewState as ReceiptScanningViewState.ReceiptScanningFailure).message?.let {
+                            it
+                        } ?: stringResource(id = R.string.receipt_scanning_error_desc)
                         openBottomSheet()
                     }
                     // TODO Handle failure scenario.
@@ -282,8 +331,10 @@ fun ImagePreviewScreen(
 fun isImageMoreThan5MB(capturedImageBitmap: ImageBitmap): Boolean {
     val baos = ByteArrayOutputStream()
     capturedImageBitmap.asAndroidBitmap().let {
-        it.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        // Compress image to upto 80% quality.
+        it.compress(Bitmap.CompressFormat.JPEG, 80, baos)
         val b: ByteArray = baos.toByteArray()
+        Log.d("CapturedImage", "Captured Image Size: ${b.size}")
         val length = (b.size / 1024)
         return length > (5 * 1024)
     }

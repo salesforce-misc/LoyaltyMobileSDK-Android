@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,21 +19,23 @@ import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
-                  promotionModel: MyPromotionViewModelInterface,
-                  voucherModel: VoucherViewModelInterface,
-                  onboardingModel: OnBoardingViewModelAbstractInterface,
-                  benefitViewModel: BenefitViewModelInterface,
-                  transactionViewModel: TransactionViewModelInterface,
-                  checkOutFlowViewModel: CheckOutFlowViewModelInterface,
-                  scanningViewModel: ScanningViewModelInterface,
-                  gameViewModel: GameViewModelInterface,
+fun HomeTabScreen(
+    profileModel: MembershipProfileViewModelInterface,
+    promotionModel: MyPromotionViewModelInterface,
+    voucherModel: VoucherViewModelInterface,
+    onboardingModel: OnBoardingViewModelAbstractInterface,
+    benefitViewModel: BenefitViewModelInterface,
+    transactionViewModel: TransactionViewModelInterface,
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    scanningViewModel: ScanningViewModelInterface,
+    gameViewModel: GameViewModel = hiltViewModel(),
 ) {
     val bottomTabsNavController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -67,7 +70,7 @@ fun TabNavigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
-    gameViewModel: GameViewModelInterface,
+    gameViewModel: GameViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
 
@@ -92,14 +95,14 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel){
+            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel, voucherModel){
                 showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.More.route+ "/{openGameZone}") {
             val gameZone = it.arguments?.getString("openGameZone")
             if (gameZone.equals(ROUTE_GAME_ZONE)) {
-                GameZoneNavigation(gameViewModel = gameViewModel) { showBottomBar(it) }
+                GameZoneNavigation(gameViewModel = gameViewModel, voucherModel) { showBottomBar(it) }
             }
         }
     }

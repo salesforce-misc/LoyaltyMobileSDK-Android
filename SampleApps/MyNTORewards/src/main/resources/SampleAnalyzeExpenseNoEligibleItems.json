@@ -1,0 +1,22 @@
+{
+    "storeName" : "alpine nutrition",
+    "storeAddress" :"625 Market Street,\n6th floor,\nSan Francisco,\nCA, 94105",
+    "receiptSFDCId" : "a0N1Q00000cyfnGUAQ",
+    "receiptNumber" : "#0529-0123",
+    "receiptDate" : "2020-01-10",
+    "memberShipNumber" : "24345678",
+    "confidenceStatus": "Success",
+    "lineItem" : [ {
+        "quantity" : "5",
+        "productName" : "Alpine-Bran Cereal",
+        "price" : "$7.99",
+        "lineItemPrice" : "$39.95",
+        "isEligible" : false
+    }, {
+        "quantity" : "2",
+        "productName" : "Alpine-Oat Cereal",
+        "price" : "$7.99",
+        "lineItemPrice" : "$15.98",
+        "isEligible" : false
+    } ]
+}
