@@ -7,6 +7,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.referral_sdk.api.ApiResponse
+import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_PROMO_ID
 import com.salesforce.referral_sdk.api.safeApiCall
 import com.salesforce.referral_sdk.entities.QueryResult
 import javax.inject.Inject
@@ -57,7 +58,7 @@ class ReferralsLocalRepository @Inject constructor(
 
     private fun accessToken() =
 //        "Bearer ${forceAuthManager.getForceAuth()?.accessToken.orEmpty()}"
-        "Bearer 00DB000000FX0aR!ARQAQCq1M5Io1M6LWzWyuXsARwcPp6Q0geoiFltINVya47W2DS1nwDGihssv5oWLtIn3s3qR4BFyQ.on8ju3ItoyVGf6a4Sf"
+        "Bearer 00DB000000FX0aR!ARQAQPmIXxBjb5ZJsta3yOhoJEMsOZMoksE2QXuYjiHgzKs.W0nJhSGR5Kr_JewlmnlOsKnZH9fLp5ckvtUJW12fa_kiO2mN"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, memberId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMemberId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
@@ -66,5 +67,5 @@ class ReferralsLocalRepository @Inject constructor(
         "SELECT MembershipNumber, referralcode from loyaltyprogrammember where MembershipNumber =\'$membershipNumber\'"
 
     private fun referralListQuery(durationInDays: Int) =
-        "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate, CurrentPromotionStage.Type FROM Referral WHERE ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
+        "SELECT Id, ClientEmail, ReferrerEmail, ReferralDate, CurrentPromotionStage.Type FROM Referral WHERE PromotionId = \'$REFERRAL_PROMO_ID\' and ReferrerId = \'0031Q00002jbn0rQAA\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
 }

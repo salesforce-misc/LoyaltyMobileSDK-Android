@@ -27,7 +27,9 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.referral_sdk.EnrollmentStatus
 import com.salesforce.referral_sdk.api.ApiResponse
+import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_DURATION
 import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_PROGRAM_NAME
+import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_PROMO_CODE
 import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
 import com.salesforce.referral_sdk.entities.referral_event.ReferralEventResponse
 import com.salesforce.referral_sdk.repository.ReferralsRepository
@@ -50,12 +52,6 @@ class MyReferralsViewModel @Inject constructor(
     val viewState: LiveData<ReferFriendViewState> = _viewState
 
     var showDefaultPopup = true
-
-    companion object {
-        private const val REFERRAL_DURATION = 90
-        // TODO: Check if we need to remove hard coded and use dynamically instead
-        private const val PROMO_CODE = "RTPROMO"
-    }
 
     init {
         repository.setInstanceUrl(instanceUrl)
@@ -103,7 +99,7 @@ class MyReferralsViewModel @Inject constructor(
         viewModelScope.launch {
             val member = getMember(context)
             val memberId = member?.loyaltyProgramMemberId.orEmpty()
-            when(val result = localRepository.checkIfMemberEnrolled(PROMO_CODE, memberId)) {
+            when(val result = localRepository.checkIfMemberEnrolled(REFERRAL_PROMO_CODE, memberId)) {
                 is ApiResponse.Success -> {
                     val data: List<ReferralEnrollmentInfo>? = result.data.records
                     if (data?.firstOrNull()?.loyaltyProgramMemberId == memberId){
@@ -145,13 +141,13 @@ class MyReferralsViewModel @Inject constructor(
         }
     }
 
-    fun fetchReferralAndPromotionCode(context: Context) {
+    private fun fetchReferralAndPromotionCode(context: Context) {
         val accessToken = ForceAuthManager(context).getForceAuth()?.accessToken ?: ""
         viewModelScope.launch {
             when(val result = localRepository.fetchMemberReferralCode(accessToken, getMember(context)?.membershipNumber.orEmpty())) {
                 is ApiResponse.Success -> {
                     result.data.records?.firstOrNull()?.referralCode?.let {
-                        setReferralCode(context, "$it-$PROMO_CODE")
+                        setReferralCode(context, "$it-$REFERRAL_PROMO_CODE")
                     } ?: Logger.d("fetchReferralAndPromotionCode", "Failed while fetching referral code")
                 }
                 else -> Logger.d("fetchReferralAndPromotionCode", "Failed while fetching referral code")
@@ -169,17 +165,17 @@ class MyReferralsViewModel @Inject constructor(
         viewModelScope.launch {
             val member = getMember(context)
             val result = when {
-//                member?.contactId != null -> {
-//                    repository.enrollExistingAdvocateToPromotionWithContactId(
-//                        REFERRAL_PROGRAM_NAME, PROMO_CODE, member.contactId
-//                    )
-//                }
-//                member?.membershipNumber != null -> {
-//                    repository.enrollExistingAdvocateToPromotionWithMembershipNumber(
-//                        REFERRAL_PROGRAM_NAME, PROMO_CODE, "XNEOT84D"
-//                    )
-//                }
-                else -> enrollNewCustomerAsAdvocateOfPromotion(REFERRAL_PROGRAM_NAME, PROMO_CODE, member)
+                member?.contactId != null -> {
+                    repository.enrollExistingAdvocateToPromotionWithContactId(
+                        REFERRAL_PROGRAM_NAME, REFERRAL_PROMO_CODE, member.contactId
+                    )
+                }
+                member?.membershipNumber != null -> {
+                    repository.enrollExistingAdvocateToPromotionWithMembershipNumber(
+                        REFERRAL_PROGRAM_NAME, REFERRAL_PROMO_CODE, "XNEOT84D"
+                    )
+                }
+                else -> enrollNewCustomerAsAdvocateOfPromotion(REFERRAL_PROGRAM_NAME, REFERRAL_PROMO_CODE, member)
             }
             when(result) {
                 is ApiResponse.Success -> {

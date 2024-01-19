@@ -2,7 +2,9 @@ package com.salesforce.referral_sdk.api
 
 object ReferralAPIConfig {
     const val REFERRAL_PROGRAM_NAME = "Referral Program"
-    const val HEADER_AUTHORIZATION = "Authorization"
+    const val REFERRAL_PROMO_CODE = "TESTRM"
+    const val REFERRAL_PROMO_ID = "0c81Q0000004S5NQAU"
+    const val REFERRAL_DURATION = 90
 
     private const val MEMBER_API_SERVICES_PATH = "/services/data/"
     private const val API_VERSION_59 = "v60.0"

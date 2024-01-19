@@ -51,7 +51,7 @@ class UnauthorizedInterceptor(private val authenticator: ForceAuthenticator) : I
      * @return New [Request] with Authorization header added.
      */
     private fun newRequestWithAccessToken(accessToken: String?, request: Request): Request {
-        val bearerTokenValue = BEARER_HEADER + "00DB000000FX0aR!ARQAQCq1M5Io1M6LWzWyuXsARwcPp6Q0geoiFltINVya47W2DS1nwDGihssv5oWLtIn3s3qR4BFyQ.on8ju3ItoyVGf6a4Sf"
+        val bearerTokenValue = BEARER_HEADER + "00DB000000FX0aR!ARQAQPmIXxBjb5ZJsta3yOhoJEMsOZMoksE2QXuYjiHgzKs.W0nJhSGR5Kr_JewlmnlOsKnZH9fLp5ckvtUJW12fa_kiO2mN"
         return request.newBuilder()
             .addHeader(HEADER_AUTHORIZATION, bearerTokenValue)
             .addHeader(HEADER_CONTENT_TYPE, HEADER_CONTENT_TYPE_VALUE)
