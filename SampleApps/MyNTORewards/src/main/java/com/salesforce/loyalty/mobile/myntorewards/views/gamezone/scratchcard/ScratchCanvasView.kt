@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
+package com.salesforce.loyalty.mobile.myntorewards.views.gamezone.scratchcard
 
 import android.annotation.SuppressLint
 import android.view.MotionEvent
@@ -41,6 +41,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SCRATCH_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GameRewardViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.RewardType
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
