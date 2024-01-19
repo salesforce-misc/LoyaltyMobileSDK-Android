@@ -31,7 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrd
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameZoneScreen
-import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.ScratchCardView
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.scratchcard.ScratchCardView
 import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen

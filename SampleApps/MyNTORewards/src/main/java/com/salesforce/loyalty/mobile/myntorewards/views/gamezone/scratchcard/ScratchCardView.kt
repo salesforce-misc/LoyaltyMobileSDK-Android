@@ -1,4 +1,4 @@
-package com.salesforce.loyalty.mobile.myntorewards.views.gamezone
+package com.salesforce.loyalty.mobile.myntorewards.views.gamezone.scratchcard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
