@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +43,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
-fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean) -> Unit) {
+fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) -> Unit, showBottomSheet: (Boolean) -> Unit) {
     val viewState by viewModel.uiState.observeAsState(null)
     val programState by viewModel.programState.observeAsState()
     val context = LocalContext.current
@@ -59,6 +61,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
         LaunchedEffect(key1 = true) {
             if (it == ReferralProgramType.JOIN_PROGRAM) {
                 showBottomSheet(true)
+                showBottomBar(false)
             }
         }
     }
@@ -68,6 +71,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomSheet: (Boolean
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
                 MyReferralsScreenView(it.uiState) {
                     showBottomSheet(true)
+                    showBottomBar(false)
                     viewModel.startReferring()
                     viewModel.showDefaultPopup = true
                 }
@@ -116,30 +120,35 @@ fun MyReferralsScreenView(uiState: MyReferralScreenState, openReferFriendSheet: 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), backAction: () -> Boolean, showBottomBar: (Boolean) -> Unit) {
-    val bottomSheetScaffoldState = BottomSheetCustomState()
     val coroutineScope = rememberCoroutineScope()
     var blurBG by remember { mutableStateOf(0.dp) }
-//    var bottomBarState by remember { mutableStateOf(true) }
-//
-//    LaunchedEffect(key1 = bottomBarState) {
-// Show Bottom Bar on screen load and hide it when bottom sheet is opened
-        showBottomBar(false)
-//    }
+    var openBottomsheet by remember { mutableStateOf(false) }
 
-    val showBottomSheet: (Boolean) -> Job = {
+    val bottomSheetScaffoldState = androidx.compose.material.rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(initialValue = BottomSheetValue.Collapsed,
+            confirmValueChange = {
+                // Prevent collapsing by swipe down gesture
+                it != BottomSheetValue.Collapsed
+            })
+    )
+    val openBottomSheet = {
         coroutineScope.launch {
-            bottomSheetScaffoldState.bottomSheetState.run {
-//                showBottomBar(!it)
-                if (it && isCollapsed) {
-                    blurBG = 3.dp
-                    expand()
-                } else {
-                    blurBG = 0.dp
-                    collapse()
-                }
-//                bottomBarState = !it
-                showBottomBar(!it)
+            blurBG = AppConstants.BLUR_BG
+            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                bottomSheetScaffoldState.bottomSheetState.expand()
+            }
+        }
+    }
 
+    if (openBottomsheet) {
+        openBottomSheet()
+    }
+
+    val closeBottomSheet = {
+        blurBG = AppConstants.NO_BLUR_BG
+        coroutineScope.launch {
+            if (bottomSheetScaffoldState.bottomSheetState.isExpanded) {
+                bottomSheetScaffoldState.bottomSheetState.collapse()
             }
         }
     }
@@ -153,7 +162,9 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
                     viewModel.fetchReferralsInfo(context)
                 }
                 viewModel.showDefaultPopup = false
-                showBottomSheet(false)
+                openBottomsheet = false
+                closeBottomSheet()
+                showBottomBar(true)
             }
         },
         sheetShape = bottomSheetShape,
@@ -167,9 +178,11 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
                 .blur(blurBG)
         ) {
             TitleView(stringResource(id = R.string.header_label_my_referrals))
-            MyReferralsScreen(viewModel) {
-                showBottomSheet(true)
-            }
+            MyReferralsScreen(viewModel, {
+                showBottomBar(it)
+            }, {
+                openBottomsheet = it
+            })
         }
     }
 }
