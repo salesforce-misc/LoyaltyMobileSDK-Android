@@ -2,7 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.di
 
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
-import com.salesforce.referral_sdk.repository.ReferralsRepository
+import com.salesforce.referral.repository.ReferralsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -2,3 +2,7 @@
 	path = GamificationMobileSDK-Android
 	url = git@github.com:loyaltysampleapp/GamificationMobileSDK-Android.git
 	branch = release-246.patch
+[submodule "ReferralMobileSDK-Android"]
+	path = ReferralMobileSDK-Android
+	url = git@github.com:loyaltysampleapp/ReferralMobileSDK-Android.git
+	branch = release-246.patch

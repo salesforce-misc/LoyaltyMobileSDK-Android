@@ -25,14 +25,12 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs.
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import com.salesforce.referral_sdk.EnrollmentStatus
-import com.salesforce.referral_sdk.api.ApiResponse
-import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_DURATION
-import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_PROGRAM_NAME
-import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_PROMO_CODE
-import com.salesforce.referral_sdk.entities.ReferralEnrollmentResponse
-import com.salesforce.referral_sdk.entities.referral_event.ReferralEventResponse
-import com.salesforce.referral_sdk.repository.ReferralsRepository
+import com.salesforce.referral.EnrollmentStatus
+import com.salesforce.referral.api.ApiResponse
+import com.salesforce.referral.entities.ReferralEnrollmentResponse
+import com.salesforce.referral.entities.referral_event.ReferralEventResponse
+import com.salesforce.referral.repository.ReferralsRepository
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,6 +43,11 @@ class MyReferralsViewModel @Inject constructor(
     instanceUrl: String
 ): BaseViewModel<MyReferralsViewState>() {
 
+    companion object {
+        const val REFERRAL_PROGRAM_NAME = "Referral Program"
+        const val REFERRAL_PROMO_CODE = "TESTRM"
+        const val REFERRAL_DURATION = 90
+    }
     private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData(null)
     val programState: LiveData<ReferralProgramType> = _programState
 

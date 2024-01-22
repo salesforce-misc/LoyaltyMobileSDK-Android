@@ -3,13 +3,13 @@ package com.salesforce.loyalty.mobile.myntorewards.referrals
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
-import com.salesforce.referral_sdk.api.ApiResponse
-import com.salesforce.referral_sdk.api.ReferralAPIConfig.REFERRAL_PROMO_ID
-import com.salesforce.referral_sdk.api.safeApiCall
-import com.salesforce.referral_sdk.entities.QueryResult
+import com.salesforce.referral.api.ApiResponse
+import com.salesforce.referral.api.safeApiCall
+
 import javax.inject.Inject
 
 class ReferralsLocalRepository @Inject constructor(
@@ -22,6 +22,7 @@ class ReferralsLocalRepository @Inject constructor(
         const val SOQL_QUERY_PATH = "/services/data/v"
         const val SOQL_QUERY_VERSION = "59.0"
         const val QUERY = "/query/"
+        const val REFERRAL_PROMO_ID = "0c81Q0000004S5NQAU"
     }
 
     private fun sObjectUrl() = instanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY

@@ -1,9 +1,9 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals.api
 
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
-import com.salesforce.referral_sdk.entities.QueryResult
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

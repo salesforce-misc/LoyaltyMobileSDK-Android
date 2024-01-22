@@ -5,10 +5,10 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralForceAuthenticatorImpl
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
-import com.salesforce.referral_sdk.api.ForceAuthenticator
 import com.salesforce.gamification.api.GameAPIClient
 import com.salesforce.gamification.api.NetworkClient
 import com.salesforce.gamification.repository.GamificationRemoteRepository
+import com.salesforce.referral.api.ReferralForceAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,7 +39,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideReferralForceAuthenticatorImpl(forceAuthManager: ForceAuthManager): ForceAuthenticator =
+    fun provideReferralForceAuthenticatorImpl(forceAuthManager: ForceAuthManager): ReferralForceAuthenticator =
         ReferralForceAuthenticatorImpl(forceAuthManager)
 
     @Provides
