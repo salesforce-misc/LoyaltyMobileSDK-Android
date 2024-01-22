@@ -79,11 +79,13 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
                 textButtonClicked = {  }
             )
             is EMPTY_STATE -> {
-                CircularProgress(modifier = Modifier.fillMaxHeight(0.92f)
+                CircularProgress(modifier = Modifier
+                    .fillMaxHeight(0.92f)
                     .fillMaxWidth())
             }
             else -> ReferFriendScreenUI(viewModel, it, backAction) {
                 closeAction()
+                viewModel.resetViewState()
             }
         }
     }
@@ -94,7 +96,8 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
             ReferFriendViewState.ReferFriendInProgress -> {
                 ProgressDialogComposable() { } // Do nothing on progress dismiss
             }
-            is ReferFriendViewState.ReferFriendSendMailsSuccess -> {}// context.showToast(it.data)
+            ReferFriendViewState.ReferFriendSendMailsSuccess -> { context.showToast(stringResource(R.string.emails_sent_successfully)) }
+            ReferFriendViewState.ReferFriendSendMailsFailed -> { context.showToast(stringResource(R.string.failed_try_again)) }
             is ReferFriendViewState.EnrollmentFailed -> {
                 // Do nothing
             }

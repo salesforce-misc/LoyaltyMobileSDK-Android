@@ -9,6 +9,9 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
@@ -73,7 +77,6 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
                     showBottomSheet(true)
                     showBottomBar(false)
                     viewModel.startReferring()
-                    viewModel.showDefaultPopup = true
                 }
             }
 
@@ -152,16 +155,22 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
             }
         }
     }
-
     val context = LocalContext.current
+    var refreshing by remember { mutableStateOf(false) }
+    val refreshScope = rememberCoroutineScope()
+    fun refresh() = refreshScope.launch {
+        viewModel.fetchReferralsInfo(context)
+    }
+    val state = rememberPullRefreshState(refreshing, ::refresh)
+
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
             ReferFriendScreen(viewModel, backAction = backAction) {
-                if (viewModel.programState.value!! == ReferralProgramType.START_REFERRING) {
+                if (viewModel.programState.value!! == ReferralProgramType.START_REFERRING
+                    && viewModel.forceRefreshReferralsInfo) {
                     viewModel.fetchReferralsInfo(context)
                 }
-                viewModel.showDefaultPopup = false
                 openBottomsheet = false
                 closeBottomSheet()
                 showBottomBar(true)
@@ -171,18 +180,22 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
         sheetPeekHeight = 0.dp,
         sheetGesturesEnabled = false
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .blur(blurBG)
-        ) {
-            TitleView(stringResource(id = R.string.header_label_my_referrals))
-            MyReferralsScreen(viewModel, {
-                showBottomBar(it)
-            }, {
-                openBottomsheet = it
-            })
+        Box(contentAlignment = Alignment.TopCenter) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pullRefresh(state)
+                    .background(Color.White)
+                    .blur(blurBG)
+            ) {
+                TitleView(stringResource(id = R.string.header_label_my_referrals))
+                MyReferralsScreen(viewModel, {
+                    showBottomBar(it)
+                }, {
+                    openBottomsheet = it
+                })
+            }
+            PullRefreshIndicator(refreshing, state)
         }
     }
 }

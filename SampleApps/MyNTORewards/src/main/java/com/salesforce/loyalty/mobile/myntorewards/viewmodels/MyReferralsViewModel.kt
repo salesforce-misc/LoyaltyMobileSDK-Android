@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DURATION
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROGRAM_NAME
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROMO_CODE
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
@@ -14,7 +16,6 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
-import com.salesforce.loyalty.mobile.myntorewards.utilities.showToast
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferFriendViewState
@@ -28,11 +29,8 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.referral.EnrollmentStatus
 import com.salesforce.referral.api.ApiResponse
 import com.salesforce.referral.entities.ReferralEnrollmentResponse
-import com.salesforce.referral.entities.referral_event.ReferralEventResponse
 import com.salesforce.referral.repository.ReferralsRepository
-
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,18 +41,13 @@ class MyReferralsViewModel @Inject constructor(
     instanceUrl: String
 ): BaseViewModel<MyReferralsViewState>() {
 
-    companion object {
-        const val REFERRAL_PROGRAM_NAME = "Referral Program"
-        const val REFERRAL_PROMO_CODE = "TESTRM"
-        const val REFERRAL_DURATION = 90
-    }
     private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData(null)
     val programState: LiveData<ReferralProgramType> = _programState
 
-    private val _viewState: MutableLiveData<ReferFriendViewState> = MutableLiveData()
-    val viewState: LiveData<ReferFriendViewState> = _viewState
+    private val _viewState: MutableLiveData<ReferFriendViewState?> = MutableLiveData(null)
+    val viewState: LiveData<ReferFriendViewState?> = _viewState
 
-    var showDefaultPopup = true
+    var forceRefreshReferralsInfo = false
 
     init {
         repository.setInstanceUrl(instanceUrl)
@@ -70,31 +63,22 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun sendReferralMail(context: Context, emails: List<String>) {
-        /*if (emails.isEmpty() || emails.any { !isValidEmail(it.trim()) }) {
-            uiMutableState.value = ReferFriendViewState.ShowSignupInvalidEmailMessage
-//            Toast.makeText(this, getString(R.string.emails_warning_message_multiple), Toast.LENGTH_LONG).show()
-            return
-        }*/
         _viewState.value = ReferFriendViewState.ReferFriendInProgress
         viewModelScope.launch {
-            when(val result = repository.sendReferrals(referralCode(context), emails)) {
+            when(repository.sendReferrals(referralCode(context), emails)) {
                 is ApiResponse.Success -> {
-                    val data: ReferralEventResponse = result.data
-                    Logger.d("sendReferralMail Success", "$data")
-                    context.showToast("Emails sent Successfully!")
-                    _viewState.postValue(ReferFriendViewState.ReferFriendSendMailsSuccess(""))
+                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsSuccess
+                    forceRefreshReferralsInfo = true
                 }
-                is ApiResponse.Error -> {
-                    context.showToast("Failed, Try again!")
-                    Logger.d("sendReferralMail Error", "${result.errorMessage}")
-                    _viewState.postValue(ReferFriendViewState.ReferFriendSendMailsSuccess("Failed, Try again!"))
-                }
-                ApiResponse.NetworkError -> {
-                    context.showToast("Failed, Try again!")
-                    _viewState.postValue(ReferFriendViewState.ReferFriendSendMailsSuccess("Failed, Try again!"))
+                else -> {
+                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed
                 }
             }
         }
+    }
+
+    fun resetViewState() {
+        _viewState.value = null
     }
 
     fun fetchReferralProgramStatus(context: Context) {
@@ -107,10 +91,8 @@ class MyReferralsViewModel @Inject constructor(
                     val data: List<ReferralEnrollmentInfo>? = result.data.records
                     if (data?.firstOrNull()?.loyaltyProgramMemberId == memberId){
                         updateReferralEnrollmentStatusInPreferences(context)
-                        Logger.d("Already enrolled", "$data")
                         fetchReferralsInfo(context)
                     } else {
-                        Logger.d("Not enrolled", "$data")
                         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(null)))
                         _programState.value = ReferralProgramType.JOIN_PROGRAM
                     }
@@ -129,12 +111,13 @@ class MyReferralsViewModel @Inject constructor(
         }
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
-            val accessToken = ForceAuthManager(context).getForceAuth()?.accessToken ?: ""
-            when(val result = localRepository.fetchReferralsInfo(accessToken, REFERRAL_DURATION)) {
+            val member = getMember(context)
+            when(val result = localRepository.fetchReferralsInfo(member?.contactId.orEmpty(), REFERRAL_PROMO_CODE, REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
                     val data: List<ReferralEntity>? = result.data.records
                     Logger.d("Success", "$data")
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(data)))
+                    forceRefreshReferralsInfo = false
                 }
                 is ApiResponse.Error -> {
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchFailure(result.errorMessage))
@@ -145,9 +128,8 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     private fun fetchReferralAndPromotionCode(context: Context) {
-        val accessToken = ForceAuthManager(context).getForceAuth()?.accessToken ?: ""
         viewModelScope.launch {
-            when(val result = localRepository.fetchMemberReferralCode(accessToken, getMember(context)?.membershipNumber.orEmpty())) {
+            when(val result = localRepository.fetchMemberReferralCode(getMember(context)?.membershipNumber.orEmpty())) {
                 is ApiResponse.Success -> {
                     result.data.records?.firstOrNull()?.referralCode?.let {
                         setReferralCode(context, "$it-$REFERRAL_PROMO_CODE")
@@ -175,7 +157,7 @@ class MyReferralsViewModel @Inject constructor(
                 }
                 member?.membershipNumber != null -> {
                     repository.enrollExistingAdvocateToPromotionWithMembershipNumber(
-                        REFERRAL_PROGRAM_NAME, REFERRAL_PROMO_CODE, "XNEOT84D"
+                        REFERRAL_PROGRAM_NAME, REFERRAL_PROMO_CODE, member.membershipNumber
                     )
                 }
                 else -> enrollNewCustomerAsAdvocateOfPromotion(REFERRAL_PROGRAM_NAME, REFERRAL_PROMO_CODE, member)
@@ -184,31 +166,24 @@ class MyReferralsViewModel @Inject constructor(
                 is ApiResponse.Success -> {
                     val enrollmentResponse = result.data
                     val status = enrollmentResponse.transactionJournals.firstOrNull()?.status
+                    // If enrolment is processed successfully, start referring friends else show error message
                     if (status == EnrollmentStatus.PROCESSED.status) {
                         _programState.value = ReferralProgramType.START_REFERRING
                         setReferralCode(context, enrollmentResponse.promotionReferralCode)
                         updateReferralEnrollmentStatusInPreferences(context)
                     } else {
-                        // TODO: What to do if enrollment is not processed
+                        val error = context.getString(R.string.enrolment_not_processed_message)
+                        _programState.value = ReferralProgramType.ERROR(error)
+                        _viewState.value = ReferFriendViewState.EnrollmentFailed(error)
                     }
-                    context.showToast("Enrollment $status!")
-
-                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsSuccess("Enrollment $status!")
-                    Logger.d("enrollToReferralProgram Success", "$enrollmentResponse")
                 }
                 is ApiResponse.Error -> {
-                    // TODO: REMOVE this line
-//                    _programState.value = ReferralProgramType.START_REFERRING
-
                     _programState.value = ReferralProgramType.ERROR(result.errorMessage)
                     _viewState.value = ReferFriendViewState.EnrollmentFailed(result.errorMessage)
-
-                    Logger.d("enrollToReferralProgram Error", "${result.errorMessage}")
                 }
                 ApiResponse.NetworkError -> {
                     _programState.value = ReferralProgramType.ERROR()
                     _viewState.value = ReferFriendViewState.EnrollmentFailed()
-                    Logger.d("enrollToReferralProgram Error", "N/W error")
                 }
             }
         }

@@ -7,7 +7,9 @@ import com.salesforce.referral.api.ReferralForceAuthenticator
 class ReferralForceAuthenticatorImpl(private val forceAuthManager: ForceAuthManager) : ReferralForceAuthenticator {
     override fun getAccessToken(): String? {
         ReferralLogger.d("ReferralForceAuthenticatorImpl", "getAccessToken")
-        return forceAuthManager.getAccessToken()
+        //TODO: Remove hard coded token
+        return "00DB000000FX0aR!ARQAQMOzkV5jlsMF1NMHwDoKmJ7P0jBfiDo3VK_RMuZ0bPGUlcd5SEU_uVyBsBQM42anAbQX2urlJ0vAuiKcbOlZTYJeKG1g"
+//        return forceAuthManager.getAccessToken()
     }
 
     override suspend fun grantAccessToken(): String? {
