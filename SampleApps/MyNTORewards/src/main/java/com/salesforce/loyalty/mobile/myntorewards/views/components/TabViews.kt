@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
@@ -47,7 +48,7 @@ fun CustomScrollableTab(
             Tab(
                 selected = selectedTab == index,
                 onClick = { updateTab(index) },
-                text = { Text(text = stringResource(it.tabName)) },
+                text = { Text(text = stringResource(it.tabName), fontSize = 16.sp) },
                 selectedContentColor = VibrantPurple40,
                 unselectedContentColor = TextGray,
             )

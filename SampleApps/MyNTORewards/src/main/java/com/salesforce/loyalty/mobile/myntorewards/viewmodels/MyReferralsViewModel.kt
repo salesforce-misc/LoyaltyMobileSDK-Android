@@ -129,7 +129,7 @@ class MyReferralsViewModel @Inject constructor(
 
     private fun fetchReferralAndPromotionCode(context: Context) {
         viewModelScope.launch {
-            when(val result = localRepository.fetchMemberReferralCode(getMember(context)?.membershipNumber.orEmpty())) {
+            when(val result = localRepository.fetchMemberReferralCode(getMember(context)?.contactId.orEmpty())) {
                 is ApiResponse.Success -> {
                     result.data.records?.firstOrNull()?.referralCode?.let {
                         setReferralCode(context, "$it-$REFERRAL_PROMO_CODE")
@@ -237,7 +237,7 @@ class MyReferralsViewModel @Inject constructor(
         return data.map {
             ReferralItemState(
                 referralItemSectionName(it.referralDate),
-                it.clientEmail.orEmpty(),
+                it.referredParty?.firstName.orEmpty(),
                 it.referralDate.orEmpty(),
                 ReferralStatusType from it.promotionStage?.type
             )
