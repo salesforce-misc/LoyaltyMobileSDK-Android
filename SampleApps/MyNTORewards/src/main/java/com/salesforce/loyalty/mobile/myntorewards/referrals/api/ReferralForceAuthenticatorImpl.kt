@@ -8,7 +8,7 @@ class ReferralForceAuthenticatorImpl(private val forceAuthManager: ForceAuthMana
     override fun getAccessToken(): String? {
         ReferralLogger.d("ReferralForceAuthenticatorImpl", "getAccessToken")
         //TODO: Remove hard coded token
-        return "00DB000000FX0aR!ARQAQMOzkV5jlsMF1NMHwDoKmJ7P0jBfiDo3VK_RMuZ0bPGUlcd5SEU_uVyBsBQM42anAbQX2urlJ0vAuiKcbOlZTYJeKG1g"
+        return "00DB000000FX0aR!ARQAQKIdCPDOFmCuyIW_1r9fiRrSsvTvJJpgoSNoB57fQ9cOCF4o9SBCV6fROwUVoANPJT6AJYQ1IbQjqzlZblrw.nAeTO2b"
 //        return forceAuthManager.getAccessToken()
     }
 

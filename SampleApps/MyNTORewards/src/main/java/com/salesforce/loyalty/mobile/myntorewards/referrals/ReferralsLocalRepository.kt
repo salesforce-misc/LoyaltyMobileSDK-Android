@@ -59,15 +59,14 @@ class ReferralsLocalRepository @Inject constructor(
     private fun accessToken() =
 //        "Bearer ${forceAuthManager.getForceAuth()?.accessToken.orEmpty()}"
         // TODO: Replace hard coded token
-        "Bearer 00DB000000FX0aR!ARQAQD3QQ_gV2xalWUJmZ8R1A7CdrFmLWK0o1SKIH3RcyvT5TFUHn7a9r5uAL4M6E58r2Azq0sfgPGCZxahhWmwYoq2.6g_G"
+        "Bearer 00DB000000FX0aR!ARQAQKIdCPDOFmCuyIW_1r9fiRrSsvTvJJpgoSNoB57fQ9cOCF4o9SBCV6fROwUVoANPJT6AJYQ1IbQjqzlZblrw.nAeTO2b"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, memberId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMemberId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
 
     private fun memberReferralCodeQuery(contactId: String) =
-//        "SELECT MembershipNumber, referralcode from loyaltyprogrammember where MembershipNumber =\'$membershipNumber\'"
         "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and ProgramId='$REFERRAL_PROGRAM_ID'"
 
     private fun referralListQuery(contactId: String, promoCode: String, durationInDays: Int) =
-        "SELECT ClientEmail, ReferredPartyId, ReferredParty.Name, ReferredParty.Email, ReferredParty.FirstName, ReferredParty.LastName, ReferralDate, CurrentPromotionStage.Type FROM Referral WHERE Promotion.PromotionCode=\'$promoCode\' and ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
+        "SELECT ClientEmail, ReferredPartyId, ReferredParty.Name, ReferredParty.Email, ReferredParty.FirstName, ReferredParty.LastName, ReferralDate, LastReferencedDate, CurrentPromotionStage.Type FROM Referral WHERE Promotion.PromotionCode=\'$promoCode\' and ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
 }

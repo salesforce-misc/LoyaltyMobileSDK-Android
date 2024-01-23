@@ -174,16 +174,16 @@ class MyReferralsViewModel @Inject constructor(
                     } else {
                         val error = context.getString(R.string.enrolment_not_processed_message)
                         _programState.value = ReferralProgramType.ERROR(error)
-                        _viewState.value = ReferFriendViewState.EnrollmentFailed(error)
                     }
+                    _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
                 is ApiResponse.Error -> {
                     _programState.value = ReferralProgramType.ERROR(result.errorMessage)
-                    _viewState.value = ReferFriendViewState.EnrollmentFailed(result.errorMessage)
+                    _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
                 ApiResponse.NetworkError -> {
                     _programState.value = ReferralProgramType.ERROR()
-                    _viewState.value = ReferFriendViewState.EnrollmentFailed()
+                    _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
             }
         }
