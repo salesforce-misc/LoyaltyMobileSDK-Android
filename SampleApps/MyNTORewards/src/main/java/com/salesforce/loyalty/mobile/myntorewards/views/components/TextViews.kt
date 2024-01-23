@@ -39,6 +39,10 @@ fun BodyText(text: String, modifier: Modifier = Modifier) {
 fun BodyTextBold(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier) {
     CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier)
 }
+@Composable
+fun BodyTextBoldCentered(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier, textAlign = TextAlign.Center)
+}
 
 @Composable
 fun BodyTextLargeBold(text: String, color: Color = Color.Black, modifier: Modifier = Modifier) {

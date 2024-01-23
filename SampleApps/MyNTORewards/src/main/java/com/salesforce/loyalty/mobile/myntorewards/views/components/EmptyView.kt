@@ -1,10 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -27,7 +24,7 @@ fun EmptyView(header: String, description: String? = null) {
             painter = painterResource(id = R.drawable.ic_empty_view),
             contentDescription = header
         )
-        BodyTextBold(text = header,  modifier = Modifier.padding(top = 4.dp))
+        BodyTextBoldCentered(text = header,  modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
         description?.let {
             BodyTextSmall(text = it, modifier = Modifier.padding(top = 4.dp))
         }
