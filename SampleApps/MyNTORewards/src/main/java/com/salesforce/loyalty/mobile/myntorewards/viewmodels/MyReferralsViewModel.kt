@@ -237,7 +237,7 @@ class MyReferralsViewModel @Inject constructor(
         return data.map {
             ReferralItemState(
                 referralItemSectionName(it.referralDate),
-                it.referredParty?.firstName.orEmpty(),
+                it.referredParty?.account?.personEmail.orEmpty(),
                 it.referralDate.orEmpty(),
                 ReferralStatusType from it.promotionStage?.type
             )

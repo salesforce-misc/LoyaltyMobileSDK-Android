@@ -23,14 +23,13 @@ data class CurrentPromotionStage(
 )
 
 data class ReferredParty(
-    @SerializedName("Name")
-    val name: String?,
-    @SerializedName("Email")
-    val email: String?,
-    @SerializedName("FirstName")
-    val firstName: String?,
-    @SerializedName("LastName")
-    val lastName: String?
+    @SerializedName("Account")
+    val account: ReferredAccount?
+)
+
+data class ReferredAccount(
+    @SerializedName("PersonEmail")
+    val personEmail: String?
 )
 
 data class Attributes(
