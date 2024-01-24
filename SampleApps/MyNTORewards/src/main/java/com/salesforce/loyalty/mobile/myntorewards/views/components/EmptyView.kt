@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 
@@ -26,7 +27,7 @@ fun EmptyView(header: String, description: String? = null) {
         )
         BodyTextBoldCentered(text = header,  modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
         description?.let {
-            BodyTextSmall(text = it, modifier = Modifier.padding(top = 4.dp))
+            BodyTextSmall(text = it, modifier = Modifier.padding(top = 4.dp), textAlign = TextAlign.Center)
         }
     }
 }

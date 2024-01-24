@@ -124,7 +124,7 @@ fun ReferralCard(referralsInfo: List<Pair<Int, String>>, recentDuration: String,
 @Composable
 fun CategoryCount(header: String, value: String, modifier: Modifier) {
     Column (modifier = modifier) {
-        BodyTextSmallBold(text = header, color = VibrantPurple90)
+        BodyTextSmallBold(text = header, color = VibrantPurple80)
         BodyTextLargeBold(text = value, color = Color.White)
     }
 }
