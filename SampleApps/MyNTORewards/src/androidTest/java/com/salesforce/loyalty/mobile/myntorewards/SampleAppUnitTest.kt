@@ -1319,7 +1319,7 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
             override fun getGames(context: Context, gameParticipantRewardId: String?, mock: Boolean) {
                 viewState.value = GamesViewState.GamesFetchInProgress
                 val gson = Gson()
-                val mockResponse = MockResponseFileReader("Games.json").content
+                val mockResponse = MockResponseFileReader("Games_UI_Test_Sample.json").content
                 games.value = gson.fromJson(
                     mockResponse,
                     Games::class.java
