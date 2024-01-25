@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.MyNTORewards.R.*
@@ -21,19 +19,24 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Receipt
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.UploadReceiptResponse
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.CurrentPromotionStage
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredParty
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
+import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
-import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import com.salesforce.referral.EnrollmentStatus
 import com.salesforce.referral.api.ApiResponse
-import com.salesforce.referral.api.ReferralAPIConfig
 import com.salesforce.referral.entities.ReferralEnrollmentResponse
 import com.salesforce.referral.entities.TransactionJournal
 import com.salesforce.referral.entities.referral_event.ReferralEventResponse
@@ -42,8 +45,6 @@ import io.mockk.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.*
 import org.junit.runner.Description
@@ -1900,31 +1901,8 @@ class SampleAppViewModelTest {
         )
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `return api response for enroll new customer as advocate for promotion`() {
-        val communityMemberModel: CommunityMemberModel= mockk()
-
-        coEvery { communityMemberModel.firstName } returns ""
-        coEvery { communityMemberModel.lastName } returns ""
-        coEvery { communityMemberModel.email } returns ""
-
-        GlobalScope.launch {
-            myReferralsViewModel.enrollNewCustomerAsAdvocateOfPromotion("", "", communityMemberModel )
-        }
-
-        coVerify {
-            referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(   firstName = "",
-                lastName ="",
-                email = "",
-                promotionName  = "",
-                promotionCode  = "")
-        }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    @Test
-    fun `on SignUp To Refer Clicked`() {
+    fun `on SignUp To Refer Clicked program state should be join program`() {
         myReferralsViewModel.onSignUpToReferClicked("")
         Assert.assertEquals(
             ReferralProgramType.JOIN_PROGRAM,
@@ -1933,9 +1911,8 @@ class SampleAppViewModelTest {
         )
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `on start refer Refer Clicked`() {
+    fun `on start refer Refer Clicked program state should be start referring`() {
         myReferralsViewModel.startReferring()
         Assert.assertEquals(
             ReferralProgramType.START_REFERRING,
@@ -1943,6 +1920,7 @@ class SampleAppViewModelTest {
         )
     }
 
+    //after null status will be removed this test cases can be added.
    /* @Test
     fun `on reset clicked`() {
         myReferralsViewModel.resetViewState()
@@ -1953,22 +1931,12 @@ class SampleAppViewModelTest {
     }*/
 
 
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
     fun `for send email if api call is success posted value should be success with empty data`() {
-        val communityMemberModel: CommunityMemberModel= mockk()
-
-        coEvery { communityMemberModel.firstName } returns ""
-        coEvery { communityMemberModel.lastName } returns ""
-        coEvery { communityMemberModel.email } returns ""
-
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-            .returns("")
-//        coEvery { referralsRepository.setInstanceUrl("") } returns Unit
 
         coEvery {  referralsRepository.sendReferrals(any(), any()) }
             .returns(ApiResponse.Success(ReferralEventResponse("", "", "", listOf(), "")) )
@@ -1978,7 +1946,6 @@ class SampleAppViewModelTest {
             referralsRepository.sendReferrals(any(), any())
         }
 
-        Log.d("Akash", referralViewState.toString())
         Assert.assertEquals(
             ReferFriendViewState.ReferFriendInProgress,
             referralViewState[0]
@@ -1991,22 +1958,12 @@ class SampleAppViewModelTest {
 
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
     fun `for send email if api call is failure posted value should be failure with empty data`() {
-        val communityMemberModel: CommunityMemberModel= mockk()
-
-        coEvery { communityMemberModel.firstName } returns ""
-        coEvery { communityMemberModel.lastName } returns ""
-        coEvery { communityMemberModel.email } returns ""
-
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-            .returns("")
-//        coEvery { referralsRepository.setInstanceUrl("") } returns Unit
 
         coEvery {  referralsRepository.sendReferrals(any(), any()) }
             .returns(ApiResponse.Error("Network Error") )
@@ -2016,7 +1973,6 @@ class SampleAppViewModelTest {
             referralsRepository.sendReferrals(any(), any())
         }
 
-        Log.d("Akash", referralViewState.toString())
         Assert.assertEquals(
             ReferFriendViewState.ReferFriendInProgress,
             referralViewState[0]
@@ -2028,22 +1984,14 @@ class SampleAppViewModelTest {
         )
 
     }
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `for fetch Referral Program Status should be success`() {
-        val communityMemberModel: CommunityMemberModel = mockk()
-
-        coEvery { communityMemberModel.firstName } returns ""
-        coEvery { communityMemberModel.lastName } returns ""
-        coEvery { communityMemberModel.email } returns ""
-
+    fun `for fetch Referral Program Success Status should be success`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
         val context = mockk<Context>(relaxed = true)
+
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-            .returns("")
-//        coEvery { referralsRepository.setInstanceUrl("") } returns Unit
 
         coEvery { localRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
@@ -2054,13 +2002,10 @@ class SampleAppViewModelTest {
             localRepository.checkIfMemberEnrolled(any(), "")
         }
 
-
-        Log.d("Akash", referralViewState.toString())
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
             uiMutableState[0]
         )
-
 
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchSuccess(
@@ -2079,20 +2024,12 @@ class SampleAppViewModelTest {
     }
 
     @Test
-    fun `for fetch Referral Program Status error ui state error`() {
-        val communityMemberModel: CommunityMemberModel = mockk()
-
-        coEvery { communityMemberModel.firstName } returns ""
-        coEvery { communityMemberModel.lastName } returns ""
-        coEvery { communityMemberModel.email } returns ""
+    fun `for fetch Referral Program Status error should have ui state error`() {
 
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-            .returns("")
-//        coEvery { referralsRepository.setInstanceUrl("") } returns Unit
 
         coEvery { localRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.Error("Run time Exception"))
@@ -2102,14 +2039,10 @@ class SampleAppViewModelTest {
         coVerify {
             localRepository.checkIfMemberEnrolled(any(), "")
         }
-
-
-        Log.d("Akash", referralViewState.toString())
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
             uiMutableState[0]
         )
-
 
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchFailure("Run time Exception"),
@@ -2118,20 +2051,12 @@ class SampleAppViewModelTest {
     }
 
     @Test
-    fun `for fetch Referral Program Status error ui state network error`() {
-        val communityMemberModel: CommunityMemberModel = mockk()
-
-        coEvery { communityMemberModel.firstName } returns ""
-        coEvery { communityMemberModel.lastName } returns ""
-        coEvery { communityMemberModel.email } returns ""
+    fun `for fetch Referral Program Status network error ui state should failure`() {
 
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-            .returns("")
-//        coEvery { referralsRepository.setInstanceUrl("") } returns Unit
 
         coEvery { localRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.NetworkError)
@@ -2142,13 +2067,10 @@ class SampleAppViewModelTest {
             localRepository.checkIfMemberEnrolled(any(), "")
         }
 
-
-        Log.d("Akash", referralViewState.toString())
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
             uiMutableState[0]
         )
-
 
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchFailure(),
@@ -2158,12 +2080,7 @@ class SampleAppViewModelTest {
 
     @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `for fetch fetch Referrals Info is success`() {
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
-
+    fun `for fetch fetch Referrals Info is success should be MyReferralsFetchSuccess`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
@@ -2174,8 +2091,8 @@ class SampleAppViewModelTest {
                 any(),
                 any(), any()
             )
-        }
-            .returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
+
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
@@ -2202,16 +2119,87 @@ class SampleAppViewModelTest {
         )
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    @Test
-    fun `for fetch fetch Referrals Info is error`() {
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
 
+    @Test
+    fun `for fetch fetch Referrals Info is success data not null MyReferrals Fetch Success`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        val reffralEntity= ReferralEntity(any(),"abc@gmai.com", "abc@gmai.com", "2024-10-10", CurrentPromotionStage(""),  ReferredParty("abc xyz", "abc@gmail.com", "abc", "xyz"))
+
+        coEvery {
+            localRepository.fetchMemberReferralCode(
+                any()
+            )
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(ReferralCode("24345678","REFERRAL_CODE")), "")))
+
+        coEvery {
+            localRepository.fetchReferralsInfo(
+                any(),
+                any(), any()
+            )
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(reffralEntity), "")))
+
+        myReferralsViewModel.fetchReferralsInfo(context)
+
+        coVerify {
+            localRepository.fetchReferralsInfo(any(), any(), any())
+        }
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchSuccess(
+                successState(listOf(reffralEntity))
+            ),
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for fetch fetch Referrals Info is success referral code not empty MyReferrals Fetch Success`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val context = mockk<Context>(relaxed = true)
+        val reffralEntity= ReferralEntity(any(),"abc@gmai.com", "abc@gmai.com", "2024-10-10", CurrentPromotionStage(""),  ReferredParty("abc xyz", "abc@gmail.com", "abc", "xyz"))
+
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery {
+            localRepository.fetchReferralsInfo(
+                any(),
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(reffralEntity), "")))
+
+        myReferralsViewModel.fetchReferralsInfo(context)
+
+        coVerify {
+            sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any())
+        }
+        coVerify {
+            localRepository.fetchReferralsInfo(any(),any(), any())
+        }
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchSuccess(successState( listOf(reffralEntity))),
+            uiMutableState[1]
+        )
+
+    }
+
+    @Test
+    fun `for fetch fetch Referrals Info is error MyReferrals Fetch Failure`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
 
@@ -2220,8 +2208,8 @@ class SampleAppViewModelTest {
                 any(),
                 any(), any()
             )
-        }
-            .returns(ApiResponse.Error("run time exception"))
+        }.returns(ApiResponse.Error("run time exception"))
+
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
@@ -2238,14 +2226,8 @@ class SampleAppViewModelTest {
         )
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `for fetch fetch Referrals Info is network error`() {
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
-
+    fun `for fetch fetch Referrals Info is network error MyReferrals Fetch Failure`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
@@ -2256,8 +2238,8 @@ class SampleAppViewModelTest {
                 any(),
                 any(), any()
             )
-        }
-            .returns(ApiResponse.NetworkError)
+        }.returns(ApiResponse.NetworkError)
+
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
@@ -2274,30 +2256,13 @@ class SampleAppViewModelTest {
         )
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `for enroll To referral promotion success tryAgain false`() {
-
-
-
+    fun `for enroll To referral promotion success tryAgain false refer in progress`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
         every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(" ")
-
-/*
-        coEvery { communityMemberModel.firstName } returns ""
-        coEvery { communityMemberModel.lastName } returns ""
-        coEvery { communityMemberModel.email } returns ""
-        coEvery { communityMemberModel.contactId } returns "TEST_CONTACT"*/
-
-
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
 
         coEvery {
             referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(
@@ -2326,19 +2291,12 @@ class SampleAppViewModelTest {
 
     @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `for enroll To referral promotion error tryAgain false`() {
-
+    fun `for enroll To referral promotion generic error tryAgain false should have enrollment failed with generic error`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
         every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(" ")
-
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
 
         coEvery {
             referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(
@@ -2368,21 +2326,14 @@ class SampleAppViewModelTest {
 
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun `for enroll To referral promotion network error tryAgain false`() {
+    fun `for enroll To referral promotion network error tryAgain false should have enrollment failed with network error`() {
 
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
         every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(" ")
-
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
 
         coEvery {
             referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(
@@ -2413,24 +2364,13 @@ class SampleAppViewModelTest {
     }
 
     @Test
-    fun `for enroll To referral promotion success tryAgain false contact id not null`() {
+    fun `for enroll To referral promotion success tryAgain false contact id not null enrollment status false then enrollment should fail`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-
-        every { context.getSharedPreferences(any(), any()) }
-            .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-        // val communityMemberModel: CommunityMemberModel = CommunityMemberModel("", "", "", "", "","", "TEST_CONTACT")
         val mockResponse = MockResponseFileReader("MemberInfo.json").content
         every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(mockResponse)
-
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
 
         coEvery {
             referralsRepository.enrollExistingAdvocateToPromotionWithContactId(
@@ -2464,24 +2404,15 @@ class SampleAppViewModelTest {
     }
 
     @Test
-    fun `for enroll To referral promotion success tryAgain false member id not null`() {
+    fun `for enroll To referral promotion success tryAgain false member id not null enrollment status false then enrollment should fail`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
 
-        every { context.getSharedPreferences(any(), any()) }
-            .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-        // val communityMemberModel: CommunityMemberModel = CommunityMemberModel("", "", "", "", "","", "TEST_CONTACT")
-        val mockResponse = MockResponseFileReader("MembrInfoMembershipNull.json").content
+        val mockResponse = MockResponseFileReader("MembrInfoContactIDNull.json").content
         every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(mockResponse)
 
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
 
         coEvery {
             referralsRepository.enrollExistingAdvocateToPromotionWithMembershipNumber(
@@ -2515,26 +2446,14 @@ class SampleAppViewModelTest {
     }
 
     @Test
-    fun `for enroll To referral promotion success tryAgain false member not null and status is processed`() {
+    fun `for enroll To referral promotion success tryAgain false member not null EnrollmentStatus is PROCESSED and program status is processed`() {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val mockTransactionJournal = mockk<List<TransactionJournal>>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-
-        every { context.getSharedPreferences(any(), any()) }
-            .returns(sharedPrefs)
-        every { sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any()) }
-        // val communityMemberModel: CommunityMemberModel = CommunityMemberModel("", "", "", "", "","", "TEST_CONTACT")
         val mockResponse = MockResponseFileReader("MemberInfo.json").content
         every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(mockResponse)
-
-        val forceAuthManager = mockk<ForceAuthManager>(relaxed = true)
-        val myReferralsViewModelData: MyReferralsViewModel = mockk<MyReferralsViewModel>()
-        coEvery { myReferralsViewModelData.referralCode(context) } returns ""
-        coEvery { forceAuthManager.getAccessToken() } returns " "
-
         coEvery { mockTransactionJournal.firstOrNull()?.status } returns EnrollmentStatus.PROCESSED.status
 
         coEvery {
@@ -2557,10 +2476,6 @@ class SampleAppViewModelTest {
             ReferFriendViewState.ReferFriendInProgress,
             referralViewState[0]
         )
-      /*  Assert.assertEquals(
-            ReferFriendViewState.EnrollmentFailed(context.getString(R.string.enrolment_not_processed_message)),
-            referralViewState[1]
-        )*/
         Assert.assertEquals(
             ReferralProgramType.START_REFERRING,
             programDataState[0]
@@ -2785,5 +2700,42 @@ class MainDispatcherRule(
         super.finished(description)
 
         Dispatchers.resetMain()
+    }
+}
+
+private fun successState(data: List<ReferralEntity>?): MyReferralScreenState {
+    val (successStates, inProgressStates) = successAndInProgressItemStates(data)
+    val sentCount = data?.size ?: 0
+    val acceptedCount = inProgressStates.filter { it.purchaseStatus == ReferralStatusType.SIGNED_UP }.size
+    return MyReferralScreenState(
+        tabItems = ReferralTabs.sortedTabs(),
+        completedStates = successStates,
+        inProgressStates = inProgressStates,
+        listOf(Pair(R.string.my_referral_sent_label, "$sentCount"),
+            Pair(R.string.my_referrals_accepted_label, "$acceptedCount"),
+            Pair(R.string.my_referrals_vouchers_earned_label, "${successStates.size}")),
+        referralsRecentDuration = "${ReferralConfig.REFERRAL_DURATION}"
+    )
+}
+
+private fun successAndInProgressItemStates(data: List<ReferralEntity>?): Pair<List<ReferralItemState>, List<ReferralItemState>> {
+    if (data == null) {
+        return Pair(emptyList(), emptyList())
+    }
+    return data.map {
+        ReferralItemState(
+            referralItemSectionName(it.referralDate),
+            it.referredParty?.firstName.orEmpty(),
+            it.referralDate.orEmpty(),
+            ReferralStatusType from it.promotionStage?.type
+        )
+    }.partition { it.purchaseStatus == ReferralStatusType.COMPLETED }
+}
+
+private fun referralItemSectionName(inputDate: String?): Int {
+    return when(DateUtils.datePeriod(inputDate)) {
+        DatePeriodType.WITHIN1MONTH, DatePeriodType.TODAY, DatePeriodType.WITHIN7DAYS, DatePeriodType.YESTERDAY -> R.string.recent_referrals_section_name
+        DatePeriodType.WITHIN3MONTHS -> R.string.referral_one_month_ago_section_name
+        else -> R.string.referrals_older_than_three_months_section_name
     }
 }

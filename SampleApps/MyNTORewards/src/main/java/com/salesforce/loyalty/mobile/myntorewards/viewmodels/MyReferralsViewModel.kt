@@ -54,7 +54,8 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun onSignUpToReferClicked(email: String) {
-        _programState.postValue( ReferralProgramType.JOIN_PROGRAM)
+        // TODO: Signup to Referral Program with mail id
+        _programState.value = ReferralProgramType.JOIN_PROGRAM
         //_programState.value = ReferralProgramType.JOIN_PROGRAM
     }
 
@@ -78,7 +79,7 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun resetViewState() {
-        _viewState.postValue(null)
+        _viewState.value = null
     }
 
     fun fetchReferralProgramStatus(context: Context) {
@@ -193,7 +194,7 @@ class MyReferralsViewModel @Inject constructor(
         PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
     }
 
-     suspend fun enrollNewCustomerAsAdvocateOfPromotion(
+     private suspend fun enrollNewCustomerAsAdvocateOfPromotion(
         promotionName: String, promotionCode: String, member: CommunityMemberModel?
     ): ApiResponse<ReferralEnrollmentResponse> {
         return repository.enrollNewCustomerAsAdvocateOfPromotion(
