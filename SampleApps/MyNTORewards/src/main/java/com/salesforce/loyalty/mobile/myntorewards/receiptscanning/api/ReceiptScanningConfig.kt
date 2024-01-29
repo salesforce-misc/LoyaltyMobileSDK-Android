@@ -2,7 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api
 
 object ReceiptScanningConfig {
 
-    const val RECEIPT_NAMESPACE = "pppos123"
+    const val RECEIPT_NAMESPACE = "ReceiptScanner"
 
     const val RECEIPT_ANALYZE_EXPENSE = "/services/apexrest/${RECEIPT_NAMESPACE}/expense-analysis/"
 
