@@ -270,7 +270,7 @@
     <string name="game_error_msg">Oops! Something went wrong \u2028 while processing the request. Try again.</string>
     <string name="play_more_text">Play More</string>
 
-    <!-- My Referrals Screen -->
+    <!-- My Referrals Strings Start -->
     <string name="referral_card_content_description">Referral Card</string>
     <string name="referral_card_button_text">Refer Now</string>
     <string name="referral_tab_success">Completed</string>
@@ -298,7 +298,7 @@
     <string name="friends_email_address_placeholder">Enter the email addresses of your friends…</string>
     <string name="forward_arrow_content_description">Forward Arrow</string>
     <string name="tap_to_copy">Copy</string>
-    <string name="share_referral_message">Use my referral code:\n%1$s</string>
+    <string name="share_referral_message">Use my referral link to sign up: %1$s</string>
     <string name="emails_warning_message_multiple">Please enter valid E-mails!</string>
     <string name="share_referral_code_intent_chooser">Share Referral Code</string>
     <string name="selected_app_is_not_installed">Selected app is not installed!</string>
@@ -313,6 +313,12 @@
     <string name="days_ago_label">%s Days Ago</string>
     <string name="join_referral_program_header">Join Referral Program</string>
     <string name="join_referral_program_description">Join our referral program and share your referral code with friends to get rewarded.</string>
+    <string name="failed_try_again">We couldn’t send an invitation email to your referred friends. Try again.</string>
+    <string name="emails_sent_successfully">An invitation email was sent to your friends with your referral link.</string>
+    <string name="enrolment_not_processed_message">We couldn’t send an invitation email to your friends. Try again.</string>
+    <string name="no_referrals_label">After you refer a friend, you’ll see it here.</string>
+    <string name="invalid_email_error_message">Something doesn\'t look right with one of the email addresses.</string>
+    <!-- My Referrals Strings End -->
 
     <string name="text_go_to_voucher_section">Go to Vouchers</string>
     <string name="text_better_luck_reward">Thank you for playing! Stay tuned for more offers.</string>
@@ -327,7 +333,4 @@
     <string name="receipt_progress_step_4">Receipt Scanning Process Completed</string>
     <string name="receipt_error_confidence_status_failure">Oops! The required information in the receipt could not be read and processed. \n\nTry scanning the receipt again.</string>
     <string name="receipt_error_confidence_status_partial">Oops! Some items in the receipt could not be read and processed.\n\n\nTry scanning the receipt again or submit it for a manual review.</string>
-    <string name="failed_try_again">Failed, Try again!</string>
-    <string name="emails_sent_successfully">Emails sent Successfully!</string>
-    <string name="enrolment_not_processed_message">Please contact Salesforce helpdesk!</string>
 </resources>

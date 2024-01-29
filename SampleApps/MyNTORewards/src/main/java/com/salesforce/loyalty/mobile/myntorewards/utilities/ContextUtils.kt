@@ -56,8 +56,8 @@ fun Context.sendMail(emails: List<String>, subject: String, body: String) {
     }
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = INTENT_TYPE_MAIL
-        putExtra(Intent.EXTRA_SUBJECT, subject);
-        putExtra(Intent.EXTRA_TEXT, body);
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
         putExtra(Intent.EXTRA_EMAIL, emails.toTypedArray())
     }
     startActivity(Intent.createChooser(intent, getString(R.string.share_referral_code_intent_chooser)))
@@ -72,6 +72,7 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
 
     when (shareType) {
         ShareType.FACEBOOK -> {
+            intent.type = INTENT_TYPE_IMAGE
             intent.setPackage(FACEBOOK_APP_PACKAGE)
         }
         ShareType.INSTAGRAM -> {

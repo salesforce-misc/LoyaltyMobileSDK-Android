@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -25,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
@@ -32,14 +34,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_LINK
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.CopyColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextLightGray
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
@@ -59,7 +67,11 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.RoundedIconBu
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextButtonCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCustom
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.*
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.EMPTY_STATE
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.ERROR
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.JOIN_PROGRAM
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.SIGNUP
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.START_REFERRING
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 
 const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
@@ -91,12 +103,14 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
 
     viewState?.let {
         when (it) {
-            ReferFriendViewState.ShowSignupInvalidEmailMessage -> context.showToast("Please enter valid E-mails!")
+            ReferFriendViewState.ShowSignupInvalidEmailMessage -> context.showToast(stringResource(R.string.invalid_email_error_message))
             ReferFriendViewState.ReferFriendInProgress -> {
                 ProgressDialogComposable() { } // Do nothing on progress dismiss
             }
             ReferFriendViewState.ReferFriendSendMailsSuccess -> { context.showToast(stringResource(R.string.emails_sent_successfully)) }
-            ReferFriendViewState.ReferFriendSendMailsFailed -> { context.showToast(stringResource(R.string.failed_try_again)) }
+            is ReferFriendViewState.ReferFriendSendMailsFailed -> {
+                context.showToast(it.errorMessage ?: stringResource(R.string.failed_try_again))
+            }
             is ReferFriendViewState.EnrollmentTaskFinished -> {
                 // Do nothing
             }
@@ -153,6 +167,7 @@ fun SignupToReferUi(viewModel: MyReferralsViewModel) {
     var textField by remember { mutableStateOf(TextFieldValue("")) }
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val invalidEmailMessage = stringResource(R.string.invalid_email_error_message)
     TextFieldCustom(
         textField,
         stringResource(R.string.email_address_placeholder),
@@ -164,7 +179,7 @@ fun SignupToReferUi(viewModel: MyReferralsViewModel) {
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.referral_signup_button_text), onClick = {
         if (!isValidEmail(textField.text.trim())) {
-            context.showToast("Please enter valid E-mails!")
+            context.showToast(invalidEmailMessage)
             return@PrimaryButton
         }
         focusManager.clearFocus()
@@ -195,9 +210,11 @@ fun JoinReferralProgramUi(viewModel: MyReferralsViewModel, backAction: () -> Boo
 private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit) {
     val context = LocalContext.current
     val referralCode = viewModel.referralCode(context)
-    val extraText = context.getString(R.string.share_referral_message, referralCode)
+    val referralLink = REFERRAL_LINK + referralCode
+    val extraText = context.getString(R.string.share_referral_message, referralLink)
     val focusManager = LocalFocusManager.current
     var textField by remember { mutableStateOf(TextFieldValue("")) }
+    val invalidEmailMessage = stringResource(R.string.invalid_email_error_message)
 
     BodyTextBold(text = stringResource(R.string.refer_a_friend_and_earn_header))
     BodyText(text = stringResource(R.string.refer_a_friend_and_earn_sub_header))
@@ -210,7 +227,7 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit
         rightIconClick = {
             val emails = textField.text.split(",")
             if (emails.isEmpty() || emails.any { !isValidEmail(it.trim()) }) {
-                context.showToast("Please enter valid E-mails!")
+                context.showToast(invalidEmailMessage)
                 return@TextFieldCustom
             }
             textField = TextFieldValue("")
@@ -231,7 +248,8 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, doneAction: () -> Unit
         fontWeight = FontWeight.ExtraBold
     )
     SocialMediaRow(extraText)
-    ReferralCodeView(referralCode)
+    Spacer(modifier = Modifier.height(16.dp))
+    ReferralCodeView(referralLink)
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { doneAction() })
 }
@@ -275,27 +293,51 @@ fun SocialMediaRow(referralContent: String) {
 
 @Composable
 fun ReferralCodeView(referralCode: String) {
-    Row(
-        Modifier
+    ConstraintLayout(
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp)
             .dashedBorder(1.dp, SaffronColor, SaffronColorLight, 8.dp, 10.dp)
     ) {
+        val (referralLinkView, dividerView, copyView) = createRefs()
         val context = LocalContext.current
-        BodyTextBold(
-            text = referralCode,
+
+        BodyTextSmall(
+            text = stringResource(R.string.tap_to_copy), color = CopyColor,
             modifier = Modifier
-                .wrapContentSize()
-                .padding(12.dp)
-        )
-        CommonText(
-            text = stringResource(R.string.tap_to_copy), textAlign = TextAlign.End,
-            modifier = Modifier
-                .fillMaxWidth()
+                .constrainAs(copyView) {
+                    end.linkTo(parent.end)
+                }
                 .padding(12.dp)
                 .clickable {
                     context.copyToClipboard(text = referralCode)
                 }
+        )
+        ImageComponent(
+            drawableId = R.drawable.divider_line_vertical, "",
+            modifier = Modifier
+                .constrainAs(dividerView) {
+                    height = Dimension.fillToConstraints
+                    top.linkTo(parent.top, margin = 2.dp)
+                    bottom.linkTo(parent.bottom, margin = 2.dp)
+                    start.linkTo(copyView.start)
+                }
+                .width(1.dp),
+            contentScale = ContentScale.FillHeight
+        )
+
+        CommonText(
+            text = referralCode,
+            color = TextLightGray,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .constrainAs(referralLinkView) {
+                    width = Dimension.fillToConstraints
+
+                    start.linkTo(parent.start)
+                    end.linkTo(dividerView.start)
+                }
+                .padding(12.dp)
         )
     }
 }

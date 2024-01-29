@@ -14,12 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils.formatDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
@@ -35,14 +35,15 @@ const val TEST_TAG_REFERRALS_LIST_ITEM = "TEST_TAG_REFERRALS_LIST_ITEM"
 @Composable
 fun ReferralList(itemStates: List<ReferralItemState>) {
     if (itemStates.isEmpty()) {
-        EmptyView(header = "No Referrals")
+        EmptyView(header = stringResource(R.string.no_referrals_label))
         return
     }
     // Group Items based on section name to show items under the respective section header
     val grouped = itemStates.groupBy{ stringResource(id = it.sectionName) }
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(VeryLightPurple)
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .testTag(TEST_TAG_REFERRALS_LIST)
@@ -73,15 +74,19 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
         ImageComponent(
             drawableId = purchaseStatus.iconId,
             contentDescription = null,
-            modifier = Modifier.constrainAs(statusIcon) {
-                start.linkTo(parent.start)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-            }.padding(end = 8.dp)
+            modifier = Modifier
+                .constrainAs(statusIcon) {
+                    start.linkTo(parent.start)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }
+                .padding(end = 8.dp)
         )
 
         BodyTextSmallBold(
             text = mail,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.constrainAs(mailView) {
                 start.linkTo(statusIcon.end)
             }
@@ -89,16 +94,15 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
 
         BodyTextSmall(
             text = formatDate(LocalContext.current, duration),
+            color = TextDarkGray,
             modifier = Modifier.constrainAs(durationView) {
                 start.linkTo(statusIcon.end)
                 top.linkTo(mailView.bottom)
             }
         )
 
-        CommonText(
+        BodyTextSmall(
             text = stringResource(id = purchaseStatus.content),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
             color = purchaseStatus.contentColor,
             modifier = Modifier.constrainAs(statusText) {
                 end.linkTo(parent.end)
