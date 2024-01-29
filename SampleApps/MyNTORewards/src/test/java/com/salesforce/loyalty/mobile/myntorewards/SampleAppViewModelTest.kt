@@ -2,7 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
@@ -81,7 +80,7 @@ class SampleAppViewModelTest {
     //private val localManager: LocalFileManager = mockk()
 
     private val referralsRepository: ReferralsRepository = mockk()
-    private val localRepository: ReferralsLocalRepository = mockk()
+    private val referralsLocalRepository: ReferralsLocalRepository = mockk()
 
 
 
@@ -196,7 +195,7 @@ class SampleAppViewModelTest {
 
         every { referralsRepository.setInstanceUrl("") } returns Unit
         //    referralsRepository.setInstanceUrl("")
-        myReferralsViewModel= MyReferralsViewModel(referralsRepository, localRepository, "")
+        myReferralsViewModel= MyReferralsViewModel(referralsRepository, referralsLocalRepository, "")
         referralViewState= mutableListOf()
 
         myReferralsViewModel.viewState.observeForever{
@@ -2194,13 +2193,13 @@ class SampleAppViewModelTest {
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
 
-        coEvery { localRepository.checkIfMemberEnrolled(any(), "") }
+        coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
 
         myReferralsViewModel.fetchReferralProgramStatus(context)
 
         coVerify {
-            localRepository.checkIfMemberEnrolled(any(), "")
+            referralsLocalRepository.checkIfMemberEnrolled(any(), "")
         }
 
         Assert.assertEquals(
@@ -2232,13 +2231,13 @@ class SampleAppViewModelTest {
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
 
-        coEvery { localRepository.checkIfMemberEnrolled(any(), "") }
+        coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.Error("Run time Exception"))
 
         myReferralsViewModel.fetchReferralProgramStatus(context)
 
         coVerify {
-            localRepository.checkIfMemberEnrolled(any(), "")
+            referralsLocalRepository.checkIfMemberEnrolled(any(), "")
         }
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
@@ -2259,13 +2258,13 @@ class SampleAppViewModelTest {
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
 
-        coEvery { localRepository.checkIfMemberEnrolled(any(), "") }
+        coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.NetworkError)
 
         myReferralsViewModel.fetchReferralProgramStatus(context)
 
         coVerify {
-            localRepository.checkIfMemberEnrolled(any(), "")
+            referralsLocalRepository.checkIfMemberEnrolled(any(), "")
         }
 
         Assert.assertEquals(
@@ -2288,7 +2287,7 @@ class SampleAppViewModelTest {
             .returns(sharedPrefs)
 
         coEvery {
-            localRepository.fetchReferralsInfo(
+            referralsLocalRepository.fetchReferralsInfo(
                 any(),
                 any(), any()
             )
@@ -2297,7 +2296,7 @@ class SampleAppViewModelTest {
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
-            localRepository.fetchReferralsInfo(any(), any(), any())
+            referralsLocalRepository.fetchReferralsInfo(any(), any(), any())
         }
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
@@ -2331,13 +2330,13 @@ class SampleAppViewModelTest {
         val reffralEntity= ReferralEntity(any(),"abc@gmai.com", "abc@gmai.com", "2024-10-10", CurrentPromotionStage(""),  ReferredParty("abc xyz", "abc@gmail.com", "abc", "xyz"))
 
         coEvery {
-            localRepository.fetchMemberReferralCode(
+            referralsLocalRepository.fetchMemberReferralCode(
                 any()
             )
         }.returns(ApiResponse.Success(QueryResult(0, true, listOf(ReferralCode("24345678","REFERRAL_CODE")), "")))
 
         coEvery {
-            localRepository.fetchReferralsInfo(
+            referralsLocalRepository.fetchReferralsInfo(
                 any(),
                 any(), any()
             )
@@ -2346,7 +2345,7 @@ class SampleAppViewModelTest {
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
-            localRepository.fetchReferralsInfo(any(), any(), any())
+            referralsLocalRepository.fetchReferralsInfo(any(), any(), any())
         }
 
         Assert.assertEquals(
@@ -2369,7 +2368,7 @@ class SampleAppViewModelTest {
             .returns(sharedPrefs)
 
         coEvery {
-            localRepository.fetchReferralsInfo(
+            referralsLocalRepository.fetchReferralsInfo(
                 any(),
                 any(),
                 any()
@@ -2382,7 +2381,7 @@ class SampleAppViewModelTest {
             sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any())
         }
         coVerify {
-            localRepository.fetchReferralsInfo(any(),any(), any())
+            referralsLocalRepository.fetchReferralsInfo(any(),any(), any())
         }
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
@@ -2405,7 +2404,7 @@ class SampleAppViewModelTest {
             .returns(sharedPrefs)
 
         coEvery {
-            localRepository.fetchReferralsInfo(
+            referralsLocalRepository.fetchReferralsInfo(
                 any(),
                 any(), any()
             )
@@ -2414,7 +2413,7 @@ class SampleAppViewModelTest {
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
-            localRepository.fetchReferralsInfo(any(), any(), any())
+            referralsLocalRepository.fetchReferralsInfo(any(), any(), any())
         }
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
@@ -2435,7 +2434,7 @@ class SampleAppViewModelTest {
             .returns(sharedPrefs)
 
         coEvery {
-            localRepository.fetchReferralsInfo(
+            referralsLocalRepository.fetchReferralsInfo(
                 any(),
                 any(), any()
             )
@@ -2444,7 +2443,7 @@ class SampleAppViewModelTest {
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
-            localRepository.fetchReferralsInfo(any(), any(), any())
+            referralsLocalRepository.fetchReferralsInfo(any(), any(), any())
         }
         Assert.assertEquals(
             MyReferralsViewState.MyReferralsFetchInProgress,
