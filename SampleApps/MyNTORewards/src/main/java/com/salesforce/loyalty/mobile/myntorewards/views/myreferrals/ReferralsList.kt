@@ -42,8 +42,7 @@ fun ReferralList(itemStates: List<ReferralItemState>) {
     val grouped = itemStates.groupBy{ stringResource(id = it.sectionName) }
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
             .background(VeryLightPurple)
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .testTag(TEST_TAG_REFERRALS_LIST)
@@ -74,13 +73,11 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
         ImageComponent(
             drawableId = purchaseStatus.iconId,
             contentDescription = null,
-            modifier = Modifier
-                .constrainAs(statusIcon) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
-                .padding(end = 8.dp)
+            modifier = Modifier.constrainAs(statusIcon) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+            }.padding(end = 8.dp)
         )
 
         BodyTextSmallBold(

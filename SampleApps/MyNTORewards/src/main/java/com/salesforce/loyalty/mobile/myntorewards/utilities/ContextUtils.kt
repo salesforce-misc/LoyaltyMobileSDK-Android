@@ -56,8 +56,8 @@ fun Context.sendMail(emails: List<String>, subject: String, body: String) {
     }
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = INTENT_TYPE_MAIL
-        putExtra(Intent.EXTRA_SUBJECT, subject)
-        putExtra(Intent.EXTRA_TEXT, body)
+        putExtra(Intent.EXTRA_SUBJECT, subject);
+        putExtra(Intent.EXTRA_TEXT, body);
         putExtra(Intent.EXTRA_EMAIL, emails.toTypedArray())
     }
     startActivity(Intent.createChooser(intent, getString(R.string.share_referral_code_intent_chooser)))
