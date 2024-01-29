@@ -1141,9 +1141,6 @@ class SampleAppViewModelTest {
         coVerify {
             ForceAuthEncryptedPreference.clearAll(context)
         }
-       /* coVerify {
-            ForceConnectedAppEncryptedPreference.clearAll(context)
-        }*/
 
         Assert.assertEquals(LogoutState.LOGOUT_IN_PROGRESS, logoutState[0])
         Assert.assertEquals(LogoutState.LOGOUT_SUCCESS, logoutState[1])
