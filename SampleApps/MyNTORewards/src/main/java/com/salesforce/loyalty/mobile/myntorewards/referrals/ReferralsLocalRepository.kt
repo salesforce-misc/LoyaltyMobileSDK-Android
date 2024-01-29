@@ -1,7 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals
 
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROGRAM_ID
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROGRAM_NAME
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
@@ -46,11 +46,11 @@ class ReferralsLocalRepository @Inject constructor(
         }
     }
 
-    suspend fun fetchMemberReferralCode(contactId: String): ApiResponse<QueryResult<ReferralCode>> {
+    suspend fun fetchMemberReferralCode(contactId: String, programName: String = REFERRAL_PROGRAM_NAME): ApiResponse<QueryResult<ReferralCode>> {
         return safeApiCall {
             apiService.fetchMemberReferralId(
                 sObjectUrl(),
-                memberReferralCodeQuery(contactId),
+                memberReferralCodeQuery(contactId, programName),
                 accessToken()
             )
         }
@@ -59,13 +59,13 @@ class ReferralsLocalRepository @Inject constructor(
     private fun accessToken() =
 //        "Bearer ${forceAuthManager.getForceAuth()?.accessToken.orEmpty()}"
         // TODO: Replace hard coded token
-        "Bearer 00DB000000FX0aR!ARQAQEYGkb9lsiSIy88c1sYgSPb8sip_IWEnSqa_L8WDdpUNWtSCxAB26LA15oL1.GCwj5yG3GtD0JurHF9sax7cGBSFublV"
+        "Bearer 00DB000000FX0aR!ARQAQECGz4F0jRP.Fi9arq8PVEvgc6zYEHgyVvZo_A.h6dpyjIJ_8APE2VznAg97_NJc48XH7pMprab.fWThUj0Juqjt3VCE"
 
-    private fun memberEnrollmentStatusQuery(promoCode: String, memberId: String) =
-        "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMemberId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
+    private fun memberEnrollmentStatusQuery(promoCode: String, contactId: String) =
+        "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$contactId\' and Promotion.PromotionCode=\'$promoCode\'"
 
-    private fun memberReferralCodeQuery(contactId: String) =
-        "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and ProgramId='$REFERRAL_PROGRAM_ID'"
+    private fun memberReferralCodeQuery(contactId: String, programName: String) =
+        "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and Program.Name='$programName'"
 
     private fun referralListQuery(contactId: String, promoCode: String, durationInDays: Int) =
         "SELECT ReferredPartyId, ReferralDate, CurrentPromotionStage.Type, TYPEOF ReferredParty WHEN Contact THEN Account.PersonEmail WHEN Account THEN PersonEmail END FROM Referral WHERE Promotion.PromotionCode=\'$promoCode\' and ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
