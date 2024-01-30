@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.QUERY
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.RECEIPT_NAMESPACE
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_PATH
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.SOQL_QUERY_VERSION
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.*
@@ -135,7 +136,7 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     private fun fetchReceiptListSOQLQuery(membershipKey: String): String {
-        return "select Id,PurchaseDate__c,ReceiptID__c,Name,Status__c,StoreName__c,TotalRewardPoints__c,TotalAmount__c,APIResponse__c,ImageUrl__c from Receipts__c WHERE LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' Order by CreatedDate DESC"
+        return "select Id,${RECEIPT_NAMESPACE}__PurchaseDate__c,${RECEIPT_NAMESPACE}__ReceiptID__c,Name,${RECEIPT_NAMESPACE}__Status__c,${RECEIPT_NAMESPACE}__StoreName__c,${RECEIPT_NAMESPACE}__TotalRewardPoints__c,${RECEIPT_NAMESPACE}__TotalAmount__c,${RECEIPT_NAMESPACE}__APIResponse__c,${RECEIPT_NAMESPACE}__ImageUrl__c from ${RECEIPT_NAMESPACE}__Receipts__c WHERE ${RECEIPT_NAMESPACE}__LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' Order by CreatedDate DESC"
     }
 
     private fun getCreateTransactionUrl(): String {
@@ -147,7 +148,7 @@ class ReceiptScanningManager constructor(auth: ForceAuthenticator, instanceUrl: 
     }
 
     private fun fetchReceiptStatusSOQLQuery(membershipKey: String, receiptId: String): String {
-        return "select Id,Status__c,TotalRewardPoints__c from Receipts__c WHERE LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' AND Id = '${receiptId}'"
+        return "select Id,${RECEIPT_NAMESPACE}__Status__c,${RECEIPT_NAMESPACE}__TotalRewardPoints__c from ${RECEIPT_NAMESPACE}__Receipts__c WHERE ${RECEIPT_NAMESPACE}__LoyaltyProgramMember__r.MembershipNumber = '${membershipKey}' AND Id = '${receiptId}'"
     }
 
     private fun getUploadReceiptUrl(): String {
