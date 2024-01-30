@@ -124,8 +124,9 @@ fun ManualReview(
                 modifier = Modifier.weight(0.65f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
+                val receiptNumber = analyzeExpenseResponse?.receiptNumber ?: ""
                 Text(
-                    text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse?.receiptNumber,
+                    text = stringResource(R.string.field_receipt_number) + " " + receiptNumber,
                     fontWeight = FontWeight.SemiBold,
                     color = LighterBlack,
                     fontFamily = font_sf_pro,

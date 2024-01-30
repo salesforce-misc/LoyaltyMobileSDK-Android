@@ -27,7 +27,7 @@ data class AnalyzeExpenseResponse(
 
 data class LineItem(
     @SerializedName("quantity")
-    val quantity: Int?,
+    val quantity: String?,
     @SerializedName("productName")
     val productName: String?,
     @SerializedName("price")

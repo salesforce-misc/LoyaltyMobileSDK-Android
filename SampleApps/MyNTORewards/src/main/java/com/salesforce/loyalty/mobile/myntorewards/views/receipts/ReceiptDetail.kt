@@ -230,8 +230,9 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                         modifier = Modifier.weight(0.5f),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
+                        val receiptNumber = analyzeExpenseResponse?.receiptNumber ?: ""
                         Text(
-                            text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse?.receiptNumber,
+                            text = stringResource(R.string.field_receipt_number) + " " + receiptNumber,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black,
                             textAlign = TextAlign.Start,
@@ -239,7 +240,7 @@ fun ReceiptDetail(navController: NavHostController, scanningViewModel: ScanningV
                             modifier = Modifier.testTag(TEST_TAG_RECEIPT_NUMBER)
                         )
                         Text(
-                            text = stringResource(R.string.field_date) + " " + purchaseDate?.let { purchase_date ->
+                            text = stringResource(R.string.field_date_colon) + " " + purchaseDate?.let { purchase_date ->
                                 formatReceiptListAPIDate(
                                     purchase_date, context)
                             },
