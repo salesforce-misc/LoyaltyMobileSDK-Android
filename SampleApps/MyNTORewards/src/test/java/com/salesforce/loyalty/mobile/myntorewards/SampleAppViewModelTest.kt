@@ -194,7 +194,6 @@ class SampleAppViewModelTest {
 
 
         every { referralsRepository.setInstanceUrl("") } returns Unit
-        //    referralsRepository.setInstanceUrl("")
         myReferralsViewModel= MyReferralsViewModel(referralsRepository, referralsLocalRepository, "")
         referralViewState= mutableListOf()
 
