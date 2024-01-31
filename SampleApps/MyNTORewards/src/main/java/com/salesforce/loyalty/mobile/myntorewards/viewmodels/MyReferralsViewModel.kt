@@ -85,11 +85,11 @@ class MyReferralsViewModel @Inject constructor(
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             val member = getMember(context)
-            val memberId = member?.loyaltyProgramMemberId.orEmpty()
+            val memberId = member?.contactId.orEmpty()
             when(val result = localRepository.checkIfMemberEnrolled(REFERRAL_PROMO_CODE, memberId)) {
                 is ApiResponse.Success -> {
                     val data: List<ReferralEnrollmentInfo>? = result.data.records
-                    if (data?.firstOrNull()?.loyaltyProgramMemberId == memberId){
+                    if (data?.isNotEmpty() == true){
                         updateReferralEnrollmentStatusInPreferences(context)
                         fetchReferralsInfo(context)
                     } else {

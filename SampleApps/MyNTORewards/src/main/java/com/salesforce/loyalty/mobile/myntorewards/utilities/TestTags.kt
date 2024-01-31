@@ -114,5 +114,8 @@ class TestTags {
 
         const val TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED= "first_step_completed"
         const val TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED= "second_step_completed"
+
+        const val TEST_TAG_EMPTY_VIEW= "empty_view"
+        const val TEST_TAG_CLOSE_REFER_POPUP= "close_refer_popup"
     }
 }
