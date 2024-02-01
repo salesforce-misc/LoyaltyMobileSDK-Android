@@ -66,14 +66,15 @@ class MyReferralsViewModel @Inject constructor(
     fun sendReferralMail(context: Context, emails: List<String>) {
         _viewState.value = ReferFriendViewState.ReferFriendInProgress
         viewModelScope.launch {
-            when(repository.sendReferrals(referralCode(context), emails)) {
+            when(val result = repository.sendReferrals(referralCode(context), emails)) {
                 is ApiResponse.Success -> {
                     _viewState.value = ReferFriendViewState.ReferFriendSendMailsSuccess
                     forceRefreshReferralsInfo = true
                 }
-                else -> {
-                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed
+                is ApiResponse.Error -> {
+                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed(result.errorMessage)
                 }
+                ApiResponse.NetworkError -> _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed()
             }
         }
     }
