@@ -155,8 +155,7 @@ class DateUtilsTest {
     @Test
     fun `Given date older than 7 days, when formatting date, then verify returned string`() {
         // Given
-        val tenDaysAgoDate = Calendar.getInstance().apply { add(Calendar.DATE, -10) }.time
-        val inputDate = SimpleDateFormat(DateUtils.DATE_FORMAT_YYYYMMDD).format(tenDaysAgoDate)
+        val inputDate = "2024-01-21"
         // When
         val formattedDate = DateUtils.formatDate(mockApplicationContext!!, inputDate)
         // Then

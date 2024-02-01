@@ -57,9 +57,7 @@ class ReferralsLocalRepository @Inject constructor(
     }
 
     private fun accessToken() =
-//        "Bearer ${forceAuthManager.getForceAuth()?.accessToken.orEmpty()}"
-        // TODO: Replace hard coded token
-        "Bearer 00DB000000FX0aR!ARQAQECGz4F0jRP.Fi9arq8PVEvgc6zYEHgyVvZo_A.h6dpyjIJ_8APE2VznAg97_NJc48XH7pMprab.fWThUj0Juqjt3VCE"
+        "Bearer ${forceAuthManager.getAccessToken().orEmpty()}"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, contactId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$contactId\' and Promotion.PromotionCode=\'$promoCode\'"
