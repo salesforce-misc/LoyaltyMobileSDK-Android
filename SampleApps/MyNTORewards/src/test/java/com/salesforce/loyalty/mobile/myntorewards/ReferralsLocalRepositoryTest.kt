@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards
 
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.CurrentPromotionStage
@@ -13,7 +12,6 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredAccou
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredParty
 import com.salesforce.referral.api.ApiResponse
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
@@ -22,13 +20,11 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Test
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
 import retrofit2.Response
 
 class ReferralsLocalRepositoryTest {
 
     private val apiService: ReferralsLocalApiService = mockk()
-    private val forceAuthManager: ForceAuthManager = mockk()
     private val instanceUrl: String = ""
 
     private lateinit var repository: ReferralsLocalRepository
@@ -36,9 +32,7 @@ class ReferralsLocalRepositoryTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        every { forceAuthManager.getAccessToken() } returns any()
-
-        repository = ReferralsLocalRepository(apiService, instanceUrl, forceAuthManager)
+        repository = ReferralsLocalRepository(apiService, instanceUrl)
     }
 
     @Test
@@ -49,7 +43,7 @@ class ReferralsLocalRepositoryTest {
                 CurrentPromotionStage("Friend Signs Up"),
                 ReferredParty(ReferredAccount(personEmail = "testemail@test.com"))
             )
-            coEvery { apiService.fetchReferralsInfo(any(), any(), any()) } returns (
+            coEvery { apiService.fetchReferralsInfo(any(), any()) } returns (
                     Response.success(QueryResult(1, true, listOf(referralEntity), null))
             )
 
@@ -72,7 +66,7 @@ class ReferralsLocalRepositoryTest {
     fun `Given API failure with error info, when fetching referral list, then verify api failure with error data`(){
         runBlocking {
             // Given
-            coEvery { apiService.fetchReferralsInfo(any(), any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralEntity>>)
+            coEvery { apiService.fetchReferralsInfo(any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralEntity>>)
 
             // When
             val result = repository.fetchReferralsInfo("1234", "PROMO123", 90)
@@ -92,7 +86,7 @@ class ReferralsLocalRepositoryTest {
         runBlocking {
             // Given
             val referralCode = ReferralCode("12345678", "WGPIC1K")
-            coEvery { apiService.fetchMemberReferralId(any(), any(), any()) } returns (
+            coEvery { apiService.fetchMemberReferralId(any(), any()) } returns (
                     Response.success(QueryResult(1, true, listOf(referralCode), null))
             )
 
@@ -109,13 +103,11 @@ class ReferralsLocalRepositoryTest {
         }
     }
 
-
-
     @Test
     fun `Given API failure with error info, when fetching referral code, then verify api failure with error data`(){
         runBlocking {
             // Given
-            coEvery { apiService.fetchMemberReferralId(any(), any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralCode>>)
+            coEvery { apiService.fetchMemberReferralId(any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralCode>>)
 
             // When
             val result = repository.fetchMemberReferralCode("1234", "REFERRAL PROGRAM")
@@ -135,7 +127,7 @@ class ReferralsLocalRepositoryTest {
         runBlocking {
             // Given
             val referralEnrollmentInfo = ReferralEnrollmentInfo("123456789", ReferralContactInfo("ABCN123IAM"))
-            coEvery { apiService.checkIfMemberEnrolled(any(), any(), any()) } returns (
+            coEvery { apiService.checkIfMemberEnrolled(any(), any()) } returns (
                     Response.success(QueryResult(1, true, listOf(referralEnrollmentInfo), null))
             )
 
@@ -152,13 +144,11 @@ class ReferralsLocalRepositoryTest {
         }
     }
 
-
-
     @Test
     fun `Given API failure with error info, when fetching referral enrolment status, then verify api failure with error data`(){
         runBlocking {
             // Given
-            coEvery { apiService.checkIfMemberEnrolled(any(), any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralEnrollmentInfo>>)
+            coEvery { apiService.checkIfMemberEnrolled(any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralEnrollmentInfo>>)
 
             // When
             val result = repository.checkIfMemberEnrolled("TEMPRP9", "123456789")

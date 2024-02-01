@@ -14,8 +14,7 @@ import javax.inject.Inject
 
 class ReferralsLocalRepository @Inject constructor(
     private val apiService: ReferralsLocalApiService,
-    private val instanceUrl: String,
-    private val forceAuthManager: ForceAuthManager
+    private val instanceUrl: String
 ) {
 
     companion object {
@@ -30,8 +29,7 @@ class ReferralsLocalRepository @Inject constructor(
         return safeApiCall {
             apiService.fetchReferralsInfo(
                 sObjectUrl(),
-                referralListQuery(contactId, promoCode, durationInDays),
-                accessToken()
+                referralListQuery(contactId, promoCode, durationInDays)
             )
         }
     }
@@ -40,8 +38,7 @@ class ReferralsLocalRepository @Inject constructor(
         return safeApiCall {
             apiService.checkIfMemberEnrolled(
                 sObjectUrl(),
-                memberEnrollmentStatusQuery(promoCode, memberId),
-                accessToken()
+                memberEnrollmentStatusQuery(promoCode, memberId)
             )
         }
     }
@@ -50,14 +47,10 @@ class ReferralsLocalRepository @Inject constructor(
         return safeApiCall {
             apiService.fetchMemberReferralId(
                 sObjectUrl(),
-                memberReferralCodeQuery(contactId, programName),
-                accessToken()
+                memberReferralCodeQuery(contactId, programName)
             )
         }
     }
-
-    private fun accessToken() =
-        "Bearer ${forceAuthManager.getAccessToken().orEmpty()}"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, contactId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$contactId\' and Promotion.PromotionCode=\'$promoCode\'"

@@ -14,21 +14,18 @@ interface ReferralsLocalApiService {
     @GET
     suspend fun fetchReferralsInfo(
         @Url url: String,
-        @Query("q") query: String?,
-        @Header("Authorization") bearerToken: String
+        @Query("q") query: String?
     ): Response<QueryResult<ReferralEntity>>
 
     @GET
     suspend fun fetchMemberReferralId(
         @Url url: String,
-        @Query("q") query: String?,
-        @Header("Authorization") bearerToken: String
+        @Query("q") query: String?
     ): Response<QueryResult<ReferralCode>>
 
     @GET
     suspend fun checkIfMemberEnrolled(
         @Url url: String,
-        @Query("q") query: String?,
-        @Header("Authorization") bearerToken: String
+        @Query("q") query: String?
     ): Response<QueryResult<ReferralEnrollmentInfo>>
 }
