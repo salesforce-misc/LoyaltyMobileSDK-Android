@@ -1843,7 +1843,7 @@ class SampleAppViewModelTest {
             receiptStatusUpdateViewState[0]
         )
         Assert.assertEquals(
-            ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess("100.0").points,
+            ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(null).points,
             (receiptStatusUpdateViewState[1] as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points
         )
     }
