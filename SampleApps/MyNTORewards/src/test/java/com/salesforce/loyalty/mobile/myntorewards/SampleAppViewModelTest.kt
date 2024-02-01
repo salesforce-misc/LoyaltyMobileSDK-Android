@@ -22,6 +22,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.CurrentPromot
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredAccount
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredParty
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
@@ -212,17 +213,6 @@ class SampleAppViewModelTest {
         myReferralsViewModel.programState.observeForever{
             programDataState.add(it)
         }
-
-
-    /*    gameViewModel = GameViewModel(loyaltyAPIManager)
-        rewardViewState = mutableListOf()
-        viewState = mutableListOf()
-        gameViewModel.gameRewardsViewState.observeForever{
-            rewardViewState.add(it)
-        }
-        gameViewModel.gamesViewState.observeForever{
-            viewState.add(it)
-        }*/
 
 
     }
@@ -1896,207 +1886,6 @@ class SampleAppViewModelTest {
         )
     }
 
-            /*   @Test
-               fun `for get game  reward success, data must be available`() {
-
-                   val mockGameResponse =
-                       Gson().fromJson(
-                           MockResponseFileReader("GameRewards.json").content,
-                           GameRewardResponse::class.java
-                       )
-                   coEvery {
-                       loyaltyAPIManager.getGameReward("12345", false)
-                   } returns Result.success(mockGameResponse)
-
-
-                   gameViewModel.getGameReward("12345", false)
-
-                   coVerify {
-                       loyaltyAPIManager.getGameReward(any(), any())
-                   }
-
-                   Assert.assertEquals(
-                       GameRewardViewState.GameRewardFetchInProgress,
-                       rewardViewState[0]
-                   )
-                   Assert.assertEquals(gameViewModel.rewardLiveData.value, mockGameResponse)
-
-                   Assert.assertEquals(
-                       GameRewardViewState.GameRewardFetchSuccess,
-                       rewardViewState[1]
-                   )
-               }
-
-               @Test
-               fun `for get game  reward failure, data must not be available`() {
-
-                   coEvery {
-                       loyaltyAPIManager.getGameReward("12345", false)
-                   } returns Result.failure(RuntimeException())
-
-                   gameViewModel.getGameReward("12345", false)
-
-                   coVerify {
-                       loyaltyAPIManager.getGameReward(any(), any())
-                   }
-
-                   Assert.assertEquals(
-                       GameRewardViewState.GameRewardFetchInProgress,
-                       rewardViewState[0]
-                   )
-
-                   Assert.assertEquals(gameViewModel.rewardLiveData.value, null)
-
-                   Assert.assertEquals(
-                       GameRewardViewState.GameRewardFetchFailure,
-                       rewardViewState[1]
-                   )
-               }
-
-               @OptIn(DelicateCoroutinesApi::class)
-               @Test
-               fun `for get game  reward result success, data must be available`() {
-                   var results: Result<GameRewardResponse>? = null
-                   var response: GameRewardResponse? = null
-
-                   val mockGameResponse =
-                       Gson().fromJson(
-                           MockResponseFileReader("GameRewards.json").content,
-                           GameRewardResponse::class.java
-                       )
-                   coEvery {
-                       loyaltyAPIManager.getGameReward("12345", false)
-                   } returns Result.success(mockGameResponse)
-
-
-                   GlobalScope.launch {
-                       results= gameViewModel.getGameRewardResult("12345", false)
-                       results?.onSuccess {
-                           response= it
-                       }
-                   }
-
-                   coVerify {
-                       loyaltyAPIManager.getGameReward(any(), any())
-                   }
-
-                   Assert.assertEquals(
-                       results?.isSuccess,
-                       true
-                   )
-                   Assert.assertEquals(
-                       response,
-                       mockGameResponse
-                   )
-               }
-
-               @OptIn(DelicateCoroutinesApi::class)
-               @Test
-               fun `for get game  reward result Failure, data must not be available`() {
-                   var results: Result<GameRewardResponse>? = null
-                   var response: Throwable? = null
-
-                   coEvery {
-                       loyaltyAPIManager.getGameReward("12345", false)
-                   } returns Result.failure(RuntimeException("run time exception"))
-
-
-                   GlobalScope.launch {
-                       results= gameViewModel.getGameRewardResult("12345", false)
-                       results?.onFailure {
-                           response= it
-                       }
-                   }
-
-                   coVerify {
-                       loyaltyAPIManager.getGameReward(any(), any())
-                   }
-
-                   Assert.assertEquals(
-                       results?.isFailure,
-                       true
-                   )
-                   Assert.assertEquals(
-                       response?.message,
-                       "run time exception"
-                   )
-               }
-
-               @Test
-               fun `for get game success, data must be available`() {
-
-                   val mockGameResponse =
-                       Gson().fromJson(
-                           MockResponseFileReader("Games.json").content,
-                           Games::class.java
-                       )
-                   val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
-                   val context = mockk<Context>(relaxed = true)
-                   val mockResponse = MockResponseFileReader("MemberInfo.json").content
-                   every { context.getSharedPreferences(any(), any()) }
-                       .returns(sharedPrefs)
-                   every { sharedPrefs.getString(any(), any()) }
-                       .returns(mockResponse)
-
-                   coEvery {
-                       loyaltyAPIManager.getGames("0lMB0000000TW41MAG", false)
-                   } returns Result.success(mockGameResponse)
-
-
-                   gameViewModel.getGames(context, false)
-
-                   coVerify {
-                       loyaltyAPIManager.getGames(any(), any())
-                   }
-
-                   Assert.assertEquals(
-                       GamesViewState.GamesFetchInProgress,
-                       viewState[0]
-                   )
-                   Assert.assertEquals(gameViewModel.gamesLiveData.value, mockGameResponse)
-
-                   Assert.assertEquals(
-                       GamesViewState.GamesFetchSuccess,
-                       viewState[1]
-                   )
-               }
-
-               @Test
-               fun `for get game failure, data must be available`() {
-
-                   val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
-                   val context = mockk<Context>(relaxed = true)
-                   val mockResponse = MockResponseFileReader("MemberInfo.json").content
-                   every { context.getSharedPreferences(any(), any()) }
-                       .returns(sharedPrefs)
-                   every { sharedPrefs.getString(any(), any()) }
-                       .returns(mockResponse)
-
-                   coEvery {
-                       loyaltyAPIManager.getGames("0lMB0000000TW41MAG", false)
-                   } returns Result.failure(RuntimeException())
-
-
-                   gameViewModel.getGames(context, false)
-
-                   coVerify {
-                       loyaltyAPIManager.getGames(any(), any())
-                   }
-
-                   Assert.assertEquals(
-                       GamesViewState.GamesFetchInProgress,
-                       viewState[0]
-                   )
-                   Assert.assertEquals(gameViewModel.gamesLiveData.value, null)
-
-                   Assert.assertEquals(
-                       GamesViewState.GamesFetchFailure,
-                       viewState[1]
-                   )
-               }*/
-
-
-
     @Test
     fun `on SignUp To Refer Clicked program state should be join program`() {
         myReferralsViewModel.onSignUpToReferClicked("")
@@ -2323,7 +2112,9 @@ class SampleAppViewModelTest {
         every { context.getSharedPreferences(any(), any()) }
             .returns(sharedPrefs)
 
-        val reffralEntity= ReferralEntity(any(),"abc@gmai.com", "abc@gmai.com", "2024-10-10", CurrentPromotionStage(""),  ReferredParty("abc xyz", "abc@gmail.com", "abc", "xyz"))
+        val reffralEntity= ReferralEntity(any(),"abc@gmai.com", "abc@gmai.com", "2024-10-10", CurrentPromotionStage(""),  ReferredParty(
+            ReferredAccount(""))
+        )
 
         coEvery {
             referralsLocalRepository.fetchMemberReferralCode(
@@ -2357,7 +2148,7 @@ class SampleAppViewModelTest {
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
 
         val context = mockk<Context>(relaxed = true)
-        val reffralEntity= ReferralEntity(any(),"abc@gmai.com", "abc@gmai.com", "2024-10-10", CurrentPromotionStage(""),  ReferredParty("abc xyz", "abc@gmail.com", "abc", "xyz"))
+        val reffralEntity= ReferralEntity(any(),"abc@gmai.com", "abc@gmai.com", "2024-10-10", CurrentPromotionStage(""),  ReferredParty(ReferredAccount("")))
 
 
         every { context.getSharedPreferences(any(), any()) }
@@ -2512,7 +2303,7 @@ class SampleAppViewModelTest {
             referralViewState[0]
         )
         Assert.assertEquals(
-            ReferFriendViewState.EnrollmentFailed("Run Time Exception"),
+            ReferFriendViewState.EnrollmentTaskFinished,
             referralViewState[1]
         )
         Assert.assertEquals(
@@ -2549,7 +2340,7 @@ class SampleAppViewModelTest {
             referralViewState[0]
         )
         Assert.assertEquals(
-            ReferFriendViewState.EnrollmentFailed(),
+            ReferFriendViewState.EnrollmentTaskFinished,
             referralViewState[1]
         )
         Assert.assertEquals(
@@ -2589,7 +2380,7 @@ class SampleAppViewModelTest {
             referralViewState[0]
         )
         Assert.assertEquals(
-            ReferFriendViewState.EnrollmentFailed(context.getString(R.string.enrolment_not_processed_message)),
+            ReferFriendViewState.EnrollmentTaskFinished,
             referralViewState[1]
         )
         Assert.assertEquals(
@@ -2631,7 +2422,7 @@ class SampleAppViewModelTest {
             referralViewState[0]
         )
         Assert.assertEquals(
-            ReferFriendViewState.EnrollmentFailed(context.getString(R.string.enrolment_not_processed_message)),
+            ReferFriendViewState.EnrollmentTaskFinished,
             referralViewState[1]
         )
         Assert.assertEquals(
@@ -2720,7 +2511,7 @@ private fun successAndInProgressItemStates(data: List<ReferralEntity>?): Pair<Li
     return data.map {
         ReferralItemState(
             referralItemSectionName(it.referralDate),
-            it.referredParty?.firstName.orEmpty(),
+            it.referredParty?.account?.personEmail.orEmpty(),
             it.referralDate.orEmpty(),
             ReferralStatusType from it.promotionStage?.type
         )
