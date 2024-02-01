@@ -79,7 +79,6 @@ open class ReferralsRepository @Inject constructor(
         contactId: String,
         memberStatus: MemberStatus = MemberStatus.ACTIVE
     ): ApiResponse<ReferralEnrollmentResponse> {
-        Log.d("Akash", "method3")
         val gson = Gson()
         val mockResponse = MockResponseFileReader("memberEnrolledResponse.json").content
         var response= gson.fromJson(
