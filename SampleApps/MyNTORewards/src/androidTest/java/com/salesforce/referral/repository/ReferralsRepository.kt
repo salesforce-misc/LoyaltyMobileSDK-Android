@@ -107,7 +107,7 @@ open class ReferralsRepository @Inject constructor(
         emails: List<String>
     ): ApiResponse<ReferralEventResponse> {
         val gson = Gson()
-        val mockResponse = MockResponseFileReader("memberEnrolledResponse.json").content
+        val mockResponse = MockResponseFileReader("reffered.json").content
         var response= gson.fromJson(
             mockResponse,
             ReferralEventResponse::class.java

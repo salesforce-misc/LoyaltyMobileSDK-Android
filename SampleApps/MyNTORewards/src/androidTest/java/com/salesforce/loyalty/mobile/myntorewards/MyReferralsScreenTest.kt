@@ -32,6 +32,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.INSTAGRAM_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
@@ -48,6 +49,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REF
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFERRALS_LIST_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFERRAL_CARD
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFER_FRIEND_SCREEN
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.referral.api.ApiService
 import com.salesforce.referral.entities.ReferralEnrollmentResponse
 import com.salesforce.referral.entities.ReferralExistingEnrollmentRequest
@@ -92,6 +95,7 @@ class MyReferralsScreenTest {
     @Test
     fun verifyReferralScreen() {
         composeTestRule.run {
+            PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = false
             onNodeWithText("My Referrals").assertIsDisplayed()
             onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
             Thread.sleep(5000)
@@ -104,7 +108,7 @@ class MyReferralsScreenTest {
             onNodeWithText("Invitations Accepted").assertIsDisplayed()
             onNodeWithText("Vouchers Earned").assertIsDisplayed()
             onNodeWithText("Refer Now").assertIsDisplayed()
-/*
+
             onNodeWithTag(TEST_TAG_REFER_FRIEND_SCREEN).assertIsDisplayed()
             onNodeWithText("Join Referral Program").assertIsDisplayed()
             onNodeWithText("Join our referral program and share your referral code with friends to get rewarded.").assertIsDisplayed()
@@ -115,14 +119,22 @@ class MyReferralsScreenTest {
             Thread.sleep(2000)
 
             onNodeWithText("Done").assertIsDisplayed()
-            onNodeWithText("Done").performClick()*/
+
+            onNodeWithText("Refer Now").assertIsDisplayed().performClick()
+            //Thread.sleep(5000)
+            onNodeWithText("Enter the email addresses of your friends…")
+                .performTextInput("akash.agrawal@salesforce.com")
+
+            onNodeWithTag(TEST_TAG_TEXT_FIELD_RIGHT_ICON, useUnmergedTree=true).performClick()
+
+            onNodeWithText("Done").performClick()
 
             onNodeWithText("Completed").assertIsDisplayed()
 
             onNodeWithText("In Progress").assertIsDisplayed()
 
             onNodeWithText("Completed").assertIsDisplayed().performClick()
-
+            //Thread.sleep(5000)
             onNodeWithText("No Referrals").assertIsDisplayed()
             onNodeWithContentDescription("No Referrals").assertIsDisplayed()
             onNodeWithTag(TEST_TAG_EMPTY_VIEW).assertIsDisplayed()
@@ -156,16 +168,14 @@ class MyReferralsScreenTest {
 
             // Test Email input Field
             onNodeWithText("Add a comma after each email address.").assertIsDisplayed()
-           /* onNodeWithText("Enter the email addresses of your friends…")
-                .performTextInput("abc@xyz.com, abc@xyz2.com")*/
+
             onNodeWithTag(TEST_TAG_TEXT_FIELD_RIGHT_ICON, true).assertIsDisplayed()
 
             Thread.sleep(2000)
-
-
             onNodeWithText("2BYEMSGU-TEMPRP9").assertIsDisplayed()
             onNodeWithText("Copy").assertIsDisplayed().performClick()
             assertEquals("2BYEMSGU-TEMPRP9", clipboardManager.text)
+
             onNodeWithTag(TEST_TAG_CLOSE_REFER_POPUP).performClick()
             Thread.sleep(2000)
 

@@ -32,7 +32,7 @@ class ReferralsLocalRepository constructor(
     private fun sObjectUrl() = instanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY
 
     suspend fun fetchReferralsInfo(contactId: String, promoCode: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
-        delay(1000)
+        //delay(1000)
         val gson = Gson()
         val mockResponse = MockResponseFileReader("refferralData.json").content
 
@@ -69,7 +69,7 @@ class ReferralsLocalRepository constructor(
     private fun accessToken() =
 //        "Bearer ${forceAuthManager.getForceAuth()?.accessToken.orEmpty()}"
         // TODO: Replace hard coded token
-        "Bearer 00DB000000FX0aR!ARQAQNf3gSx28wnWtCeESz2GtZRwboZQlEC6bGfQ_UMGvUSxZ8pljA2_QWa7FrIP5sxLevZ9qTQnYHu2.gf1LguDbG54Dwm1"
+        "Bearer 00DB000000FX0aR!ARQAQLOe8NMiyzP592U1KwUYExvHtPps4i3YM5bMkr5AJ2w4zjuxs3anWZ5LK2.zOC_8QUXkAKnW2kSYe4uosfb7UGN6TFhQ"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, memberId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMemberId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
