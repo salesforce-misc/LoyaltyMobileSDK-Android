@@ -185,8 +185,9 @@ fun ShowScannedReceiptScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
 //                Spacer(modifier = Modifier.height(8.dp))
+                    val receiptNumber = analyzeExpenseResponse?.receiptNumber ?: ""
                     Text(
-                        text = stringResource(R.string.field_receipt_number) + " " + analyzeExpenseResponse?.receiptNumber,
+                        text = stringResource(R.string.field_receipt_number) + " " + receiptNumber,
                         modifier = Modifier.padding(16.dp),
                         style = TextStyle(
                             fontSize = 16.sp,
@@ -313,7 +314,7 @@ fun ShowScannedReceiptScreen(
 
                         if (manualReviewOption) {
                             Text(
-                                text = stringResource(id = R.string.manual_review_option),
+                                text = stringResource(id = R.string.receipt_submit_manual_review),
                                 fontFamily = font_sf_pro,
                                 modifier = Modifier
                                     .padding(top = 12.dp, bottom = 3.dp)

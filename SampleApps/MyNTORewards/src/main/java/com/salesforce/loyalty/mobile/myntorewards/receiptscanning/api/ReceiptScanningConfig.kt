@@ -2,13 +2,15 @@ package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api
 
 object ReceiptScanningConfig {
 
-    const val RECEIPT_ANALYZE_EXPENSE = "/services/apexrest/expense-analysis/"
+    const val RECEIPT_NAMESPACE = "ReceiptScanner"
+
+    const val RECEIPT_ANALYZE_EXPENSE = "/services/apexrest/${RECEIPT_NAMESPACE}/expense-analysis/"
 
     const val RECEIPT_CREATE_TRANSACTION_PATH = "/services/apexrest/CreateAndProcessTransactionJournal"
 
-    const val RECEIPT_STATUS_UPDATE_URL = "/services/apexrest/receipt-status-updation/"
+    const val RECEIPT_STATUS_UPDATE_URL = "/services/apexrest/${RECEIPT_NAMESPACE}/receipt-status-updation/"
 
-    const val RECEIPT_UPLOAD_RECEIPT = "/services/apexrest/upload-receipt/"
+    const val RECEIPT_UPLOAD_RECEIPT = "/services/apexrest/${RECEIPT_NAMESPACE}/upload-receipt/"
 
     const val RECEIPT_STATUS_MANUAL_REVIEW = "Manual Review"
 

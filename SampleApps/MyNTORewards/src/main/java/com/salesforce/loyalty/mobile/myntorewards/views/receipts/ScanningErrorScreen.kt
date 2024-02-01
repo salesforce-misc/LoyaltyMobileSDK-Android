@@ -111,7 +111,6 @@ fun ErrorPopup(
                     fontSize = 16.sp,
                     color = LighterBlack,
                     fontWeight = FontWeight.Normal,
-
                     )
 
         }

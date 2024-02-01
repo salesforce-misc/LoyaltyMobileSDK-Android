@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
 import android.annotation.SuppressLint
+import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -202,13 +203,16 @@ fun ConnectedAppDetails(
                         consumerKey.text.isEmpty() ||
                         consumerSecret.text.isEmpty() ||
                         callbackUrl.text.isEmpty() ||
+                        !URLUtil.isValidUrl(callbackUrl.text) ||
                         baseUrl.text.isEmpty() ||
                         instanceUrl.text.isEmpty() ||
-                        communityUrl.text.isEmpty()
+                        !URLUtil.isValidUrl(instanceUrl.text) ||
+                        communityUrl.text.isEmpty() ||
+                        !URLUtil.isValidUrl(communityUrl.text)
                     ) {
                         Toast.makeText(
                             context,
-                            "Some fields are missing",
+                            "Some fields are missing or not valid",
                             Toast.LENGTH_LONG
                         ).show()
                     } else {

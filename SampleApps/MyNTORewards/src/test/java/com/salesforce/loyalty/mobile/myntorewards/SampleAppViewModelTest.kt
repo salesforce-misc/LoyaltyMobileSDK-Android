@@ -2,9 +2,11 @@ package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.gson.Gson
+import com.salesforce.gamification.model.GameRewardResponse
+import com.salesforce.gamification.model.Games
+import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
@@ -50,6 +52,7 @@ class SampleAppViewModelTest {
     private lateinit var gameViewModel: GameViewModel
 
     private val loyaltyAPIManager: LoyaltyAPIManager = mockk()
+    private val gameRemoteRepository: GamificationRemoteRepository = mockk()
     private val checkoutManager: CheckoutManager = mockk()
     private val receiptScanningManager: ReceiptScanningManager = mockk()
 
@@ -163,7 +166,7 @@ class SampleAppViewModelTest {
             cancelSubmissionViewState.add(it)
         }
 
-        gameViewModel = GameViewModel(loyaltyAPIManager)
+        gameViewModel = GameViewModel(gameRemoteRepository)
         rewardViewState = mutableListOf()
         viewState = mutableListOf()
         gameViewModel.gameRewardsViewState.observeForever{
@@ -1089,9 +1092,6 @@ class SampleAppViewModelTest {
         coVerify {
             ForceAuthEncryptedPreference.clearAll(context)
         }
-        coVerify {
-            ForceConnectedAppEncryptedPreference.clearAll(context)
-        }
 
         Assert.assertEquals(LogoutState.LOGOUT_IN_PROGRESS, logoutState[0])
         Assert.assertEquals(LogoutState.LOGOUT_SUCCESS, logoutState[1])
@@ -1857,14 +1857,14 @@ class SampleAppViewModelTest {
                 GameRewardResponse::class.java
             )
         coEvery {
-            loyaltyAPIManager.getGameReward("12345", false)
+            gameRemoteRepository.getGameReward("12345", false)
         } returns Result.success(mockGameResponse)
 
 
         gameViewModel.getGameReward("12345", false)
 
         coVerify {
-            loyaltyAPIManager.getGameReward(any(), any())
+            gameRemoteRepository.getGameReward(any(), any())
         }
 
         Assert.assertEquals(
@@ -1883,13 +1883,13 @@ class SampleAppViewModelTest {
     fun `for get game  reward failure, data must not be available`() {
 
         coEvery {
-            loyaltyAPIManager.getGameReward("12345", false)
+            gameRemoteRepository.getGameReward("12345", false)
         } returns Result.failure(RuntimeException())
 
         gameViewModel.getGameReward("12345", false)
 
         coVerify {
-            loyaltyAPIManager.getGameReward(any(), any())
+            gameRemoteRepository.getGameReward(any(), any())
         }
 
         Assert.assertEquals(
@@ -1917,7 +1917,7 @@ class SampleAppViewModelTest {
                 GameRewardResponse::class.java
             )
         coEvery {
-            loyaltyAPIManager.getGameReward("12345", false)
+            gameRemoteRepository.getGameReward("12345", false)
         } returns Result.success(mockGameResponse)
 
 
@@ -1929,7 +1929,7 @@ class SampleAppViewModelTest {
         }
 
         coVerify {
-            loyaltyAPIManager.getGameReward(any(), any())
+            gameRemoteRepository.getGameReward(any(), any())
         }
 
         Assert.assertEquals(
@@ -1949,7 +1949,7 @@ class SampleAppViewModelTest {
         var response: Throwable? = null
 
         coEvery {
-            loyaltyAPIManager.getGameReward("12345", false)
+            gameRemoteRepository.getGameReward("12345", false)
         } returns Result.failure(RuntimeException("run time exception"))
 
 
@@ -1961,7 +1961,7 @@ class SampleAppViewModelTest {
         }
 
         coVerify {
-            loyaltyAPIManager.getGameReward(any(), any())
+            gameRemoteRepository.getGameReward(any(), any())
         }
 
         Assert.assertEquals(
@@ -1991,14 +1991,14 @@ class SampleAppViewModelTest {
             .returns(mockResponse)
 
         coEvery {
-            loyaltyAPIManager.getGames("0lMB0000000TW41MAG", false)
+            gameRemoteRepository.getGames(any(), "0lMB0000000TW41MAG", false)
         } returns Result.success(mockGameResponse)
 
 
-        gameViewModel.getGames(context, false)
+        gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
 
         coVerify {
-            loyaltyAPIManager.getGames(any(), any())
+            gameRemoteRepository.getGames(any(), any(), any())
         }
 
         Assert.assertEquals(
@@ -2025,14 +2025,14 @@ class SampleAppViewModelTest {
             .returns(mockResponse)
 
         coEvery {
-            loyaltyAPIManager.getGames("0lMB0000000TW41MAG", false)
+            gameRemoteRepository.getGames(any(),"0lMB0000000TW41MAG", false)
         } returns Result.failure(RuntimeException())
 
 
-        gameViewModel.getGames(context, false)
+        gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
 
         coVerify {
-            loyaltyAPIManager.getGames(any(), any())
+            gameRemoteRepository.getGames(any(), any(), any())
         }
 
         Assert.assertEquals(

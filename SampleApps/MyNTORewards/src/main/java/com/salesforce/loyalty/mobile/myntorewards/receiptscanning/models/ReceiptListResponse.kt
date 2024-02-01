@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models
 
 import com.google.gson.annotations.SerializedName
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig.RECEIPT_NAMESPACE
 
 data class ReceiptListResponse(
     val done: Boolean,
@@ -15,30 +16,29 @@ data class Record(
     @SerializedName("Name")
     val name: String,
 
-    @SerializedName("PurchaseDate__c")
+    @SerializedName("${RECEIPT_NAMESPACE}__PurchaseDate__c")
     val purchase_date: String?,
 
-    @SerializedName("ReceiptID" +
-            "__c")
+    @SerializedName("${RECEIPT_NAMESPACE}__ReceiptID__c")
     val receipt_id: String,
 
-    @SerializedName("Status__c")
+    @SerializedName("${RECEIPT_NAMESPACE}__Status__c")
     val receipt_status: String,
 
-    @SerializedName("StoreName__c")
+    @SerializedName("${RECEIPT_NAMESPACE}__StoreName__c")
     val store_name: String,
 
-    @SerializedName("TotalAmount__c")
+    @SerializedName("${RECEIPT_NAMESPACE}__TotalAmount__c")
     val total_amount: String?,
 
-    @SerializedName("ImageUrl__c")
+    @SerializedName("${RECEIPT_NAMESPACE}__ImageUrl__c")
     val imageUrl: String?,
 
-    @SerializedName("APIResponse__c")
+    @SerializedName("${RECEIPT_NAMESPACE}__APIResponse__c")
     val processedAWSResponse: String?,
 
-    @SerializedName("TotalRewardPoints__c")
-    val total_points: Any,
+    @SerializedName("${RECEIPT_NAMESPACE}__TotalRewardPoints__c")
+    val total_points: Double?,
 
     @SerializedName("attributes")
     val attributes: Attributes

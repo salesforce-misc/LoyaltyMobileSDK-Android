@@ -197,7 +197,7 @@ class ScanningViewModel(private val receiptScanningManager: ReceiptScanningManag
                     Logger.d(TAG, "getReceiptStatus Success : $it")
                     val record = it.records.get(0)
                     status = record.receipt_status
-                    points = record.total_points?.toString()
+                    points = record.total_points?.let { String.format("%.2f", it) }
                 }.onFailure {
                     Logger.d(TAG, "getReceiptStatus failed: ${it.message}")
                     receiptStatusUpdateViewState.postValue(ReceiptStatusUpdateViewState.ReceiptStatusUpdateFailure)

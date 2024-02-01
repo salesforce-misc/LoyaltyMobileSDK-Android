@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -196,7 +198,7 @@ fun OpenBottomSheetContent(
     closeSheet: () -> Unit,
     model: OnBoardingViewModelAbstractInterface
 ) {
-
+    val activity = LocalContext.current as Activity
     when (bottomSheetType) {
         BottomSheetType.POPUP_LOGIN -> {
             LoginUI(
@@ -212,7 +214,13 @@ fun OpenBottomSheetContent(
         }
         BottomSheetType.SETTINGS -> {
             SettingsMain(
-                closeSheet = closeSheet
+                closeSheet = {
+                    /* Restart the activity after making changes to the connected app settings, so
+                    that the Retrofit instances gets re-initialized with the correct selected
+                    connected app setting.*/
+                    activity.finish();
+                    activity.startActivity(activity.getIntent());
+                }
             )
         }
         BottomSheetType.POPUP_SELF_REGISTER -> {
