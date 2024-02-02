@@ -38,9 +38,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMPTY_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.WHATSAPP_APP_PACKAGE
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.BaseViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.TEST_TAG_TITLE_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TEST_TAG_TEXT_FIELD_RIGHT_ICON
@@ -121,7 +119,7 @@ class MyReferralsScreenTest {
             onNodeWithText("Done").assertIsDisplayed()
 
             onNodeWithText("Refer Now").assertIsDisplayed().performClick()
-            //Thread.sleep(5000)
+
             onNodeWithText("Enter the email addresses of your friends…")
                 .performTextInput("akash.agrawal@salesforce.com")
 
@@ -134,7 +132,7 @@ class MyReferralsScreenTest {
             onNodeWithText("In Progress").assertIsDisplayed()
 
             onNodeWithText("Completed").assertIsDisplayed().performClick()
-            //Thread.sleep(5000)
+
             onNodeWithText("No Referrals").assertIsDisplayed()
             onNodeWithContentDescription("No Referrals").assertIsDisplayed()
             onNodeWithTag(TEST_TAG_EMPTY_VIEW).assertIsDisplayed()
@@ -230,7 +228,7 @@ class MyReferralsScreenTest {
 
             val facebookOpened: Boolean = facebook.clickAndWait(Until.newWindow(), 10000)
             assert(facebookOpened)
-         //   Thread.sleep(2000)
+
             uiDevice.pressBack()
 
 
@@ -291,7 +289,7 @@ fun getLocalAPIService(): ReferralsLocalApiService {
         ): Response<QueryResult<ReferralEnrollmentInfo>> {
 
             delay(2000)
-            val mockResponse = MockResponseFileReader("IsMemberEnrolled.json").content
+            val mockResponse = MockResponseFileReader("ReferralEnrollmentInfo.json").content
             val gson = Gson()
             var response= gson.fromJson(
                 mockResponse,

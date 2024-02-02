@@ -1,6 +1,5 @@
 package com.salesforce.referral.repository
 
-import android.util.Log
 import com.google.gson.Gson
 import com.salesforce.referral.EnrollmentChannel
 import com.salesforce.referral.MemberStatus
@@ -9,18 +8,9 @@ import com.salesforce.referral.TransactionalJournalStatementMethod
 import com.salesforce.referral.api.ApiResponse
 import com.salesforce.referral.api.ApiService
 import com.salesforce.referral.api.ReferralAPIConfig
-import com.salesforce.referral.api.ReferralAPIConfig.MEMBER_SHIP_RANDOM_NUMBER_COUNT
-import com.salesforce.referral.api.ReferralAPIConfig.getRequestUrl
-import com.salesforce.referral.api.safeApiCall
-import com.salesforce.referral.entities.AssociatedPersonAccountDetails
 import com.salesforce.referral.entities.ReferralEnrollmentResponse
 import com.salesforce.referral.entities.ReferralExistingEnrollmentRequest
-import com.salesforce.referral.entities.ReferralNewEnrollmentRequestBody
-import com.salesforce.referral.entities.referral_event.Emails
-import com.salesforce.referral.entities.referral_event.ReferralEventRequest
 import com.salesforce.referral.entities.referral_event.ReferralEventResponse
-import com.salesforce.referral.utils.getCurrentDateTime
-import com.salesforce.referral.utils.getRandomString
 import javax.inject.Inject
 
 /**
@@ -106,7 +96,7 @@ open class ReferralsRepository @Inject constructor(
         emails: List<String>
     ): ApiResponse<ReferralEventResponse> {
         val gson = Gson()
-        val mockResponse = MockResponseFileReader("reffered.json").content
+        val mockResponse = MockResponseFileReader("ReferralEventResponse.json").content
         var response= gson.fromJson(
             mockResponse,
             ReferralEventResponse::class.java

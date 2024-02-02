@@ -1,6 +1,5 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals
 
-import android.util.Log
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.MockResponseFileReader
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
@@ -12,10 +11,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.referral.api.ApiResponse
-import com.salesforce.referral.api.safeApiCall
 import kotlinx.coroutines.delay
-
-import javax.inject.Inject
 
 class ReferralsLocalRepository constructor(
     private val apiService: ReferralsLocalApiService,
@@ -34,7 +30,7 @@ class ReferralsLocalRepository constructor(
     suspend fun fetchReferralsInfo(contactId: String, promoCode: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
         //delay(1000)
         val gson = Gson()
-        val mockResponse = MockResponseFileReader("refferralData.json").content
+        val mockResponse = MockResponseFileReader("ReferralEntityResponse.json").content
 
         var response= gson.fromJson(
             mockResponse,
@@ -46,7 +42,7 @@ class ReferralsLocalRepository constructor(
 
     suspend fun checkIfMemberEnrolled(promoCode: String, memberId: String): ApiResponse<QueryResult<ReferralEnrollmentInfo>> {
         val gson = Gson()
-        val mockResponse = MockResponseFileReader("IsMemberEnrolled.json").content
+        val mockResponse = MockResponseFileReader("ReferralEnrollmentInfo.json").content
         var response= gson.fromJson(
             mockResponse,
             QueryResult::class.java
@@ -58,7 +54,7 @@ class ReferralsLocalRepository constructor(
 
     suspend fun fetchMemberReferralCode(contactId: String): ApiResponse<QueryResult<ReferralCode>> {
         val gson = Gson()
-        val mockResponse = MockResponseFileReader("IsMemberEnrolled.json").content
+        val mockResponse = MockResponseFileReader("ReferralEnrollmentInfo.json").content
         var response= gson.fromJson(
             mockResponse,
             QueryResult::class.java
