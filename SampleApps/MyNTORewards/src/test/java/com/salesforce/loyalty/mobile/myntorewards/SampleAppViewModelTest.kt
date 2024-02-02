@@ -1980,7 +1980,7 @@ class SampleAppViewModelTest {
         )
 
         Assert.assertEquals(
-            ReferFriendViewState.ReferFriendSendMailsFailed,
+            ReferFriendViewState.ReferFriendSendMailsFailed("Network Error"),
             referralViewState[1]
         )
 
