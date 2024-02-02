@@ -41,10 +41,10 @@ class MyReferralsViewModel @Inject constructor(
     instanceUrl: String
 ): BaseViewModel<MyReferralsViewState>() {
 
-    private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData(null)
+    private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData()
     val programState: LiveData<ReferralProgramType> = _programState
 
-    private val _viewState: MutableLiveData<ReferFriendViewState?> = MutableLiveData(null)
+    private val _viewState: MutableLiveData<ReferFriendViewState?> = MutableLiveData()
     val viewState: LiveData<ReferFriendViewState?> = _viewState
 
     var forceRefreshReferralsInfo = false
@@ -56,6 +56,7 @@ class MyReferralsViewModel @Inject constructor(
     fun onSignUpToReferClicked(email: String) {
         // TODO: Signup to Referral Program with mail id
         _programState.value = ReferralProgramType.JOIN_PROGRAM
+        //_programState.value = ReferralProgramType.JOIN_PROGRAM
     }
 
     fun startReferring() {
@@ -65,14 +66,15 @@ class MyReferralsViewModel @Inject constructor(
     fun sendReferralMail(context: Context, emails: List<String>) {
         _viewState.value = ReferFriendViewState.ReferFriendInProgress
         viewModelScope.launch {
-            when(repository.sendReferrals(referralCode(context), emails)) {
+            when(val result = repository.sendReferrals(referralCode(context), emails)) {
                 is ApiResponse.Success -> {
                     _viewState.value = ReferFriendViewState.ReferFriendSendMailsSuccess
                     forceRefreshReferralsInfo = true
                 }
-                else -> {
-                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed
+                is ApiResponse.Error -> {
+                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed(result.errorMessage)
                 }
+                ApiResponse.NetworkError -> _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed()
             }
         }
     }
@@ -193,7 +195,7 @@ class MyReferralsViewModel @Inject constructor(
         PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
     }
 
-    private suspend fun enrollNewCustomerAsAdvocateOfPromotion(
+     private suspend fun enrollNewCustomerAsAdvocateOfPromotion(
         promotionName: String, promotionCode: String, member: CommunityMemberModel?
     ): ApiResponse<ReferralEnrollmentResponse> {
         return repository.enrollNewCustomerAsAdvocateOfPromotion(

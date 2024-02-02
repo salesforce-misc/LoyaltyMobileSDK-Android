@@ -72,6 +72,7 @@ fun Context.shareReferralCode(content: String, shareType: ShareType) {
 
     when (shareType) {
         ShareType.FACEBOOK -> {
+            intent.type = INTENT_TYPE_IMAGE
             intent.setPackage(FACEBOOK_APP_PACKAGE)
         }
         ShareType.INSTAGRAM -> {

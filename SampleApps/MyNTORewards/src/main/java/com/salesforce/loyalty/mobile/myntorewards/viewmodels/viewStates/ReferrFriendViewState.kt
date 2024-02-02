@@ -5,6 +5,6 @@ sealed class ReferFriendViewState {
     object ReferFriendInProgress : ReferFriendViewState()
     object ReferFriendTryAgainInProgress : ReferFriendViewState()
     object ReferFriendSendMailsSuccess : ReferFriendViewState()
-    object ReferFriendSendMailsFailed : ReferFriendViewState()
+    data class ReferFriendSendMailsFailed(val errorMessage: String? = null) : ReferFriendViewState()
     object EnrollmentTaskFinished : ReferFriendViewState()
 }

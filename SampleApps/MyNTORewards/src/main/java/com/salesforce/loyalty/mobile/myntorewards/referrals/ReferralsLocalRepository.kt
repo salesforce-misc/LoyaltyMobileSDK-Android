@@ -62,7 +62,7 @@ class ReferralsLocalRepository @Inject constructor(
         "Bearer 00DB000000FX0aR!ARQAQLOe8NMiyzP592U1KwUYExvHtPps4i3YM5bMkr5AJ2w4zjuxs3anWZ5LK2.zOC_8QUXkAKnW2kSYe4uosfb7UGN6TFhQ"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, memberId: String) =
-        "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
+        "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMemberId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
 
     private fun memberReferralCodeQuery(contactId: String) =
         "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and ProgramId='$REFERRAL_PROGRAM_ID'"
