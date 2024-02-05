@@ -49,6 +49,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import kotlinx.coroutines.launch
@@ -335,8 +336,12 @@ fun PromotionItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                blurBG(BLUR_BG)
-                currentPromotionDetailPopupState = true
+                if (results.promotionName == "TemporaryReferralPromo9") {
+                    navCheckOutFlowController.navigate(MoreScreens.MyReferralsScreen.route)
+                } else {
+                    blurBG(BLUR_BG)
+                    currentPromotionDetailPopupState = true
+                }
             }
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .testTag(TEST_TAG_PROMO_ITEM),

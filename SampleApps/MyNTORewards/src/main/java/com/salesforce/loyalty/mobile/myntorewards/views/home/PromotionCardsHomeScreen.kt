@@ -37,6 +37,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
@@ -62,8 +63,12 @@ fun PromotionCard(
         modifier = Modifier
             .background(Color.White).testTag(TEST_TAG_PROMO_CARD)
             .clickable {
-                currentPromotionDetailPopupState = true
-                blurBG(BLUR_BG)
+                if (promoName == "TemporaryReferralPromo9") {
+                    navCheckOutFlowController.navigate(MoreScreens.MyReferralsScreen.route)
+                } else {
+                    currentPromotionDetailPopupState = true
+                    blurBG(BLUR_BG)
+                }
             }
     ) {
         Column(
