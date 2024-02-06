@@ -1,6 +1,7 @@
 package com.salesforce.referral.repository
 
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.myntorewards.MockResponseFileReader
 import com.salesforce.referral.EnrollmentChannel
 import com.salesforce.referral.MemberStatus
 import com.salesforce.referral.TransactionalJournalStatementFrequency
@@ -9,7 +10,6 @@ import com.salesforce.referral.api.ApiResponse
 import com.salesforce.referral.api.ApiService
 import com.salesforce.referral.api.ReferralAPIConfig
 import com.salesforce.referral.entities.ReferralEnrollmentResponse
-import com.salesforce.referral.entities.ReferralExistingEnrollmentRequest
 import com.salesforce.referral.entities.referral_event.ReferralEventResponse
 import javax.inject.Inject
 
@@ -77,13 +77,6 @@ open class ReferralsRepository @Inject constructor(
         ) as ReferralEnrollmentResponse
 
         return ApiResponse.Success(response)
-    }
-    private suspend fun enrollExistingAdvocateToNewPromotion(
-        promotionName: String,
-        promotionCode: String,
-        existingMemberRequest: ReferralExistingEnrollmentRequest
-    ) {
-
     }
 
     /**

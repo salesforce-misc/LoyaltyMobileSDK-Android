@@ -12,7 +12,3 @@ data class QueryResult<T>(
     @SerializedName("nextRecordsUrl")
     val nextRecordsUrl: String?
 )
-
-data class RecordList(
-    val records: List<ReferralEntity>? = mutableListOf()
-)
