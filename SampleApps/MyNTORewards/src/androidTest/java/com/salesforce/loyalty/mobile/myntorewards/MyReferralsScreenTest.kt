@@ -111,7 +111,7 @@ class MyReferralsScreenTest {
             onNodeWithText("Join Referral Program").assertIsDisplayed()
             onNodeWithText("Join our referral program and share your referral code with friends to get rewarded.").assertIsDisplayed()
             onNodeWithText("Join").assertIsDisplayed()
-            onNodeWithText("Back").assertIsDisplayed()
+            onNodeWithText("Cancel").assertIsDisplayed()
 
             onNodeWithText("Join").performClick()
             Thread.sleep(2000)
@@ -133,8 +133,8 @@ class MyReferralsScreenTest {
 
             onNodeWithText("Completed").assertIsDisplayed().performClick()
 
-            onNodeWithText("No Referrals").assertIsDisplayed()
-            onNodeWithContentDescription("No Referrals").assertIsDisplayed()
+            onNodeWithText("After you refer a friend, you’ll see it here.").assertIsDisplayed()
+            onNodeWithContentDescription("After you refer a friend, you’ll see it here.").assertIsDisplayed()
             onNodeWithTag(TEST_TAG_EMPTY_VIEW).assertIsDisplayed()
 
             onNodeWithText("In Progress").assertIsDisplayed().performClick()
@@ -143,7 +143,7 @@ class MyReferralsScreenTest {
             onNodeWithText("Recent").assertIsDisplayed()
 
             val inProgressList = onNodeWithTag(TEST_TAG_REFERRALS_LIST).onChildren()
-            inProgressList.assertCountEquals(5)
+            inProgressList.assertCountEquals(6)
             inProgressList.onFirst().assert(hasText("Recent"))
 
             inProgressList[1].assert(hasTestTag(TEST_TAG_REFERRALS_LIST_ITEM))

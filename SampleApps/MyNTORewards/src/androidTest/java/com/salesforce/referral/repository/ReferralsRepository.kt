@@ -2,6 +2,8 @@ package com.salesforce.referral.repository
 
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.MockResponseFileReader
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.referral.EnrollmentChannel
 import com.salesforce.referral.MemberStatus
 import com.salesforce.referral.TransactionalJournalStatementFrequency
@@ -34,13 +36,8 @@ open class ReferralsRepository @Inject constructor(
         transactionalJournalFrequency: TransactionalJournalStatementFrequency = TransactionalJournalStatementFrequency.MONTHLY,
         transactionalJournalMethod: TransactionalJournalStatementMethod = TransactionalJournalStatementMethod.EMAIL
     ): ApiResponse<ReferralEnrollmentResponse> {
-        val gson = Gson()
-        val mockResponse = MockResponseFileReader("memberEnrolledResponse.json").content
-        var response= gson.fromJson(
-            mockResponse,
-            ReferralEnrollmentResponse::class.java
-        ) as ReferralEnrollmentResponse
 
+        val response = mockResponse("memberEnrolledResponse.json", ReferralEnrollmentResponse::class.java) as ReferralEnrollmentResponse
         return ApiResponse.Success(response)
 
     }
@@ -51,13 +48,8 @@ open class ReferralsRepository @Inject constructor(
         membershipNumber: String,
         memberStatus: MemberStatus = MemberStatus.ACTIVE
     ): ApiResponse<ReferralEnrollmentResponse> {
-        val gson = Gson()
-        val mockResponse = MockResponseFileReader("memberEnrolledResponse.json").content
-        var response= gson.fromJson(
-            mockResponse,
-            ReferralEnrollmentResponse::class.java
-        ) as ReferralEnrollmentResponse
 
+        val response = mockResponse("memberEnrolledResponse.json", ReferralEnrollmentResponse::class.java) as ReferralEnrollmentResponse
         return ApiResponse.Success(response)
 
     }
@@ -69,13 +61,8 @@ open class ReferralsRepository @Inject constructor(
         contactId: String,
         memberStatus: MemberStatus = MemberStatus.ACTIVE
     ): ApiResponse<ReferralEnrollmentResponse> {
-        val gson = Gson()
-        val mockResponse = MockResponseFileReader("memberEnrolledResponse.json").content
-        var response= gson.fromJson(
-            mockResponse,
-            ReferralEnrollmentResponse::class.java
-        ) as ReferralEnrollmentResponse
 
+        val response = mockResponse("memberEnrolledResponse.json", ReferralEnrollmentResponse::class.java) as ReferralEnrollmentResponse
         return ApiResponse.Success(response)
     }
 
@@ -88,13 +75,8 @@ open class ReferralsRepository @Inject constructor(
         referralCode: String,
         emails: List<String>
     ): ApiResponse<ReferralEventResponse> {
-        val gson = Gson()
-        val mockResponse = MockResponseFileReader("ReferralEventResponse.json").content
-        var response= gson.fromJson(
-            mockResponse,
-            ReferralEventResponse::class.java
-        ) as ReferralEventResponse
 
+        val response = mockResponse("ReferralEventResponse.json", ReferralEventResponse::class.java) as ReferralEventResponse
         return ApiResponse.Success(response)
     }
 
@@ -103,5 +85,12 @@ open class ReferralsRepository @Inject constructor(
      */
     fun setInstanceUrl(instanceUrl: String) {
         ReferralAPIConfig.instanceUrl = instanceUrl
+    }
+
+    private fun mockResponse(fileName: String, java: Class<*>): Any {
+        val gson = Gson()
+        val mockResponse =
+            MockResponseFileReader(fileName).content
+        return gson.fromJson(mockResponse, java)
     }
 }

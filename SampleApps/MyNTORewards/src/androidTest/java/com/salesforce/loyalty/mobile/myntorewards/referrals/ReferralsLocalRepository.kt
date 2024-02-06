@@ -41,38 +41,22 @@ class ReferralsLocalRepository constructor(
     }
 
     suspend fun checkIfMemberEnrolled(promoCode: String, memberId: String): ApiResponse<QueryResult<ReferralEnrollmentInfo>> {
-        val gson = Gson()
-        val mockResponse = MockResponseFileReader("ReferralEnrollmentInfo.json").content
-        var response= gson.fromJson(
-            mockResponse,
-            QueryResult::class.java
-        ) as QueryResult<ReferralEnrollmentInfo>
 
+        val response = mockResponse("ReferralEnrollmentInfo.json", QueryResult::class.java) as QueryResult<ReferralEnrollmentInfo>
         delay(2000)
         return ApiResponse.Success(response)
+
     }
 
     suspend fun fetchMemberReferralCode(contactId: String): ApiResponse<QueryResult<ReferralCode>> {
-        val gson = Gson()
-        val mockResponse = MockResponseFileReader("ReferralEnrollmentInfo.json").content
-        var response= gson.fromJson(
-            mockResponse,
-            QueryResult::class.java
-        ) as QueryResult<ReferralCode>
+        val response = mockResponse("ReferralEnrollmentInfo.json", QueryResult::class.java) as QueryResult<ReferralCode>
         return ApiResponse.Success(response)
     }
 
-    private fun accessToken() =
-//        "Bearer ${forceAuthManager.getForceAuth()?.accessToken.orEmpty()}"
-        // TODO: Replace hard coded token
-        "Bearer 00DB000000FX0aR!ARQAQLOe8NMiyzP592U1KwUYExvHtPps4i3YM5bMkr5AJ2w4zjuxs3anWZ5LK2.zOC_8QUXkAKnW2kSYe4uosfb7UGN6TFhQ"
-
-    private fun memberEnrollmentStatusQuery(promoCode: String, memberId: String) =
-        "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMemberId=\'$memberId\' and Promotion.PromotionCode=\'$promoCode\'"
-
-    private fun memberReferralCodeQuery(contactId: String) =
-        "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and ProgramId='$REFERRAL_PROGRAM_ID'"
-
-    private fun referralListQuery(contactId: String, promoCode: String, durationInDays: Int) =
-        "SELECT ReferredPartyId, ReferralDate, CurrentPromotionStage.Type, TYPEOF ReferredParty WHEN Contact THEN Account.PersonEmail WHEN Account THEN PersonEmail END FROM Referral WHERE Promotion.PromotionCode=\'$promoCode\' and ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
+    private fun mockResponse(fileName: String, java: Class<*>): Any {
+        val gson = Gson()
+        val mockResponse =
+            MockResponseFileReader(fileName).content
+        return gson.fromJson(mockResponse, java)
+    }
 }
