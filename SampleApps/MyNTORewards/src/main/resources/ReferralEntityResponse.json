@@ -1,0 +1,368 @@
+{
+  "records": [
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTmQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzh7QAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzh7QAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmejAQAQ"
+          },
+          "PersonEmail": "sivap@xyz.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WPFQA2"
+      },
+      "ReferredPartyId": "0031Q00002jbzRIQAY",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzRIQAY"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmeW6QAI"
+          },
+          "PersonEmail": "sivanaganjaneyulu.polam@gmail.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WPKQA2"
+      },
+      "ReferredPartyId": "0031Q00002jbz7rQAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbz7rQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bme71QAA"
+          },
+          "PersonEmail": "sivanaganjaneyulumpolammmmmmmm@gmail.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WPPQA2"
+      },
+      "ReferredPartyId": "0031Q00002jbyy0QAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbyy0QAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmeQSQAY"
+          },
+          "PersonEmail": "mytestemail@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTcQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzgTQAQ",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzgTQAQ"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmeiCQAQ"
+          },
+          "PersonEmail": "siva@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WThQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzgYQAQ",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzgYQAQ"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmeiMQAQ"
+          },
+          "PersonEmail": "siva@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTwQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzhlQAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzhlQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmejoQAA"
+          },
+          "PersonEmail": "sp@xyz.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTrQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzhgQAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzhgQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmejjQAA"
+          },
+          "PersonEmail": "siva@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTsQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzhhQAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzhhQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmejkQAA"
+          },
+          "PersonEmail": "vasanth@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTtQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzhiQAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzhiQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmejlQAA"
+          },
+          "PersonEmail": "leon@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTuQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzhjQAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzhjQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmejmQAA"
+          },
+          "PersonEmail": "nirupama@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WTvQAM"
+      },
+      "ReferredPartyId": "0031Q00002jbzhkQAA",
+      "ReferralDate": "2024-01-25",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbzhkQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmejnQAA"
+          },
+          "PersonEmail": "damodaram@test.com"
+        }
+      }
+    },
+    {
+      "attributes": {
+        "type": "Referral",
+        "url": "/services/data/v59.0/sobjects/Referral/0wi1Q0000008WKOQA2"
+      },
+      "ReferredPartyId": "0031Q00002jbxreQAA",
+      "ReferralDate": "2024-01-24",
+      "CurrentPromotionStage": {
+        "attributes": {
+          "type": "PromotionStage",
+          "url": "/services/data/v59.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+        },
+        "Type": "Advocate Refers Friend"
+      },
+      "ReferredParty": {
+        "attributes": {
+          "type": "Contact",
+          "url": "/services/data/v59.0/sobjects/Contact/0031Q00002jbxreQAA"
+        },
+        "Account": {
+          "attributes": {
+            "type": "Account",
+            "url": "/services/data/v59.0/sobjects/Account/0011Q00002bmcOPQAY"
+          },
+          "PersonEmail": "pnaganjaneyulu@salesforce.com"
+        }
+      }
+    }
+  ]
+}
