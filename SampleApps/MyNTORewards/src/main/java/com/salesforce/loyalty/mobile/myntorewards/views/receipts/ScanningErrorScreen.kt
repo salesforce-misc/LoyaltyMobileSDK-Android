@@ -33,7 +33,8 @@ fun ErrorPopup(
     errorMessage: String,
     textButtonClicked: () -> Unit,
     tryAgainClicked: () -> Unit,
-    textButton:String= ""
+    textButton:String= "",
+    tryAgainButtonText: String = stringResource(id = R.string.button_try_again)
 ) {
     Column(
         modifier = Modifier
@@ -89,7 +90,7 @@ fun ErrorPopup(
 
             ) {
                 Text(
-                    text = stringResource(id = R.string.button_try_again),
+                    text = tryAgainButtonText,
                     fontFamily = font_sf_pro,
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
