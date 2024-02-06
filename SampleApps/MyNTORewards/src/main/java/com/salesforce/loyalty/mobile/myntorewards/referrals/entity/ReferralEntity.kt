@@ -3,12 +3,6 @@ package com.salesforce.loyalty.mobile.myntorewards.referrals.entity
 import com.google.gson.annotations.SerializedName
 
 data class ReferralEntity(
-    @SerializedName("attributes")
-    val attributes: Attributes?,
-    @SerializedName("ClientEmail")
-    val clientEmail: String?,
-    @SerializedName("ReferrerEmail")
-    val referrerEmail: String?,
     @SerializedName("ReferralDate")
     val referralDate: String?,
     @SerializedName("CurrentPromotionStage")
@@ -30,11 +24,4 @@ data class ReferredParty(
 data class ReferredAccount(
     @SerializedName("PersonEmail")
     val personEmail: String?
-)
-
-data class Attributes(
-    @SerializedName("type")
-    val type: String?,
-    @SerializedName("url")
-    val url: String?
 )

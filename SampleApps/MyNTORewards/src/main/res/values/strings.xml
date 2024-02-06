@@ -315,9 +315,10 @@
     <string name="join_referral_program_description">Join our referral program and share your referral code with friends to get rewarded.</string>
     <string name="failed_try_again">We couldn’t send an invitation email to your referred friends. Try again.</string>
     <string name="emails_sent_successfully">An invitation email was sent to your friends with your referral link.</string>
-    <string name="enrolment_not_processed_message">We couldn’t send an invitation email to your friends. Try again.</string>
+    <string name="enrolment_not_processed_message">We couldn’t enroll you as a member of the referral program. Try joining again.</string>
     <string name="no_referrals_label">After you refer a friend, you’ll see it here.</string>
     <string name="invalid_email_error_message">Something doesn\'t look right with one of the email addresses.</string>
+    <string name="join_referral_program_button_text">Join Referral Program</string>
     <!-- My Referrals Strings End -->
 
     <string name="text_go_to_voucher_section">Go to Vouchers</string>

@@ -87,6 +87,7 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, backAction: () -> Boolean
         when(it) {
             is ERROR -> ErrorPopup(
                 it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                tryAgainButtonText = stringResource(id = R.string.join_referral_program_button_text),
                 tryAgainClicked = { viewModel.enrollToReferralPromotion(context, true) },
                 textButtonClicked = {  }
             )
