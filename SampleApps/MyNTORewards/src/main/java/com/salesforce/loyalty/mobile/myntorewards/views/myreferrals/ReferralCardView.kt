@@ -16,16 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple80
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple90
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextLargeBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmallBold
+import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.HtmlText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 import com.salesforce.loyalty.mobile.myntorewards.views.components.SecondaryButton
@@ -46,6 +49,7 @@ fun ReferralCard(referralsInfo: List<Pair<Int, String>>, recentDuration: String,
         HtmlText(
             text = stringResource(R.string.my_referral_card_header, recentDuration),
             textColor = VibrantPurple80,
+            size = 12f,
             modifier = Modifier.constrainAs(headerText) {
                 width = Dimension.fillToConstraints
                 top.linkTo(parent.top)
@@ -125,7 +129,15 @@ fun ReferralCard(referralsInfo: List<Pair<Int, String>>, recentDuration: String,
 fun CategoryCount(header: String, value: String, modifier: Modifier) {
     Column (modifier = modifier) {
         BodyTextSmallBold(text = header, color = VibrantPurple80)
-        BodyTextLargeBold(text = value, color = Color.White)
+        // Below text style removes the default extra space around the Text.
+        CommonText(text = value, color = Color.White, fontSize = 18.sp,
+            style = TextStyle(
+            platformStyle = PlatformTextStyle(includeFontPadding = false),
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Top,
+                trim = LineHeightStyle.Trim.None
+            ))
+        )
     }
 }
 

@@ -17,14 +17,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils.formatDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmallBold
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
 import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
@@ -80,8 +80,10 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
             }.padding(end = 8.dp)
         )
 
-        BodyTextSmallBold(
+        CommonText(
             text = mail,
+            fontSize = 13.sp,
+            color = LighterBlack,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.constrainAs(mailView) {
@@ -89,8 +91,9 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
             }
         )
 
-        BodyTextSmall(
+        CommonText(
             text = formatDate(LocalContext.current, duration),
+            fontSize = 13.sp,
             color = TextDarkGray,
             modifier = Modifier.constrainAs(durationView) {
                 start.linkTo(statusIcon.end)
@@ -98,8 +101,9 @@ fun ReferralsListItem(mail: String, duration: String, purchaseStatus: ReferralSt
             }
         )
 
-        BodyTextSmall(
+        CommonText(
             text = stringResource(id = purchaseStatus.content),
+            fontSize = 13.sp,
             color = purchaseStatus.contentColor,
             modifier = Modifier.constrainAs(statusText) {
                 end.linkTo(parent.end)

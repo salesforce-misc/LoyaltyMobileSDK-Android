@@ -4,6 +4,7 @@ import android.text.method.LinkMovementMethod
 import android.view.Gravity
 import android.widget.TextView
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import java.time.format.TextStyle
 
 /**
  * This file has all Text Views related Composables with different shapes/styles.
@@ -70,7 +72,8 @@ fun CommonText(
     textAlign: TextAlign = TextAlign.Start,
     fontWeight: FontWeight = FontWeight.Normal,
     maxLines: Int = Int.MAX_VALUE,
-    overflow: TextOverflow = TextOverflow.Clip
+    overflow: TextOverflow = TextOverflow.Clip,
+    style: androidx.compose.ui.text.TextStyle = LocalTextStyle.current
 ) {
     Text(
         text = text,
@@ -81,7 +84,8 @@ fun CommonText(
         textAlign = textAlign,
         fontWeight = fontWeight,
         maxLines = maxLines,
-        overflow = overflow
+        overflow = overflow,
+        style = style
     )
 }
 

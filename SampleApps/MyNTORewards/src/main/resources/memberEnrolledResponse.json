@@ -1,0 +1,18 @@
+{
+  "contactId": "003B000000N6SUi",
+  "memberId": "0lM1Q000000L51l",
+  "membershipNumber": "2BYEMSGU",
+  "programName": "Referral Program",
+  "promotionReferralCode": "2BYEMSGU-TEMPRP9",
+  "transactionJournals": [
+    {
+      "activityDate": "2024-01-30T17:41:25.000Z",
+      "journalSubType": "Advocate Enrollment",
+      "journalType": "Referral",
+      "membershipNumber": "2BYEMSGU",
+      "programName": "Referral Program",
+      "status": "Processed",
+      "transactionJournalId": "0lV1Q000000Chea"
+    }
+  ]
+}

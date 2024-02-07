@@ -224,6 +224,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
     val context: Context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
     Spacer(modifier = Modifier.height(12.dp))
+    val totalPoints = receipt.total_points?.let { String.format("%.2f", it) }
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -242,7 +243,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                 )
                 navController.currentBackStackEntry?.arguments?.putString(
                     KEY_RECEIPT_TOTAL_POINTS,
-                    receipt.total_points?.toString()
+                    totalPoints
                 )
                 navController.currentBackStackEntry?.arguments?.putString(
                     KEY_PURCHASE_DATE,
@@ -264,9 +265,9 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
             }
     ) {
         Column(modifier = Modifier.weight(0.65f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-
+            val receiptId = receipt.receipt_id ?: ""
             Text(
-                text = stringResource(R.string.field_receipt_number) + " " + receipt.receipt_id,
+                text = stringResource(R.string.field_receipt_number) + " " + receiptId,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
@@ -274,10 +275,11 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
             )
 
             Text(
-                text = stringResource(R.string.field_date) + " " + (receipt.purchase_date?.let {
+                text = receipt.purchase_date?.let {
                     formatReceiptListAPIDate(
-                        it, context)
-                } ?: ""),
+                        it, context
+                    )
+                } ?: "",
                 fontFamily = font_sf_pro,
                 color = Color.Black,
                 textAlign = TextAlign.Start,
@@ -300,8 +302,7 @@ fun ReceiptItem(receipt: Record, navController: NavHostController, scanningViewM
                 fontSize = 13.sp,
                 modifier = Modifier
             )
-
-            ReceiptStatusText(receipt.total_points?.toString(), receipt.receipt_status)
+            ReceiptStatusText(totalPoints, receipt.receipt_status)
 
         }
     }

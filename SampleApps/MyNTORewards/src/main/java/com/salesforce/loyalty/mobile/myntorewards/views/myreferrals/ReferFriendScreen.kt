@@ -49,6 +49,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextLightGray
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
 import com.salesforce.loyalty.mobile.myntorewards.utilities.shareReferralCode
@@ -142,7 +143,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
             if (referralProgramType == START_REFERRING) {
                 RoundedIconButton(
                     onClick = { closeAction() },
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    modifier = Modifier.align(Alignment.TopEnd).testTag(TEST_TAG_CLOSE_REFER_POPUP)
                 )
             }
         }
