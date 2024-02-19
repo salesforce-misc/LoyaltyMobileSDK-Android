@@ -8,6 +8,7 @@
 package com.salesforce.loyalty.mobile.sources.loyaltyAPI
 
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyConfig.HEADER_SFORCE_OPTION_Value
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -57,6 +58,7 @@ class UnauthorizedInterceptor(auth: ForceAuthenticator) : Interceptor {
         val bearerTokenValue = BEARER_HEADER + accessToken
         return request.newBuilder()
             .addHeader(LoyaltyConfig.HEADER_AUTHORIZATION, bearerTokenValue)
+            .addHeader(LoyaltyConfig.HEADER_SFORCE_OPTION_KEY, HEADER_SFORCE_OPTION_Value)
             .build()
     }
 }
