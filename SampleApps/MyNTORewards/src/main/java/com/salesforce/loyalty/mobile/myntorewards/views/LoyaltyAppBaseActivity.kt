@@ -7,13 +7,13 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.ReceiptScanningManager
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
@@ -24,11 +24,15 @@ import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 //Main Activity Application Entry Point
 @AndroidEntryPoint
 class LoyaltyAppBaseActivity : ComponentActivity() {
     private val TAG = LoyaltyAppBaseActivity::class.java.simpleName
+
+    @Inject
+    lateinit var referralsLocalRepository: ReferralsLocalRepository
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +66,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                 MembershipProfileViewModel::class.java
             )
         val promotionModel: MyPromotionViewModel =
-            ViewModelProvider(this, MyPromotionViewModelFactory(loyaltyAPIManager)).get(
+            ViewModelProvider(this, MyPromotionViewModelFactory(loyaltyAPIManager, referralsLocalRepository)).get(
                 MyPromotionViewModel::class.java
             )
         val voucherModel: VoucherViewModel = ViewModelProvider(
@@ -149,6 +153,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         forceAuthManager.authenticationStatusLiveData.observe(this) { status ->
             if (ForceAuthManager.AuthenticationStatus.UNAUTHENTICATED == status) {
                 Logger.d(TAG, "observeSessionExpiry() status: $status")
+//                referralsLocalRepository.clearReferralsData()
                 model.logoutAndClearAllSettingsAfterSessionExpiry(applicationContext)
             }
         }

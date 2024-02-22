@@ -18,7 +18,7 @@ class AppConstants {
         const val KEY_COMMUNITY_MEMBER = "community_member_details"
         const val KEY_EMAIL = "email"
         const val KEY_PHONE = "Phone"
-        const val KEY_PROMOTION_REFERRAL_CODE = "promotion_referral_code"
+        const val KEY_MEMBER_REFERRAL_CODE = "member_referral_code"
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"

@@ -1,6 +1,11 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.components
 
+import android.text.Html
+import android.text.Spannable
+import android.text.TextPaint
 import android.text.method.LinkMovementMethod
+import android.text.style.URLSpan
+import android.text.style.UnderlineSpan
 import android.view.Gravity
 import android.widget.TextView
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourViewSizeChart
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-import java.time.format.TextStyle
+
 
 /**
  * This file has all Text Views related Composables with different shapes/styles.
@@ -103,7 +109,19 @@ fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, te
                 movementMethod = LinkMovementMethod.getInstance()
             }
         },
-        update = { it.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT) }
+        update = {
+            val s = Html.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT) as Spannable
+            for (u in s.getSpans(0, s.length, URLSpan::class.java)) {
+                s.setSpan(object : UnderlineSpan() {
+                    override fun updateDrawState(tp: TextPaint) {
+                        tp.isUnderlineText = false
+                    }
+                }, s.getSpanStart(u), s.getSpanEnd(u), 0)
+            }
+//            textView.setText(s)
+            it.text = s
+            it.setLinkTextColor(ColourViewSizeChart.toArgb())
+        }
     )
 }
 

@@ -10,6 +10,7 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthEncrypte
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConfig
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConnectedAppEncryptedPreference
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_COMMUNITY_MEMBER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_LOGIN_SUCCESSFUL
@@ -140,6 +141,7 @@ open class OnboardingScreenViewModel(
             // clear Shared Preferences
             ForceAuthEncryptedPreference.clearAll(context)
             PrefHelper.clearAll(context)
+            ReferralsLocalRepository.clearReferralsData()
 
             //clear cache
             LocalFileManager.clearAllFolders(context)
@@ -154,6 +156,7 @@ open class OnboardingScreenViewModel(
             // clear Shared Preferences
             ForceAuthEncryptedPreference.clearAll(context)
             PrefHelper.clearAll(context)
+            ReferralsLocalRepository.clearReferralsData()
 
             //clear cache
             LocalFileManager.clearAllFolders(context)

@@ -37,13 +37,11 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferr
 import com.salesforce.loyalty.mobile.myntorewards.views.TitleView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CircularProgress
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BottomSheetCustomState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
@@ -53,30 +51,31 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
     val context = LocalContext.current
     val referralProgramJoined = PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED, false]
     LaunchedEffect(key1 = true) {
-        if (referralProgramJoined == true) {
-            viewModel.fetchReferralsInfo(context)
-        } else {
+//        if (viewModel.getReferralStatus().second) {
+//            viewModel.fetchReferralsInfo(context)
+//        } else {
             viewModel.fetchReferralProgramStatus(context)
-        }
+//        }
     }
 
 
-    programState?.let {
+    /*programState?.let {
         LaunchedEffect(key1 = true) {
             if (it == ReferralProgramType.JOIN_PROGRAM) {
                 showBottomSheet(true)
                 showBottomBar(false)
             }
         }
-    }
+    }*/
 
     viewState?.let {
         when(it) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
                 MyReferralsScreenView(it.uiState) {
+//                    viewModel.setDefaultPromotion()
                     showBottomSheet(true)
                     showBottomBar(false)
-                    viewModel.startReferring()
+//                    viewModel.startReferring()
                 }
             }
 
@@ -91,6 +90,31 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
                 CircularProgress()
             }
+
+            is MyReferralsViewState.MyReferralsPromotionEnrolled -> {
+                viewModel.fetchReferralsInfo(context)
+            }
+
+            is MyReferralsViewState.MyReferralsPromotionNotEnrolled -> {
+                /*MyReferralsScreenView(it.uiState) {
+                    viewModel.onSignUpToReferClicked("")
+                    showBottomSheet(true)
+                    showBottomBar(false)
+                }*/
+                viewModel.fetchReferralsInfo(context)
+            }
+
+            is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
+                ErrorPopup(
+                    it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                    tryAgainClicked = { viewModel.fetchReferralProgramStatus(context) },
+                    textButtonClicked = {  }
+                )
+            }
+
+            is MyReferralsViewState.PromotionReferralApiStatusFailure -> TODO()
+            MyReferralsViewState.PromotionStateNonReferral -> TODO()
+            is MyReferralsViewState.PromotionStateReferral -> TODO()
         }
     }
 }
@@ -166,7 +190,8 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            ReferFriendScreen(viewModel, backAction = backAction) {
+            val promotionDetails = viewModel.fetchDefaultPromotionDetails(context)
+            ReferFriendScreen(viewModel, promotionDetails = promotionDetails, backAction = backAction) {
                 if (viewModel.programState.value!! == ReferralProgramType.START_REFERRING
                     && viewModel.forceRefreshReferralsInfo) {
                     viewModel.fetchReferralsInfo(context)
