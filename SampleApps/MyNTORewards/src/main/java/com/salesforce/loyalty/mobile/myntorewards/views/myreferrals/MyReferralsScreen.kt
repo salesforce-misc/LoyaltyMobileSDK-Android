@@ -40,42 +40,22 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrolla
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
-import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import kotlinx.coroutines.launch
 
 @Composable
 fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) -> Unit, showBottomSheet: (Boolean) -> Unit) {
     val viewState by viewModel.uiState.observeAsState(null)
-    val programState by viewModel.programState.observeAsState()
     val context = LocalContext.current
-    val referralProgramJoined = PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED, false]
     LaunchedEffect(key1 = true) {
-//        if (viewModel.getReferralStatus().second) {
-//            viewModel.fetchReferralsInfo(context)
-//        } else {
-            viewModel.fetchReferralProgramStatus(context)
-//        }
+        viewModel.fetchReferralProgramStatus(context)
     }
-
-
-    /*programState?.let {
-        LaunchedEffect(key1 = true) {
-            if (it == ReferralProgramType.JOIN_PROGRAM) {
-                showBottomSheet(true)
-                showBottomBar(false)
-            }
-        }
-    }*/
 
     viewState?.let {
         when(it) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
                 MyReferralsScreenView(it.uiState) {
-//                    viewModel.setDefaultPromotion()
                     showBottomSheet(true)
                     showBottomBar(false)
-//                    viewModel.startReferring()
                 }
             }
 
@@ -96,11 +76,6 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
             }
 
             is MyReferralsViewState.MyReferralsPromotionNotEnrolled -> {
-                /*MyReferralsScreenView(it.uiState) {
-                    viewModel.onSignUpToReferClicked("")
-                    showBottomSheet(true)
-                    showBottomBar(false)
-                }*/
                 viewModel.fetchReferralsInfo(context)
             }
 
@@ -112,9 +87,15 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
                 )
             }
 
-            is MyReferralsViewState.PromotionReferralApiStatusFailure -> TODO()
-            MyReferralsViewState.PromotionStateNonReferral -> TODO()
-            is MyReferralsViewState.PromotionStateReferral -> TODO()
+            is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
+                // Do nothing
+            }
+            MyReferralsViewState.PromotionStateNonReferral -> {
+                // Do nothing
+            }
+            is MyReferralsViewState.PromotionStateReferral -> {
+                // Do nothing
+            }
         }
     }
 }

@@ -118,7 +118,6 @@ fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, te
                     }
                 }, s.getSpanStart(u), s.getSpanEnd(u), 0)
             }
-//            textView.setText(s)
             it.text = s
             it.setLinkTextColor(ColourViewSizeChart.toArgb())
         }

@@ -164,8 +164,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
             }
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
-            MyReferralsListScreen(backAction =
-            {
+            MyReferralsListScreen(backAction = {
                 navCheckOutFlowController.popBackStack()
             }) {
                 showBottomBar(it)
@@ -258,10 +257,8 @@ fun PromotionScreenAndCheckOutFlowNavigation(
             }
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
-            MyReferralsListScreen(backAction =
-            {
+            MyReferralsListScreen(backAction = {
                 navCheckOutFlowController.popBackStack()
-
             }) {
                 showBottomBar(it)
             }

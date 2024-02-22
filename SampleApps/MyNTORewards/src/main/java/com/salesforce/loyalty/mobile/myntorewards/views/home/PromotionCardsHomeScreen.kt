@@ -62,25 +62,15 @@ fun PromotionCard(
     var promotionEnrollmentRqr = membershipPromo?.get(page)?.promotionEnrollmentRqr ?: false
     var memberEligibilityCategory = membershipPromo?.get(page)?.memberEligibilityCategory ?: ""
     val context: Context = LocalContext.current
-    val promotionClickState by promotionViewModel.promotionClickState.observeAsState()
-    var currentReferralPromotionPopupState by remember { mutableStateOf(false) }
 
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
-            .background(Color.White)
-            .testTag(TEST_TAG_PROMO_CARD)
+            .background(Color.White).testTag(TEST_TAG_PROMO_CARD)
             .clickable {
-                if (membershipPromo?.get(page)?.promotionId != null) {
-                    /*promotionViewModel.checkIfGivenPromotionIsReferralAndEnrolled(
-                        context,
-                        membershipPromo.get(page)?.promotionId!!
-                    )
-                } else {*/
-                    currentPromotionDetailPopupState = true
-                    blurBG(BLUR_BG)
-                }
+                currentPromotionDetailPopupState = true
+                blurBG(BLUR_BG)
             }
     ) {
         Column(
@@ -97,7 +87,6 @@ fun PromotionCard(
                     modifier = Modifier
                         .size(289.dp, 154.dp)
                         .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop,
                 )
 
                 membershipPromo?.get(page)?.promotionImageUrl?.let {
@@ -113,7 +102,7 @@ fun PromotionCard(
                     }
                 } ?: Image(
                     painter = painterResource(R.drawable.bg_refer_friend_banner),
-                    contentDescription = stringResource(com.salesforce.loyalty.mobile.MyNTORewards.R.string.cd_onboard_screen_bottom_fade),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                     modifier = Modifier
                         .size(289.dp, 154.dp)
                         .clip(RoundedCornerShape(10.dp)),
@@ -200,71 +189,8 @@ fun PromotionCard(
                 blurBG(NO_BLUR_BG)
                 referralViewModel.clearState()
             }
-
-
-            /*PromotionEnrollPopup(
-                it,
-                closePopup = {
-                    currentPromotionDetailPopupState = false
-                    blurBG(NO_BLUR_BG)
-                    promotionViewModel.hideSheet()
-                },
-                navCheckOutFlowController,
-                promotionViewModel
-            )*/
         }
     }
-
-    /*if (currentReferralPromotionPopupState) {
-        ShowReferralSheet(isEnrolled = it.isUserEnrolledToReferralPromotion) {
-            currentPromotionDetailPopupState = false
-            blurBG(NO_BLUR_BG)
-        }
-    }*/
-
-
-
-
-
-    /*promotionClickState?.let {
-        when(it) {
-            is PromotionClickState.PromotionReferralApiStatusInProgress -> ProgressDialogComposable { }
-            is PromotionClickState.PromotionStateReferralHideSheet ->  {
-                blurBG(NO_BLUR_BG)
-            }
-            is PromotionClickState.PromotionStateReferral -> {
-                ShowReferralSheet(promoCode = it.promotionCode, isEnrolled = it.isUserEnrolledToReferralPromotion) {
-                    promotionViewModel.hideSheet()
-//                    currentPromotionDetailPopupState = false
-//                    blurBG(NO_BLUR_BG)
-                }
-            }
-            is PromotionClickState.PromotionReferralApiStatusFailure -> ErrorPopup(
-                it.error ?: stringResource(id = R.string.receipt_scanning_error_desc),
-                tryAgainClicked = {  },
-                textButtonClicked = {  }
-            )
-
-            is PromotionClickState.PromotionStateNonReferral -> {
-                currentPromotionDetailPopupState = true
-                blurBG(BLUR_BG)
-            }
-        }
-    }*/
-}
-
-@Composable
-fun ShowReferralSheet(viewModel: MyReferralsViewModel, promotionDetails: Results, closePopup: () -> Unit) {
-//    Popup(
-//        alignment = Alignment.Center,
-//        offset = IntOffset(0, 800),
-//        onDismissRequest = { closePopup() },
-//        properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = false),
-//    ) {
-        ReferFriendScreen(viewModel, promotionDetails = promotionDetails, backAction = closePopup) {
-            closePopup()
-        }
-//    }
 }
 
 @Composable

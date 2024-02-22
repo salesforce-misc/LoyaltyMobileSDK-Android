@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -20,7 +19,6 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionClickState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferFriendViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType
@@ -51,9 +49,6 @@ class MyReferralsViewModel @Inject constructor(
     private val _viewState: MutableLiveData<ReferFriendViewState?> = MutableLiveData()
     val viewState: LiveData<ReferFriendViewState?> = _viewState
 
-    private val clickState = MutableLiveData<PromotionClickState>()
-    val promotionClickState: LiveData<PromotionClickState> = clickState
-
     var forceRefreshReferralsInfo = false
     private var promotionCode: String = REFERRAL_PROMO_CODE
 
@@ -62,9 +57,7 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun onSignUpToReferClicked(email: String) {
-        // TODO: Signup to Referral Program with mail id
         _programState.value = ReferralProgramType.JOIN_PROGRAM
-        //_programState.value = ReferralProgramType.JOIN_PROGRAM
     }
 
     fun startReferring() {
@@ -92,8 +85,6 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun fetchReferralProgramStatus(context: Context) {
-        Log.e("ReferralViewModel", "fetchReferralProgramStatus")
-
         if (referralCode(context).isNullOrEmpty()) {
             fetchReferralAndPromotionCode(context)
         }
@@ -107,16 +98,12 @@ class MyReferralsViewModel @Inject constructor(
                     // If data is available that indicates, user is already enrolled to the given Promotion
                     updateReferralEnrollmentStatusInPreferences(context, isEnrolled = data.isNotEmpty())
                     if (data.isNotEmpty()) {
-//                        clickState.postValue(PromotionClickState.PromotionStateReferral(data.isNotEmpty(), promotionCode))
                         _programState.value = ReferralProgramType.START_REFERRING
                         uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionEnrolled)
-//                        fetchReferralsInfo(context)
                     } else {
-//                        uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(null)))
                         _programState.value = ReferralProgramType.JOIN_PROGRAM
                         uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionNotEnrolled(successState(null)))
                     }
-
                 }
                 is ApiResponse.Error -> {
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionStatusFailure(result.errorMessage))
@@ -127,13 +114,10 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun fetchReferralsInfo(context: Context) {
-        /*if (localRepository.referralCode(context, promotionCode).isNullOrEmpty()) {
-            fetchReferralAndPromotionCode(context)
-        }*/
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             val member = getMember(context)
-            when(val result = localRepository.fetchReferralsInfo(member?.contactId.orEmpty(), REFERRAL_PROMO_CODE, REFERRAL_DURATION)) {
+            when(val result = localRepository.fetchReferralsInfo(member?.contactId.orEmpty(), REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
                     val data: List<ReferralEntity>? = result.data.records
                     Logger.d("Success", "$data")
@@ -213,10 +197,7 @@ class MyReferralsViewModel @Inject constructor(
 
     private fun updateReferralEnrollmentStatusInPreferences(context: Context, isReferralPromotion: Boolean = true, isEnrolled: Boolean = false) {
         localRepository.setReferralStatus(promotionCode, isReferralPromotion = isReferralPromotion, isEnrolled = isEnrolled)
-//        PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
     }
-
-    fun getReferralStatus() = localRepository.getReferralStatus(promotionCode)
 
      private suspend fun enrollNewCustomerAsAdvocateOfPromotion(
         promotionName: String, promotionCode: String, member: CommunityMemberModel?
@@ -278,12 +259,13 @@ class MyReferralsViewModel @Inject constructor(
             .set(AppConstants.KEY_MEMBER_REFERRAL_CODE, memberReferralCode)
     }
 
+    /**
+     * Check if Promotion status is already loaded and available in cache other wise maki API call
+     */
     fun checkIfGivenPromotionIsInCache(context: Context, promotionId: String) {
-        Log.e("ReferralViewModel", "checkIfGivenPromotionIsInCache")
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         val promoCodeFromCache = localRepository.getPromoCodeFromCache(promotionId)
         setPromoCode(promoCodeFromCache)
-        Log.e("ReferralViewModel", "$promotionId-$promoCodeFromCache")
 
         if (promoCodeFromCache != null) {
             val (isReferral, isEnrolled) = localRepository.getReferralStatus(promoCodeFromCache)
@@ -304,24 +286,16 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun checkIfGivenPromotionIsReferralAndEnrolled(context: Context, promotionId: String) {
-        Log.e("ReferralViewModel", "checkIfGivenPromotionIsReferralAndEnrolled")
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             when(val result = localRepository.checkIfGivenPromotionIsReferralAndEnrolled(promotionId)) {
                 is ApiResponse.Success -> {
                     val records = result.data.records
-//                    val promotionInfo = records?.firstOrNull()?.promotion
-//                    val isUserEnrolled = records?.any { it.loyaltyProgramMember?.contactId == contactId }
-
                     val promoDetails = records?.firstOrNull()
                     localRepository.setPromoCode(promotionId, promoDetails?.promotionCode.orEmpty())
                     setPromoCode(promoDetails?.promotionCode.orEmpty())
                     if (promoDetails?.isReferralPromotion == true) {
-                        /*if (localRepository.referralCode(context, promoDetails.promotionCode.orEmpty()).isNullOrEmpty()) {
-                            fetchReferralAndPromotionCode(context)
-                        }*/
                         fetchReferralProgramStatus(context)
-//                        uiMutableState.postValue(MyReferralsViewState.PromotionStateReferral(null, promoDetails.promotionCode))
                     } else {
                         updateReferralEnrollmentStatusInPreferences(context, isReferralPromotion = false)
                         uiMutableState.postValue(MyReferralsViewState.PromotionStateNonReferral)
@@ -335,13 +309,9 @@ class MyReferralsViewModel @Inject constructor(
         }
     }
 
-    fun fetchDefaultPromotionDetails(context: Context, ): Results? {
+    fun fetchDefaultPromotionDetails(context: Context): Results? {
         val member = getMember(context)
         return localRepository.getDefaultPromotionDetailsFromCache(context = context, member?.membershipNumber.orEmpty(), REFERRAL_PROMO_ID)
-    }
-
-    fun hideSheet() {
-        clickState.postValue(PromotionClickState.PromotionStateReferralHideSheet)
     }
 
     private fun setPromoCode(promoCode: String?) {
@@ -350,9 +320,5 @@ class MyReferralsViewModel @Inject constructor(
 
     fun clearState() {
         uiMutableState.value = null
-    }
-
-    fun setDefaultPromotion() {
-        promotionCode = REFERRAL_PROMO_CODE
     }
 }

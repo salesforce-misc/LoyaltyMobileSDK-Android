@@ -6,31 +6,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
-import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionClickState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
-import com.salesforce.referral.api.ApiResponse
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MyPromotionViewModel @Inject constructor(val loyaltyAPIManager: LoyaltyAPIManager, val referralsLocalRepository: ReferralsLocalRepository) : ViewModel(), MyPromotionViewModelInterface {
+class MyPromotionViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : ViewModel(), MyPromotionViewModelInterface {
 
     private val TAG = MyPromotionViewModel::class.java.simpleName
-
-//    @Inject
-//    lateinit var referralsLocalRepository: ReferralsLocalRepository
 
     override val membershipPromotionLiveData: LiveData<PromotionsResponse>
         get() = membershipPromo
@@ -46,10 +35,6 @@ class MyPromotionViewModel @Inject constructor(val loyaltyAPIManager: LoyaltyAPI
         get() = viewState
 
     private val viewState = MutableLiveData<PromotionViewState>()
-    override val promotionClickState: LiveData<PromotionClickState>
-        get() = clickState
-
-    private val clickState = MutableLiveData<PromotionClickState>()
 
     //Setting up enrollment status as default after enrollment result. this is to avoid duplicate observation when compose recreate
     override fun resetPromEnrollmentStatusDefault() {

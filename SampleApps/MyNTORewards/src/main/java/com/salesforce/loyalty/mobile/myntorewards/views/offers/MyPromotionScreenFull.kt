@@ -320,16 +320,6 @@ fun PromotionItem(
 
 
     if (currentPromotionDetailPopupState) {
-//        PromotionEnrollPopup(
-//            results,
-//            closePopup = {
-//                currentPromotionDetailPopupState = false
-//                blurBG(NO_BLUR_BG)
-//            },
-//            navCheckOutFlowController,
-//            promotionViewModel
-//        )
-
         val referralViewModel: MyReferralsViewModel = hiltViewModel()
         PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, results, results.promotionId.orEmpty(), referralViewModel) {
             currentPromotionDetailPopupState = false
@@ -346,12 +336,8 @@ fun PromotionItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-//                if (results.promotionName == "TemporaryReferralPromo9") {
-//                    navCheckOutFlowController.navigate(MoreScreens.MyReferralsScreen.route)
-//                } else {
-                    blurBG(BLUR_BG)
-                    currentPromotionDetailPopupState = true
-//                }
+                blurBG(BLUR_BG)
+                currentPromotionDetailPopupState = true
             }
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .testTag(TEST_TAG_PROMO_ITEM),

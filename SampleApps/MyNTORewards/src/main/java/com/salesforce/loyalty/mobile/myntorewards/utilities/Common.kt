@@ -27,7 +27,7 @@ class Common {
             return if (memberJson != null) {
                 Gson().fromJson(memberJson, CommunityMemberModel::class.java)
             } else {
-                Logger.d("enrollToReferralProgram", "failed: member promotion Member details not present")
+                Logger.d("getMember", "failed: member promotion Member details not present")
                 null
             }
         }

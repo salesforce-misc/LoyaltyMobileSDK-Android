@@ -94,8 +94,6 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
     val viewState by viewModel.viewState.observeAsState(null)
     val context = LocalContext.current
 
-//    viewModel.setPromoCode(promoCode)
-
     programState?.let {
         when(it) {
             is ERROR -> ErrorPopup(
@@ -147,10 +145,10 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             val isStartReferring = referralProgramType == START_REFERRING
-            val (imageSize, contentScale) = if (isStartReferring) {
-                Pair(170.dp, ContentScale.Crop)
+            val imageSize = if (isStartReferring) {
+                170.dp
             } else {
-                Pair(250.dp, ContentScale.Crop)
+                250.dp
             }
             ImageComponent(
                 drawableId = R.drawable.promotion_card_placeholder,
@@ -159,7 +157,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                     .fillMaxWidth()
                     .size(imageSize)
                     .clip(bottomSheetShape),
-                contentScale = contentScale
+                contentScale = ContentScale.Crop
             )
 
             promotionDetails?.promotionImageUrl?.let {
@@ -170,7 +168,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                         .fillMaxWidth()
                         .size(imageSize)
                         .clip(bottomSheetShape),
-                    contentScale = contentScale
+                    contentScale = ContentScale.Crop
                 ){
                     it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 }
@@ -181,7 +179,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                     .fillMaxWidth()
                     .size(imageSize)
                     .clip(bottomSheetShape),
-                contentScale = contentScale
+                contentScale = ContentScale.Crop
             )
 
             if (isStartReferring) {
@@ -249,7 +247,6 @@ fun ColumnScope.JoinReferralProgramUi(
     Spacer(modifier = Modifier.weight(1f))
     PrimaryButton(textContent = stringResource(id = R.string.referral_join_button_text), onClick = {
         viewModel.enrollToReferralPromotion(context, false)
-//        PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = true
     })
     TextButtonCustom(
         modifier = Modifier

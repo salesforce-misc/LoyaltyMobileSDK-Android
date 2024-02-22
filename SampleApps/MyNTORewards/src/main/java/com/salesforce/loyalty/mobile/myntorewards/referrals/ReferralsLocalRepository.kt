@@ -42,11 +42,11 @@ class ReferralsLocalRepository @Inject constructor(
 
     private fun sObjectUrl() = instanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY
 
-    suspend fun fetchReferralsInfo(contactId: String, promoCode: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
+    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
         return safeApiCall {
             apiService.fetchReferralsInfo(
                 sObjectUrl(),
-                referralListQuery(contactId, promoCode, durationInDays)
+                referralListQuery(contactId, durationInDays)
             )
         }
     }
@@ -81,15 +81,15 @@ class ReferralsLocalRepository @Inject constructor(
 
 
     private fun memberEnrollmentAndReferralStatusQuery(promoId: String) =
-//        "SELECT LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId, Promotion.PromotionCode, Promotion.IsReferralPromotion FROM LoyaltyProgramMbrPromotion where PromotionId=\'$promoId\'"
-            "SELECT Id, IsReferralPromotion, PromotionCode, Name FROM Promotion Where Id= \'$promoId\'"
+        "SELECT Id, IsReferralPromotion, PromotionCode, Name FROM Promotion Where Id= \'$promoId\'"
+
     private fun memberEnrollmentStatusQuery(promoCode: String, contactId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$contactId\' and Promotion.PromotionCode=\'$promoCode\'"
 
     private fun memberReferralCodeQuery(contactId: String, programName: String) =
         "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and Program.Name='$programName'"
 
-    private fun referralListQuery(contactId: String, promoCode: String, durationInDays: Int) =
+    private fun referralListQuery(contactId: String, durationInDays: Int) =
         "SELECT ReferredPartyId, ReferralDate, CurrentPromotionStage.Type, TYPEOF ReferredParty WHEN Contact THEN Account.PersonEmail WHEN Account THEN PersonEmail END FROM Referral WHERE ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
 
     fun getDefaultPromotionDetailsFromCache(context: Context, memberShipNumber: String, promotionId: String): Results? {
@@ -118,6 +118,4 @@ class ReferralsLocalRepository @Inject constructor(
     fun getPromoCodeFromCache(promotionId: String): String? {
         return cachedPromoCode[promotionId]
     }
-
-
 }
