@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
@@ -245,8 +244,8 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                         items(playedGames.size) { playedGameItem ->
                                             val playedGame = playedGames[playedGameItem]
                                             val gameType =
-                                                if (GameType.SPIN_A_WHEEL.gameType == playedGame.type) {
-                                                    GameType.SPIN_A_WHEEL
+                                                if (GameType.SPIN_THE_WHEEL.gameType == playedGame.type) {
+                                                    GameType.SPIN_THE_WHEEL
                                                 } else {
                                                     GameType.SCRATCH_CARD
                                                 }
@@ -313,8 +312,8 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                             context
                                                         )
                                                     val gameType =
-                                                        if (GameType.SPIN_A_WHEEL.gameType == activeGame.type) {
-                                                            GameType.SPIN_A_WHEEL
+                                                        if (GameType.SPIN_THE_WHEEL.gameType == activeGame.type) {
+                                                            GameType.SPIN_THE_WHEEL
                                                         } else {
                                                             GameType.SCRATCH_CARD
                                                         }
@@ -327,7 +326,7 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                     ) {
                                                         val gamePartRewardId = activeGame.participantGameRewards.firstOrNull()?.gameParticipantRewardId
 
-                                                        if (gameType == GameType.SPIN_A_WHEEL) {
+                                                        if (gameType == GameType.SPIN_THE_WHEEL) {
                                                             navController.navigate(
                                                                 MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId=$gamePartRewardId"
                                                             )
@@ -371,8 +370,8 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
                                                 items(expiredGames.size) { expiredItem ->
                                                     val activeGame = expiredGames[expiredItem]
                                                     val gameType =
-                                                        if (GameType.SPIN_A_WHEEL.gameType == activeGame.type) {
-                                                            GameType.SPIN_A_WHEEL
+                                                        if (GameType.SPIN_THE_WHEEL.gameType == activeGame.type) {
+                                                            GameType.SPIN_THE_WHEEL
                                                         } else {
                                                             GameType.SCRATCH_CARD
                                                         }

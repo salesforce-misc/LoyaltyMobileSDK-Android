@@ -219,7 +219,7 @@
     <string name="label_eligible_items">Eligible Items</string>
     <string name="label_ineligible_items">Ineligible Items</string>
 
-    <string name="game_scratch_card_title">Scratch a Card and Win</string>
+    <string name="game_scratch_card_title">Scratchcard and Win</string>
     <string name="game_spin_sub_title">Spin the wheel and unlock instant rewards!</string>
     <string name="game_scratch_card_sub_title">Unlock instant rewards!</string>
     <string name="game_scratch_card_instruction">Scratch coupon to play</string>
@@ -231,10 +231,10 @@
     <string name="game_expiring_tomorrow">Expiring Tomorrow</string>
     <string name="game_placeholder_title">Bonnie and Clyde Style Promotion</string>
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
-    <string name="game_spin_a_wheel">Spin a Wheel</string>
-    <string name="game_scratch_card">Scratch a Card</string>
+    <string name="game_spin_the_wheel">Spin the Wheel</string>
+    <string name="game_scratch_card">Scratchcard</string>
     <string name="tap_spin_to_play">Tap \'Spin\' to play.</string>
-    <string name="text_spin_a_wheel">Spin a Wheel</string>
+    <string name="text_spin_the_wheel">Spin the Wheel</string>
     <string name="cd_game_back_button">game back button</string>
 
     <!-- Game zone Better luck Screen -->
