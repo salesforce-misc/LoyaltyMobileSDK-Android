@@ -231,10 +231,10 @@
     <string name="game_expiring_tomorrow">Expiring Tomorrow</string>
     <string name="game_placeholder_title">Bonnie and Clyde Style Promotion</string>
     <string name="game_placeholder_scratch_card_title">Cat Scratch Fever</string>
-    <string name="game_spin_a_wheel">Spin a Wheel</string>
-    <string name="game_scratch_card">Scratch a Card</string>
+    <string name="game_spin_the_wheel">Spin the Wheel</string>
+    <string name="game_scratch_card">Scratchcard</string>
     <string name="tap_spin_to_play">Tap \'Spin\' to play.</string>
-    <string name="text_spin_a_wheel">Spin a Wheel</string>
+    <string name="text_spin_the_wheel">Spin the Wheel</string>
     <string name="cd_game_back_button">game back button</string>
 
     <!-- Game zone Better luck Screen -->

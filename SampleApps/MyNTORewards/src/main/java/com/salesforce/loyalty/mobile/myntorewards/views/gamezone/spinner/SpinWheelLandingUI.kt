@@ -69,7 +69,7 @@ fun SpinWheelLandingPage(
             }
         }
         if(gameName.isEmpty())
-            gameName= stringResource(id = R.string.text_spin_a_wheel)
+            gameName= stringResource(id = R.string.text_spin_the_wheel)
         if(gameDescription.isEmpty() )
             gameDescription= stringResource(id = R.string.game_spin_sub_title)
 
