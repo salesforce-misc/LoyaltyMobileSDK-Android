@@ -5,5 +5,4 @@ object ReferralConfig {
     const val REFERRAL_PROMO_CODE = "TEMPRP7"
     const val REFERRAL_PROMO_ID = "0c81Q0000004UL4QAM"
     const val REFERRAL_DURATION = 90
-    const val REFERRAL_LINK = "https://rb.gy/m7bt48?referralCode="
 }

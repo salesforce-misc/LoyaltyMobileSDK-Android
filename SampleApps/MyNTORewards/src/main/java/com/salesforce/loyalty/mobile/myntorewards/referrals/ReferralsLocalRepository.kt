@@ -1,7 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals
 
 import android.content.Context
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROGRAM_NAME
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
@@ -9,10 +8,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
-import com.salesforce.loyalty.mobile.sources.PrefHelper
-import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import com.salesforce.referral.api.ApiResponse
@@ -32,7 +28,7 @@ class ReferralsLocalRepository @Inject constructor(
         const val QUERY = "/query/"
 
         private var cachedReferralStatus = mutableMapOf<String, Pair<Boolean, Boolean>>()
-        private var cachedPromoCode = mutableMapOf<String, String>()
+        private var cachedPromoCode = mutableMapOf<String, Pair<String?, String?>>()
 
         fun clearReferralsData() {
             cachedReferralStatus = mutableMapOf()
@@ -81,7 +77,7 @@ class ReferralsLocalRepository @Inject constructor(
 
 
     private fun memberEnrollmentAndReferralStatusQuery(promoId: String) =
-        "SELECT Id, IsReferralPromotion, PromotionCode, Name FROM Promotion Where Id= \'$promoId\'"
+        "SELECT Id, IsReferralPromotion, PromotionCode, PromotionPageUrl, Name FROM Promotion Where Id= \'$promoId\'"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, contactId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$contactId\' and Promotion.PromotionCode=\'$promoCode\'"
@@ -111,11 +107,15 @@ class ReferralsLocalRepository @Inject constructor(
         return cachedReferralStatus[promotionCode] ?: Pair(false, false)
     }
 
-    fun setPromoCode(promotionId: String, promotionCode: String) {
-        cachedPromoCode[promotionId] = promotionCode
+    fun setPromoCode(promotionId: String, promotionDetails: ReferralPromotionStatusAndPromoCode?) {
+        cachedPromoCode[promotionId] = Pair(promotionDetails?.promotionCode, promotionDetails?.promotionPageUrl)
     }
 
     fun getPromoCodeFromCache(promotionId: String): String? {
-        return cachedPromoCode[promotionId]
+        return cachedPromoCode[promotionId]?.first
+    }
+
+    fun getPromoUrlFromCache(promotionId: String): String {
+        return cachedPromoCode[promotionId]?.second.orEmpty()
     }
 }

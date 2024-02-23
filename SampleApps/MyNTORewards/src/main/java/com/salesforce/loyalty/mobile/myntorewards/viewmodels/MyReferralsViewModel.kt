@@ -254,6 +254,10 @@ class MyReferralsViewModel @Inject constructor(
         return memberReferralCode?.let { "$it-$promotionCode" }
     }
 
+    fun referralLink(context: Context, promotionId: String): String {
+        return localRepository.getPromoUrlFromCache(promotionId) + referralCode(context)
+    }
+
     fun setReferralCode(context: Context, memberReferralCode: String?) {
         PrefHelper.customPrefs(context)
             .set(AppConstants.KEY_MEMBER_REFERRAL_CODE, memberReferralCode)
@@ -292,7 +296,7 @@ class MyReferralsViewModel @Inject constructor(
                 is ApiResponse.Success -> {
                     val records = result.data.records
                     val promoDetails = records?.firstOrNull()
-                    localRepository.setPromoCode(promotionId, promoDetails?.promotionCode.orEmpty())
+                    localRepository.setPromoCode(promotionId, promoDetails)
                     setPromoCode(promoDetails?.promotionCode.orEmpty())
                     if (promoDetails?.isReferralPromotion == true) {
                         fetchReferralProgramStatus(context)

@@ -50,7 +50,6 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_LINK
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.CopyColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
@@ -260,8 +259,7 @@ fun ColumnScope.JoinReferralProgramUi(
 @Composable
 private fun StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Results? = null, doneAction: () -> Unit) {
     val context = LocalContext.current
-    val referralCode = viewModel.referralCode(context)
-    val referralLink = REFERRAL_LINK + referralCode
+    val referralLink = viewModel.referralLink(context, promotionDetails?.promotionId.orEmpty())
     val extraText = context.getString(R.string.share_referral_message, referralLink)
     val focusManager = LocalFocusManager.current
     var textField by remember { mutableStateOf(TextFieldValue("")) }
