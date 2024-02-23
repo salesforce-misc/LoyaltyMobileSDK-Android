@@ -206,6 +206,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
     }
 }
 
+//NOTE: This UI state is never called as user is already logged in to this sample app to access Referral feature
 @Composable
 fun SignupToReferUi(viewModel: MyReferralsViewModel) {
     var textField by remember { mutableStateOf(TextFieldValue("")) }

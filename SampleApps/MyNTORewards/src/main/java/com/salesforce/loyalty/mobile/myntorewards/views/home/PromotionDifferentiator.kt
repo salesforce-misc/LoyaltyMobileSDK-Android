@@ -108,10 +108,6 @@ fun PromotionDifferentiator(
                         promotionViewModel
                     )
                 }
-
-                is MyReferralsViewState.PromotionStateReferral -> referralViewModel.fetchReferralProgramStatus(
-                    context
-                )
             }
         }
     }

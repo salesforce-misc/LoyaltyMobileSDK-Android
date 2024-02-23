@@ -98,6 +98,7 @@ fun CommonText(
 @Composable
 fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, textGravity: Int = Gravity.START, modifier: Modifier = Modifier) {
     val resources = LocalContext.current.resources
+    val spannable = spannable(text)
     AndroidView(
         modifier = modifier,
         factory = { context ->
@@ -110,18 +111,22 @@ fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, te
             }
         },
         update = {
-            val s = Html.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT) as Spannable
-            for (u in s.getSpans(0, s.length, URLSpan::class.java)) {
-                s.setSpan(object : UnderlineSpan() {
-                    override fun updateDrawState(tp: TextPaint) {
-                        tp.isUnderlineText = false
-                    }
-                }, s.getSpanStart(u), s.getSpanEnd(u), 0)
-            }
-            it.text = s
-            it.setLinkTextColor(ColourViewSizeChart.toArgb())
+            it.text = spannable
         }
     )
+}
+
+@Composable
+private fun spannable(text: String): Spannable {
+    val spannable = Html.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT) as Spannable
+    for (u in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
+        spannable.setSpan(object : UnderlineSpan() {
+            override fun updateDrawState(tp: TextPaint) {
+                tp.isUnderlineText = false
+            }
+        }, spannable.getSpanStart(u), spannable.getSpanEnd(u), 0)
+    }
+    return spannable
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)

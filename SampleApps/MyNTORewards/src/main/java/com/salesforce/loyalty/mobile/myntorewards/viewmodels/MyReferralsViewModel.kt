@@ -57,6 +57,7 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun onSignUpToReferClicked(email: String) {
+        //NOTE: This UI state is never called as user is already logged in to this sample app to access Referral feature
         _programState.value = ReferralProgramType.JOIN_PROGRAM
     }
 
@@ -271,6 +272,7 @@ class MyReferralsViewModel @Inject constructor(
         val promoCodeFromCache = localRepository.getPromoCodeFromCache(promotionId)
         setPromoCode(promoCodeFromCache)
 
+        // If promotion code is not available in cache, call API to get the promotion type and promotion code
         if (promoCodeFromCache != null) {
             val (isReferral, isEnrolled) = localRepository.getReferralStatus(promoCodeFromCache)
             if (isReferral) {

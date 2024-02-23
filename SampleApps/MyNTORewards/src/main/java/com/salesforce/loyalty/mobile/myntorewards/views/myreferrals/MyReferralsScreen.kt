@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROMO_ID
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
@@ -47,7 +48,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
     val viewState by viewModel.uiState.observeAsState(null)
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        viewModel.fetchReferralProgramStatus(context)
+        viewModel.checkIfGivenPromotionIsInCache(context, REFERRAL_PROMO_ID)
     }
 
     viewState?.let {
@@ -88,12 +89,13 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
             }
 
             is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
-                // Do nothing
+                ErrorPopup(
+                    it.error ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                    tryAgainClicked = { viewModel.checkIfGivenPromotionIsReferralAndEnrolled(context, REFERRAL_PROMO_ID) },
+                    textButtonClicked = {  }
+                )
             }
             MyReferralsViewState.PromotionStateNonReferral -> {
-                // Do nothing
-            }
-            is MyReferralsViewState.PromotionStateReferral -> {
                 // Do nothing
             }
         }
