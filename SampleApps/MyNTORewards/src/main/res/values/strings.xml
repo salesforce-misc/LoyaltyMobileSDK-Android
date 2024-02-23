@@ -306,7 +306,7 @@
     <string name="referral_signup_button_text">Sign Up</string>
     <string name="referral_join_button_text">Start Referring</string>
     <string name="email_address_placeholder">Email Address</string>
-    <string name="refer_a_friend_and_earn_bottom_text"><![CDATA[To join the promotion and start referring your friends, tap Start Referring. By clicking Start Referring, you agree to the promotion’s <a href="https://www.salesforce.com/company/legal/agreements/">terms and conditions</a>.]]></string>
+    <string name="refer_a_friend_and_earn_bottom_text"><![CDATA[To join the promotion and start referring your friends, tap Start Referring. By clicking Start Referring, you agree to the promotion’s <a href="%s">terms and conditions</a>.]]></string>
 
     <string name="today_label">Today</string>
     <string name="yesterday_label">One Day Ago</string>

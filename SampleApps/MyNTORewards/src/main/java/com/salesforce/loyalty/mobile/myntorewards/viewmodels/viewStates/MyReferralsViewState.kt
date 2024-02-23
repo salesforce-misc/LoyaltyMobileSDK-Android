@@ -10,7 +10,7 @@ sealed class MyReferralsViewState {
     data class MyReferralsFetchFailure(val errorMessage: String? = null): MyReferralsViewState()
     object MyReferralsFetchInProgress : MyReferralsViewState()
     object MyReferralsPromotionEnrolled : MyReferralsViewState()
-    data class MyReferralsPromotionNotEnrolled(val uiState: MyReferralScreenState) : MyReferralsViewState()
+    object MyReferralsPromotionNotEnrolled : MyReferralsViewState()
     data class MyReferralsPromotionStatusFailure(val errorMessage: String? = null): MyReferralsViewState()
     object PromotionStateNonReferral : MyReferralsViewState()
     data class PromotionReferralApiStatusFailure(val error: String? = null) : MyReferralsViewState()

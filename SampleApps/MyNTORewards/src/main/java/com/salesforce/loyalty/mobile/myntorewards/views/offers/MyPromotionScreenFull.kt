@@ -318,18 +318,13 @@ fun PromotionItem(
     val context: Context = LocalContext.current
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
-
     if (currentPromotionDetailPopupState) {
         val referralViewModel: MyReferralsViewModel = hiltViewModel()
         PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, results, results.promotionId.orEmpty(), referralViewModel) {
             currentPromotionDetailPopupState = false
             blurBG(NO_BLUR_BG)
-            referralViewModel.clearState()
         }
     }
-
-
-
 
     Spacer(modifier = Modifier.height(16.dp))
     Row(
@@ -367,7 +362,7 @@ fun PromotionItem(
                 }
             } ?: Image(
                 painter = painterResource(R.drawable.bg_refer_friend_banner),
-                contentDescription = "promotion_item_placeholder",
+                contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                 modifier = Modifier
                     .size(130.dp, 166.dp)
                     .clip(RoundedCornerShape(10.dp)),

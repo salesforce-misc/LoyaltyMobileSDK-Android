@@ -99,15 +99,15 @@ class ReferralsLocalRepository @Inject constructor(
         return promotionsList?.firstOrNull { it.promotionId == promotionId }
     }
 
-    fun setReferralStatus(promotionCode: String, isReferralPromotion: Boolean, isEnrolled: Boolean) {
+    fun saveReferralStatusInCache(promotionCode: String, isReferralPromotion: Boolean, isEnrolled: Boolean) {
         cachedReferralStatus[promotionCode] = Pair(isReferralPromotion, isEnrolled)
     }
 
-    fun getReferralStatus(promotionCode: String): Pair<Boolean, Boolean> {
+    fun getReferralStatusFromCache(promotionCode: String): Pair<Boolean, Boolean> {
         return cachedReferralStatus[promotionCode] ?: Pair(false, false)
     }
 
-    fun setPromoCode(promotionId: String, promotionDetails: ReferralPromotionStatusAndPromoCode?) {
+    fun savePromoCodeAndUrlInCache(promotionId: String, promotionDetails: ReferralPromotionStatusAndPromoCode?) {
         cachedPromoCode[promotionId] = Pair(promotionDetails?.promotionCode, promotionDetails?.promotionPageUrl)
     }
 

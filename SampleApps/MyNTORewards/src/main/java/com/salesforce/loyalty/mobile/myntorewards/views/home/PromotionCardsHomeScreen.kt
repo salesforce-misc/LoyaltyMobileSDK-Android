@@ -187,7 +187,6 @@ fun PromotionCard(
             PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, it, it.promotionId.orEmpty(), referralViewModel) {
                 currentPromotionDetailPopupState = false
                 blurBG(NO_BLUR_BG)
-                referralViewModel.clearState()
             }
         }
     }

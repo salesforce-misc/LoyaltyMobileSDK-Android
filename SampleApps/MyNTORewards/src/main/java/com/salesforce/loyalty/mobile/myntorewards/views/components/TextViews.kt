@@ -119,12 +119,12 @@ fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, te
 @Composable
 private fun spannable(text: String): Spannable {
     val spannable = Html.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT) as Spannable
-    for (u in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
+    for (spannedContent in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
         spannable.setSpan(object : UnderlineSpan() {
             override fun updateDrawState(tp: TextPaint) {
                 tp.isUnderlineText = false
             }
-        }, spannable.getSpanStart(u), spannable.getSpanEnd(u), 0)
+        }, spannable.getSpanStart(spannedContent), spannable.getSpanEnd(spannedContent), 0)
     }
     return spannable
 }

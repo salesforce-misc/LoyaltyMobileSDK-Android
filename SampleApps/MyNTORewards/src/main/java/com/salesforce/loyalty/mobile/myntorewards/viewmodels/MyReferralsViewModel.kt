@@ -103,7 +103,7 @@ class MyReferralsViewModel @Inject constructor(
                         uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionEnrolled)
                     } else {
                         _programState.value = ReferralProgramType.JOIN_PROGRAM
-                        uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionNotEnrolled(successState(null)))
+                        uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionNotEnrolled)
                     }
                 }
                 is ApiResponse.Error -> {
@@ -197,7 +197,7 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     private fun updateReferralEnrollmentStatusInPreferences(context: Context, isReferralPromotion: Boolean = true, isEnrolled: Boolean = false) {
-        localRepository.setReferralStatus(promotionCode, isReferralPromotion = isReferralPromotion, isEnrolled = isEnrolled)
+        localRepository.saveReferralStatusInCache(promotionCode, isReferralPromotion = isReferralPromotion, isEnrolled = isEnrolled)
     }
 
      private suspend fun enrollNewCustomerAsAdvocateOfPromotion(
@@ -274,14 +274,14 @@ class MyReferralsViewModel @Inject constructor(
 
         // If promotion code is not available in cache, call API to get the promotion type and promotion code
         if (promoCodeFromCache != null) {
-            val (isReferral, isEnrolled) = localRepository.getReferralStatus(promoCodeFromCache)
+            val (isReferral, isEnrolled) = localRepository.getReferralStatusFromCache(promoCodeFromCache)
             if (isReferral) {
                 if (isEnrolled) {
                     _programState.value = ReferralProgramType.START_REFERRING
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionEnrolled)
                 } else {
                     _programState.value = ReferralProgramType.JOIN_PROGRAM
-                    uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionNotEnrolled(successState(null)))
+                    uiMutableState.postValue(MyReferralsViewState.MyReferralsPromotionNotEnrolled)
                 }
             } else {
                 uiMutableState.postValue(MyReferralsViewState.PromotionStateNonReferral)
@@ -298,7 +298,7 @@ class MyReferralsViewModel @Inject constructor(
                 is ApiResponse.Success -> {
                     val records = result.data.records
                     val promoDetails = records?.firstOrNull()
-                    localRepository.setPromoCode(promotionId, promoDetails)
+                    localRepository.savePromoCodeAndUrlInCache(promotionId, promoDetails)
                     setPromoCode(promoDetails?.promotionCode.orEmpty())
                     if (promoDetails?.isReferralPromotion == true) {
                         fetchReferralProgramStatus(context)
@@ -322,9 +322,5 @@ class MyReferralsViewModel @Inject constructor(
 
     private fun setPromoCode(promoCode: String?) {
         promoCode?.let { promotionCode = it }
-    }
-
-    fun clearState() {
-        uiMutableState.value = null
     }
 }

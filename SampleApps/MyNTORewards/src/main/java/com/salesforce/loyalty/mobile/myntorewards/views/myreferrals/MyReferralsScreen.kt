@@ -41,7 +41,10 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrolla
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
+
+const val LOG_TAG = "MyReferralsScreen"
 
 @Composable
 fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) -> Unit, showBottomSheet: (Boolean) -> Unit) {
@@ -96,6 +99,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
                 )
             }
             MyReferralsViewState.PromotionStateNonReferral -> {
+                Logger.d(LOG_TAG, "PromotionStateNonReferral")
                 // Do nothing
             }
         }

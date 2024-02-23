@@ -25,7 +25,10 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetSh
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferFriendScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopupUI
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
+
+const val LOG_TAG = "PromotionDifferentiator"
 
 @Composable
 fun PromotionDifferentiator(
@@ -53,11 +56,12 @@ fun PromotionDifferentiator(
             when (it) {
                 is MyReferralsViewState.MyReferralsFetchSuccess -> {
                     // do nothing
-
+                    Logger.d(LOG_TAG, "MyReferralsFetchSuccess")
                 }
 
                 is MyReferralsViewState.MyReferralsFetchFailure -> {
                     // do nothing
+                    Logger.d(LOG_TAG, "MyReferralsFetchFailure")
                 }
 
                 is MyReferralsViewState.MyReferralsFetchInProgress -> {
