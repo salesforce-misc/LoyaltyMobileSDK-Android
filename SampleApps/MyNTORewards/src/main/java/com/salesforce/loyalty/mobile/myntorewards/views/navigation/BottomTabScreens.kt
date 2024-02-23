@@ -163,6 +163,13 @@ fun HomeScreenAndCheckOutFlowNavigation(
                 }
             }
         }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            MyReferralsListScreen(backAction = {
+                navCheckOutFlowController.popBackStack()
+            }) {
+                showBottomBar(it)
+            }
+        }
     }
 }
 
@@ -247,6 +254,13 @@ fun PromotionScreenAndCheckOutFlowNavigation(
                 bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
                     popUpTo(0)
                 }
+            }
+        }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            MyReferralsListScreen(backAction = {
+                navCheckOutFlowController.popBackStack()
+            }) {
+                showBottomBar(it)
             }
         }
     }

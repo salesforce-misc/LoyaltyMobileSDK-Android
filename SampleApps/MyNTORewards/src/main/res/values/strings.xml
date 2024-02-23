@@ -304,9 +304,9 @@
     <string name="selected_app_is_not_installed">Selected app is not installed!</string>
 
     <string name="referral_signup_button_text">Sign Up</string>
-    <string name="referral_join_button_text">Join</string>
+    <string name="referral_join_button_text">Start Referring</string>
     <string name="email_address_placeholder">Email Address</string>
-    <string name="refer_a_friend_and_earn_bottom_text">Tap ‘Join and Refer’ to participate. By Joining you agree to the terms and conditions.</string>
+    <string name="refer_a_friend_and_earn_bottom_text"><![CDATA[To join the promotion and start referring your friends, tap Start Referring. By clicking Start Referring, you agree to the promotion’s <a href="%s">terms and conditions</a>.]]></string>
 
     <string name="today_label">Today</string>
     <string name="yesterday_label">One Day Ago</string>
@@ -319,6 +319,7 @@
     <string name="no_referrals_label">After you refer a friend, you’ll see it here.</string>
     <string name="invalid_email_error_message">Something doesn\'t look right with one of the email addresses.</string>
     <string name="join_referral_program_button_text">Join Referral Program</string>
+    <string name="referral_back_button_text">Back</string>
     <!-- My Referrals Strings End -->
 
     <string name="text_go_to_voucher_section">Go to Vouchers</string>

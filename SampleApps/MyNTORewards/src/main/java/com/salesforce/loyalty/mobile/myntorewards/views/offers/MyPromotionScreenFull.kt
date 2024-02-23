@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -46,9 +47,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.MY_PROMOTION_FULL_SCREEN_HEADER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_LIST
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionDifferentiator
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import kotlinx.coroutines.launch
@@ -314,21 +318,13 @@ fun PromotionItem(
     val context: Context = LocalContext.current
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
-
     if (currentPromotionDetailPopupState) {
-        PromotionEnrollPopup(
-            results,
-            closePopup = {
-                currentPromotionDetailPopupState = false
-                blurBG(NO_BLUR_BG)
-            },
-            navCheckOutFlowController,
-            promotionViewModel
-        )
+        val referralViewModel: MyReferralsViewModel = hiltViewModel()
+        PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, results, results.promotionId.orEmpty(), referralViewModel) {
+            currentPromotionDetailPopupState = false
+            blurBG(NO_BLUR_BG)
+        }
     }
-
-
-
 
     Spacer(modifier = Modifier.height(16.dp))
     Row(
@@ -352,17 +348,27 @@ fun PromotionItem(
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.FillWidth
             )
-            GlideImage(
-                model = results.promotionImageUrl,
-                contentDescription = description,
+            results.promotionImageUrl?.let {
+                GlideImage(
+                    model = results.promotionImageUrl,
+                    contentDescription = description,
+                    modifier = Modifier
+                        .size(130.dp, 166.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+
+                    contentScale = ContentScale.Crop
+                ) {
+                    it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                }
+            } ?: Image(
+                painter = painterResource(R.drawable.bg_refer_friend_banner),
+                contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                 modifier = Modifier
                     .size(130.dp, 166.dp)
                     .clip(RoundedCornerShape(10.dp)),
-
                 contentScale = ContentScale.Crop
-            ) {
-                it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            }
+            )
+
         }
 
 

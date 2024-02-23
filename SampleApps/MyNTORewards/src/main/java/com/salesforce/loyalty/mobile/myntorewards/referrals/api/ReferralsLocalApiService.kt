@@ -4,6 +4,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -28,4 +29,10 @@ interface ReferralsLocalApiService {
         @Url url: String,
         @Query("q") query: String?
     ): Response<QueryResult<ReferralEnrollmentInfo>>
+
+    @GET
+    suspend fun checkIfGivenPromotionIsReferralAndEnrolled(
+        @Url url: String,
+        @Query("q") query: String?
+    ): Response<QueryResult<ReferralPromotionStatusAndPromoCode>>
 }

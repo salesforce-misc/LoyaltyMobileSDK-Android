@@ -3,6 +3,7 @@ package com.salesforce.loyalty.mobile.myntorewards.utilities
 import android.content.Context
 import android.text.format.DateUtils
 import android.util.Log
+import com.google.gson.Gson
 
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
@@ -11,6 +12,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -19,6 +22,15 @@ import java.util.*
 
 class Common {
     companion object {
+        fun getMember(context: Context): CommunityMemberModel? {
+            val memberJson = PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            return if (memberJson != null) {
+                Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            } else {
+                Logger.d("getMember", "failed: member promotion Member details not present")
+                null
+            }
+        }
 
         fun formatPromotionDate(apiDate: String, context: Context): String {
             val apiDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_API_FORMAT)

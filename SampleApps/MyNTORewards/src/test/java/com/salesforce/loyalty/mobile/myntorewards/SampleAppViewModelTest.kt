@@ -2181,7 +2181,7 @@ class SampleAppViewModelTest {
         myReferralsViewModel.fetchReferralsInfo(context)
 
         coVerify {
-            sharedPrefs.getString(AppConstants.KEY_PROMOTION_REFERRAL_CODE, any())
+            sharedPrefs.getString(AppConstants.KEY_MEMBER_REFERRAL_CODE, any())
         }
         coVerify {
             referralsLocalRepository.fetchReferralsInfo(any(),any(), any())
