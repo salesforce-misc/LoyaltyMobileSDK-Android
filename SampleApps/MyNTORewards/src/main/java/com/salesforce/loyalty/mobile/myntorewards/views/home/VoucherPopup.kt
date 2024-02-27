@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -35,6 +36,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.POPUP_ROUNDED_CORNER_SIZE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.QRCode
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
@@ -68,11 +70,12 @@ fun VoucherPopupUI(
 ) {
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     var clippedText by remember { mutableStateOf("") }
+    val context: Context = LocalContext.current
 
     Column(
             modifier = Modifier
-                .fillMaxHeight(0.98f)
-                .background(Color.White, RoundedCornerShape(16.dp))
+                .fillMaxHeight(0.90f)
+                .background(Color.White, RoundedCornerShape(POPUP_ROUNDED_CORNER_SIZE))
                 .verticalScroll(
                     rememberScrollState()
                 ),
@@ -92,7 +95,7 @@ fun VoucherPopupUI(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(180.dp)
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                .clip(RoundedCornerShape(topStart = POPUP_ROUNDED_CORNER_SIZE, topEnd = POPUP_ROUNDED_CORNER_SIZE)),
                             contentScale = ContentScale.Crop
                         )
 
@@ -102,7 +105,7 @@ fun VoucherPopupUI(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(180.dp)
-                                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                .clip(RoundedCornerShape(topStart = POPUP_ROUNDED_CORNER_SIZE, topEnd = POPUP_ROUNDED_CORNER_SIZE)),
 
                             contentScale = ContentScale.Crop
                         ) {
@@ -180,12 +183,12 @@ fun VoucherPopupUI(
                         withStyle(
                             style = SpanStyle()
                         ) {
-                            append("Expiring on: ")
+                            append("Expiring on ")
                         }
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(voucher.expirationDate?.let { Common.formatPromotionDate(it) })
+                            append(voucher.expirationDate?.let { Common.formatPromotionDate(it,context) })
                         }
                     },
                     fontFamily = font_sf_pro,

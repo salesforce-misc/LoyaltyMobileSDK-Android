@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -31,6 +33,8 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BLUR_BG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
@@ -39,11 +43,12 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.VoucherResponse
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun VoucherView(voucher: VoucherResponse) {
+fun VoucherView(voucher: VoucherResponse, blurBG: (Dp) -> Unit) {
 
     var voucherPopupState by remember { mutableStateOf(false) }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
     var clippedText by remember { mutableStateOf("") }
+    val context: Context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -52,6 +57,7 @@ fun VoucherView(voucher: VoucherResponse) {
             .padding(bottom = 16.dp)
             .clickable {
                 voucherPopupState = true
+                blurBG(BLUR_BG)
             }
     )
 
@@ -149,7 +155,7 @@ fun VoucherView(voucher: VoucherResponse) {
                     withStyle(
                         style = SpanStyle(fontWeight = FontWeight.Bold)
                     ) {
-                        append(voucher.expirationDate?.let { Common.formatPromotionDate(it) })
+                        append(voucher.expirationDate?.let { Common.formatPromotionDate(it, context) })
                     }
                 },
                 fontWeight = FontWeight.Normal,
@@ -246,6 +252,7 @@ fun VoucherView(voucher: VoucherResponse) {
             voucher,
             closePopup = {
                 voucherPopupState = false
+                blurBG(NO_BLUR_BG)
             }
         )
     }

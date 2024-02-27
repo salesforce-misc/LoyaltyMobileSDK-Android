@@ -14,7 +14,8 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
                     onboardingModel: OnBoardingViewModelAbstractInterface,
                     benefitModel: BenefitViewModelInterface,
                     transactionModel: TransactionViewModelInterface,
-                    checkoutFlowModel: CheckOutFlowViewModelInterface) {
+                    checkoutFlowModel: CheckOutFlowViewModelInterface,
+                    scanningViewModel: ScanningViewModelInterface) {
 
     Navigation(
         profileModel,
@@ -23,7 +24,8 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
         onboardingModel,
         benefitModel,
         transactionModel,
-        checkoutFlowModel
+        checkoutFlowModel,
+        scanningViewModel
     )
 }
 
@@ -35,7 +37,8 @@ fun Navigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     benefitViewModel: BenefitViewModelInterface,
     transactionViewModel: TransactionViewModelInterface,
-    checkOutFlowViewModel: CheckOutFlowViewModelInterface
+    checkOutFlowViewModel: CheckOutFlowViewModelInterface,
+    scanningViewModel: ScanningViewModelInterface
 
 ) {
     val navController = rememberNavController()
@@ -46,7 +49,7 @@ fun Navigation(
             OnboardingScreenBox(navController, onboardingModel)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel)
+            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel)
         }
     }
 }

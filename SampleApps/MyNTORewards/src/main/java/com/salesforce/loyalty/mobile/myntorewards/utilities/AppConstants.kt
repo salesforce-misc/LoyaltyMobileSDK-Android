@@ -1,12 +1,15 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
+import androidx.compose.ui.unit.dp
+
 class AppConstants {
 
     companion object {
 
         //preferences
         const val PREF_NAME = "com.salesforce.loyalty.mobile.sources.SHARED_PREF"
-        const val CONNECTED_APP_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.CONNECTED_APP_PREF"
+        const val CONNECTED_APP_PREF_NAME =
+            "com.salesforce.loyalty.mobile.myntorewards.CONNECTED_APP_PREF"
         const val AUTH_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.AUTH_PREF"
         const val KEY_SELECTED_INSTANCE_URL = "selected_instance_url"
         const val KEY_OPEN_CONNECTED_APP_INSTANCE = "open_connected_app_instance"
@@ -32,6 +35,15 @@ class AppConstants {
         const val ROUTE_BENEFIT_FULL_SCREEN = "route_benefit_screen"
         const val ROUTE_TRANSACTION_FULL_SCREEN = "route_transaction_screen"
 
+        //Receipt screens
+        const val ROUTE_MORE_LIST_SCREEN = "more_list_screen"
+        const val ROUTE_RECEIPT_LIST_SCREEN = "receipt_list_screen"
+        const val ROUTE_CAPTURE_IMAGE_SCREEN = "capture_image_screen"
+        const val ROUTE_SCANNED_RECEIPT_SCREEN = "scanned_receipt_screen"
+        const val ROUTE_SCANNED_CONG_SCREEN = "scanned_cong_screen"
+        const val ROUTE_SCAN_PROGRESS_SCREEN = "scanned_progress_screen"
+        const val ROUTE_RECEIPT_DETAIL_SCREEN = "receipt_detail_screen"
+
         //benefit icon based on strings
         const val BENEFIT_TYPE_FREE_SHIPPING = "Free Shipping"
         const val BENEFIT_TYPE_EXTENDED_RETURN = "Extended Return"
@@ -51,8 +63,6 @@ class AppConstants {
         const val MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED = "EligibleButNotEnrolled"
         const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
         const val MAX_PAGE_COUNT_PROMOTION = 4
-        const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
-        const val PROMOTION_DATE_SAMPLE_APP_FORMAT = "dd/MM/yyyy"
 
         //Transaction types
         const val TRANSACTION_PURCHASE = "Purchase"
@@ -64,8 +74,7 @@ class AppConstants {
         const val MAX_TRANSACTION_COUNT = 3
         const val TRANSACTION_REWARD_POINTS = "Points"
         const val REWARD_CURRENCY_NAME = "Reward Points"
-        const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        const val TRANSACTION_HISTORY_APP_DATE_FORMAT = "dd LLLL yyyy"
+
 
         //tabs vouchers
         const val VOUCHER_ISSUED = "Issued"
@@ -79,6 +88,10 @@ class AppConstants {
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
+        const val RECEIPT_PROGRESS_STARTED = "progress_started"
+        const val RECEIPT_PROGRESS_FIRST_STEP = "progress_first_step_completed"
+        const val RECEIPT_PROGRESS_SECOND_STEP = "progress_second_step_completed"
+        const val RECEIPT_PROGRESS_COMPLETED = "progress_completed"
         const val ORDER_ID = "orderID"
         const val PROMOTION_NAME = "promotionName"
 
@@ -93,5 +106,48 @@ class AppConstants {
         const val EXPIRED_VOUCHERS_FILTER_DAYS = 30
 
         const val REDEEMED_VOUCHERS_FILTER_DAYS = 90
+
+        val POPUP_ROUNDED_CORNER_SIZE = 22.dp
+        val BLUR_BG = 3.dp
+        val NO_BLUR_BG = 0.dp
+
+        //Receipt_Point_Status
+        val RECEIPT_POINT_STATUS_PENDING = "Pending"
+        val RECEIPT_POINT_STATUS_MANUAL_REVIEW = "Manual Review"
+        val RECEIPT_POINT_STATUS_PROCESSING = "Processing"
+        val RECEIPT_POINT_STATUS_PROCESSED = "Processed"
+        val RECEIPT_POINT_STATUS_REJECTED = "Rejected"
+
+        const val KEY_PROCESSED_AWS_RESPONSE = "key_processed_aws_response"
+        const val KEY_ANALYZED_AWS_RESPONSE = "key_analyzed_aws_response"
+        const val KEY_PURCHASE_DATE= "key_purchase_date"
+        const val KEY_RECEIPT_ID = "key_receipt_id"
+        const val KEY_RECEIPT_STATUS = "key_receipt_status"
+        const val KEY_RECEIPT_TOTAL_POINTS = "key_receipt_total_points"
+        const val KEY_RECEIPT_IMAGE_URL = "key_receipt_image_url"
+        const val TAB_ELIGIBLE_ITEM = 0
+        const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
+
+        //Different Date Formats incoming from server
+        const val PROMOTION_DATE_API_FORMAT = "yyyy-MM-dd"
+
+        const val RECEIPT_DATE_API_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.sZ"
+        const val TRANSACTION_HISTORY_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        const val RECEIPT_DETAILS_API_DATETIME_FORMAT = "dd/MM/yyyy"
+        const val RECEIPT_DETAILS_API_DATETIME_FORMAT2 = "dd/MM/yyyy"
+        const val RECEIPT_API_FORMAT = "yyyy-MM-dd"
+
+        //Date Format 02 Nov 2019
+        const val DEFAULT_SAMPLE_APP_FORMAT = "dd MMM yyyy"
+
+        //Date Format 24 August 2023
+        const val SAMPLE_APP_DATE_FORMAT_DDLLLYYY  = "dd LLLL yyyy"
+
+        //Date Format 30/09/2023
+        const val SAMPLE_APP_DATE_FORMAT_DDMMYYYY = "dd/MM/yyyy"
+        const val PREF_MY_DATE = "MyDatePrefs"
+        const val KEY_APP_DATE = "appDate"
+
+
     }
 }

@@ -21,6 +21,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ADDRESS_DETAIL
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_DELIVER_TO_ADDRESS
 
 @Composable
 fun OrderAddressUI(switchPaymentTab: () -> Unit) {
@@ -194,7 +195,7 @@ fun EditDeleteAddressRow() {
 fun ButtonDeliver(switchPaymentTab: () -> Unit) {
 
     Button(
-        modifier = Modifier
+        modifier = Modifier.testTag(TEST_TAG_CHECKOUT_DELIVER_TO_ADDRESS)
             .fillMaxWidth(), onClick = {
             switchPaymentTab()
         },

@@ -1,0 +1,326 @@
+{
+    "totalSize": 20,
+    "done": true,
+    "records": [
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyfGUUAY"
+            },
+            "Id": "a0N1Q00000cyfGUUAY",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000944",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/85e0355b-9bf0-8272-d5ab-cc4fcc690f88.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyfGFUAY"
+            },
+            "Id": "a0N1Q00000cyfGFUAY",
+            "PurchaseDate__c": "2019-02-11",
+            "ReceiptID__c": "US-001",
+            "Name": "R00000941",
+            "Status__c": "Processed",
+            "StoreName__c": "East Repair Inc.",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$154.06",
+            "APIResponse__c": "{\n  \"storeName\" : \"East Repair Inc.\",\n  \"storeAddress\" : \"1912 Harvest Lane\\nNew York, NY 12210\",\n  \"receiptNumber\" : \"US-001\",\n  \"receiptDate\" : \"2019-02-11\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"Front and rear brake cables\",\n    \"price\" : \"100.00\",\n    \"lineItemPrice\" : \"100.00\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"New set of pedal arms\",\n    \"price\" : \"15.00\",\n    \"lineItemPrice\" : \"30.00\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"3\",\n    \"productName\" : \"Labor 3hrs\",\n    \"price\" : \"5.00\",\n    \"lineItemPrice\" : \"15.00\",\n    \"isEligible\" : false\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/35b317e9-fdf4-a907-1f86-dea15227fa5e.jpg"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyfGAUAY"
+            },
+            "Id": "a0N1Q00000cyfGAUAY",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000940",
+            "Status__c": "Manual Review",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/4147d062-2d35-6ee3-6a0c-fab8dadf0699.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyewXUAQ"
+            },
+            "Id": "a0N1Q00000cyewXUAQ",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000939",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/b87ce593-5c47-3518-30be-2a4ff05e98c7.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyewSUAQ"
+            },
+            "Id": "a0N1Q00000cyewSUAQ",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000938",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/1cdaca53-51d0-5d3b-abc3-7b558476ac41.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyegpUAA"
+            },
+            "Id": "a0N1Q00000cyegpUAA",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000937",
+            "Status__c": "Draft",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"$ 19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"$ 17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/1a7b76d3-27b8-df47-af8b-006a499245d1.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyegfUAA"
+            },
+            "Id": "a0N1Q00000cyegfUAA",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000935",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/d92216cb-4c2a-f1ea-45a3-15d1872e605e.jpg"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyedgUAA"
+            },
+            "Id": "a0N1Q00000cyedgUAA",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000933",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/2dab11de-13de-6e8d-c3a5-dbc9c71ef8f8.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyedbUAA"
+            },
+            "Id": "a0N1Q00000cyedbUAA",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000932",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/586165b2-7d75-c52a-fae3-0d430e88e8f8.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyedWUAQ"
+            },
+            "Id": "a0N1Q00000cyedWUAQ",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000931",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/9160b28a-8ecf-a746-497d-476af84defec.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyedRUAQ"
+            },
+            "Id": "a0N1Q00000cyedRUAQ",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000930",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/d1eb7522-0d85-de94-b0dc-be062ac744f4.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyedMUAQ"
+            },
+            "Id": "a0N1Q00000cyedMUAQ",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000929",
+            "Status__c": "Processed",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/26eccb0e-c830-526f-f35f-bb54f099a522.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyedHUAQ"
+            },
+            "Id": "a0N1Q00000cyedHUAQ",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000928",
+            "Status__c": "Draft",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/154b90f6-f0ba-bf4e-d650-732e266c0cd2.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyedCUAQ"
+            },
+            "Id": "a0N1Q00000cyedCUAQ",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000927",
+            "Status__c": "Draft",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/78ce48eb-63a9-fcae-395a-1831b11b2ff5.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyed7UAA"
+            },
+            "Id": "a0N1Q00000cyed7UAA",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000926",
+            "Status__c": "Draft",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/1947963d-cb10-a5b3-7d49-761614ed833b.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyed2UAA"
+            },
+            "Id": "a0N1Q00000cyed2UAA",
+            "PurchaseDate__c": "2020-01-10",
+            "ReceiptID__c": "#0529-0002",
+            "Name": "R00000925",
+            "Status__c": "Draft",
+            "StoreName__c": "alpine nutrition",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": "$55.93",
+            "APIResponse__c": "{\n  \"storeName\" : \"alpine nutrition\",\n  \"storeAddress\" : \"625 Market Street,\\n6th floor,\\nSan Francisco,\\nCA, 94105\",\n  \"receiptNumber\" : \"#0529-0002\",\n  \"receiptDate\" : \"2020-01-10\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"5\",\n    \"productName\" : \"Alpine-Bran Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$39.95\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"Alpine-Oat Cereal\",\n    \"price\" : \"$7.99\",\n    \"lineItemPrice\" : \"$15.98\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/5419cc9d-400f-531a-5a96-04a563ccfeb2.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyecxUAA"
+            },
+            "Id": "a0N1Q00000cyecxUAA",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000924",
+            "Status__c": "Draft",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/d9873b87-3e91-e707-af09-b9c9a6e964d5.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyecsUAA"
+            },
+            "Id": "a0N1Q00000cyecsUAA",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000923",
+            "Status__c": "Draft",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/9d199dfa-9aef-83f4-28d6-311842e8b2a4.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyecnUAA"
+            },
+            "Id": "a0N1Q00000cyecnUAA",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000922",
+            "Status__c": "Draft",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": null,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/04f3f46d-0f7b-01c4-82cc-d558bb283d6e.png"
+        },
+        {
+            "attributes": {
+                "type": "Receipts__c",
+                "url": "/services/data/v59.0/sobjects/Receipts__c/a0N1Q00000cyeciUAA"
+            },
+            "Id": "a0N1Q00000cyeciUAA",
+            "PurchaseDate__c": "2019-12-12",
+            "ReceiptID__c": "246",
+            "Name": "R00000921",
+            "Status__c": "Processed",
+            "StoreName__c": "BULL BAR & RESTAURANT",
+            "TotalRewardPoints__c": 100.0,
+            "TotalAmount__c": null,
+            "APIResponse__c": "{\n  \"storeName\" : \"BULL BAR & RESTAURANT\",\n  \"storeAddress\" : \"2000, BULL PARK AVE\\nNEW HILLS, NC, 27154-8908\",\n  \"receiptNumber\" : \"246\",\n  \"receiptDate\" : \"2019-12-12\",\n  \"memberShipNumber\" : \"24345678\",\n  \"lineItem\" : [ {\n    \"quantity\" : \"1\",\n    \"productName\" : \"WINE BOTTLE\",\n    \"lineItemPrice\" : \"19.99\",\n    \"isEligible\" : true\n  }, {\n    \"quantity\" : \"2\",\n    \"productName\" : \"CHEESE STEAK\",\n    \"lineItemPrice\" : \"17.98\",\n    \"isEligible\" : false\n  }, {\n    \"quantity\" : \"1\",\n    \"productName\" : \"SPICY BARQUE STEAK\",\n    \"lineItemPrice\" : \"$ 12.49\",\n    \"isEligible\" : true\n  } ]\n}",
+            "ImageUrl__c": "https://8g3is6zko1.execute-api.us-east-1.amazonaws.com/Dev/uploadimagesalesforce/1c498cf5-1f2a-12d3-c8da-60badc2d92dc.png"
+        }
+    ]
+}

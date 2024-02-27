@@ -15,9 +15,9 @@ class ViewPagerSupport {
 
         fun screenTextID(page: Int): Int {
             return when (page) {
-                0 -> R.string.onboard_screen_text_1
-                1 -> R.string.onboard_screen_text_2
-                2 -> R.string.onboard_screen_text_3
+                0 -> R.string.onboard_screen_text_2
+                1 -> R.string.onboard_screen_text_3
+                2 -> R.string.onboard_screen_text_1
                 else -> R.string.onboard_screen_text_1
             }
         }

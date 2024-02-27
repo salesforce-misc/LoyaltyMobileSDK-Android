@@ -21,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +39,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.voucherEmptyViewMsg
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
@@ -46,16 +48,20 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: VoucherViewModelInterface) {
+fun VoucherFullScreen(
+    navCheckOutFlowController: NavController,
+    voucherModel: VoucherViewModelInterface
+) {
 
     var refreshing by remember { mutableStateOf(false) }
+    var blurBG by remember { mutableStateOf(0.dp) }
     val refreshScope = rememberCoroutineScope()
 
     val context: Context = LocalContext.current
 
     fun refresh() = refreshScope.launch {
 
-        voucherModel.loadVoucher(context,true )
+        voucherModel.loadVoucher(context, true)
 
     }
 
@@ -68,6 +74,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
             modifier = Modifier
                 .background(Color.White)
                 .pullRefresh(state)
+                .blur(blurBG)
         )
         {
             var isInProgress by remember { mutableStateOf(true) }
@@ -151,6 +158,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                     isInProgress = false
 
                 }
+
                 VoucherViewState.VoucherFetchFailure -> {
                     isInProgress = false
                 }
@@ -158,6 +166,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                 VoucherViewState.VoucherFetchInProgress -> {
                     isInProgress = true
                 }
+
                 else -> {}
             }
 
@@ -173,7 +182,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
             }
 
             // Redeemed tab
-            if(selectedTab == 1){
+            if (selectedTab == 1) {
                 filteredVouchers = filteredVouchers?.filter {
                     it.useDate?.let { date ->
                         Common.isWithinMentionedDay(
@@ -209,7 +218,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
 
             } else {
                 if (filteredVouchers?.isEmpty() == true) {
-                    VoucherEmptyView()
+                    VoucherEmptyView(voucherEmptyViewMsg(selectedTab))
                 } else {
                     Column(
                         modifier = Modifier
@@ -227,8 +236,10 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                items(filteredVouchers.size) {
-                                    VoucherView(filteredVouchers[it])
+                                items(filteredVouchers.size) { filteredVoucherItem ->
+                                    VoucherView(filteredVouchers[filteredVoucherItem]) {
+                                        blurBG = it
+                                    }
                                 }
                             }
                         }
@@ -244,7 +255,7 @@ fun VoucherFullScreen(navCheckOutFlowController: NavController, voucherModel: Vo
 }
 
 @Composable
-fun VoucherEmptyView() {
+fun VoucherEmptyView(emptyMsg:Int) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -255,11 +266,11 @@ fun VoucherEmptyView() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_empty_view),
-            contentDescription = stringResource(id = R.string.label_empty_vouchers)
+            contentDescription = stringResource(id = emptyMsg)
         )
         Spacer(modifier = Modifier.padding(10.dp))
         androidx.compose.material3.Text(
-            text = stringResource(id = R.string.label_empty_vouchers),
+            text = stringResource(id = emptyMsg),
             fontWeight = FontWeight.Bold,
             fontFamily = font_sf_pro,
             color = Color.Black,

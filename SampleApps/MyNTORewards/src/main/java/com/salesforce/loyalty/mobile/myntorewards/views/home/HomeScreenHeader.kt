@@ -3,6 +3,7 @@ package com.salesforce.loyalty.mobile.myntorewards.views.home
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -30,11 +32,12 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.getCurrencyPointBalance
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_APP_LOGO_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 
 
 @Composable
-fun AppLogoAndSearchRow() {
+fun AppLogoAndSearchRow(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -51,10 +54,13 @@ fun AppLogoAndSearchRow() {
             contentScale = ContentScale.FillWidth
         )
         Image(
-            painter = painterResource(id = R.drawable.research),
-            contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+            painter = painterResource(id = R.drawable.receipt_icon),
+            contentDescription = stringResource(R.string.receipt_scanning),
             modifier = Modifier
-                .padding(end = 16.dp),
+                .padding(end = 16.dp)
+                .clickable{
+                    navController.navigate(MoreScreens.ReceiptListScreen.route)
+                },
             contentScale = ContentScale.FillWidth
         )
     }
@@ -75,7 +81,7 @@ fun UserNameAndRewardRow(profileModel: MembershipProfileViewModelInterface) {
     val firstName = (membershipProfile?.associatedContact?.firstName) ?: ""
     val lastName = (membershipProfile?.associatedContact?.lastName) ?: ""
     val userNameWelcomeText =
-        stringResource(id = R.string.home_screen_welcome_start_text) + " $firstName $lastName " + stringResource(
+        stringResource(id = R.string.home_screen_welcome_start_text) + " $firstName " + stringResource(
             id = R.string.home_screen_welcome_end_text
         )
 

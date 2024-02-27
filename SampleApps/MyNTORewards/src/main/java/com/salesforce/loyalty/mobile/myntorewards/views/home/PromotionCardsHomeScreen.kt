@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -21,6 +23,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -29,6 +32,8 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BLUR_BG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
@@ -41,13 +46,15 @@ fun PromotionCard(
     page: Int,
     membershipPromo: List<Results>?,
     navCheckOutFlowController: NavController,
-    promotionViewModel: MyPromotionViewModelInterface
+    promotionViewModel: MyPromotionViewModelInterface,
+    blurBG: (Dp) -> Unit
 ) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
     var promoName = membershipPromo?.get(page)?.promotionName ?: ""
     var endDate = membershipPromo?.get(page)?.endDate ?: ""
     var promotionEnrollmentRqr = membershipPromo?.get(page)?.promotionEnrollmentRqr ?: false
     var memberEligibilityCategory = membershipPromo?.get(page)?.memberEligibilityCategory ?: ""
+    val context: Context = LocalContext.current
 
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
     Card(
@@ -56,6 +63,7 @@ fun PromotionCard(
             .background(Color.White).testTag(TEST_TAG_PROMO_CARD)
             .clickable {
                 currentPromotionDetailPopupState = true
+                blurBG(BLUR_BG)
             }
     ) {
         Column(
@@ -131,7 +139,7 @@ fun PromotionCard(
                         withStyle(
                             style = SpanStyle(fontWeight = FontWeight.Bold)
                         ) {
-                            append(formatPromotionDate(endDate))
+                            append(formatPromotionDate(endDate, context))
                         }
                     },
                     fontFamily = font_sf_pro,
@@ -166,6 +174,7 @@ fun PromotionCard(
                 it,
                 closePopup = {
                     currentPromotionDetailPopupState = false
+                    blurBG(NO_BLUR_BG)
                 },
                 navCheckOutFlowController,
                 promotionViewModel
@@ -199,7 +208,7 @@ fun PromotionEmptyView(descriptionResourceId: Int) {
         )
         Spacer(modifier = Modifier.padding(4.dp))
         Text(
-            text = stringResource(id = R.string.description_empty_promotions),
+            text = stringResource(id = descriptionResourceId),
             fontWeight = FontWeight.Normal,
             fontFamily = font_sf_pro,
             color = Color.Black,

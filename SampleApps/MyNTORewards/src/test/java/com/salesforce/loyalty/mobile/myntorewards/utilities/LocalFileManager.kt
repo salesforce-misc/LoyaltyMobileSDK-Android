@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.MockResponseFileReader
+import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 
 object LocalFileManager {
@@ -14,6 +15,7 @@ object LocalFileManager {
     const val DIRECTORY_TRANSACTIONS = "Transactions"
     const val DIRECTORY_PROMOTIONS = "Promotions"
     const val DIRECTORY_VOUCHERS = "Vouchers"
+    const val DIRECTORY_RECEIPT_LIST = "ReceiptList"
 
     fun <T> saveData(context: Context, data: T, id: String, folderName: String) {
         println("DEBUG: $id: $folderName")
@@ -42,6 +44,10 @@ object LocalFileManager {
             }
             DIRECTORY_PROMOTIONS -> {
                 return  Gson().fromJson(MockResponseFileReader("Promotions.json").content, PromotionsResponse::class.java) as T
+
+            }
+            DIRECTORY_RECEIPT_LIST -> {
+                return  Gson().fromJson(MockResponseFileReader("receiptlist.json").content, ReceiptListResponse::class.java) as T
 
             }
             else -> {

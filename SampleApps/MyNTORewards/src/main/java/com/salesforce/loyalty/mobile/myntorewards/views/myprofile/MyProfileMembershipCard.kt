@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +30,8 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourPurpleQR
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BLUR_BG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.REWARD_CURRENCY_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
@@ -38,7 +41,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyProfil
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberProfileResponse
 
 @Composable
-fun ProfileCard(profileModel: MembershipProfileViewModelInterface) {
+fun ProfileCard(profileModel: MembershipProfileViewModelInterface, blurBG: (Dp) -> Unit) {
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
@@ -53,7 +56,9 @@ fun ProfileCard(profileModel: MembershipProfileViewModelInterface) {
                 .background(Color.White, RoundedCornerShape(4.dp))
         ) {
             CardBackground()
-            CardContent(profileModel)
+            CardContent(profileModel){
+                blurBG(it)
+            }
         }
     }
 }
@@ -72,7 +77,7 @@ fun CardBackground() {
 }
 
 @Composable
-fun CardContent(profileModel: MembershipProfileViewModelInterface) {
+fun CardContent(profileModel: MembershipProfileViewModelInterface, blurBG: (Dp) -> Unit) {
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
         Column(
@@ -125,7 +130,9 @@ fun CardContent(profileModel: MembershipProfileViewModelInterface) {
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                QRCodeRow(membershipProfile)
+                QRCodeRow(membershipProfile){
+                    blurBG(it)
+                }
             }
 
         }
@@ -196,7 +203,7 @@ fun RewardPointsAndExpiry(memberCurrencyPointBalance: Double?) {
 }
 
 @Composable
-fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
+fun QRCodeRow(membershipProfile: MemberProfileResponse?, blurBG: (Dp) -> Unit) {
 
     val membershipID =
         membershipProfile?.loyaltyProgramMemberId ?: ""
@@ -219,6 +226,7 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
         )
         Column(modifier = Modifier.clickable {
             popupControlQRCOde = true
+            blurBG(BLUR_BG)
         }.testTag(TEST_TAG_QR_CODE)) {
             QRCode(value = membershipID, width = 46, height = 46, ColourPurpleQR)
         }
@@ -227,11 +235,14 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?) {
             Popup(
                 alignment = Alignment.Center,
                 offset = IntOffset(0, 700),
-                onDismissRequest = { popupControlQRCOde = false },
+                onDismissRequest = {
+                    popupControlQRCOde = false
+                    blurBG(NO_BLUR_BG) },
                 properties = PopupProperties(focusable = true)
             ) {
                 QRCodePopup(membershipProfile) {
                     popupControlQRCOde = false
+                    blurBG(NO_BLUR_BG)
                 }
             }
         }
