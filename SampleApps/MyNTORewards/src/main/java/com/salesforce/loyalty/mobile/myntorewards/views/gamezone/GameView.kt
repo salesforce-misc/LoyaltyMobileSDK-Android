@@ -54,7 +54,7 @@ fun GameView(isExpired: Boolean, isPlayed: Boolean, gamePlayingStatus: String?, 
     {
 
             val thumbnailId = when (gameType) {
-                GameType.SPIN_A_WHEEL -> {
+                GameType.SPIN_THE_WHEEL -> {
                     if (isExpired) {
                         R.drawable.placeholder_spin_wheel_expired
                     } else {
@@ -99,7 +99,7 @@ fun GameView(isExpired: Boolean, isPlayed: Boolean, gamePlayingStatus: String?, 
 
             Column(modifier = Modifier.fillMaxWidth().align(Alignment.BottomStart)) {
                 val gameTypeText = when (gameType) {
-                    GameType.SPIN_A_WHEEL -> R.string.game_spin_a_wheel
+                    GameType.SPIN_THE_WHEEL -> R.string.game_spin_the_wheel
                     GameType.SCRATCH_CARD -> R.string.game_scratch_card
                 }
                 Text(
@@ -162,5 +162,5 @@ fun GameView(isExpired: Boolean, isPlayed: Boolean, gamePlayingStatus: String?, 
 @Preview
 @Composable
 fun previewGameView(){
-    GameView(false, false,"Expiring Tomorrow", title = "R.string.game_placeholder_title", gameType = GameType.SPIN_A_WHEEL){}
+    GameView(false, false,"Expiring Tomorrow", title = "R.string.game_placeholder_title", gameType = GameType.SPIN_THE_WHEEL){}
 }

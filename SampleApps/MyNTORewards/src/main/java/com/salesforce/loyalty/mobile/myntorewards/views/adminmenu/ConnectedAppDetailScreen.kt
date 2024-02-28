@@ -1,6 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.view.WindowManager
 import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -138,6 +140,12 @@ fun ConnectedAppDetails(
         null
     )
     val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+
+    LaunchedEffect(key1 = true) {
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
+
     val viewModel: ConnectedAppViewModel =
         viewModel(factory = ConnectedAppViewModelFactory())
 

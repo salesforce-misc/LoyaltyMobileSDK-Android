@@ -195,7 +195,7 @@ class SampleAppUnitTest {
 
         composeTestRule.onNodeWithText("Played").performClick()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(2)
-        composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasText("Spin the Wheel")).assertCountEquals(2)
         composeTestRule.onNodeWithText("Games Played in the last 90 days").assertIsDisplayed()
 
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).assertCountEquals(2)
@@ -250,12 +250,12 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Expired").performClick()
         composeTestRule.onNodeWithText("No longer available").assertIsDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM)).assertCountEquals(1)
-        composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(1)
+        composeTestRule.onAllNodes(hasText("Spin the Wheel")).assertCountEquals(1)
         //composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
 
         composeTestRule.onNodeWithText("Available").performClick()
-        composeTestRule.onAllNodes(hasText("Spin a Wheel")).assertCountEquals(2)
-        composeTestRule.onAllNodes(hasText("Scratch a Card")).assertCountEquals(1)
+        composeTestRule.onAllNodes(hasText("Spin the Wheel")).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasText("Scratchcard")).assertCountEquals(1)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).assertCountEquals(3)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TITLE), useUnmergedTree=true).assertCountEquals(3)
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_TYPE),useUnmergedTree=true).assertCountEquals(3)

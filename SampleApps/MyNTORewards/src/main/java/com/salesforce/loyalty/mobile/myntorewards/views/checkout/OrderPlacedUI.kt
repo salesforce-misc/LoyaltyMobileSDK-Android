@@ -152,7 +152,7 @@ fun FooterButtonsView(
                     navCheckOutFlowController.navigate(MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId=$gamePartRewardId") {
                         popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
                     }
-                } else if (gameType == GameType.SPIN_A_WHEEL){
+                } else if (gameType == GameType.SPIN_THE_WHEEL){
                     navCheckOutFlowController.navigate(MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId=$gamePartRewardId") {
                         popUpTo(CheckOutFlowScreen.StartCheckoutFlowScreen.route)
                     }
