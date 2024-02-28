@@ -45,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_TANDC_LINK
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.CopyColor
@@ -75,7 +76,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCust
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.EMPTY_STATE
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.ERROR
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.ERROR_ENROLL
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.JOIN_PROGRAM
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.SIGNUP
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.START_REFERRING
@@ -92,11 +93,16 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
 
     programState?.let {
         when(it) {
-            is ERROR -> ErrorPopup(
+            is ERROR_ENROLL -> ErrorPopup(
                 it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
                 tryAgainButtonText = stringResource(id = R.string.join_referral_program_button_text),
                 tryAgainClicked = { viewModel.enrollToReferralPromotion(context, true) },
-                textButtonClicked = {  }
+                textButtonClicked = { backAction }
+            )
+            is ReferralProgramType.ERROR_REFERRAL_EVENT -> ErrorPopup(
+                it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                tryAgainClicked = { viewModel.retryReferralMailEvent(context) },
+                textButtonClicked = { backAction }
             )
             is EMPTY_STATE -> {
                 CircularProgress(modifier = Modifier
@@ -118,7 +124,7 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
             }
             ReferFriendViewState.ReferFriendSendMailsSuccess -> { context.showToast(stringResource(R.string.emails_sent_successfully)) }
             is ReferFriendViewState.ReferFriendSendMailsFailed -> {
-                context.showToast(it.errorMessage ?: stringResource(R.string.failed_try_again))
+                // Do nothing
             }
             is ReferFriendViewState.EnrollmentTaskFinished -> {
                 // Do nothing
@@ -159,7 +165,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
             promotionDetails?.promotionImageUrl?.let {
                 GlideImage(
                     model = it,
-                    contentDescription = stringResource(id = R.string.content_description_promotion_image),
+                    contentDescription = stringResource(id = R.string.refer_friend_banner_content_description),
                     modifier = Modifier
                         .fillMaxWidth()
                         .size(imageSize)
@@ -394,5 +400,6 @@ fun ReferralCodeView(referralCode: String) {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun ReferFriendScreenPreview() {
-    ReferFriendScreen(viewModel(), backAction = { true }) {  }
+//    ReferFriendScreen(viewModel(), backAction = { true }) {  }
+    SocialMediaRow("")
 }

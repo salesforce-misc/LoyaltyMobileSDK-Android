@@ -2323,7 +2323,7 @@ class SampleAppViewModelTest {
             referralViewState[1]
         )
         Assert.assertEquals(
-            ReferralProgramType.ERROR("Run Time Exception"),
+            ReferralProgramType.ERROR_ENROLL("Run Time Exception"),
             programDataState[0]
         )
 
@@ -2360,7 +2360,7 @@ class SampleAppViewModelTest {
             referralViewState[1]
         )
         Assert.assertEquals(
-            ReferralProgramType.ERROR(),
+            ReferralProgramType.ERROR_ENROLL(),
             programDataState[0]
         )
 
@@ -2400,7 +2400,7 @@ class SampleAppViewModelTest {
             referralViewState[1]
         )
         Assert.assertEquals(
-            ReferralProgramType.ERROR(context.getString(R.string.enrolment_not_processed_message)),
+            ReferralProgramType.ERROR_ENROLL(context.getString(R.string.enrolment_not_processed_message)),
             programDataState[0]
         )
 
@@ -2442,7 +2442,7 @@ class SampleAppViewModelTest {
             referralViewState[1]
         )
         Assert.assertEquals(
-            ReferralProgramType.ERROR(context.getString(R.string.enrolment_not_processed_message)),
+            ReferralProgramType.ERROR_ENROLL(context.getString(R.string.enrolment_not_processed_message)),
             programDataState[0]
         )
 

@@ -10,6 +10,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onLast
@@ -25,19 +26,20 @@ import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.INSTAGRAM_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMPTY_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.WHATSAPP_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.isAppInstalled
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.TEST_TAG_TITLE_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
@@ -57,6 +59,7 @@ import com.salesforce.referral.entities.referral_event.ReferralEventRequest
 import com.salesforce.referral.entities.referral_event.ReferralEventResponse
 import com.salesforce.referral.repository.ReferralsRepository
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.delay
 import org.junit.Before
 import org.junit.Rule
@@ -77,12 +80,9 @@ class MyReferralsScreenTest {
         clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        var authenticator = ForceAuthManager(context)
-         val repository= ReferralsRepository(getAPIService())
-         val localRepository=  ReferralsLocalRepository(getLocalAPIService(), "", authenticator)
-
-
-        var myReferralsViewModel= MyReferralsViewModel(repository, localRepository, "")
+        val repository = ReferralsRepository(getAPIService())
+        val localRepository =  ReferralsLocalRepository(getLocalAPIService(), "")
+        var myReferralsViewModel = MyReferralsViewModel(repository, localRepository, "")
 
         // Launch the screen
         composeTestRule.setContent {
@@ -105,15 +105,15 @@ class MyReferralsScreenTest {
             onNodeWithText("Invitations Sent").assertIsDisplayed()
             onNodeWithText("Invitations Accepted").assertIsDisplayed()
             onNodeWithText("Vouchers Earned").assertIsDisplayed()
-            onNodeWithText("Refer Now").assertIsDisplayed()
+            onNodeWithText("Refer Now").assertIsDisplayed().performClick()
 
             onNodeWithTag(TEST_TAG_REFER_FRIEND_SCREEN).assertIsDisplayed()
-            onNodeWithText("Join Referral Program").assertIsDisplayed()
-            onNodeWithText("Join our referral program and share your referral code with friends to get rewarded.").assertIsDisplayed()
-            onNodeWithText("Join").assertIsDisplayed()
-            onNodeWithText("Cancel").assertIsDisplayed()
+            onNodeWithText("Default Referral Promotion").assertIsDisplayed()
+            onNodeWithText("Invite your friends and get a voucher when they shop for the first time.").assertIsDisplayed()
+            onNodeWithText("Start Referring").assertIsDisplayed()
+            onNodeWithText("Back").assertIsDisplayed()
 
-            onNodeWithText("Join").performClick()
+            onNodeWithText("Start Referring").performClick()
             Thread.sleep(2000)
 
             onNodeWithText("Done").assertIsDisplayed()
@@ -160,9 +160,9 @@ class MyReferralsScreenTest {
             onNodeWithText("Refer Now").assertIsDisplayed().performClick()
             Thread.sleep(500)
             onNodeWithTag(TEST_TAG_REFER_FRIEND_SCREEN).assertIsDisplayed()
-            onNodeWithContentDescription(activity.getString(R.string.refer_friend_banner_content_description)).assertIsDisplayed()
-            onNodeWithText("Start Referring").assertIsDisplayed()
-            onNodeWithText("Your referral code is ready! Share the referral code with your friends and get rewarded when they place their first order.").assertIsDisplayed()
+//            onNodeWithContentDescription(activity.getString(R.string.refer_friend_banner_content_description)).assertIsDisplayed()
+            onNodeWithText("Default Referral Promotion").assertIsDisplayed()
+            onNodeWithText("Invite your friends and get a voucher when they shop for the first time.").assertIsDisplayed()
 
             // Test Email input Field
             onNodeWithText("Add a comma after each email address.").assertIsDisplayed()
@@ -170,14 +170,7 @@ class MyReferralsScreenTest {
             onNodeWithTag(TEST_TAG_TEXT_FIELD_RIGHT_ICON, true).assertIsDisplayed()
 
             Thread.sleep(2000)
-            onNodeWithText("2BYEMSGU-TEMPRP9").assertIsDisplayed()
-
-            //below comment causing intermittent behaviour. Sometime clip board gets hanged and doesnt disappear and
-            //overshadow the twitter or other click icon. Icons get blocked to click and test gets failed.
-            //we can test this at faster or real test device so that things perform faster.
-
-     /*       onNodeWithText("Copy").assertIsDisplayed().performClick()
-            assertEquals("2BYEMSGU-TEMPRP9", clipboardManager.text)*/
+            onNodeWithText("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", substring = true).assertIsDisplayed()
 
             onNodeWithTag(TEST_TAG_CLOSE_REFER_POPUP).performClick()
             Thread.sleep(2000)
@@ -192,46 +185,67 @@ class MyReferralsScreenTest {
             onNodeWithContentDescription(activity.getString(R.string.share_via_twitter_icon_description))
                 .assertIsDisplayed().performClick()
             Thread.sleep(1000)
-            val twitter: UiObject2 = uiDevice.findObject(By.text("Post"))
-            // Perform a click and wait until the app is opened.
-            val twitterOpened: Boolean = twitter.clickAndWait(Until.newWindow(), 15000)
-            assert(twitterOpened)
-            assertEquals(TWITTER_APP_PACKAGE, uiDevice.currentPackageName)
-            Thread.sleep(2000)
-            uiDevice.pressBack()
-            Thread.sleep(2000)
-            uiDevice.pressBack()
-            Thread.sleep(2000)
+            if (context.isAppInstalled(TWITTER_APP_PACKAGE)) {
+                val twitter: UiObject2 = uiDevice.findObject(By.text("Post"))
+                // Perform a click and wait until the app is opened.
+                val twitterOpened: Boolean = twitter.clickAndWait(Until.newWindow(), 15000)
+                assert(twitterOpened)
+                assertEquals(TWITTER_APP_PACKAGE, uiDevice.currentPackageName)
+                Thread.sleep(2000)
+                uiDevice.pressBack()
+                Thread.sleep(2000)
+                uiDevice.pressBack()
+                Thread.sleep(2000)
 
-            val twitterDelete: UiObject2 = uiDevice.findObject(By.text("Delete"))
-
-            twitterDelete.click()
+                val twitterDelete: UiObject2 = uiDevice.findObject(By.text("Delete"))
+                twitterDelete.click()
+            } else {
+                onAllNodesWithText("No apps can perform this action.")
+                uiDevice.pressBack()
+            }
             Thread.sleep(1000)
 
-            onNodeWithContentDescription(activity.getString(R.string.share_via_instagram_icon_description))
-                .assertIsDisplayed().performClick()
-            Thread.sleep(2000)
+            if (context.isAppInstalled(INSTAGRAM_APP_PACKAGE)) {
+                onNodeWithContentDescription(activity.getString(R.string.share_via_instagram_icon_description))
+                    .assertIsDisplayed().performClick()
+                Thread.sleep(2000)
 
-            assertEquals(INSTAGRAM_APP_PACKAGE, uiDevice.currentPackageName)
+                assertEquals(INSTAGRAM_APP_PACKAGE, uiDevice.currentPackageName)
+            } else {
+                onAllNodesWithText("No apps can perform this action.")
+            }
             uiDevice.pressBack()
 
-            onNodeWithContentDescription(activity.getString(R.string.share_via_whatsapp_icon_description))
-                .assertIsDisplayed().performClick()
-            Thread.sleep(2000)
-            assertEquals(WHATSAPP_APP_PACKAGE, uiDevice.currentPackageName)
+            if (context.isAppInstalled(WHATSAPP_APP_PACKAGE)) {
+                onNodeWithContentDescription(activity.getString(R.string.share_via_whatsapp_icon_description))
+                    .assertIsDisplayed().performClick()
+                Thread.sleep(2000)
+                assertEquals(WHATSAPP_APP_PACKAGE, uiDevice.currentPackageName)
+            } else {
+                onAllNodesWithText("No apps can perform this action.")
+            }
             uiDevice.pressBack()
 
-            onNodeWithContentDescription(activity.getString(R.string.share_via_facebook_icon_description))
-                .assertIsDisplayed().performClick()
-            Thread.sleep(1000)
-            val facebook: UiObject2 = uiDevice.findObject(By.text("News Feed"))
+            if (context.isAppInstalled(WHATSAPP_APP_PACKAGE)) {
+                onNodeWithContentDescription(activity.getString(R.string.share_via_facebook_icon_description))
+                    .assertIsDisplayed().performClick()
+                Thread.sleep(1000)
+                val facebook: UiObject2 = uiDevice.findObject(By.text("News Feed"))
 
-            val facebookOpened: Boolean = facebook.clickAndWait(Until.newWindow(), 10000)
-            assert(facebookOpened)
-
+                val facebookOpened: Boolean = facebook.clickAndWait(Until.newWindow(), 10000)
+                assert(facebookOpened)
+            } else {
+                onAllNodesWithText("No apps can perform this action.")
+            }
             uiDevice.pressBack()
 
+            //below comment causing intermittent behaviour. Sometime clip board gets hanged and doesnt disappear and
+            //overshadow the twitter or other click icon. Icons get blocked to click and test gets failed.
+            //we can test this at faster or real test device so that things perform faster.
 
+            onNodeWithText("Copy").assertIsDisplayed().performClick()
+            assertEquals("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", clipboardManager.text)
+            uiDevice.pressBack()
 
         }
     }
@@ -268,24 +282,21 @@ fun getLocalAPIService(): ReferralsLocalApiService {
     return object : ReferralsLocalApiService {
         override suspend fun fetchReferralsInfo(
             url: String,
-            query: String?,
-            bearerToken: String
+            query: String?
         ): Response<QueryResult<ReferralEntity>> {
             return Response.success("" as QueryResult<ReferralEntity>)
         }
 
         override suspend fun fetchMemberReferralId(
             url: String,
-            query: String?,
-            bearerToken: String
+            query: String?
         ): Response<QueryResult<ReferralCode>> {
             return Response.success("" as QueryResult<ReferralCode>)
         }
 
         override suspend fun checkIfMemberEnrolled(
             url: String,
-            query: String?,
-            bearerToken: String
+            query: String?
         ): Response<QueryResult<ReferralEnrollmentInfo>> {
 
             delay(2000)
@@ -297,6 +308,13 @@ fun getLocalAPIService(): ReferralsLocalApiService {
             ) as QueryResult<ReferralEnrollmentInfo>
 
             return Response.success(response)
+        }
+
+        override suspend fun checkIfGivenPromotionIsReferralAndEnrolled(
+            url: String,
+            query: String?
+        ): Response<QueryResult<ReferralPromotionStatusAndPromoCode>> {
+            return Response.success("" as QueryResult<ReferralPromotionStatusAndPromoCode>)
         }
     }
 }

@@ -8,5 +8,6 @@ sealed class ReferralProgramType {
     object JOIN_PROGRAM : ReferralProgramType()
     object START_REFERRING : ReferralProgramType()
     object EMPTY_STATE : ReferralProgramType()
-    data class ERROR(val errorMessage: String? = null) : ReferralProgramType()
+    data class ERROR_ENROLL(val errorMessage: String? = null) : ReferralProgramType()
+    data class ERROR_REFERRAL_EVENT(val errorMessage: String? = null) : ReferralProgramType()
 }
