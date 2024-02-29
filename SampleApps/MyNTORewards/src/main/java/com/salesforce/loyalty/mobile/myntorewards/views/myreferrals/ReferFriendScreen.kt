@@ -54,6 +54,8 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextLightGray
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.REFER_FRIEND_PROMOTION_DESC
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.REFER_FRIEND_PROMOTION_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.copyToClipboard
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isValidEmail
@@ -97,12 +99,14 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
                 it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
                 tryAgainButtonText = stringResource(id = R.string.join_referral_program_button_text),
                 tryAgainClicked = { viewModel.enrollToReferralPromotion(context, true) },
-                textButtonClicked = { backAction }
+                textButtonClicked = { closeAction() },
+                textButton = stringResource(id = R.string.referral_back_button_text)
             )
             is ReferralProgramType.ERROR_REFERRAL_EVENT -> ErrorPopup(
                 it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
                 tryAgainClicked = { viewModel.retryReferralMailEvent(context) },
-                textButtonClicked = { backAction }
+                textButtonClicked = { closeAction() },
+                textButton = stringResource(id = R.string.referral_back_button_text)
             )
             is EMPTY_STATE -> {
                 CircularProgress(modifier = Modifier
@@ -242,9 +246,9 @@ fun ColumnScope.JoinReferralProgramUi(
     backAction: () -> Any
 ) {
     val context = LocalContext.current
-    BodyTextBold(text = promotionDetails?.promotionName ?: stringResource(R.string.join_referral_program_header))
+    BodyTextBold(text = promotionDetails?.promotionName ?: stringResource(R.string.join_referral_program_header), modifier = Modifier.testTag(REFER_FRIEND_PROMOTION_NAME))
     promotionDetails?.description?.let {
-        BodyText(text = it)
+        BodyText(text = it, modifier = Modifier.testTag(REFER_FRIEND_PROMOTION_DESC))
     }
     HtmlText(text = stringResource(R.string.refer_a_friend_and_earn_bottom_text, REFERRAL_TANDC_LINK), size = 16f)
     Spacer(modifier = Modifier.weight(1f))
@@ -269,9 +273,10 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Resu
     var textField by remember { mutableStateOf(TextFieldValue("")) }
     val invalidEmailMessage = stringResource(R.string.invalid_email_error_message)
 
-    BodyTextBold(text = promotionDetails?.promotionName ?: stringResource(R.string.refer_a_friend_and_earn_header))
+    BodyTextBold(text = promotionDetails?.promotionName ?: stringResource(R.string.refer_a_friend_and_earn_header), modifier = Modifier.testTag(
+        REFER_FRIEND_PROMOTION_NAME))
     promotionDetails?.description?.let {
-        BodyText(text = it)
+        BodyText(text = it, modifier = Modifier.testTag(REFER_FRIEND_PROMOTION_DESC))
     }
     TextFieldCustom(
         textField,

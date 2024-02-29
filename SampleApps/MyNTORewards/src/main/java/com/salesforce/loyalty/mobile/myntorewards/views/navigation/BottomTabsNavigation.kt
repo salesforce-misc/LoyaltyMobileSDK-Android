@@ -20,6 +20,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -36,6 +37,7 @@ fun HomeTabScreen(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModel = hiltViewModel(),
+    referralViewModel: MyReferralsViewModel
 ) {
     val bottomTabsNavController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -51,7 +53,7 @@ fun HomeTabScreen(
                 .background(TextPurpleLightBG)
                 .testTag(TEST_TAG_HOME_SCREEN)
         ) {
-            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel) {
+            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel, referralViewModel) {
                 bottomBarState.value = it
             }
         }
@@ -71,6 +73,7 @@ fun TabNavigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModel,
+    referralViewModel: MyReferralsViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
 
@@ -78,12 +81,12 @@ fun TabNavigation(
     {
         composable(route = BottomNavTabs.Home.route) {
 
-            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel) {
+            HomeScreenAndCheckOutFlowNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel, referralViewModel) {
                 showBottomBar(it)
             }
         }
         composable(route = BottomNavTabs.MyOffers.route) {
-            PromotionScreenAndCheckOutFlowNavigation(bottomTabsNavController, promotionModel, voucherModel, checkOutFlowViewModel, profileModel, gameViewModel) {
+            PromotionScreenAndCheckOutFlowNavigation(bottomTabsNavController, promotionModel, voucherModel, checkOutFlowViewModel, profileModel, gameViewModel, referralViewModel) {
                 showBottomBar(it)
             }
         }

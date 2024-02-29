@@ -36,6 +36,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromo
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.INSTAGRAM_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMPTY_VIEW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.WHATSAPP_APP_PACKAGE
@@ -59,14 +60,16 @@ import com.salesforce.referral.entities.referral_event.ReferralEventRequest
 import com.salesforce.referral.entities.referral_event.ReferralEventResponse
 import com.salesforce.referral.repository.ReferralsRepository
 import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.delay
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import retrofit2.Response
 
 class MyReferralsScreenTest {
+    private lateinit var localRepository: ReferralsLocalRepository
+
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
     private lateinit var clipboardManager: ClipboardManager
@@ -80,18 +83,28 @@ class MyReferralsScreenTest {
         clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
+        localRepository = ReferralsLocalRepository(getLocalAPIService(), "")
+    }
+
+    private fun mockReferralsDataLaunchScreen() {
         val repository = ReferralsRepository(getAPIService())
-        val localRepository =  ReferralsLocalRepository(getLocalAPIService(), "")
         var myReferralsViewModel = MyReferralsViewModel(repository, localRepository, "")
 
         // Launch the screen
         composeTestRule.setContent {
-            MyReferralsListScreen(myReferralsViewModel, backAction = {true}) {}
+            MyReferralsListScreen(myReferralsViewModel, backAction = { true }) {}
         }
     }
 
+    @After
+    fun tearDown() {
+        ReferralsLocalRepository.clearReferralsData()
+    }
+
     @Test
-    fun verifyReferralScreen() {
+    fun testReferralScreenSuccessFlow() {
+        mockReferralsDataLaunchScreen()
+
         composeTestRule.run {
             PrefHelper.customPrefs(context)[AppConstants.REFERRAL_PROGRAM_JOINED] = false
             onNodeWithText("My Referrals").assertIsDisplayed()
@@ -155,12 +168,55 @@ class MyReferralsScreenTest {
         verifyReferFriendScreen()
     }
 
+    @Test
+    fun testReferralScreenFetchReferralsAPiFailureFlow() {
+        localRepository.setReferralsListApiSuccess(false)
+        mockReferralsDataLaunchScreen()
+
+        composeTestRule.onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
+        Thread.sleep(5000)
+        verifyErrorScreenDisplayed()
+    }
+
+    @Test
+    fun testReferralEnrollmentApiFailureFlow() {
+        localRepository.setReferralsListApiSuccess(true)
+        localRepository.setReferralEnrollmentStatusApiSuccess(false)
+        mockReferralsDataLaunchScreen()
+
+        composeTestRule.onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
+        Thread.sleep(5000)
+        verifyErrorScreenDisplayed()
+    }
+
+    @Test
+    fun testPromotionTypeAndCodeApiFailureFlow() {
+        localRepository.setReferralsListApiSuccess(true)
+        localRepository.setReferralEnrollmentStatusApiSuccess(true)
+        localRepository.setPromotionTypeAndCodeApiSuccess(false)
+        mockReferralsDataLaunchScreen()
+
+        verifyErrorScreenDisplayed()
+    }
+
+    private fun verifyErrorScreenDisplayed() {
+        composeTestRule.run {
+            onNodeWithTag(TEST_TAG_TITLE_VIEW)
+                .assertTextEquals("My Referrals")
+                .assertIsDisplayed()
+            onNodeWithTag(TestTags.TEST_TAG_ERROR_SCREEN).assertIsDisplayed()
+            onNodeWithText("Something went wrong. Try again.").assertIsDisplayed()
+            onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN)
+                .assertTextEquals("Try Again").assertIsDisplayed()
+            Thread.sleep(1000)
+        }
+    }
+
     private fun verifyReferFriendScreen() {
         composeTestRule.run {
             onNodeWithText("Refer Now").assertIsDisplayed().performClick()
             Thread.sleep(500)
             onNodeWithTag(TEST_TAG_REFER_FRIEND_SCREEN).assertIsDisplayed()
-//            onNodeWithContentDescription(activity.getString(R.string.refer_friend_banner_content_description)).assertIsDisplayed()
             onNodeWithText("Default Referral Promotion").assertIsDisplayed()
             onNodeWithText("Invite your friends and get a voucher when they shop for the first time.").assertIsDisplayed()
 

@@ -54,6 +54,7 @@ fun PromotionCard(
     membershipPromo: List<Results>?,
     navCheckOutFlowController: NavController,
     promotionViewModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     blurBG: (Dp) -> Unit
 ) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
@@ -183,7 +184,6 @@ fun PromotionCard(
 
     if (currentPromotionDetailPopupState) {
         membershipPromo?.get(page)?.let {
-            val referralViewModel: MyReferralsViewModel = hiltViewModel()
             PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, it, it.promotionId.orEmpty(), referralViewModel) {
                 currentPromotionDetailPopupState = false
                 blurBG(NO_BLUR_BG)

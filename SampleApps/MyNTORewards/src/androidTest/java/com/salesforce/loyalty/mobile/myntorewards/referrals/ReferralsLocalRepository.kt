@@ -1,9 +1,8 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals
 
 import android.content.Context
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.salesforce.loyalty.mobile.myntorewards.MockResponseFileReader
+import com.salesforce.loyalty.mobile.myntorewards.mockResponse
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
@@ -13,9 +12,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromo
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import com.salesforce.referral.api.ApiResponse
-import com.salesforce.referral.repository.RecordList
 import kotlinx.coroutines.delay
-import java.lang.reflect.Type
 
 
 class ReferralsLocalRepository constructor(
@@ -24,67 +21,65 @@ class ReferralsLocalRepository constructor(
 ) {
 
     companion object {
-        const val SOQL_QUERY_PATH = "/services/data/v"
-        const val SOQL_QUERY_VERSION = "59.0"
-        const val QUERY = "/query/"
-
         private var cachedReferralStatus = mutableMapOf<String, Pair<Boolean, Boolean>>()
         private var cachedPromoCode = mutableMapOf<String, Pair<String?, String?>>()
+        private var isReferralPromotion: Boolean = true
+        private var isReferralsListApiSuccess: Boolean = true
+        private var isReferralEnrollmentStatusApiSuccess: Boolean = true
+        private var isPromotionTypeAndCodeApiSuccess: Boolean = true
 
         fun clearReferralsData() {
             cachedReferralStatus = mutableMapOf()
             cachedPromoCode = mutableMapOf()
+            isReferralPromotion = true
+            isReferralsListApiSuccess = true
+            isReferralEnrollmentStatusApiSuccess = true
+            isPromotionTypeAndCodeApiSuccess = true
         }
     }
 
-    private fun sObjectUrl() = instanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY
-
     suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
-        //delay(1000)
-        val bookType = object : TypeToken<QueryResult<ReferralEntity>>() {}.type
-        val response = mockResponse("ReferralEntityResponse.json", bookType) as QueryResult<ReferralEntity>
-
-//        val gson = Gson()
-//        val mockResponse = MockResponseFileReader("ReferralEntityResponse.json").content
-//
-//        var response= gson.fromJson(
-//            mockResponse,
-//            RecordList::class.java
-//        )
-//        var Obj = QueryResult<ReferralEntity>(13, true, response.records, "")
-        return ApiResponse.Success(response)
+        val responseType = object : TypeToken<QueryResult<ReferralEntity>>() {}.type
+        val response = mockResponse("ReferralEntityResponse.json", responseType) as QueryResult<ReferralEntity>
+        return if (isReferralsListApiSuccess) {
+            ApiResponse.Success(response)
+        } else {
+            ApiResponse.NetworkError
+        }
     }
 
     suspend fun checkIfMemberEnrolled(promoCode: String, memberId: String): ApiResponse<QueryResult<ReferralEnrollmentInfo>> {
-        val bookType = object : TypeToken<QueryResult<ReferralEnrollmentInfo>>() {}.type
-
-        val response = mockResponse("ReferralEnrollmentInfo.json", bookType) as QueryResult<ReferralEnrollmentInfo>
+        val responseType = object : TypeToken<QueryResult<ReferralEnrollmentInfo>>() {}.type
+        val response = mockResponse("ReferralEnrollmentInfo.json", responseType) as QueryResult<ReferralEnrollmentInfo>
         delay(2000)
-        return ApiResponse.Success(response)
-
+        return if (isReferralEnrollmentStatusApiSuccess) {
+            ApiResponse.Success(response)
+        } else {
+            ApiResponse.NetworkError
+        }
     }
 
     suspend fun fetchMemberReferralCode(contactId: String, programName: String = ReferralConfig.REFERRAL_PROGRAM_NAME): ApiResponse<QueryResult<ReferralCode>> {
-        val bookType = object : TypeToken<QueryResult<ReferralCode>>() {}.type
-        val response = mockResponse("ReferralCode.json", bookType) as QueryResult<ReferralCode>
+        val responseType = object : TypeToken<QueryResult<ReferralCode>>() {}.type
+        val response = mockResponse("ReferralCode.json", responseType) as QueryResult<ReferralCode>
         return ApiResponse.Success(response)
     }
 
     suspend fun checkIfGivenPromotionIsReferralAndEnrolled(promoId: String): ApiResponse<QueryResult<ReferralPromotionStatusAndPromoCode>> {
-        val bookType = object : TypeToken<QueryResult<ReferralPromotionStatusAndPromoCode>>() {}.type
-
-        val response = mockResponse("PromotionTypeAndCode.json", bookType) as QueryResult<ReferralPromotionStatusAndPromoCode>
-        val results = listOf<ReferralPromotionStatusAndPromoCode>(
+        val results = listOf(
             ReferralPromotionStatusAndPromoCode(
                 "Default Referral Promotion",
                 "TEMPRP7",
-                "https://rb.gy/wa6jw7?referralCode=",
-                true
+                "https://rb.gy/wa6jw7",
+                isReferralPromotion
             )
         )
-        var Obj = QueryResult<ReferralPromotionStatusAndPromoCode>(1, true, results, "")
-
-        return ApiResponse.Success(response)
+        var customResponse = QueryResult(1, true, results, "")
+        return if (isPromotionTypeAndCodeApiSuccess) {
+            ApiResponse.Success(customResponse)
+        } else {
+            ApiResponse.NetworkError
+        }
     }
 
     fun getDefaultPromotionDetailsFromCache(context: Context, memberShipNumber: String, promotionId: String): Results? {
@@ -112,10 +107,19 @@ class ReferralsLocalRepository constructor(
         return cachedPromoCode[promotionId]?.second.orEmpty()
     }
 
-    private fun mockResponse(fileName: String, java: Type): Any {
-        val gson = Gson()
-        val mockResponse =
-            MockResponseFileReader(fileName).content
-        return gson.fromJson(mockResponse, java)
+    fun setPromotionType(isReferral: Boolean) {
+        isReferralPromotion = isReferral
+    }
+
+    fun setReferralsListApiSuccess(success: Boolean) {
+        isReferralsListApiSuccess = success
+    }
+
+    fun setReferralEnrollmentStatusApiSuccess(success: Boolean) {
+        isReferralEnrollmentStatusApiSuccess = success
+    }
+
+    fun setPromotionTypeAndCodeApiSuccess(success: Boolean) {
+        isPromotionTypeAndCodeApiSuccess = success
     }
 }

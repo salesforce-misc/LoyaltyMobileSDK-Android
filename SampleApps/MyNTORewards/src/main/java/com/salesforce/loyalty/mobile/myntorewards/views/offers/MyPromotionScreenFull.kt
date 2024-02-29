@@ -44,7 +44,9 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.MY_PROMOTION_FULL_SCREEN_HEADER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_LIST
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
@@ -62,7 +64,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyPromotionScreen(
     navCheckOutFlowController: NavController,
-    promotionViewModel: MyPromotionViewModelInterface
+    promotionViewModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel
 ) {
 
 
@@ -186,7 +189,7 @@ fun MyPromotionScreen(
 
                         when (selectedTab) {
                             0 -> {
-                                PromotionItem(it, navCheckOutFlowController, promotionViewModel) {
+                                PromotionItem(it, navCheckOutFlowController, promotionViewModel, referralViewModel) {
                                     blurBG = it
                                 }
                             }
@@ -196,7 +199,8 @@ fun MyPromotionScreen(
                                     PromotionItem(
                                         it,
                                         navCheckOutFlowController,
-                                        promotionViewModel
+                                        promotionViewModel,
+                                        referralViewModel
                                     ) {
                                         blurBG = it
                                     }
@@ -208,7 +212,8 @@ fun MyPromotionScreen(
                                     PromotionItem(
                                         it,
                                         navCheckOutFlowController,
-                                        promotionViewModel
+                                        promotionViewModel,
+                                        referralViewModel
                                     ) {
 
                                     }
@@ -310,6 +315,7 @@ fun PromotionItem(
     results: Results,
     navCheckOutFlowController: NavController,
     promotionViewModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     blurBG: (Dp) -> Unit
 ) {
 
@@ -319,7 +325,6 @@ fun PromotionItem(
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
     if (currentPromotionDetailPopupState) {
-        val referralViewModel: MyReferralsViewModel = hiltViewModel()
         PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, results, results.promotionId.orEmpty(), referralViewModel) {
             currentPromotionDetailPopupState = false
             blurBG(NO_BLUR_BG)
@@ -339,7 +344,7 @@ fun PromotionItem(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
 
-        Box() {
+        Box(modifier = Modifier.testTag(TEST_TAG_PROMO_IMAGE)) {
             Image(
                 painter = painterResource(R.drawable.promotionlist_image_placeholder),
                 contentDescription = "promotion_item_placeholder",
@@ -396,6 +401,7 @@ fun PromotionItem(
                         modifier = Modifier
                             .padding(start = 16.dp)
                             .padding(end = 16.dp)
+                            .testTag(TestTags.TEST_TAG_PROMO_NAME)
                     )
                 }
 
@@ -422,6 +428,7 @@ fun PromotionItem(
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .padding(end = 16.dp)
+                    .testTag(TestTags.TEST_TAG_PROMO_DESCRIPTION)
             )
 
             Row(
