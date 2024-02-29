@@ -47,7 +47,9 @@ class ReferralsLocalRepositoryTest {
                     Response.success(QueryResult(1, true, listOf(referralEntity), null))
             )
 
+
             val result = repository.fetchReferralsInfo("1234", 90)
+
             assert(result is ApiResponse.Success)
             val queryResult = result as ApiResponse.Success<QueryResult<ReferralEntity>>
             val entityQueryResult = queryResult.data
