@@ -16,8 +16,6 @@ class MockResponseFileReader(path: String) {
 }
 
 fun mockResponse(fileName: String, java: Type): Any {
-    val gson = Gson()
-    val mockResponse =
-        MockResponseFileReader(fileName).content
-    return gson.fromJson(mockResponse, java)
+    val mockResponse = MockResponseFileReader(fileName).content
+    return Gson().fromJson(mockResponse, java)
 }

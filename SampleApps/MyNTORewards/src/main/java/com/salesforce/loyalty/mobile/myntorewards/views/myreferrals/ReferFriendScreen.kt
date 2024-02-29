@@ -405,6 +405,5 @@ fun ReferralCodeView(referralCode: String) {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun ReferFriendScreenPreview() {
-//    ReferFriendScreen(viewModel(), backAction = { true }) {  }
-    SocialMediaRow("")
+    ReferFriendScreen(viewModel(), backAction = { true }) {  }
 }

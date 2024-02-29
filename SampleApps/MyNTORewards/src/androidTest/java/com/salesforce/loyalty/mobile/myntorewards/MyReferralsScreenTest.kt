@@ -68,14 +68,13 @@ import org.junit.Test
 import retrofit2.Response
 
 class MyReferralsScreenTest {
-    private lateinit var localRepository: ReferralsLocalRepository
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
     private lateinit var clipboardManager: ClipboardManager
     private lateinit var uiDevice: UiDevice
     private lateinit var context: Context
-
+    private lateinit var localRepository: ReferralsLocalRepository
 
     @Before
     fun setUp() {
@@ -92,7 +91,7 @@ class MyReferralsScreenTest {
 
         // Launch the screen
         composeTestRule.setContent {
-            MyReferralsListScreen(myReferralsViewModel, backAction = { true }) {}
+            MyReferralsListScreen(myReferralsViewModel, backAction = {true}) {}
         }
     }
 
@@ -102,7 +101,7 @@ class MyReferralsScreenTest {
     }
 
     @Test
-    fun testReferralScreenSuccessFlow() {
+    fun givenReferralsListApiSuccessThenVerifyMyReferralsScreenFlows() {
         mockReferralsDataLaunchScreen()
 
         composeTestRule.run {
@@ -295,14 +294,9 @@ class MyReferralsScreenTest {
             }
             uiDevice.pressBack()
 
-            //below comment causing intermittent behaviour. Sometime clip board gets hanged and doesnt disappear and
-            //overshadow the twitter or other click icon. Icons get blocked to click and test gets failed.
-            //we can test this at faster or real test device so that things perform faster.
-
             onNodeWithText("Copy").assertIsDisplayed().performClick()
             assertEquals("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", clipboardManager.text)
             uiDevice.pressBack()
-
         }
     }
 }
