@@ -91,6 +91,12 @@ fun GameView(isExpired: Boolean, isPlayed: Boolean, gamePlayingStatus: String?, 
                 color = LighterBlack,
                 textAlign = TextAlign.Start,
                 fontSize = 13.sp,
+                maxLines = if (isPlayed) {
+                    1
+                } else {
+                    2
+                },
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth().align(Alignment.TopStart).testTag(TEST_TAG_GAME_ZONE_ITEM_TITLE)
             )
