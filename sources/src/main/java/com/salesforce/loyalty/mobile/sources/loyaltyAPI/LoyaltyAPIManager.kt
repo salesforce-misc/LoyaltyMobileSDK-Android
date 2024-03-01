@@ -7,11 +7,15 @@
 
 package com.salesforce.loyalty.mobile.sources.loyaltyAPI
 
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.sources.forceUtils.DateUtils
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import kotlinx.coroutines.delay
+import java.io.InputStreamReader
+import java.lang.RuntimeException
 
 /**
  * LoyaltyAPIManager class manages the requests related to loyalty program and it inturn invokes the rest APIs

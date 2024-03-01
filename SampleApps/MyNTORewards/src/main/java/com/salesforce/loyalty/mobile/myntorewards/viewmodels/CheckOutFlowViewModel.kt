@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
+import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
@@ -27,6 +28,11 @@ class CheckOutFlowViewModel(private val checkoutManager: CheckoutManager) : View
         get() = orderID
 
     private var orderID = MutableLiveData<String>()
+
+    override val orderCreationResponseLiveData: LiveData<OrderCreationResponse>
+        get() = orderCreationResponse
+
+    private var orderCreationResponse = MutableLiveData<OrderCreationResponse>()
 
     override val orderDetailLiveData: LiveData<OrderDetailsResponse>
         get() = orderDetails
@@ -51,6 +57,27 @@ class CheckOutFlowViewModel(private val checkoutManager: CheckoutManager) : View
                 .onFailure {
                     orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_FAILURE
                     Logger.d(TAG, "orderPlaced request failed: ${it.message}")
+                }
+
+        }
+    }
+
+    override fun placeOrderAndGetParticipantReward() {
+        Logger.d(TAG, "Order Placed request and get participant reward")
+        viewModelScope.launch {
+
+            checkoutManager.createOrderAndParticipantReward().onSuccess {
+                orderCreationResponse.value = it
+                Logger.d(TAG, "Order Placed request and get participant reward Success")
+                orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_SUCCESS
+                Logger.d(TAG, "orderPlacedStatus Success")
+            }
+                .onFailure {
+                    orderPlacedStatus.value = OrderPlacedState.ORDER_PLACED_FAILURE
+                    Logger.d(
+                        TAG,
+                        "Order Placed request and get participant reward failed: ${it.message}"
+                    )
                 }
 
         }
