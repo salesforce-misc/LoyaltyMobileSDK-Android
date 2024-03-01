@@ -63,7 +63,7 @@ class AppConstants {
         const val TIER_RUBY = "ruby"
         const val MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED = "EligibleButNotEnrolled"
         const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
-        const val MAX_PAGE_COUNT_PROMOTION = 4
+        const val MAX_PAGE_COUNT_PROMOTION = 5
 
         //Transaction types
         const val TRANSACTION_PURCHASE = "Purchase"

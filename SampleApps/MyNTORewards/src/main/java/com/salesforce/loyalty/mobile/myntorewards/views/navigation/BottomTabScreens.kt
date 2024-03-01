@@ -26,6 +26,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
@@ -59,6 +60,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModel,
+    referralViewModel: MyReferralsViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -75,7 +77,8 @@ fun HomeScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 profileModel,
                 promotionModel,
-                voucherModel
+                voucherModel,
+                referralViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderDetailScreen.route) {
@@ -182,6 +185,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
     gameViewModel: GameViewModel,
+    referralViewModel: MyReferralsViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -195,7 +199,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
 
 
             showBottomBar(true)
-            MyPromotionScreen(navCheckOutFlowController, promotionViewModel)
+            MyPromotionScreen(navCheckOutFlowController, promotionViewModel, referralViewModel)
 
 
         }

@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.ColourViewSizeChart
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 
@@ -112,6 +112,7 @@ fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, te
         },
         update = {
             it.text = spannable
+            it.setLinkTextColor(VibrantPurple40.toArgb())
         }
     )
 }

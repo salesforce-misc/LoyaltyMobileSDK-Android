@@ -100,6 +100,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                 GameViewModel::class.java
             )*/
         setContent {
+            val referralViewModel: MyReferralsViewModel = hiltViewModel()
             if (loginSuccess == true) {
 
                
@@ -112,7 +113,8 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     benefitModel,
                     transactionModel,
                     checkoutFlowModel,
-                    scanningViewModel
+                    scanningViewModel,
+                    referralViewModel = referralViewModel
                 )
             } else {
                 MainScreenStart(

@@ -52,6 +52,7 @@ class MyReferralsViewModel @Inject constructor(
     var forceRefreshReferralsInfo = false
     private var promotionCode: String = REFERRAL_PROMO_CODE
 
+    private var emailsToSend: List<String> = mutableListOf()
     init {
         repository.setInstanceUrl(instanceUrl)
     }
@@ -65,18 +66,28 @@ class MyReferralsViewModel @Inject constructor(
         _programState.value = ReferralProgramType.START_REFERRING
     }
 
+    fun retryReferralMailEvent(context: Context) {
+        sendReferralMail(context, emailsToSend)
+    }
+
     fun sendReferralMail(context: Context, emails: List<String>) {
+        emailsToSend = emails
         _viewState.value = ReferFriendViewState.ReferFriendInProgress
         viewModelScope.launch {
             when(val result = repository.sendReferrals(referralCode(context).orEmpty(), emails)) {
                 is ApiResponse.Success -> {
                     _viewState.value = ReferFriendViewState.ReferFriendSendMailsSuccess
                     forceRefreshReferralsInfo = true
+                    startReferring()
                 }
                 is ApiResponse.Error -> {
+                    _programState.value = ReferralProgramType.ERROR_REFERRAL_EVENT(result.errorMessage)
                     _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed(result.errorMessage)
                 }
-                ApiResponse.NetworkError -> _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed()
+                ApiResponse.NetworkError -> {
+                    _programState.value = ReferralProgramType.ERROR_REFERRAL_EVENT()
+                    _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed()
+                }
             }
         }
     }
@@ -180,16 +191,16 @@ class MyReferralsViewModel @Inject constructor(
                         updateReferralEnrollmentStatusInPreferences(context, isEnrolled = true)
                     } else {
                         val error = context.getString(R.string.enrolment_not_processed_message)
-                        _programState.value = ReferralProgramType.ERROR(error)
+                        _programState.value = ReferralProgramType.ERROR_ENROLL(error)
                     }
                     _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
                 is ApiResponse.Error -> {
-                    _programState.value = ReferralProgramType.ERROR(result.errorMessage)
+                    _programState.value = ReferralProgramType.ERROR_ENROLL(result.errorMessage)
                     _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
                 ApiResponse.NetworkError -> {
-                    _programState.value = ReferralProgramType.ERROR()
+                    _programState.value = ReferralProgramType.ERROR_ENROLL()
                     _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
             }
@@ -256,7 +267,7 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun referralLink(context: Context, promotionId: String): String {
-        return localRepository.getPromoUrlFromCache(promotionId) + referralCode(context)
+        return localRepository.getPromoUrlFromCache(promotionId) + "?referralCode=" + referralCode(context)
     }
 
     fun setReferralCode(context: Context, memberReferralCode: String?) {

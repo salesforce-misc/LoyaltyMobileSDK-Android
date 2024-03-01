@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -131,6 +132,7 @@ fun CategoryCount(header: String, value: String, modifier: Modifier) {
         BodyTextSmallBold(text = header, color = VibrantPurple80)
         // Below text style removes the default extra space around the Text.
         CommonText(text = value, color = Color.White, fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
             style = TextStyle(
             platformStyle = PlatformTextStyle(includeFontPadding = false),
             lineHeightStyle = LineHeightStyle(
