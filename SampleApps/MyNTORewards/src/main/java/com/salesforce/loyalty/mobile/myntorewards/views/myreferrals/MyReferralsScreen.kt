@@ -65,7 +65,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
                 ErrorPopup(
-                    it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                    it.errorMessage ?: stringResource(id = R.string.game_error_msg),
                     tryAgainClicked = { viewModel.fetchReferralsInfo(context) },
                     textButtonClicked = {  }
                 )
@@ -85,7 +85,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
 
             is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
                 ErrorPopup(
-                    it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                    it.errorMessage ?: stringResource(id = R.string.game_error_msg),
                     tryAgainClicked = { viewModel.fetchReferralProgramStatus(context) },
                     textButtonClicked = {  }
                 )
@@ -93,7 +93,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
 
             is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
                 ErrorPopup(
-                    it.error ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                    it.error ?: stringResource(id = R.string.game_error_msg),
                     tryAgainClicked = { viewModel.checkIfGivenPromotionIsReferralAndEnrolled(context, REFERRAL_PROMO_ID) },
                     textButtonClicked = {  }
                 )

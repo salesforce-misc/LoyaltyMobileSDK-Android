@@ -14,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrol
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.getMember
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
@@ -328,7 +329,15 @@ class MyReferralsViewModel @Inject constructor(
 
     fun fetchDefaultPromotionDetails(context: Context): Results? {
         val member = getMember(context)
-        return localRepository.getDefaultPromotionDetailsFromCache(context = context, member?.membershipNumber.orEmpty(), REFERRAL_PROMO_ID)
+        val defaultPromotion = localRepository.getDefaultPromotionDetailsFromCache(
+            context = context,
+            member?.membershipNumber.orEmpty(),
+            REFERRAL_PROMO_ID
+        )
+        if (isEndDateExpired(defaultPromotion?.endDate)) {
+            _programState.value = ReferralProgramType.ERROR_PROMOTION_EXPIRED(context.getString(R.string.referral_promotion_expired_error_message))
+        }
+        return defaultPromotion
     }
 
     private fun setPromoCode(promoCode: String?) {

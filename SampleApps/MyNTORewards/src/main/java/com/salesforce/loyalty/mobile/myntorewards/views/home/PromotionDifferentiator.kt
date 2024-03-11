@@ -88,7 +88,7 @@ fun PromotionDifferentiator(
                 is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
                     ErrorPopup(
                         it.errorMessage
-                            ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                            ?: stringResource(id = R.string.game_error_msg),
                         tryAgainClicked = { referralViewModel.fetchReferralProgramStatus(context) },
                         textButtonClicked = { closePopup() },
                         textButton = stringResource(id = R.string.referral_back_button_text)
@@ -97,7 +97,7 @@ fun PromotionDifferentiator(
 
                 is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
                     ErrorPopup(
-                        it.error ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                        it.error ?: stringResource(id = R.string.game_error_msg),
                         tryAgainClicked = { referralViewModel.checkIfGivenPromotionIsReferralAndEnrolled(context, results.promotionId.orEmpty()) },
                         textButtonClicked = { closePopup() },
                         textButton = stringResource(id = R.string.referral_back_button_text)

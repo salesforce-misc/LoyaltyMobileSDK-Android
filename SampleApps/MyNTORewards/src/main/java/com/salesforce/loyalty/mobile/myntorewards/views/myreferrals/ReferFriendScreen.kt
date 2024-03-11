@@ -45,7 +45,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_TANDC_LINK
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.CopyColor
@@ -96,17 +95,23 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
     programState?.let {
         when(it) {
             is ERROR_ENROLL -> ErrorPopup(
-                it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                it.errorMessage ?: stringResource(id = R.string.game_error_msg),
                 tryAgainButtonText = stringResource(id = R.string.join_referral_program_button_text),
                 tryAgainClicked = { viewModel.enrollToReferralPromotion(context, true) },
                 textButtonClicked = { closeAction() },
                 textButton = stringResource(id = R.string.referral_back_button_text)
             )
             is ReferralProgramType.ERROR_REFERRAL_EVENT -> ErrorPopup(
-                it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
+                it.errorMessage ?: stringResource(id = R.string.game_error_msg),
                 tryAgainClicked = { viewModel.retryReferralMailEvent(context) },
                 textButtonClicked = { closeAction() },
                 textButton = stringResource(id = R.string.referral_back_button_text)
+            )
+            is ReferralProgramType.ERROR_PROMOTION_EXPIRED -> ErrorPopup(
+                it.errorMessage ?: stringResource(id = R.string.game_error_msg),
+                tryAgainClicked = { closeAction() },
+                tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
+                textButtonClicked = { closeAction() }
             )
             is EMPTY_STATE -> {
                 CircularProgress(modifier = Modifier

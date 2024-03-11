@@ -10,4 +10,5 @@ sealed class ReferralProgramType {
     object EMPTY_STATE : ReferralProgramType()
     data class ERROR_ENROLL(val errorMessage: String? = null) : ReferralProgramType()
     data class ERROR_REFERRAL_EVENT(val errorMessage: String? = null) : ReferralProgramType()
+    data class ERROR_PROMOTION_EXPIRED(val errorMessage: String? = null) : ReferralProgramType()
 }
