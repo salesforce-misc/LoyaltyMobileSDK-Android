@@ -18,6 +18,7 @@ class AppConstants {
         const val KEY_COMMUNITY_MEMBER = "community_member_details"
         const val KEY_EMAIL = "email"
         const val KEY_PHONE = "Phone"
+        const val KEY_MEMBER_REFERRAL_CODE = "member_referral_code"
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"
@@ -62,7 +63,7 @@ class AppConstants {
         const val TIER_RUBY = "ruby"
         const val MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED = "EligibleButNotEnrolled"
         const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
-        const val MAX_PAGE_COUNT_PROMOTION = 4
+        const val MAX_PAGE_COUNT_PROMOTION = 5
 
         //Transaction types
         const val TRANSACTION_PURCHASE = "Purchase"
@@ -88,6 +89,9 @@ class AppConstants {
         const val ROUTE_ORDER_CONFIRMATION_SCREEN = "order_confirmation_screen"
         const val ROUTE_VOUCHER_FULL_SCREEN = "voucher_full_screen"
 
+        const val KEY_ORDER_ID = "key_orderID"
+        const val KEY_GAME_PARTICIPANT_REWARD_ID = "key_game_participant_reward_id"
+        const val KEY_GAME_TYPE = "key_game_type"
         const val RECEIPT_PROGRESS_STARTED = "progress_started"
         const val RECEIPT_PROGRESS_FIRST_STEP = "progress_first_step_completed"
         const val RECEIPT_PROGRESS_SECOND_STEP = "progress_second_step_completed"
@@ -125,6 +129,8 @@ class AppConstants {
         const val KEY_RECEIPT_STATUS = "key_receipt_status"
         const val KEY_RECEIPT_TOTAL_POINTS = "key_receipt_total_points"
         const val KEY_RECEIPT_IMAGE_URL = "key_receipt_image_url"
+        const val KEY_CONFIRMARION_SCREEN_REWARD_TYPE = "key_confirmation_screen_reward_type"
+        const val KEY_CONFIRMARION_SCREEN_REWARD_VALUE = "key_confirmation_reward_value"
         const val TAB_ELIGIBLE_ITEM = 0
         const val TAB_ORIGINAL_RECEIPT_IMAGE = 1
 
@@ -148,6 +154,43 @@ class AppConstants {
         const val PREF_MY_DATE = "MyDatePrefs"
         const val KEY_APP_DATE = "appDate"
 
+        const val ROUTE_GAME_ZONE_SCREEN = "game_zone_screen"
+        const val ROUTE_GAME_SCRATCH_CARD = "game_scratch_card"
+        const val ROUTE_GAME_SPIN_WHEEL = "game_spin_wheel"
+        const val ROUTE_GAME_CONGRATS_SCREEN = "game_congrats_screen"
+        const val ROUTE_GAME_BETTER_LUCK_SCREEN = "game_better_luck_screen"
+        const val ROUTE_MY_REFERRALS_SCREEN = "my_referrals_screen"
+
+        // Game types
+        const val SPIN_THE_WHEEL_GAME = "SpintheWheel"
+        const val SCRATCH_CARD_GAME = "Scratchcard"
+        const val GAME_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        const val TAB_ACTIVE_GAMES = 0
+        const val TAB_PLAYED_GAMES = 1
+        const val TAB_EXPIRED_GAMES = 2
+
+
+
+        const val KEY_GAME_REWARD= "game_reward"
+
+        //Reward Types
+        const val NO_REWARD = "NoReward"
+        const val REWARD_TYPE_VOUCHER =   "Voucher"
+        const val REWARD_TYPE_POINTS =   "LoyaltyPoints"
+        const val REWARD_TYPE_CUSTOM =   "Custom"
+
+        //Reward status
+        const val REWARD_STATUS_YET_TO_REWARD = "YetToReward"
+        const val REWARD_STATUS_REWARDED = "Rewarded"
+        const val REWARD_STATUS_NO_REWARD = "NoReward"
+        const val REWARD_STATUS_EXPIRED = "Expired"
+
+        const val ROUTE_GAME_ZONE = "route_open_game_zone"
+
+        // Referral
+        const val REFERRAL_PROGRAM_JOINED = "REFERRAL_PROGRAM_JOINED"
+        const val GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC = 1500L // 1.5 sec
+        const val GAME_STATUS_PLAYED= "Played"
 
     }
 }

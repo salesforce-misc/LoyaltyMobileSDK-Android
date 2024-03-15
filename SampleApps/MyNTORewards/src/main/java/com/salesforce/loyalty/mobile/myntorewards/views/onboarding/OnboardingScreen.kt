@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
 
 import android.app.Activity
+import android.view.WindowManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -199,6 +200,9 @@ fun OpenBottomSheetContent(
     model: OnBoardingViewModelAbstractInterface
 ) {
     val activity = LocalContext.current as Activity
+    LaunchedEffect(key1 = true) {
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
     when (bottomSheetType) {
         BottomSheetType.POPUP_LOGIN -> {
             LoginUI(

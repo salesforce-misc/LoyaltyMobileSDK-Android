@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,11 +25,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.RequestBuilderTransform
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
@@ -36,8 +42,9 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_CARD
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferFriendScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -47,6 +54,7 @@ fun PromotionCard(
     membershipPromo: List<Results>?,
     navCheckOutFlowController: NavController,
     promotionViewModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     blurBG: (Dp) -> Unit
 ) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
@@ -93,7 +101,14 @@ fun PromotionCard(
                     ){
                         it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     }
-                }
+                } ?: Image(
+                    painter = painterResource(R.drawable.bg_refer_friend_banner),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+                    modifier = Modifier
+                        .size(289.dp, 154.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    contentScale = ContentScale.Crop,
+                )
             }
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -169,16 +184,10 @@ fun PromotionCard(
 
     if (currentPromotionDetailPopupState) {
         membershipPromo?.get(page)?.let {
-
-            PromotionEnrollPopup(
-                it,
-                closePopup = {
-                    currentPromotionDetailPopupState = false
-                    blurBG(NO_BLUR_BG)
-                },
-                navCheckOutFlowController,
-                promotionViewModel
-            )
+            PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, it, it.promotionId.orEmpty(), referralViewModel) {
+                currentPromotionDetailPopupState = false
+                blurBG(NO_BLUR_BG)
+            }
         }
     }
 }

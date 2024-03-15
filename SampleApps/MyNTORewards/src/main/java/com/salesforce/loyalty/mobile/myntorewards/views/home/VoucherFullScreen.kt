@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -25,6 +27,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,11 +38,13 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_ISSUED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.VOUCHER_REDEEMED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.voucherEmptyViewMsg
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
@@ -59,6 +64,12 @@ fun VoucherFullScreen(
 
     val context: Context = LocalContext.current
 
+    if(navCheckOutFlowController.previousBackStackEntry?.destination?.route== ROUTE_GAME_ZONE_SCREEN){
+        LaunchedEffect(key1 = true) {
+            voucherModel.loadVoucher(context, true)
+        }
+    }
+
     fun refresh() = refreshScope.launch {
 
         voucherModel.loadVoucher(context, true)
@@ -73,7 +84,7 @@ fun VoucherFullScreen(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .background(Color.White)
-                .pullRefresh(state)
+                .pullRefresh(state).testTag(TEST_TAG_VOUCHER_SCREEN)
                 .blur(blurBG)
         )
         {
@@ -82,7 +93,7 @@ fun VoucherFullScreen(
             Spacer(modifier = Modifier.height(50.dp))
             Image(
                 painter = painterResource(id = R.drawable.back_arrow),
-                contentDescription = stringResource(R.string.cd_onboard_screen_onboard_image),
+                contentDescription = stringResource(R.string.voucher_back_button),
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp, start = 16.dp, end = 16.dp)

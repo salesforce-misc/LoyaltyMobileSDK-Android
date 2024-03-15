@@ -42,12 +42,14 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_HOME_SCREEN_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMOTION_CARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BadgeViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.BadgeView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -58,6 +60,7 @@ fun HomeScreenLandingView(
     profileModel: MembershipProfileViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
+    referralViewModel: MyReferralsViewModel
 ) {
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
@@ -97,8 +100,7 @@ fun HomeScreenLandingView(
 
                 AppLogoAndSearchRow(navCheckOutFlowController)
                 UserNameAndRewardRow(profileModel)
-
-                PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel)
+                PromotionCardRow(bottomTabsNavController, navCheckOutFlowController, promotionModel, referralViewModel)
                 {
                     blurBG = it
                 }
@@ -122,6 +124,7 @@ fun PromotionCardRow(
     bottomTabsNavController: NavController,
     navCheckOutFlowController: NavController,
     promotionModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     blurBG: (Dp) -> Unit
 ) {
 
@@ -135,7 +138,7 @@ fun PromotionCardRow(
             .testTag(TEST_TAG_PROMOTION_CARD),
     ) {
         var isInProgress by remember { mutableStateOf(false) }
-        HomeSubViewHeader(R.string.text_promotions, bottomTabsNavController)
+        HomeSubViewHeader(R.string.text_my_promotions, bottomTabsNavController)
         val context: Context = LocalContext.current
 
         val promoViewState by promotionModel.promotionViewState.observeAsState()
@@ -169,7 +172,8 @@ fun PromotionCardRow(
                             page,
                             activePromotions,
                             navCheckOutFlowController,
-                            promotionModel
+                            promotionModel,
+                            referralViewModel
                         ) {
                             blurBG(it)
                         }

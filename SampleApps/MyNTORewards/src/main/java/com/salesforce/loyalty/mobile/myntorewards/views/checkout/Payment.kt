@@ -27,16 +27,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ORDER_ID
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CONFIRM_ORDER_BUTTON
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PAYMENT_UI_CONTAINER
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.OrderPlacedState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.CheckOutFlowViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.VoucherViewModelInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameType
 import com.salesforce.loyalty.mobile.myntorewards.views.myCheckBoxColors
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 
@@ -46,7 +50,8 @@ fun PaymentsUI(
     navCheckOutFlowController: NavController,
     voucherModel: VoucherViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
-    profileModel: MembershipProfileViewModelInterface
+    profileModel: MembershipProfileViewModelInterface,
+    gameViewModel: GameViewModel
 ) {
     val membershipProfile by profileModel.membershipProfileLiveData.observeAsState()
     val context: Context = LocalContext.current
@@ -56,6 +61,7 @@ fun PaymentsUI(
 
     Box() {
         var isInProgress by remember { mutableStateOf(false) }
+        var isGameQueryInProgress by remember { mutableStateOf(false) }
         Column(modifier = Modifier
             .padding(start = 20.dp, end = 20.dp)
             .verticalScroll(
@@ -77,21 +83,28 @@ fun PaymentsUI(
             Spacer(modifier = Modifier.height(24.dp))
             Spacer(modifier = Modifier.height(16.dp))
 
+            val gamesViewState by gameViewModel.gamesViewState.observeAsState()
+            val games by gameViewModel.gamesLiveData.observeAsState()
+            val orderCreationResponse by checkOutFlowViewModel.orderCreationResponseLiveData.observeAsState()
+
             val orderPlaceStatus by checkOutFlowViewModel.orderPlacedStatusLiveData.observeAsState(OrderPlacedState.ORDER_PLACED_DEFAULT_EMPTY) // collecting livedata as state
 
             if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_SUCCESS) {
-                var orderID = checkOutFlowViewModel.orderIDLiveData.value.toString()
-                Toast.makeText(
+                LaunchedEffect(key1 = true){
+                    val gameParticipantRewardId =
+                        orderCreationResponse?.gameParticipantRewardId
+                    isGameQueryInProgress = true
+                    gameViewModel.getGames(context,
+                        gameParticipantRewardId = gameParticipantRewardId,
+                        false
+                    )
+                }
+                /*Toast.makeText(
                     LocalContext.current,
                     "Order Success:: " + checkOutFlowViewModel.orderIDLiveData.value.toString(),
                     Toast.LENGTH_LONG
-                ).show()
-                checkOutFlowViewModel.resetOrderPlacedStatusDefault()
-                isInProgress = false
-                navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
-                    set(ORDER_ID, orderID)
-                }
-                navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
+                ).show()*/
+
             } else if (orderPlaceStatus == OrderPlacedState.ORDER_PLACED_FAILURE) {
                 Toast.makeText(LocalContext.current, "orderPlaceStatus Failed", Toast.LENGTH_LONG)
                     .show()
@@ -99,11 +112,55 @@ fun PaymentsUI(
                 isInProgress = false
             }
 
+            when (gamesViewState) {
+                GamesViewState.GamesFetchSuccess -> {
+                    if (isGameQueryInProgress) {
+                        var gameType: String? = null
+                        games?.gameDefinitions?.first()?.let { gameDef ->
+                            gameType = GameType.from(gameDef.type)?.gameType
+                        }
+                        val orderID =
+                            orderCreationResponse?.orderId
+                        val gameParticipantRewardId =
+                            orderCreationResponse?.gameParticipantRewardId
+                        checkOutFlowViewModel.resetOrderPlacedStatusDefault()
+                        navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
+                            set(AppConstants.KEY_ORDER_ID, orderID)
+                            if (gameType != null) {
+                                set(
+                                    AppConstants.KEY_GAME_PARTICIPANT_REWARD_ID,
+                                    gameParticipantRewardId
+                                )
+                                set(AppConstants.KEY_GAME_TYPE, gameType)
+                            }
+                        }
+                        navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
+                        isInProgress = false
+                        isGameQueryInProgress = false
+                    }
+                }
+                GamesViewState.GamesFetchFailure -> {
+                    if (isGameQueryInProgress) {
+                        val orderID =
+                            checkOutFlowViewModel.orderCreationResponseLiveData.value?.orderId
+                        checkOutFlowViewModel.resetOrderPlacedStatusDefault()
+
+                        navCheckOutFlowController.currentBackStackEntry?.savedStateHandle?.apply {
+                            set(AppConstants.KEY_ORDER_ID, orderID)
+                        }
+                        navCheckOutFlowController.navigate(CheckOutFlowScreen.OrderConfirmationScreen.route)
+                        isInProgress = false
+                        isGameQueryInProgress = false
+                    }
+                }
+                else -> {}
+            }
+
             Button(
                 modifier = Modifier
                     .fillMaxWidth(), onClick = {
                     isInProgress = true
-                    checkOutFlowViewModel.placeOrder()
+                    checkOutFlowViewModel.placeOrderAndGetParticipantReward()
                 },
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)

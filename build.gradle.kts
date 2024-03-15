@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath("org.jacoco:org.jacoco.core:0.8.7")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.8.20}")
+//        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44")
     }
 }
 
@@ -19,5 +20,6 @@ plugins {
     id("com.android.library") version "7.4.0" apply false
     id("org.jetbrains.kotlin.android") version "1.8.0" apply false
     id("org.jetbrains.dokka") version "1.8.20" apply false
+    id("com.google.dagger.hilt.android") version "2.44" apply false
 }
 apply(plugin = "jacoco")

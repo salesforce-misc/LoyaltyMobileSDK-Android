@@ -15,6 +15,7 @@ object LoyaltyConfig {
     const val API_VERSION_55 = "v55.0"
     const val API_VERSION_56 = "v56.0"
     const val API_VERSION_58 = "v58.0"
+    const val API_VERSION_60 = "v60.0"
     const val MEMBER_API_SERVICES_PATH = "/services/data/"
     const val KEY_MEMBERSHIP_NUMBER = "MembershipNumber"
     const val KEY_MEMBER_ID = "MemberId"
@@ -23,6 +24,7 @@ object LoyaltyConfig {
     const val HEADER_AUTHORIZATION = "Authorization"
     const val HEADER_SFORCE_OPTION_KEY = "Sforce-Call-Options"
     const val HEADER_SFORCE_OPTION_Value = "client=loyaltyMobileSdk-Android"
+
 
 
     /**
