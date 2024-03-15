@@ -9,6 +9,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 
 @Composable
 fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
+                    badgeViewModel:BadgeViewModelInterface,
                     promotionModel: MyPromotionViewModelInterface,
                     voucherModel: VoucherViewModelInterface,
                     onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -19,6 +20,7 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
 
     Navigation(
         profileModel,
+        badgeViewModel,
         promotionModel,
         voucherModel,
         onboardingModel,
@@ -32,6 +34,7 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
 @Composable
 fun Navigation(
     profileModel: MembershipProfileViewModelInterface,
+    badgeViewModel: BadgeViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -49,7 +52,7 @@ fun Navigation(
             OnboardingScreenBox(navController, onboardingModel)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeTabScreen(profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel)
+            HomeTabScreen(profileModel,badgeViewModel, promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 
+import com.salesforce.loyalty.mobile.myntorewards.badge.api.BadgeNetworkInterface
 import com.salesforce.loyalty.mobile.myntorewards.checkout.api.CheckoutNetworkInterface
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningNetworkInterface
 import com.salesforce.loyalty.mobile.sources.BuildConfig
@@ -44,5 +45,9 @@ class NetworkClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
 
     val receiptApi: ReceiptScanningNetworkInterface by lazy {
         authRetrofit.create(ReceiptScanningNetworkInterface::class.java)
+    }
+
+    val badgeApi: BadgeNetworkInterface by lazy {
+        authRetrofit.create(BadgeNetworkInterface::class.java)
     }
 }

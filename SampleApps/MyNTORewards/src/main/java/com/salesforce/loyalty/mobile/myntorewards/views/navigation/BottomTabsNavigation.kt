@@ -22,6 +22,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 
 @Composable
 fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
+                  badgeViewModel:BadgeViewModelInterface,
                   promotionModel: MyPromotionViewModelInterface,
                   voucherModel: VoucherViewModelInterface,
                   onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -43,7 +44,7 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
                 .padding(padding)
                 .background(TextPurpleLightBG).testTag(TEST_TAG_HOME_SCREEN)
         ) {
-            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel) {
+            TabNavigation(bottomTabsNavController, profileModel, badgeViewModel, promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel) {
                 bottomBarState.value = it
             }
         }
@@ -54,6 +55,7 @@ fun HomeTabScreen(profileModel: MembershipProfileViewModelInterface,
 fun TabNavigation(
     bottomTabsNavController: NavHostController,
     profileModel: MembershipProfileViewModelInterface,
+    badgeViewModel:BadgeViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -78,7 +80,7 @@ fun TabNavigation(
             }
         }
         composable(route = BottomNavTabs.MyProfile.route) {
-            MyProfileScreen(profileModel,voucherModel, benefitViewModel, transactionViewModel)
+            MyProfileScreen(profileModel, badgeViewModel, voucherModel, benefitViewModel, transactionViewModel)
         }
         //part of UX but not part of MVP
         /*  composable(route = BottomNavTabs.Redeem.route) {

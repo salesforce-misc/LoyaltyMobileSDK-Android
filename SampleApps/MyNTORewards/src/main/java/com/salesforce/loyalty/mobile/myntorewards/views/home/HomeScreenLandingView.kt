@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.home
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -42,8 +43,10 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMOTION_CARD
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BadgeViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.VoucherViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.BadgeView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import kotlinx.coroutines.launch
 
@@ -315,4 +318,107 @@ fun VoucherRow(
         Spacer(modifier = Modifier.height(16.dp))
     }
 
+}
+
+@Composable
+fun BadgeRow(
+    navCheckOutFlowController: NavController,
+    badgeModel: BadgeViewModelInterface,
+    blurBG: (Dp) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .wrapContentSize(Alignment.Center)
+            .background(PromotionCardBG)
+            .testTag(TEST_TAG_VOUCHER_ROW)
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp, bottom = 16.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.text_badges),
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+            )
+            Text(
+                text = stringResource(id = R.string.view_all),
+                fontWeight = FontWeight.Bold,
+                color = VibrantPurple40,
+                textAlign = TextAlign.Center,
+                fontSize = 13.sp,
+                modifier = Modifier.clickable {
+                    navCheckOutFlowController.navigate(CheckOutFlowScreen.VoucherFullScreen.route)
+                }
+            )
+        }
+
+        var isInProgress by remember { mutableStateOf(false) }
+
+        val badges by badgeModel.badgeLiveData.observeAsState() // collecting livedata as state
+        val badgeFetchStatus by badgeModel.badgeViewState.observeAsState() // collecting livedata as state
+
+        val context: Context = LocalContext.current
+        LaunchedEffect(key1 = true) {
+            badgeModel.loadBadge(context)
+            isInProgress = true
+        }
+
+        when (badgeFetchStatus) {
+            BadgeViewState.BadgeFetchSuccess -> {
+                isInProgress = false
+
+            }
+
+            BadgeViewState.BadgeFetchFailure -> {
+                isInProgress = false
+            }
+
+            BadgeViewState.BadgeFetchInProgress -> {
+                isInProgress = true
+            }
+
+            else -> {}
+        }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (isInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxSize(0.1f)
+                )
+            } else {
+                if (badges?.totalSize == 0) {
+                    VoucherEmptyView(Common.voucherEmptyViewMsg(0))
+                }
+
+                badges.let {
+
+                    LazyRow(modifier = Modifier.fillMaxWidth()) {
+                        items(2) { voucherItem ->
+                            Spacer(modifier = Modifier.width(12.dp))
+                            badges?.records?.get(0)?.let { it1 ->
+                                BadgeView(it1) {
+                                    blurBG(it)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+    }
 }
