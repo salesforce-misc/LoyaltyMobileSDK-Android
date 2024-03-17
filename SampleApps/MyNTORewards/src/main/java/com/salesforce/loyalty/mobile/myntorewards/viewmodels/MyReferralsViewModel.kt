@@ -332,15 +332,12 @@ class MyReferralsViewModel @Inject constructor(
 
     fun fetchDefaultPromotionDetails(context: Context): Results? {
         val member = getMember(context)
-        val defaultPromotion = localRepository.getDefaultPromotionDetailsFromCache(
-            context = context,
-            member?.membershipNumber.orEmpty(),
-            REFERRAL_DEFAULT_PROMOTION_ID
-        )
-        if (isEndDateExpired(defaultPromotion?.endDate)) {
-            _programState.value = ReferralProgramType.ERROR(context.getString(R.string.referral_promotion_expired_error_message))
+        return localRepository.getDefaultPromotionDetailsFromCache(context = context, member?.membershipNumber.orEmpty(), REFERRAL_DEFAULT_PROMOTION_ID)?.let {
+            if (isEndDateExpired(it.endDate)) {
+                _programState.value = ReferralProgramType.ERROR(context.getString(R.string.referral_promotion_expired_error_message))
+            }
+            it
         }
-        return defaultPromotion
     }
 
     private fun setPromoCode(promoCode: String?) {

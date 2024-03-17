@@ -37,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -189,9 +188,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
             if (isStartReferring) {
                 RoundedIconButton(
                     onClick = { closeAction() },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .testTag(TEST_TAG_CLOSE_REFER_POPUP)
+                    modifier = Modifier.align(Alignment.TopEnd).testTag(TEST_TAG_CLOSE_REFER_POPUP)
                 )
             }
         }
@@ -201,7 +198,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                 .wrapContentWidth()
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState())
-                .padding(top = 16.dp, bottom = 48.dp, start = 24.dp, end = 24.dp)
+                .padding(top = 16.dp, bottom = 36.dp, start = 24.dp, end = 24.dp)
         ) {
             when(referralProgramType) {
                 SIGNUP -> SignupToReferUi(viewModel)
@@ -265,7 +262,7 @@ fun ColumnScope.JoinReferralProgramUi(
 }
 
 @Composable
-private fun StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Results? = null, doneAction: () -> Unit) {
+private fun ColumnScope.StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Results? = null, doneAction: () -> Unit) {
     val context = LocalContext.current
     val referralLink = viewModel.referralLink(context, promotionDetails?.promotionId.orEmpty())
     val referralCode = viewModel.referralCode(context).orEmpty()
@@ -303,6 +300,7 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Resu
         modifier = Modifier.padding(8.dp)
     )
     CommonText(
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         text = stringResource(R.string.share_via),
         fontSize = 16.sp,
         textAlign = TextAlign.Center,
@@ -311,7 +309,7 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Resu
     SocialMediaRow(extraText)
     Spacer(modifier = Modifier.height(16.dp))
     ReferralCodeView(referralLink, referralCode)
-    Spacer(modifier = Modifier.height(24.dp))
+    Spacer(modifier = Modifier.weight(1f))
     PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { doneAction() })
 }
 
@@ -375,9 +373,7 @@ fun ReferralCodeView(referralLink: String, referralCode: String) {
             CommonText(
                 text = referralCode,
                 color = SpinnerBackground,
-                maxLines = 1,
                 fontSize = 16.sp,
-                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(start = 12.dp, bottom = 8.dp),
                 style = TextStyle(
                     platformStyle = PlatformTextStyle(includeFontPadding = false),

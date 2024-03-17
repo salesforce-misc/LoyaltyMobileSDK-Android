@@ -86,11 +86,11 @@ fun PromotionDifferentiator(
                 }
 
                 is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
-                    showErrorScreen(it.errorMessage, closePopup)
+                    ShowErrorScreen(it.errorMessage, closePopup)
                 }
 
                 is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
-                    showErrorScreen(it.error, closePopup)
+                    ShowErrorScreen(it.error, closePopup)
                 }
 
                 MyReferralsViewState.PromotionStateNonReferral -> {
@@ -109,7 +109,7 @@ fun PromotionDifferentiator(
 }
 
 @Composable
-private fun showErrorScreen(errorMessage: String?, closePopup: () -> Unit) {
+private fun ShowErrorScreen(errorMessage: String?, closePopup: () -> Unit) {
     ErrorPopup(
         errorMessage ?: stringResource(id = R.string.game_error_msg),
         tryAgainClicked = { closePopup() },

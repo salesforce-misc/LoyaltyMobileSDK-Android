@@ -72,7 +72,7 @@ fun MyReferralsScreen(
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
-                showErrorScreen(stringResource(id = R.string.game_error_msg), backAction)
+                ShowErrorScreen(stringResource(id = R.string.game_error_msg), backAction)
             }
 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
@@ -88,11 +88,11 @@ fun MyReferralsScreen(
             }
 
             is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
-                showErrorScreen(it.errorMessage, backAction)
+                ShowErrorScreen(it.errorMessage, backAction)
             }
 
             is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
-                showErrorScreen(it.error, backAction)
+                ShowErrorScreen(it.error, backAction)
             }
             MyReferralsViewState.PromotionStateNonReferral -> {
                 Logger.d(LOG_TAG, "PromotionStateNonReferral")
@@ -209,7 +209,7 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
 }
 
 @Composable
-private fun showErrorScreen(errorMessage: String?, closePopup: () -> Boolean) {
+private fun ShowErrorScreen(errorMessage: String?, closePopup: () -> Boolean) {
     ErrorPopup(
         errorMessage ?: stringResource(id = R.string.game_error_msg),
         tryAgainClicked = { closePopup() },
