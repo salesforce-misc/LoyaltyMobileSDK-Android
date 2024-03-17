@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DURATION
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROGRAM_NAME
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROMO_CODE
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROMO_ID
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DEFAULT_PROMOTION_CODE
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DEFAULT_PROMOTION_ID
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
@@ -51,7 +51,7 @@ class MyReferralsViewModel @Inject constructor(
     val viewState: LiveData<ReferFriendViewState?> = _viewState
 
     var forceRefreshReferralsInfo = false
-    private var promotionCode: String = REFERRAL_PROMO_CODE
+    private var promotionCode: String = REFERRAL_DEFAULT_PROMOTION_CODE
 
     private var emailsToSend: List<String> = mutableListOf()
     init {
@@ -82,11 +82,11 @@ class MyReferralsViewModel @Inject constructor(
                     startReferring()
                 }
                 is ApiResponse.Error -> {
-                    _programState.value = ReferralProgramType.ERROR_REFERRAL_EVENT(result.errorMessage)
+                    _programState.value = ReferralProgramType.ERROR(result.errorMessage)
                     _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed(result.errorMessage)
                 }
                 ApiResponse.NetworkError -> {
-                    _programState.value = ReferralProgramType.ERROR_REFERRAL_EVENT()
+                    _programState.value = ReferralProgramType.ERROR()
                     _viewState.value = ReferFriendViewState.ReferFriendSendMailsFailed()
                 }
             }
@@ -184,7 +184,10 @@ class MyReferralsViewModel @Inject constructor(
                 is ApiResponse.Success -> {
                     val enrollmentResponse = result.data
                     val status = enrollmentResponse.transactionJournals.firstOrNull()?.status
-                    // If enrolment is processed successfully, start referring friends else show error message
+                    /*
+                    During the Referral Promotion enrolment process, there is a slight possibility that the enrolment request may not be processed immediately.
+                    If the Transaction Journal status is not Processed, which means Canceled/Error/Pending, you may have to contact the Salesforce support centre to finish the enrolment process.
+                    */
                     if (status == EnrollmentStatus.PROCESSED.status) {
                         _programState.value = ReferralProgramType.START_REFERRING
                         val memberReferralCode = enrollmentResponse.promotionReferralCode.split("-").firstOrNull()
@@ -192,16 +195,16 @@ class MyReferralsViewModel @Inject constructor(
                         updateReferralEnrollmentStatusInPreferences(context, isEnrolled = true)
                     } else {
                         val error = context.getString(R.string.enrolment_not_processed_message)
-                        _programState.value = ReferralProgramType.ERROR_ENROLL(error)
+                        _programState.value = ReferralProgramType.ERROR(error)
                     }
                     _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
                 is ApiResponse.Error -> {
-                    _programState.value = ReferralProgramType.ERROR_ENROLL(result.errorMessage)
+                    _programState.value = ReferralProgramType.ERROR(result.errorMessage)
                     _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
                 ApiResponse.NetworkError -> {
-                    _programState.value = ReferralProgramType.ERROR_ENROLL()
+                    _programState.value = ReferralProgramType.ERROR()
                     _viewState.value = ReferFriendViewState.EnrollmentTaskFinished
                 }
             }
@@ -268,7 +271,7 @@ class MyReferralsViewModel @Inject constructor(
     }
 
     fun referralLink(context: Context, promotionId: String): String {
-        return localRepository.getPromoUrlFromCache(promotionId) + "?referralCode=" + referralCode(context)
+        return localRepository.getPromoUrlFromCache(promotionId) + "?referralCode="
     }
 
     fun setReferralCode(context: Context, memberReferralCode: String?) {
@@ -332,10 +335,10 @@ class MyReferralsViewModel @Inject constructor(
         val defaultPromotion = localRepository.getDefaultPromotionDetailsFromCache(
             context = context,
             member?.membershipNumber.orEmpty(),
-            REFERRAL_PROMO_ID
+            REFERRAL_DEFAULT_PROMOTION_ID
         )
         if (isEndDateExpired(defaultPromotion?.endDate)) {
-            _programState.value = ReferralProgramType.ERROR_PROMOTION_EXPIRED(context.getString(R.string.referral_promotion_expired_error_message))
+            _programState.value = ReferralProgramType.ERROR(context.getString(R.string.referral_promotion_expired_error_message))
         }
         return defaultPromotion
     }

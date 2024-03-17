@@ -34,7 +34,9 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrol
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.FACEBOOK_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.INSTAGRAM_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
@@ -204,9 +206,8 @@ class MyReferralsScreenTest {
                 .assertTextEquals("My Referrals")
                 .assertIsDisplayed()
             onNodeWithTag(TestTags.TEST_TAG_ERROR_SCREEN).assertIsDisplayed()
-            onNodeWithText("Something went wrong. Try again.").assertIsDisplayed()
             onNodeWithTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN)
-                .assertTextEquals("Try Again").assertIsDisplayed()
+                .assertTextEquals("Back").assertIsDisplayed()
             Thread.sleep(1000)
         }
     }
@@ -225,7 +226,8 @@ class MyReferralsScreenTest {
             onNodeWithTag(TEST_TAG_TEXT_FIELD_RIGHT_ICON, true).assertIsDisplayed()
 
             Thread.sleep(2000)
-            onNodeWithText("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", substring = true).assertIsDisplayed()
+            onNodeWithText("https://rb.gy/wa6jw7?referralCode=").assertIsDisplayed()
+            onNodeWithText("9RCLSYJO-TEMPRP7").assertIsDisplayed()
 
             onNodeWithTag(TEST_TAG_CLOSE_REFER_POPUP).performClick()
             Thread.sleep(2000)
@@ -237,7 +239,7 @@ class MyReferralsScreenTest {
             // Test Social Media Share Icons
             onNodeWithText("Share Invite").assertIsDisplayed()
 
-            onNodeWithContentDescription(activity.getString(R.string.share_via_twitter_icon_description))
+            onNodeWithContentDescription(ShareType.TWITTER.name)
                 .assertIsDisplayed().performClick()
             Thread.sleep(1000)
             if (context.isAppInstalled(TWITTER_APP_PACKAGE)) {
@@ -261,7 +263,7 @@ class MyReferralsScreenTest {
             Thread.sleep(1000)
 
             if (context.isAppInstalled(INSTAGRAM_APP_PACKAGE)) {
-                onNodeWithContentDescription(activity.getString(R.string.share_via_instagram_icon_description))
+                onNodeWithContentDescription(ShareType.INSTAGRAM.name)
                     .assertIsDisplayed().performClick()
                 Thread.sleep(2000)
 
@@ -272,7 +274,7 @@ class MyReferralsScreenTest {
             uiDevice.pressBack()
 
             if (context.isAppInstalled(WHATSAPP_APP_PACKAGE)) {
-                onNodeWithContentDescription(activity.getString(R.string.share_via_whatsapp_icon_description))
+                onNodeWithContentDescription(ShareType.WHATSAPP.name)
                     .assertIsDisplayed().performClick()
                 Thread.sleep(2000)
                 assertEquals(WHATSAPP_APP_PACKAGE, uiDevice.currentPackageName)
@@ -281,8 +283,8 @@ class MyReferralsScreenTest {
             }
             uiDevice.pressBack()
 
-            if (context.isAppInstalled(WHATSAPP_APP_PACKAGE)) {
-                onNodeWithContentDescription(activity.getString(R.string.share_via_facebook_icon_description))
+            if (context.isAppInstalled(FACEBOOK_APP_PACKAGE)) {
+                onNodeWithContentDescription(ShareType.FACEBOOK.name)
                     .assertIsDisplayed().performClick()
                 Thread.sleep(1000)
                 val facebook: UiObject2 = uiDevice.findObject(By.text("News Feed"))
@@ -294,7 +296,7 @@ class MyReferralsScreenTest {
             }
             uiDevice.pressBack()
 
-            onNodeWithText("Copy").assertIsDisplayed().performClick()
+            onNodeWithContentDescription("Copy").assertIsDisplayed().performClick()
             assertEquals("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", clipboardManager.text)
             uiDevice.pressBack()
         }

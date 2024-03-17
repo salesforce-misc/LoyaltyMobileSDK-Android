@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -32,8 +31,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,11 +49,10 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_TANDC_LINK
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.CopyColor
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColor
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SaffronColorLight
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerBackground
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextLightGray
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple65
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.REFER_FRIEND_PROMOTION_DESC
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.REFER_FRIEND_PROMOTION_NAME
@@ -77,7 +78,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.TextFieldCust
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.components.dashedBorder
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.EMPTY_STATE
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.ERROR_ENROLL
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.ERROR
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.JOIN_PROGRAM
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.SIGNUP
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType.START_REFERRING
@@ -86,6 +87,11 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
 
+/**
+ * Bottom sheet screen - Shows the UI states based on user enrolment status
+ * If user not enrolled to the given promotion, shows enrolment UI
+ * If user already enrolled tot he promotion, shows UI to refer friends
+ */
 @Composable
 fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results? = null, backAction: () -> Any, closeAction: () -> Unit) {
     val programState by viewModel.programState.observeAsState()
@@ -94,24 +100,11 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
 
     programState?.let {
         when(it) {
-            is ERROR_ENROLL -> ErrorPopup(
-                it.errorMessage ?: stringResource(id = R.string.game_error_msg),
-                tryAgainButtonText = stringResource(id = R.string.join_referral_program_button_text),
-                tryAgainClicked = { viewModel.enrollToReferralPromotion(context, true) },
-                textButtonClicked = { closeAction() },
-                textButton = stringResource(id = R.string.referral_back_button_text)
-            )
-            is ReferralProgramType.ERROR_REFERRAL_EVENT -> ErrorPopup(
-                it.errorMessage ?: stringResource(id = R.string.game_error_msg),
-                tryAgainClicked = { viewModel.retryReferralMailEvent(context) },
-                textButtonClicked = { closeAction() },
-                textButton = stringResource(id = R.string.referral_back_button_text)
-            )
-            is ReferralProgramType.ERROR_PROMOTION_EXPIRED -> ErrorPopup(
+            is ERROR -> ErrorPopup(
                 it.errorMessage ?: stringResource(id = R.string.game_error_msg),
                 tryAgainClicked = { closeAction() },
                 tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
-                textButtonClicked = { closeAction() }
+                textButtonClicked = { }
             )
             is EMPTY_STATE -> {
                 CircularProgress(modifier = Modifier
@@ -196,7 +189,9 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
             if (isStartReferring) {
                 RoundedIconButton(
                     onClick = { closeAction() },
-                    modifier = Modifier.align(Alignment.TopEnd).testTag(TEST_TAG_CLOSE_REFER_POPUP)
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .testTag(TEST_TAG_CLOSE_REFER_POPUP)
                 )
             }
         }
@@ -273,7 +268,8 @@ fun ColumnScope.JoinReferralProgramUi(
 private fun StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Results? = null, doneAction: () -> Unit) {
     val context = LocalContext.current
     val referralLink = viewModel.referralLink(context, promotionDetails?.promotionId.orEmpty())
-    val extraText = context.getString(R.string.share_referral_message, referralLink)
+    val referralCode = viewModel.referralCode(context).orEmpty()
+    val extraText = context.getString(R.string.share_referral_message, referralLink.plus(referralCode))
     val focusManager = LocalFocusManager.current
     var textField by remember { mutableStateOf(TextFieldValue("")) }
     val invalidEmailMessage = stringResource(R.string.invalid_email_error_message)
@@ -314,7 +310,7 @@ private fun StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Resu
     )
     SocialMediaRow(extraText)
     Spacer(modifier = Modifier.height(16.dp))
-    ReferralCodeView(referralLink)
+    ReferralCodeView(referralLink, referralCode)
     Spacer(modifier = Modifier.height(24.dp))
     PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { doneAction() })
 }
@@ -328,82 +324,70 @@ fun SocialMediaRow(referralContent: String) {
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         val context = LocalContext.current
-        ImageComponent(drawableId = R.drawable.ic_facebook, contentDescription = stringResource(R.string.share_via_facebook_icon_description), modifier = Modifier
-            .weight(1f)
-            .clickable {
-                context.shareReferralCode(referralContent, ShareType.FACEBOOK)
-            })
-        ImageComponent(drawableId = R.drawable.ic_instagram, contentDescription = stringResource(R.string.share_via_instagram_icon_description), modifier = Modifier
-            .weight(1f)
-            .clickable {
-                context.shareReferralCode(referralContent, ShareType.INSTAGRAM)
-            })
-        ImageComponent(drawableId = R.drawable.ic_whatsapp, contentDescription = stringResource(R.string.share_via_whatsapp_icon_description), modifier = Modifier
-            .weight(1f)
-            .clickable {
-                context.shareReferralCode(referralContent, ShareType.WHATSAPP)
-            })
-        ImageComponent(drawableId = R.drawable.ic_twitter, contentDescription = stringResource(R.string.share_via_twitter_icon_description), modifier = Modifier
-            .weight(1f)
-            .clickable {
-                context.shareReferralCode(referralContent, ShareType.TWITTER)
-            })
-        ImageComponent(drawableId = R.drawable.ic_share, contentDescription = stringResource(R.string.share_via_icon_description), modifier = Modifier
-            .weight(1f)
-            .clickable {
-                context.shareReferralCode(referralContent, ShareType.SHARE_OTHERS)
-            })
+        ShareType.values().forEach {
+            ImageComponent(
+                drawableId = it.iconId,
+                contentDescription = it.name,
+                modifier = Modifier.weight(1f).clickable {
+                    context.shareReferralCode(referralContent, it)
+                }
+            )
+        }
     }
 }
 
 @Composable
-fun ReferralCodeView(referralCode: String) {
+fun ReferralCodeView(referralLink: String, referralCode: String) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .dashedBorder(1.dp, SaffronColor, SaffronColorLight, 8.dp, 10.dp)
     ) {
-        val (referralLinkView, dividerView, copyView) = createRefs()
+        val (referralLinkView, copyView) = createRefs()
         val context = LocalContext.current
 
-        BodyTextSmall(
-            text = stringResource(R.string.tap_to_copy), color = CopyColor,
+        ImageComponent(
+            drawableId = R.drawable.ic_copy, stringResource(id = R.string.tap_to_copy),
             modifier = Modifier
                 .constrainAs(copyView) {
-                    end.linkTo(parent.end)
+                    end.linkTo(parent.end, margin = 2.dp)
                 }
-                .padding(12.dp)
                 .clickable {
-                    context.copyToClipboard(text = referralCode)
-                }
-        )
-        ImageComponent(
-            drawableId = R.drawable.divider_line_vertical, "",
-            modifier = Modifier
-                .constrainAs(dividerView) {
-                    height = Dimension.fillToConstraints
-                    top.linkTo(parent.top, margin = 2.dp)
-                    bottom.linkTo(parent.bottom, margin = 2.dp)
-                    start.linkTo(copyView.start)
-                }
-                .width(1.dp),
-            contentScale = ContentScale.FillHeight
+                    context.copyToClipboard(text = referralLink.plus(referralCode))
+                },
+            contentScale = ContentScale.Inside
         )
 
-        CommonText(
-            text = referralCode,
-            color = TextLightGray,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .constrainAs(referralLinkView) {
-                    width = Dimension.fillToConstraints
+        Column(modifier = Modifier
+            .constrainAs(referralLinkView) {
+                width = Dimension.fillToConstraints
+                start.linkTo(parent.start)
+                end.linkTo(copyView.start, margin = 8.dp)
+                bottom.linkTo(copyView.bottom)
+                top.linkTo(copyView.top)
+            }
+            .dashedBorder(0.dp, VeryLightPurple, VeryLightPurple, 8.dp, 10.dp)
+        ) {
+            CommonText(
+                text = referralLink, color = VibrantPurple65,
+                fontSize = 10.sp,
+                modifier = Modifier.padding(top = 8.dp, start = 12.dp)
+            )
+            CommonText(
+                text = referralCode,
+                color = SpinnerBackground,
+                maxLines = 1,
+                fontSize = 16.sp,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(start = 12.dp, bottom = 8.dp),
+                style = TextStyle(
+                    platformStyle = PlatformTextStyle(includeFontPadding = false),
+                    lineHeightStyle = LineHeightStyle(
+                        alignment = LineHeightStyle.Alignment.Top,
+                        trim = LineHeightStyle.Trim.None
+                    ))
+            )
+        }
 
-                    start.linkTo(parent.start)
-                    end.linkTo(dividerView.start)
-                }
-                .padding(12.dp)
-        )
     }
 }
 

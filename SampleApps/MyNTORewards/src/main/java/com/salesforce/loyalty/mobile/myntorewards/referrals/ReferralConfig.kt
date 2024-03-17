@@ -1,9 +1,15 @@
 package com.salesforce.loyalty.mobile.myntorewards.referrals
 
+/**
+ * Referral configuration class
+ */
 object ReferralConfig {
+    // Referral Program Name
     const val REFERRAL_PROGRAM_NAME = "NTO Insider"
-    const val REFERRAL_PROMO_CODE = "TEMPRP7"
-    const val REFERRAL_PROMO_ID = "0c81Q0000004UL4QAM"
+    // Configure Referral Promotion Details below, where user can also able to enroll and refer from My Referrals screen
+    const val REFERRAL_DEFAULT_PROMOTION_CODE = "TEMPRP7"
+    const val REFERRAL_DEFAULT_PROMOTION_ID = "0c81Q0000004UL4QAM"
+    // Referral duration - By default, showing the last 90days of referrals info
     const val REFERRAL_DURATION = 90
     /* Provided random link here instead of actual Terms and Conditions link.
     Replace with valid terms and conditions link while using the feature */

@@ -11,6 +11,9 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 import retrofit2.http.Url
 
+/**
+ * API service interface to make Referral related sObject APIs
+ */
 interface ReferralsLocalApiService {
     @GET
     suspend fun fetchReferralsInfo(

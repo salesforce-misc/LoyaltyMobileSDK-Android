@@ -89,18 +89,18 @@ fun PromotionDifferentiator(
                     ErrorPopup(
                         it.errorMessage
                             ?: stringResource(id = R.string.game_error_msg),
-                        tryAgainClicked = { referralViewModel.fetchReferralProgramStatus(context) },
-                        textButtonClicked = { closePopup() },
-                        textButton = stringResource(id = R.string.referral_back_button_text)
+                        tryAgainClicked = { closePopup() },
+                        tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
+                        textButtonClicked = { }
                     )
                 }
 
                 is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
                     ErrorPopup(
                         it.error ?: stringResource(id = R.string.game_error_msg),
-                        tryAgainClicked = { referralViewModel.checkIfGivenPromotionIsReferralAndEnrolled(context, results.promotionId.orEmpty()) },
-                        textButtonClicked = { closePopup() },
-                        textButton = stringResource(id = R.string.referral_back_button_text)
+                        tryAgainClicked = { closePopup() },
+                        tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
+                        textButtonClicked = { }
                     )
                 }
 

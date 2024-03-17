@@ -2,30 +2,13 @@ package com.salesforce.loyalty.mobile.myntorewards.utilities
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ContentResolver
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.Typeface
-import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
-import android.provider.MediaStore
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
-import androidx.annotation.AnyRes
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
 
 
 const val INTENT_TYPE_TEXT = "text/plain"
@@ -65,44 +48,11 @@ fun Context.sendMail(emails: List<String>, subject: String, body: String) {
 
 fun Context.shareReferralCode(content: String, shareType: ShareType) {
     val intent = Intent(Intent.ACTION_SEND).apply {
-        type = INTENT_TYPE_TEXT
+        type = shareType.intentShareType
+        setPackage(shareType.packageName)
         putExtra(Intent.EXTRA_TEXT, content)
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
     }
-
-    when (shareType) {
-        ShareType.FACEBOOK -> {
-            intent.type = INTENT_TYPE_IMAGE
-            intent.setPackage(FACEBOOK_APP_PACKAGE)
-        }
-        ShareType.INSTAGRAM -> {
-            intent.setPackage(INSTAGRAM_APP_PACKAGE)
-
-            /*intent.also {
-                it.setPackage(INSTAGRAM_APP_PACKAGE)
-                it.type = INTENT_TYPE_IMAGE
-                it.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                val bitmap = writeTextOnDrawable(this, R.drawable.bg_refer_earn, content).bitmap
-                bitmap?.let {
-                    intent.putExtra(Intent.EXTRA_STREAM, getImageUriFromBitmap(this, bitmap))
-                }
-                it.putExtra(Intent.EXTRA_TEXT, content)
-            }*/
-        }
-        ShareType.WHATSAPP -> {
-            intent.setPackage(WHATSAPP_APP_PACKAGE)
-        }
-        ShareType.TWITTER -> {
-            intent.setPackage(TWITTER_APP_PACKAGE)
-        }
-        ShareType.SHARE_OTHERS -> {
-            // do nothing
-        }
-    }
-
-    /*if (!isAppInstalled(intent.`package` ?: "")) {
-        Toast.makeText(this, getString(R.string.selected_app_is_not_installed), Toast.LENGTH_LONG).show()
-    }*/
     startActivity(Intent.createChooser(intent, getString(R.string.share_referral_code_intent_chooser)))
 }
 
