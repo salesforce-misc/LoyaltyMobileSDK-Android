@@ -72,12 +72,7 @@ fun MyReferralsScreen(
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
-                ErrorPopup(
-                    stringResource(id = R.string.game_error_msg),
-                    tryAgainClicked = { backAction() },
-                    tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
-                    textButtonClicked = {  }
-                )
+                showErrorScreen(stringResource(id = R.string.game_error_msg), backAction)
             }
 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
@@ -93,21 +88,11 @@ fun MyReferralsScreen(
             }
 
             is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
-                ErrorPopup(
-                    it.errorMessage ?: stringResource(id = R.string.game_error_msg),
-                    tryAgainClicked = { backAction() },
-                    tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
-                    textButtonClicked = { }
-                )
+                showErrorScreen(it.errorMessage, backAction)
             }
 
             is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
-                ErrorPopup(
-                    it.error ?: stringResource(id = R.string.game_error_msg),
-                    tryAgainClicked = { backAction() },
-                    tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
-                    textButtonClicked = { }
-                )
+                showErrorScreen(it.error, backAction)
             }
             MyReferralsViewState.PromotionStateNonReferral -> {
                 Logger.d(LOG_TAG, "PromotionStateNonReferral")
@@ -221,4 +206,14 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
             PullRefreshIndicator(refreshing, state)
         }
     }
+}
+
+@Composable
+private fun showErrorScreen(errorMessage: String?, closePopup: () -> Boolean) {
+    ErrorPopup(
+        errorMessage ?: stringResource(id = R.string.game_error_msg),
+        tryAgainClicked = { closePopup() },
+        tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
+        textButtonClicked = { }
+    )
 }

@@ -86,22 +86,11 @@ fun PromotionDifferentiator(
                 }
 
                 is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
-                    ErrorPopup(
-                        it.errorMessage
-                            ?: stringResource(id = R.string.game_error_msg),
-                        tryAgainClicked = { closePopup() },
-                        tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
-                        textButtonClicked = { }
-                    )
+                    showErrorScreen(it.errorMessage, closePopup)
                 }
 
                 is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
-                    ErrorPopup(
-                        it.error ?: stringResource(id = R.string.game_error_msg),
-                        tryAgainClicked = { closePopup() },
-                        tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
-                        textButtonClicked = { }
-                    )
+                    showErrorScreen(it.error, closePopup)
                 }
 
                 MyReferralsViewState.PromotionStateNonReferral -> {
@@ -117,5 +106,15 @@ fun PromotionDifferentiator(
             }
         }
     }
+}
+
+@Composable
+private fun showErrorScreen(errorMessage: String?, closePopup: () -> Unit) {
+    ErrorPopup(
+        errorMessage ?: stringResource(id = R.string.game_error_msg),
+        tryAgainClicked = { closePopup() },
+        tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
+        textButtonClicked = { }
+    )
 }
 
