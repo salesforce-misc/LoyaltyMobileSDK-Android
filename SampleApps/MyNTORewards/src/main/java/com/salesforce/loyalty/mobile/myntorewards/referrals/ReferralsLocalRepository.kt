@@ -16,6 +16,9 @@ import com.salesforce.referral.api.safeApiCall
 
 import javax.inject.Inject
 
+/**
+ * Repository class to make the SOQL query APIs and to cache the data related to referrals feature
+ */
 class ReferralsLocalRepository @Inject constructor(
     private val apiService: ReferralsLocalApiService,
     private val instanceUrl: String

@@ -19,17 +19,18 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
-import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
-import com.salesforce.loyalty.mobile.myntorewards.utilities.INSTAGRAM_APP_PACKAGE
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.FACEBOOK_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.INSTAGRAM_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.TWITTER_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.WHATSAPP_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.REFER_FRIEND_PROMOTION_DESC
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.REFER_FRIEND_PROMOTION_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_DESCRIPTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_NAME
-import com.salesforce.loyalty.mobile.myntorewards.utilities.WHATSAPP_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isAppInstalled
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
@@ -233,7 +234,8 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
                         hasTestTag(REFER_FRIEND_PROMOTION_DESC)
             ).assertIsDisplayed()
 
-            onNodeWithText("https://rb.gy/wa6jw7?referralCode=9RCLSYJO--TEMPRP7", substring = true).assertIsDisplayed()
+            onNodeWithText("https://rb.gy/wa6jw7?referralCode=").assertIsDisplayed()
+            onNodeWithText("9RCLSYJO-TEMPRP7").assertIsDisplayed()
 
             Thread.sleep(2000)
 
@@ -247,7 +249,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             // Test Social Media Share Icons
             onNodeWithText("Share Invite").assertIsDisplayed()
 
-            onNodeWithContentDescription(activity.getString(R.string.share_via_twitter_icon_description))
+            onNodeWithContentDescription(ShareType.TWITTER.name)
                 .assertIsDisplayed().performClick()
             Thread.sleep(1000)
             if (context.isAppInstalled(TWITTER_APP_PACKAGE)) {
@@ -271,7 +273,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             Thread.sleep(1000)
 
             if (context.isAppInstalled(INSTAGRAM_APP_PACKAGE)) {
-                onNodeWithContentDescription(activity.getString(R.string.share_via_instagram_icon_description))
+                onNodeWithContentDescription(ShareType.INSTAGRAM.name)
                     .assertIsDisplayed().performClick()
                 Thread.sleep(2000)
 
@@ -282,7 +284,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             uiDevice.pressBack()
 
             if (context.isAppInstalled(WHATSAPP_APP_PACKAGE)) {
-                onNodeWithContentDescription(activity.getString(R.string.share_via_whatsapp_icon_description))
+                onNodeWithContentDescription(ShareType.WHATSAPP.name)
                     .assertIsDisplayed().performClick()
                 Thread.sleep(2000)
                 assertEquals(WHATSAPP_APP_PACKAGE, uiDevice.currentPackageName)
@@ -291,8 +293,8 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             }
             uiDevice.pressBack()
 
-            if (context.isAppInstalled(WHATSAPP_APP_PACKAGE)) {
-                onNodeWithContentDescription(activity.getString(R.string.share_via_facebook_icon_description))
+            if (context.isAppInstalled(FACEBOOK_APP_PACKAGE)) {
+                onNodeWithContentDescription(ShareType.FACEBOOK.name)
                     .assertIsDisplayed().performClick()
                 Thread.sleep(1000)
                 val facebook: UiObject2 = uiDevice.findObject(By.text("News Feed"))
@@ -304,7 +306,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             }
             uiDevice.pressBack()
 
-            onNodeWithText("Copy").assertIsDisplayed().performClick()
+            onNodeWithContentDescription("Copy").assertIsDisplayed().performClick()
             assertEquals("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", clipboardManager.text)
             uiDevice.pressBack()
         }
