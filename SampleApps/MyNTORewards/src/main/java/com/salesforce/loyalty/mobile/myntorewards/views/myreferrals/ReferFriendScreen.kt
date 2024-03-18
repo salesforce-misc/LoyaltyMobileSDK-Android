@@ -307,7 +307,7 @@ private fun ColumnScope.StartReferUi(viewModel: MyReferralsViewModel, promotionD
         fontWeight = FontWeight.ExtraBold
     )
     SocialMediaRow(extraText)
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(8.dp))
     ReferralCodeView(referralLink, referralCode)
     Spacer(modifier = Modifier.weight(1f))
     PrimaryButton(textContent = stringResource(id = R.string.scanning_done), onClick = { doneAction() })
@@ -319,14 +319,14 @@ fun SocialMediaRow(referralContent: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)
     ) {
         val context = LocalContext.current
         ShareType.values().forEach {
             ImageComponent(
                 drawableId = it.iconId,
                 contentDescription = it.name,
-                modifier = Modifier.weight(1f).clickable {
+                modifier = Modifier.clickable {
                     context.shareReferralCode(referralContent, it)
                 }
             )
