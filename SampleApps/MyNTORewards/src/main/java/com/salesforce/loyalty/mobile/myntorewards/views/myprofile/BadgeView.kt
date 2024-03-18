@@ -45,7 +45,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.Record
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.RecordBadgeList
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VoucherColourCode
@@ -56,7 +56,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BadgeView(badge: Record, blurBG: (Dp) -> Unit) {
+fun BadgeView(badge: RecordBadgeList, blurBG: (Dp) -> Unit) {
 
     var voucherPopupState by remember { mutableStateOf(false) }
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
@@ -88,7 +88,7 @@ fun BadgeView(badge: Record, blurBG: (Dp) -> Unit) {
             )
             GlideImage(
                 model = badge.attributes.url,
-                contentDescription = badge.Name,
+                contentDescription = badge.name,
                 modifier = Modifier
                     .size(165.dp, 92.dp)
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
@@ -108,7 +108,7 @@ fun BadgeView(badge: Record, blurBG: (Dp) -> Unit) {
         )
 
         {
-            badge.Name?.let {
+            badge.name?.let {
                 Text(
                     text = it,
                     fontWeight = FontWeight.Bold,
@@ -168,7 +168,7 @@ fun BadgeView(badge: Record, blurBG: (Dp) -> Unit) {
                     withStyle(
                         style = SpanStyle(fontWeight = FontWeight.Bold)
                     ) {
-                        append(badge.EndDate?.let { Common.formatPromotionDate(it, context) })
+                        append(badge.endDate?.let { Common.formatPromotionDate(it, context) })
                     }
                 },
                 fontWeight = FontWeight.Normal,
@@ -228,7 +228,7 @@ fun BadgeView(badge: Record, blurBG: (Dp) -> Unit) {
                         .height(32.dp)
                         .width(200.dp)
                         .clickable {
-                            badge.LoyaltyProgramBadgeId?.let {
+                            badge.loyaltyProgramBadgeId?.let {
                                 clipboardManager.setText(AnnotatedString((it)))
                                 Toast.makeText(context, voucherCopyText, Toast.LENGTH_SHORT).show()
 
@@ -236,7 +236,7 @@ fun BadgeView(badge: Record, blurBG: (Dp) -> Unit) {
                         }
                 ) {
 
-                    badge.Status?.let {
+                    badge.status?.let {
                         Text(
                             text = it,
                             fontWeight = FontWeight.Bold,

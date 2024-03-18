@@ -50,6 +50,7 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
 
     LaunchedEffect(key1 = true) {
         badgeViewModel.loadBadge(context)
+        badgeViewModel.loadBadgeDetails(context)
     }
 
     fun refresh() = refreshScope.launch {

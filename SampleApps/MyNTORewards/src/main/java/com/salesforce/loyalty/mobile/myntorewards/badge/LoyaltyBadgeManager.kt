@@ -1,10 +1,9 @@
 package com.salesforce.loyalty.mobile.myntorewards.badge
-
 import com.salesforce.loyalty.mobile.myntorewards.badge.api.BadgeConfig
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeDetails
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.RecordBadgeDetails
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.RecordBadgeList
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
-import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.api.ReceiptScanningConfig
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
@@ -28,7 +27,7 @@ class LoyaltyBadgeManager constructor(auth: ForceAuthenticator, instanceUrl: Str
 
 
     suspend fun fetchBadgeList(membershipKey: String
-    ): Result<LoyaltyBadgeList> {
+    ): Result<LoyaltyBadgeList<RecordBadgeList>> {
         Logger.d(TAG, "BadgeList")
 
         return badgeClient.badgeApi.badgeList(
@@ -36,7 +35,7 @@ class LoyaltyBadgeManager constructor(auth: ForceAuthenticator, instanceUrl: Str
         )
     }
     suspend fun fetchBadgeDetails(membershipKey: String
-    ): Result<LoyaltyBadgeDetails> {
+    ): Result<LoyaltyBadgeList<RecordBadgeDetails>> {
         Logger.d(TAG, "fetchBadgeDetails")
 
         return badgeClient.badgeApi.badgeDetail(
@@ -45,12 +44,16 @@ class LoyaltyBadgeManager constructor(auth: ForceAuthenticator, instanceUrl: Str
     }
 
     private fun getBadgeLSOQLUrl(): String {
-        return mInstanceUrl + BadgeConfig.SOQL_QUERY_PATH + BadgeConfig.SOQL_QUERY_VERSION + ReceiptScanningConfig.QUERY
+        return mInstanceUrl + BadgeConfig.SOQL_QUERY_PATH + BadgeConfig.SOQL_QUERY_VERSION + BadgeConfig.QUERY
     }
 
+
+    //membership Key is not being used. Its placeholder for future use to fetch badges based on membership ID or any other program ID
     private fun fetchBadgeListQuery(membershipKey: String): String {
         return "select Name,StartDate,EndDate,Reason,Status,LoyaltyProgramMemberId,LoyaltyProgramBadgeId FROM LoyaltyProgramMemberBadge"
     }
+
+    //membership Key is not being used. Its placeholder for future use to fetch badges based on membership ID or any other program ID
     private fun fetchBadgeListDetailQuery(membershipKey: String): String {
         return "select Description,ImageUrl,LoyaltyProgramId,Name,StartDate,Status,ValidityDuration,ValidityDurationUnit,ValidityEndDate,ValidityType FROM LoyaltyProgramBadge"
     }

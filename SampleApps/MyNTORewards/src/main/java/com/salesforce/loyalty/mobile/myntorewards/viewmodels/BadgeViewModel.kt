@@ -6,17 +6,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.salesforce.loyalty.mobile.myntorewards.badge.LoyaltyBadgeManager
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
-import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager.TAG
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.RecordBadgeList
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BadgeViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BadgeViewState
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 
 
 class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : ViewModel(), BadgeViewModelInterface {
-    override val badgeLiveData: LiveData<LoyaltyBadgeList>
+
+    private val TAG = BadgeViewModel::class.java.simpleName
+    override val badgeLiveData: LiveData<LoyaltyBadgeList<RecordBadgeList>>
         get() = badges
 
-    private val badges = MutableLiveData<LoyaltyBadgeList>()
+    private val badges = MutableLiveData<LoyaltyBadgeList<RecordBadgeList>>()
 
     override val badgeViewState: LiveData<BadgeViewState>
         get() = viewState
@@ -29,9 +31,9 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
         loyaltyBadgeManager.fetchBadgeList("").onSuccess {
             viewState.postValue(BadgeViewState.BadgeFetchSuccess)
             badges.value = it
-            Log.d(TAG, "***********"+it.toString())
+            Log.d(TAG, "**** Badge List *******"+it.toString())
         }.onFailure {
-            Logger.d(TAG, "badge call failed: ${it.message}")
+            Logger.d(TAG, "badge list call failed: ${it.message}")
             Log.d(TAG, "failed ***********"+it.toString())
         }
     }
@@ -40,9 +42,9 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
         viewState.postValue(BadgeViewState.BadgeFetchInProgress)
         loyaltyBadgeManager.fetchBadgeDetails("").onSuccess {
             viewState.postValue(BadgeViewState.BadgeFetchSuccess)
-            Log.d(TAG, "***********"+it.toString())
+            Log.d(TAG, "***Badge Detail********"+it.toString())
         }.onFailure {
-            Logger.d(TAG, "badge call failed: ${it.message}")
+            Logger.d(TAG, "badge detail call failed: ${it.message}")
             Log.d(TAG, "failed ***********"+it.toString())
             //viewState.postValue(ReceiptViewState.ReceiptListFetchFailureView)
         }
