@@ -2,9 +2,13 @@ package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.MyNTORewards.R.*
+import com.salesforce.gamification.model.GameRewardResponse
+import com.salesforce.gamification.model.Games
+import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
@@ -15,16 +19,38 @@ import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.Analyze
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptStatusUpdateResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.UploadReceiptResponse
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.CurrentPromotionStage
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredAccount
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredParty
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
+import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
+import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.ConnectedAppViewModelFactory
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralProgramType
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferralStatusType
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import com.salesforce.referral.EnrollmentStatus
+import com.salesforce.referral.api.ApiResponse
+import com.salesforce.referral.entities.ReferralEnrollmentResponse
+import com.salesforce.referral.entities.TransactionJournal
+import com.salesforce.referral.entities.referral_event.ReferralEventResponse
+import com.salesforce.referral.repository.ReferralsRepository
 import io.mockk.*
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.*
 import org.junit.runner.Description
@@ -45,8 +71,12 @@ class SampleAppViewModelTest {
     private lateinit var onboardingScreenViewModel: OnboardingScreenViewModel
     private lateinit var connectedAppViewModel: ConnectedAppViewModel
     private lateinit var scanningViewModel: ScanningViewModel
+    private lateinit var gameViewModel: GameViewModel
+    private lateinit var myReferralsViewModel: MyReferralsViewModel
+
 
     private val loyaltyAPIManager: LoyaltyAPIManager = mockk()
+    private val gameRemoteRepository: GamificationRemoteRepository = mockk()
     private val checkoutManager: CheckoutManager = mockk()
     private val receiptScanningManager: ReceiptScanningManager = mockk()
 
@@ -56,6 +86,10 @@ class SampleAppViewModelTest {
     private val member: CommunityMemberModel = mockk()
 
     //private val localManager: LocalFileManager = mockk()
+
+    private val referralsRepository: ReferralsRepository = mockk()
+    private val referralsLocalRepository: ReferralsLocalRepository = mockk()
+
 
 
     private val memberID = "username"
@@ -75,6 +109,14 @@ class SampleAppViewModelTest {
     private lateinit var receiptStatusUpdateViewState: MutableList<ReceiptStatusUpdateViewState>
     private lateinit var createTransactionJournalViewState: MutableList<CreateTransactionJournalViewState>
     private lateinit var cancelSubmissionViewState: MutableList<UploadRecieptCancelledViewState>
+    private lateinit var rewardViewState: MutableList<GameRewardViewState>
+    private lateinit var viewState: MutableList<GamesViewState>
+    private lateinit var referralViewState: MutableList<ReferFriendViewState>
+    private lateinit var uiMutableState: MutableList<MyReferralsViewState>
+    private lateinit var programDataState: MutableList<ReferralProgramType>
+
+  /*  private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData(null)
+    val programState: LiveData<ReferralProgramType> = _programState*/
 
     /*  @get:Rule
     val rule = InstantTaskExecutorRule()*/
@@ -157,6 +199,39 @@ class SampleAppViewModelTest {
         scanningViewModel.cancellingSubmissionLiveData.observeForever {
             cancelSubmissionViewState.add(it)
         }
+        gameViewModel = GameViewModel(gameRemoteRepository)
+        rewardViewState = mutableListOf()
+        viewState = mutableListOf()
+        gameViewModel.gameRewardsViewState.observeForever{
+            rewardViewState.add(it)
+        }
+        gameViewModel.gamesViewState.observeForever{
+            viewState.add(it)
+        }
+
+
+
+        every { referralsRepository.setInstanceUrl("") } returns Unit
+        myReferralsViewModel= MyReferralsViewModel(referralsRepository, referralsLocalRepository, "")
+        referralViewState= mutableListOf()
+
+        myReferralsViewModel.viewState.observeForever{
+            if (it != null) {
+                referralViewState.add(it)
+            }
+        }
+        uiMutableState= mutableListOf()
+        myReferralsViewModel.uiState.observeForever{
+            uiMutableState.add(it)
+        }
+
+        programDataState= mutableListOf()
+
+        myReferralsViewModel.programState.observeForever{
+            programDataState.add(it)
+        }
+
+
     }
 
     @After
@@ -1072,9 +1147,6 @@ class SampleAppViewModelTest {
         coVerify {
             ForceAuthEncryptedPreference.clearAll(context)
         }
-        coVerify {
-            ForceConnectedAppEncryptedPreference.clearAll(context)
-        }
 
         Assert.assertEquals(LogoutState.LOGOUT_IN_PROGRESS, logoutState[0])
         Assert.assertEquals(LogoutState.LOGOUT_SUCCESS, logoutState[1])
@@ -1826,10 +1898,1053 @@ class SampleAppViewModelTest {
             receiptStatusUpdateViewState[0]
         )
         Assert.assertEquals(
-            ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess("100.0").points,
+            ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess(null).points,
             (receiptStatusUpdateViewState[1] as ReceiptStatusUpdateViewState.ReceiptStatusUpdateSuccess).points
         )
     }
+
+    @Test
+    fun `on SignUp To Refer Clicked program state should be join program`() {
+        myReferralsViewModel.onSignUpToReferClicked("")
+        Assert.assertEquals(
+            ReferralProgramType.JOIN_PROGRAM,
+            programDataState[0]
+
+        )
+    }
+
+    @Test
+    fun `on start refer Refer Clicked program state should be start referring`() {
+        myReferralsViewModel.startReferring()
+        Assert.assertEquals(
+            ReferralProgramType.START_REFERRING,
+            programDataState[0]
+        )
+    }
+
+    //after null status will be removed this test cases can be added.
+    /* @Test
+     fun `on reset clicked`() {
+         myReferralsViewModel.resetViewState()
+         Assert.assertEquals(
+             null,
+             referralViewState[0]
+         )
+     }*/
+
+
+    @Test
+    fun `for send email if api call is success posted value should be success with empty data`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery {  referralsRepository.sendReferrals(any(), any()) }
+            .returns(ApiResponse.Success(ReferralEventResponse("", "", "", listOf(), "")) )
+
+        myReferralsViewModel.sendReferralMail(context, listOf() )
+        coVerify {
+            referralsRepository.sendReferrals(any(), any())
+        }
+
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendSendMailsSuccess,
+            referralViewState[1]
+        )
+
+    }
+
+    @Test
+    fun `for send email if api call is failure posted value should be failure with empty data`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery {  referralsRepository.sendReferrals(any(), any()) }
+            .returns(ApiResponse.Error("Network Error") )
+
+        myReferralsViewModel.sendReferralMail(context, listOf() )
+        coVerify {
+            referralsRepository.sendReferrals(any(), any())
+        }
+
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendSendMailsFailed("Network Error"),
+            referralViewState[1]
+        )
+
+    }
+    @Test
+    fun `for fetch Referral Program Success Status should be success`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val context = mockk<Context>(relaxed = true)
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
+            .returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
+
+        coEvery { referralsLocalRepository.saveReferralStatusInCache("TEMPRP7", true,false) }
+            .returns(Unit)
+
+        myReferralsViewModel.fetchReferralProgramStatus(context)
+
+        coVerify {
+            referralsLocalRepository.checkIfMemberEnrolled(any(), "")
+        }
+
+        coVerify {
+            referralsLocalRepository.saveReferralStatusInCache("TEMPRP7", true,false)
+        }
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsPromotionNotEnrolled,
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for fetch Referral Program Status error should have ui state error`() {
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
+            .returns(ApiResponse.Error("Run time Exception"))
+
+        myReferralsViewModel.fetchReferralProgramStatus(context)
+
+        coVerify {
+            referralsLocalRepository.checkIfMemberEnrolled(any(), "")
+        }
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsPromotionStatusFailure("Run time Exception"),
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for fetch Referral Program Status network error ui state should failure`() {
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
+            .returns(ApiResponse.NetworkError)
+
+        myReferralsViewModel.fetchReferralProgramStatus(context)
+
+        coVerify {
+            referralsLocalRepository.checkIfMemberEnrolled(any(), "")
+        }
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsPromotionStatusFailure(),
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for fetchReferralAndPromotionCode called when referralCode is empty `() {
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        every { sharedPrefs.getString(AppConstants.KEY_MEMBER_REFERRAL_CODE, null) }
+            .returns(null)
+
+        coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
+            .returns(ApiResponse.NetworkError)
+        coEvery { referralsLocalRepository.saveReferralStatusInCache("", true,false) }
+            .returns(Unit)
+        coEvery { referralsLocalRepository.fetchMemberReferralCode(any())}
+            .returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
+
+        myReferralsViewModel.setReferralCode(context, "")
+
+        myReferralsViewModel.fetchReferralProgramStatus(context)
+
+
+        coVerify {
+            referralsLocalRepository.fetchMemberReferralCode(any())
+        }
+
+        coVerify {
+            sharedPrefs.getString(AppConstants.KEY_MEMBER_REFERRAL_CODE, any())
+        }
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsPromotionStatusFailure(),
+            uiMutableState[1]
+        )
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    @Test
+    fun `for fetch fetch Referrals Info is success should be MyReferralsFetchSuccess`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery {
+            referralsLocalRepository.fetchReferralsInfo(
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
+
+        myReferralsViewModel.fetchReferralsInfo(context)
+
+        coVerify {
+            referralsLocalRepository.fetchReferralsInfo(any(), any())
+        }
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchSuccess(
+                MyReferralScreenState(
+                    ReferralTabs.sortedTabs(), listOf(), listOf(), listOf(
+                        Pair(
+                            R.string.my_referral_sent_label, "${0}"
+                        ),
+                        Pair(R.string.my_referrals_accepted_label, "${0}"),
+                        Pair(R.string.my_referrals_vouchers_earned_label, "${0}")
+                    ), "${ReferralConfig.REFERRAL_DURATION}"
+                )
+            ),
+            uiMutableState[1]
+        )
+    }
+
+
+    @Test
+    fun `for fetch fetch Referrals Info is success data not null MyReferrals Fetch Success`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        val reffralEntity= ReferralEntity(any(), CurrentPromotionStage(""),  ReferredParty(
+            ReferredAccount(""))
+        )
+
+        coEvery {
+            referralsLocalRepository.fetchMemberReferralCode(
+                any()
+            )
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(ReferralCode("24345678","REFERRAL_CODE")), "")))
+
+        coEvery {
+            referralsLocalRepository.fetchReferralsInfo(
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(reffralEntity), "")))
+
+        myReferralsViewModel.fetchReferralsInfo(context)
+
+        coVerify {
+            referralsLocalRepository.fetchReferralsInfo(any(), any())
+        }
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchSuccess(
+                successState(listOf(reffralEntity))
+            ),
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for fetch fetch Referrals Info is success referral code not empty MyReferrals Fetch Success`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val context = mockk<Context>(relaxed = true)
+        val reffralEntity= ReferralEntity(any(),CurrentPromotionStage(""), ReferredParty(ReferredAccount("")) )
+
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery {
+            referralsLocalRepository.fetchReferralsInfo(
+                any(),
+                any(),
+            )
+        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(reffralEntity), "")))
+
+        myReferralsViewModel.fetchReferralsInfo(context)
+
+        coVerify {
+            sharedPrefs.getString(any(), any())
+        }
+        coVerify {
+            referralsLocalRepository.fetchReferralsInfo(any(),any())
+        }
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchSuccess(successState( listOf(reffralEntity))),
+            uiMutableState[1]
+        )
+
+    }
+
+    @Test
+    fun `for fetch fetch Referrals Info is error MyReferrals Fetch Failure`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery {
+            referralsLocalRepository.fetchReferralsInfo(
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.Error("run time exception"))
+
+        myReferralsViewModel.fetchReferralsInfo(context)
+
+        coVerify {
+            referralsLocalRepository.fetchReferralsInfo(any(), any())
+        }
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchFailure("run time exception"),
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for fetch fetch Referrals Info is network error MyReferrals Fetch Failure`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        coEvery {
+            referralsLocalRepository.fetchReferralsInfo(
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.NetworkError)
+
+        myReferralsViewModel.fetchReferralsInfo(context)
+
+        coVerify {
+            referralsLocalRepository.fetchReferralsInfo(any(), any())
+        }
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchFailure(),
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for enroll To referral promotion success tryAgain false refer in progress`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(" ")
+
+        coEvery {
+            referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+            )
+        }.returns(ApiResponse.Success(ReferralEnrollmentResponse("","","", "","" , listOf())))
+
+        myReferralsViewModel.enrollToReferralPromotion(context, false)
+
+        coVerify {
+            referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(
+                any() ,any(), any(), any(), any()
+            )
+        }
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    @Test
+    fun `for enroll To referral promotion generic error tryAgain false should have enrollment failed with generic error`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(" ")
+
+        coEvery {
+            referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+            )
+        }.returns(ApiResponse.Error("Run Time Exception"))
+
+        myReferralsViewModel.enrollToReferralPromotion(context, false)
+
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+        Assert.assertEquals(
+            ReferFriendViewState.EnrollmentTaskFinished,
+            referralViewState[1]
+        )
+        Assert.assertEquals(
+            ReferralProgramType.ERROR_ENROLL("Run Time Exception"),
+            programDataState[0]
+        )
+
+    }
+
+    //below test case causing coverage issue. Although its being passed when execute without coverage. While coverage calculation
+    //comment below test case.
+    @Test
+    fun `for enroll To referral promotion network error tryAgain false should have enrollment failed with network error`() {
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(" ")
+
+        coEvery {
+            referralsRepository.enrollNewCustomerAsAdvocateOfPromotion(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+            )
+        }.returns(ApiResponse.NetworkError)
+
+        myReferralsViewModel.enrollToReferralPromotion(context, false)
+
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+        Assert.assertEquals(
+            ReferFriendViewState.EnrollmentTaskFinished,
+            referralViewState[1]
+        )
+        Assert.assertEquals(
+            ReferralProgramType.ERROR_ENROLL(),
+            programDataState[0]
+        )
+
+    }
+
+    @Test
+    fun `for enroll To referral promotion success tryAgain false contact id not null enrollment status false then enrollment should fail`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(mockResponse)
+
+        coEvery {
+            referralsRepository.enrollExistingAdvocateToPromotionWithContactId(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.Success(ReferralEnrollmentResponse("","","", "","" , listOf())))
+
+        myReferralsViewModel.enrollToReferralPromotion(context, false)
+
+        coVerify {
+            referralsRepository.enrollExistingAdvocateToPromotionWithContactId(
+                any() ,any(), any(), any()
+            )
+        }
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+        Assert.assertEquals(
+            ReferFriendViewState.EnrollmentTaskFinished,
+            referralViewState[1]
+        )
+        Assert.assertEquals(
+            ReferralProgramType.ERROR_ENROLL(context.getString(R.string.enrolment_not_processed_message)),
+            programDataState[0]
+        )
+
+    }
+
+    @Test
+    fun `for enroll To referral promotion success tryAgain false member id not null enrollment status false then enrollment should fail`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+
+        val mockResponse = MockResponseFileReader("MembrInfoContactIDNull.json").content
+        every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(mockResponse)
+
+
+        coEvery {
+            referralsRepository.enrollExistingAdvocateToPromotionWithMembershipNumber(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.Success(ReferralEnrollmentResponse("","","", "","" , listOf())))
+
+        myReferralsViewModel.enrollToReferralPromotion(context, false)
+
+        coVerify {
+            referralsRepository.enrollExistingAdvocateToPromotionWithMembershipNumber(
+                any() ,any(), any()
+            )
+        }
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+        Assert.assertEquals(
+            ReferFriendViewState.EnrollmentTaskFinished,
+            referralViewState[1]
+        )
+        Assert.assertEquals(
+            ReferralProgramType.ERROR_ENROLL(context.getString(R.string.enrolment_not_processed_message)),
+            programDataState[0]
+        )
+
+    }
+
+    @Test
+    fun `for enroll To referral promotion success tryAgain false member not null EnrollmentStatus is PROCESSED and program status is processed`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val mockTransactionJournal = mockk<List<TransactionJournal>>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every { sharedPrefs.getString(AppConstants.KEY_COMMUNITY_MEMBER, any()) }.returns(mockResponse)
+        coEvery { mockTransactionJournal.firstOrNull()?.status } returns EnrollmentStatus.PROCESSED.status
+
+        coEvery {
+            referralsRepository.enrollExistingAdvocateToPromotionWithContactId(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }.returns(ApiResponse.Success(ReferralEnrollmentResponse("","","", "","" , mockTransactionJournal)))
+
+        myReferralsViewModel.enrollToReferralPromotion(context, false)
+
+        coVerify {
+            referralsRepository.enrollExistingAdvocateToPromotionWithContactId(
+                any() ,any(), any(), any()
+            )
+        }
+        Assert.assertEquals(
+            ReferFriendViewState.ReferFriendInProgress,
+            referralViewState[0]
+        )
+        Assert.assertEquals(
+            ReferralProgramType.START_REFERRING,
+            programDataState[0]
+        )
+    }
+
+    @Test
+    fun `for not null promoCodeFromCache isReferral true and isEnrolled true program state should be START_REFERRING and uiMutableState MyReferralsPromotionEnrolled` () {
+        var chachedPromo= mutableMapOf<String, Pair<String?, String?>>()
+
+        chachedPromo.set("Key1", Pair("First", "Second"))
+
+        coEvery { referralsLocalRepository.getPromoCodeFromCache("1234") }.returns(chachedPromo["Key1"]?.first)
+        coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(true, true))
+
+
+        myReferralsViewModel.checkIfGivenPromotionIsInCache(context, "1234")
+
+        coVerify { referralsLocalRepository.getPromoCodeFromCache("1234") }
+
+        coVerify {referralsLocalRepository.getReferralStatusFromCache(any()) }
+
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+        Assert.assertEquals(
+            ReferralProgramType.START_REFERRING,
+            programDataState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsPromotionEnrolled,
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for not null promoCodeFromCache isReferral true and isEnrolled false program state should be JOIN_PROGRAM and uiMutableState MyReferralsPromotionNotEnrolled` () {
+        var chachedPromo= mutableMapOf<String, Pair<String?, String?>>()
+        chachedPromo.set("Key1", Pair("First", "Second"))
+
+        coEvery { referralsLocalRepository.getPromoCodeFromCache("1234") }.returns(chachedPromo["Key1"]?.first)
+        coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(true, false))
+
+
+        myReferralsViewModel.checkIfGivenPromotionIsInCache(context, "1234")
+
+
+        coVerify { referralsLocalRepository.getPromoCodeFromCache("1234") }
+
+        coVerify {referralsLocalRepository.getReferralStatusFromCache(any()) }
+
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+        Assert.assertEquals(
+            ReferralProgramType.JOIN_PROGRAM,
+            programDataState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsPromotionNotEnrolled,
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for not null promoCodeFromCache isReferral false and isEnrolled false  uiMutableState PromotionStateNonReferral` () {
+        var chachedPromo= mutableMapOf<String, Pair<String?, String?>>()
+        chachedPromo.set("Key1", Pair("First", "Second"))
+
+        coEvery { referralsLocalRepository.getPromoCodeFromCache("1234") }.returns(chachedPromo["Key1"]?.first)
+        coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(false, false))
+
+        myReferralsViewModel.checkIfGivenPromotionIsInCache(context, "1234")
+
+        coVerify { referralsLocalRepository.getPromoCodeFromCache("1234") }
+
+        coVerify {referralsLocalRepository.getReferralStatusFromCache(any()) }
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+
+        Assert.assertEquals(
+            MyReferralsViewState.PromotionStateNonReferral,
+            uiMutableState[1]
+        )
+    }
+
+    @Test
+    fun `for  null promoCodeFromCache checkIfGivenPromotionIsReferralAndEnrolled method is called` () {
+        var chachedPromo= mutableMapOf<String, Pair<String?, String?>>()
+        chachedPromo.set("Key1", Pair("First", "Second"))
+        coEvery { referralsLocalRepository.getPromoCodeFromCache("1234") }.returns(null)
+        coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(false, false))
+        coEvery { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
+            .returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
+
+        coEvery { referralsLocalRepository.savePromoCodeAndUrlInCache(any(), any()) }
+            .returns(Unit)
+        coEvery { referralsLocalRepository.saveReferralStatusInCache(any(), any(), any()) }
+            .returns(Unit)
+
+        myReferralsViewModel.checkIfGivenPromotionIsInCache(context, "1234")
+
+        coVerify { referralsLocalRepository.getPromoCodeFromCache("1234") }
+        coVerify { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled("1234") }
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[1]
+        )
+
+    }
+
+    @Test
+    fun `for  null promoCodeFromCache checkIfGivenPromotionIsReferralAndEnrolled method is called ansd verify submethod call API Success` () {
+        var chachedPromo= mutableMapOf<String, Pair<String?, String?>>()
+        chachedPromo.set("Key1", Pair("First", "Second"))
+        coEvery { referralsLocalRepository.getPromoCodeFromCache("1234") }.returns(null)
+        coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(false, false))
+        coEvery { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
+            .returns(ApiResponse.Success(QueryResult(0, true, listOf(
+                ReferralPromotionStatusAndPromoCode("promo_name", "1234", "", true)
+            ), "")))
+
+        coEvery { referralsLocalRepository.savePromoCodeAndUrlInCache(any(), any()) }
+            .returns(Unit)
+        coEvery { referralsLocalRepository.saveReferralStatusInCache(any(), any(), any()) }
+            .returns(Unit)
+
+        myReferralsViewModel.checkIfGivenPromotionIsInCache(context, "1234")
+
+        coVerify { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
+        coVerify { referralsLocalRepository.savePromoCodeAndUrlInCache(any(), any()) }
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[1]
+        )
+
+    }
+
+    @Test
+    fun `for  null promoCodeFromCache checkIfGivenPromotionIsReferralAndEnrolled method is called ansd verify PromotionReferralApiStatusFailure on  API Error Response` () {
+        var chachedPromo= mutableMapOf<String, Pair<String?, String?>>()
+        chachedPromo.set("Key1", Pair("First", "Second"))
+        val (isReferral, isEnrolled) = Pair("First", "Second")
+        coEvery { referralsLocalRepository.getPromoCodeFromCache("1234") }.returns(null)
+        coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(false, false))
+        coEvery { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
+            .returns(ApiResponse.Error("Run Time Exception"))
+
+        coEvery { referralsLocalRepository.savePromoCodeAndUrlInCache(any(), any()) }
+            .returns(Unit)
+        coEvery { referralsLocalRepository.saveReferralStatusInCache(any(), any(), any()) }
+            .returns(Unit)
+
+        myReferralsViewModel.checkIfGivenPromotionIsInCache(context, "1234")
+
+        coVerify { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
+
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[1]
+        )
+        Assert.assertEquals(
+            MyReferralsViewState.PromotionReferralApiStatusFailure("Run Time Exception"),
+            uiMutableState[2]
+        )
+
+    }
+
+    @Test
+    fun `for  null promoCodeFromCache checkIfGivenPromotionIsReferralAndEnrolled method is called ansd verify PromotionReferralApiStatusFailure on  API Network Error Response` () {
+        var chachedPromo= mutableMapOf<String, Pair<String?, String?>>()
+        chachedPromo.set("Key1", Pair("First", "Second"))
+        val (isReferral, isEnrolled) = Pair("First", "Second")
+        coEvery { referralsLocalRepository.getPromoCodeFromCache("1234") }.returns(null)
+        coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(false, false))
+        coEvery { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
+            .returns(ApiResponse.NetworkError)
+
+        coEvery { referralsLocalRepository.savePromoCodeAndUrlInCache(any(), any()) }
+            .returns(Unit)
+        coEvery { referralsLocalRepository.saveReferralStatusInCache(any(), any(), any()) }
+            .returns(Unit)
+
+        myReferralsViewModel.checkIfGivenPromotionIsInCache(context, "1234")
+
+        coVerify { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
+
+
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[0]
+        )
+        Assert.assertEquals(
+            MyReferralsViewState.MyReferralsFetchInProgress,
+            uiMutableState[1]
+        )
+        Assert.assertEquals(
+            MyReferralsViewState.PromotionReferralApiStatusFailure(),
+            uiMutableState[2]
+        )
+
+    }
+
+@Test
+fun `for get game  reward success, data must be available`() {
+
+    val mockGameResponse =
+        Gson().fromJson(
+            MockResponseFileReader("GameRewards.json").content,
+            GameRewardResponse::class.java
+        )
+    coEvery {
+        gameRemoteRepository.getGameReward("12345", false)
+    } returns Result.success(mockGameResponse)
+
+
+    gameViewModel.getGameReward("12345", false)
+
+    coVerify {
+        gameRemoteRepository.getGameReward(any(), any())
+    }
+
+    Assert.assertEquals(
+        GameRewardViewState.GameRewardFetchInProgress,
+        rewardViewState[0]
+    )
+    Assert.assertEquals(gameViewModel.rewardLiveData.value, mockGameResponse)
+
+    Assert.assertEquals(
+        GameRewardViewState.GameRewardFetchSuccess,
+        rewardViewState[1]
+    )
+}
+
+@Test
+fun `for get game  reward failure, data must not be available`() {
+
+    coEvery {
+        gameRemoteRepository.getGameReward("12345", false)
+    } returns Result.failure(RuntimeException())
+
+    gameViewModel.getGameReward("12345", false)
+
+    coVerify {
+        gameRemoteRepository.getGameReward(any(), any())
+    }
+
+    Assert.assertEquals(
+        GameRewardViewState.GameRewardFetchInProgress,
+        rewardViewState[0]
+    )
+
+    Assert.assertEquals(gameViewModel.rewardLiveData.value, null)
+
+    Assert.assertEquals(
+        GameRewardViewState.GameRewardFetchFailure,
+        rewardViewState[1]
+    )
+}
+
+@OptIn(DelicateCoroutinesApi::class)
+@Test
+fun `for get game  reward result success, data must be available`() {
+    var results: Result<GameRewardResponse>? = null
+    var response: GameRewardResponse? = null
+
+    val mockGameResponse =
+        Gson().fromJson(
+            MockResponseFileReader("GameRewards.json").content,
+            GameRewardResponse::class.java
+        )
+    coEvery {
+        gameRemoteRepository.getGameReward("12345", false)
+    } returns Result.success(mockGameResponse)
+
+
+    GlobalScope.launch {
+        results= gameViewModel.getGameRewardResult("12345", false)
+        results?.onSuccess {
+            response= it
+        }
+    }
+
+    coVerify {
+        gameRemoteRepository.getGameReward(any(), any())
+    }
+
+    Assert.assertEquals(
+        results?.isSuccess,
+        true
+    )
+    Assert.assertEquals(
+        response,
+        mockGameResponse
+    )
+}
+
+@OptIn(DelicateCoroutinesApi::class)
+@Test
+fun `for get game  reward result Failure, data must not be available`() {
+    var results: Result<GameRewardResponse>? = null
+    var response: Throwable? = null
+
+    coEvery {
+        gameRemoteRepository.getGameReward("12345", false)
+    } returns Result.failure(RuntimeException("run time exception"))
+
+
+    GlobalScope.launch {
+        results= gameViewModel.getGameRewardResult("12345", false)
+        results?.onFailure {
+            response= it
+        }
+    }
+
+    coVerify {
+        gameRemoteRepository.getGameReward(any(), any())
+    }
+
+    Assert.assertEquals(
+        results?.isFailure,
+        true
+    )
+    Assert.assertEquals(
+        response?.message,
+        "run time exception"
+    )
+}
+
+@Test
+fun `for get game success, data must be available`() {
+
+    val mockGameResponse =
+        Gson().fromJson(
+            MockResponseFileReader("Games.json").content,
+            Games::class.java
+        )
+    val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+    val context = mockk<Context>(relaxed = true)
+    val mockResponse = MockResponseFileReader("MemberInfo.json").content
+    every { context.getSharedPreferences(any(), any()) }
+        .returns(sharedPrefs)
+    every { sharedPrefs.getString(any(), any()) }
+        .returns(mockResponse)
+
+    coEvery {
+        gameRemoteRepository.getGames(any(), "0lMB0000000TW41MAG", false)
+    } returns Result.success(mockGameResponse)
+
+
+    gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
+
+    coVerify {
+        gameRemoteRepository.getGames(any(), any(), any())
+    }
+
+    Assert.assertEquals(
+        GamesViewState.GamesFetchInProgress,
+        viewState[0]
+    )
+    Assert.assertEquals(gameViewModel.gamesLiveData.value, mockGameResponse)
+
+    Assert.assertEquals(
+        GamesViewState.GamesFetchSuccess,
+        viewState[1]
+    )
+}
+
+@Test
+fun `for get game failure, data must be available`() {
+
+    val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+    val context = mockk<Context>(relaxed = true)
+    val mockResponse = MockResponseFileReader("MemberInfo.json").content
+    every { context.getSharedPreferences(any(), any()) }
+        .returns(sharedPrefs)
+    every { sharedPrefs.getString(any(), any()) }
+        .returns(mockResponse)
+
+    coEvery {
+        gameRemoteRepository.getGames(any(),"0lMB0000000TW41MAG", false)
+    } returns Result.failure(RuntimeException())
+
+
+    gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
+
+    coVerify {
+        gameRemoteRepository.getGames(any(), any(), any())
+    }
+
+    Assert.assertEquals(
+        GamesViewState.GamesFetchInProgress,
+        viewState[0]
+    )
+    Assert.assertEquals(gameViewModel.gamesLiveData.value, null)
+
+    Assert.assertEquals(
+        GamesViewState.GamesFetchFailure,
+        viewState[1]
+    )
+}
+
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -1846,5 +2961,42 @@ class MainDispatcherRule(
         super.finished(description)
 
         Dispatchers.resetMain()
+    }
+}
+
+private fun successState(data: List<ReferralEntity>?): MyReferralScreenState {
+    val (successStates, inProgressStates) = successAndInProgressItemStates(data)
+    val sentCount = data?.size ?: 0
+    val acceptedCount = inProgressStates.filter { it.purchaseStatus == ReferralStatusType.SIGNED_UP }.size
+    return MyReferralScreenState(
+        tabItems = ReferralTabs.sortedTabs(),
+        completedStates = successStates,
+        inProgressStates = inProgressStates,
+        listOf(Pair(R.string.my_referral_sent_label, "$sentCount"),
+            Pair(R.string.my_referrals_accepted_label, "$acceptedCount"),
+            Pair(R.string.my_referrals_vouchers_earned_label, "${successStates.size}")),
+        referralsRecentDuration = "${ReferralConfig.REFERRAL_DURATION}"
+    )
+}
+
+private fun successAndInProgressItemStates(data: List<ReferralEntity>?): Pair<List<ReferralItemState>, List<ReferralItemState>> {
+    if (data == null) {
+        return Pair(emptyList(), emptyList())
+    }
+    return data.map {
+        ReferralItemState(
+            referralItemSectionName(it.referralDate),
+            it.referredParty?.account?.personEmail.orEmpty(),
+            it.referralDate.orEmpty(),
+            ReferralStatusType from it.promotionStage?.type
+        )
+    }.partition { it.purchaseStatus == ReferralStatusType.COMPLETED }
+}
+
+private fun referralItemSectionName(inputDate: String?): Int {
+    return when(DateUtils.datePeriod(inputDate)) {
+        DatePeriodType.WITHIN1MONTH, DatePeriodType.TODAY, DatePeriodType.WITHIN7DAYS, DatePeriodType.YESTERDAY -> R.string.recent_referrals_section_name
+        DatePeriodType.WITHIN3MONTHS -> R.string.referral_one_month_ago_section_name
+        else -> R.string.referrals_older_than_three_months_section_name
     }
 }

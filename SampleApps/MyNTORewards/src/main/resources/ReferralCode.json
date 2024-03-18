@@ -1,0 +1,16 @@
+{
+  "totalSize": 1,
+  "done": true,
+  "records": [
+    {
+      "attributes": {
+        "type": "LoyaltyProgramMember",
+        "url": "/services/data/v59.0/sobjects/LoyaltyProgramMember/0lMB0000000TW41MAG"
+      },
+      "MembershipNumber": "24345678",
+      "ContactId": "003B000000N5kgwIAB",
+      "ProgramId": "0c81Q0000004UL4QAM",
+      "ReferralCode": "9RCLSYJO"
+    }
+  ]
+}

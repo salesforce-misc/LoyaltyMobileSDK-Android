@@ -45,6 +45,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.POPUP_ROUNDED_CORNER_SIZE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_POPUP_PROMOTION
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_DETAIL_HEADING
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EXPIRATION_DATE
@@ -319,7 +320,7 @@ fun ShopButton(width: Dp, navCheckOutFlowController: NavController, promotionNam
 @Composable
 fun PromotionPopupImageBox(url:String?)
 {
-    Box() {
+    Box(modifier = Modifier.testTag(TestTags.TEST_TAG_PROMO_IMAGE)) {
         Image(
             painter = painterResource(id = R.drawable.promotion_card_placeholder),
             contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),

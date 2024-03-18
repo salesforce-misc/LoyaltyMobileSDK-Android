@@ -91,7 +91,8 @@ class MembershipProfileViewModel(private val loyaltyAPIManager: LoyaltyAPIManage
                     email = it.associatedContact?.email,
                     loyaltyProgramMemberId = it.loyaltyProgramMemberId,
                     loyaltyProgramName = it.loyaltyProgramName,
-                    membershipNumber = it.membershipNumber
+                    membershipNumber = it.membershipNumber,
+                    contactId = it.associatedContact?.contactId
                 )
                 memberId?.let { loyaltyMemberId ->
                     val member =

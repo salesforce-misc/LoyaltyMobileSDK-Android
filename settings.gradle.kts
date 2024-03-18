@@ -19,3 +19,5 @@ dependencyResolutionManagement {
 }
 include("SampleApps:MyNTORewards")
 include(":Sources")
+include(":GamificationMobileSDK-Android:GamificationMobileSDK")
+include(":ReferralMobileSDK-Android:ReferralMobileSDK")

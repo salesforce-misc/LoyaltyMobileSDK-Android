@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -43,12 +44,17 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.MY_PROMOTION_FULL_SCREEN_HEADER
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_IMAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_ITEM
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_LIST
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionDifferentiator
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import kotlinx.coroutines.launch
@@ -58,7 +64,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyPromotionScreen(
     navCheckOutFlowController: NavController,
-    promotionViewModel: MyPromotionViewModelInterface
+    promotionViewModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel
 ) {
 
 
@@ -182,7 +189,7 @@ fun MyPromotionScreen(
 
                         when (selectedTab) {
                             0 -> {
-                                PromotionItem(it, navCheckOutFlowController, promotionViewModel) {
+                                PromotionItem(it, navCheckOutFlowController, promotionViewModel, referralViewModel) {
                                     blurBG = it
                                 }
                             }
@@ -192,7 +199,8 @@ fun MyPromotionScreen(
                                     PromotionItem(
                                         it,
                                         navCheckOutFlowController,
-                                        promotionViewModel
+                                        promotionViewModel,
+                                        referralViewModel
                                     ) {
                                         blurBG = it
                                     }
@@ -204,7 +212,8 @@ fun MyPromotionScreen(
                                     PromotionItem(
                                         it,
                                         navCheckOutFlowController,
-                                        promotionViewModel
+                                        promotionViewModel,
+                                        referralViewModel
                                     ) {
 
                                     }
@@ -306,6 +315,7 @@ fun PromotionItem(
     results: Results,
     navCheckOutFlowController: NavController,
     promotionViewModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     blurBG: (Dp) -> Unit
 ) {
 
@@ -314,21 +324,12 @@ fun PromotionItem(
     val context: Context = LocalContext.current
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
-
     if (currentPromotionDetailPopupState) {
-        PromotionEnrollPopup(
-            results,
-            closePopup = {
-                currentPromotionDetailPopupState = false
-                blurBG(NO_BLUR_BG)
-            },
-            navCheckOutFlowController,
-            promotionViewModel
-        )
+        PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, results, results.promotionId.orEmpty(), referralViewModel) {
+            currentPromotionDetailPopupState = false
+            blurBG(NO_BLUR_BG)
+        }
     }
-
-
-
 
     Spacer(modifier = Modifier.height(16.dp))
     Row(
@@ -343,7 +344,7 @@ fun PromotionItem(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
 
-        Box() {
+        Box(modifier = Modifier.testTag(TEST_TAG_PROMO_IMAGE)) {
             Image(
                 painter = painterResource(R.drawable.promotionlist_image_placeholder),
                 contentDescription = "promotion_item_placeholder",
@@ -352,17 +353,27 @@ fun PromotionItem(
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.FillWidth
             )
-            GlideImage(
-                model = results.promotionImageUrl,
-                contentDescription = description,
+            results.promotionImageUrl?.let {
+                GlideImage(
+                    model = results.promotionImageUrl,
+                    contentDescription = description,
+                    modifier = Modifier
+                        .size(130.dp, 166.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+
+                    contentScale = ContentScale.Crop
+                ) {
+                    it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                }
+            } ?: Image(
+                painter = painterResource(R.drawable.bg_refer_friend_banner),
+                contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
                 modifier = Modifier
                     .size(130.dp, 166.dp)
                     .clip(RoundedCornerShape(10.dp)),
-
                 contentScale = ContentScale.Crop
-            ) {
-                it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-            }
+            )
+
         }
 
 
@@ -390,6 +401,7 @@ fun PromotionItem(
                         modifier = Modifier
                             .padding(start = 16.dp)
                             .padding(end = 16.dp)
+                            .testTag(TestTags.TEST_TAG_PROMO_NAME)
                     )
                 }
 
@@ -416,6 +428,7 @@ fun PromotionItem(
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .padding(end = 16.dp)
+                    .testTag(TestTags.TEST_TAG_PROMO_DESCRIPTION)
             )
 
             Row(

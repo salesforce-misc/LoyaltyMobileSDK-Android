@@ -219,10 +219,22 @@ fun MoreOptionList(
                 textRes = R.string.header_label_support
             ) {}*/
             AddMoreOption(
+                imageRes = R.drawable.ic_referrals,
+                textRes = R.string.header_label_my_referrals
+            ) {
+                navHostController.navigate(MoreScreens.MyReferralsScreen.route)
+            }
+            AddMoreOption(
                 imageRes = R.drawable.date_formate,
                 textRes = R.string.header_label_dates
             ) {
                 openBottomSheet("Date Formate")
+            }
+            AddMoreOption(
+                imageRes = R.drawable.ic_game_zone,
+                textRes = R.string.header_label_game_zone
+            ) {
+                navHostController.navigate(MoreScreens.GameZoneScreen.route)
             }
           /*  AddMoreOption(
                 imageRes = R.drawable.ic_favorite,

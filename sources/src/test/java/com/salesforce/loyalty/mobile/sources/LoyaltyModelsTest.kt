@@ -5,6 +5,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyConfig
 import com.salesforce.loyalty.mobile.sources.loyaltyExtensions.LoyaltyUtils
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
 import org.junit.Test
 
 class LoyaltyModelsTest {

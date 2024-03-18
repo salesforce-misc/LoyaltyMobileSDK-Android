@@ -19,6 +19,21 @@
                     "imageName": "offer2"
                 },
                 {
+                    "loyaltyPromotionType": "STANDARD",
+                    "maximumPromotionRewardValue": 0,
+                    "totalPromotionRewardPointsVal": 0,
+                    "loyaltyProgramCurrency": "0lc4x000000L1bmAAC",
+                    "memberEligibilityCategory": "Eligible",
+                    "promotionEnrollmentRqr": true,
+                    "fulfillmentAction": "CREDIT_POINTS",
+                    "promotionName": "Default Referral Promotion",
+                    "promotionId": "0c81Q0000004UL4QAM",
+                    "startDate": "2020-01-01",
+                    "endDate": "2024-02-29",
+                    "description": "Invite your friends and get a voucher when they shop for the first time.",
+                    "imageName": "offer2"
+                },
+                {
                     "loyaltyPromotionType": "CUMULATIVE",
                     "maximumPromotionRewardValue": 0,
                     "totalPromotionRewardPointsVal": 200,

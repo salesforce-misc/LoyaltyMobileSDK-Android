@@ -3,6 +3,7 @@ package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.salesforce.gamification.api.GameAuthenticator
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
@@ -17,7 +18,7 @@ import java.net.HttpURLConnection
 /**
  * ForceAuthManager class handles authentication of Salesforce credentials
  */
-class ForceAuthManager(val mContext: Context): ForceAuthenticator {
+class ForceAuthManager(val mContext: Context): ForceAuthenticator, GameAuthenticator {
 
     enum class AuthenticationStatus {
         AUTHENTICATED,
@@ -34,6 +35,7 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator {
 
     var auth: ForceAuth? = null
     override fun getAccessToken(): String? {
+        Logger.d(TAG, "getAccessToken()")
         val forceAuth = getForceAuth()
         forceAuth?.let {
             return it.accessToken
