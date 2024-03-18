@@ -39,6 +39,7 @@ fun TextFieldCustom(
     rightIconContentDescription: Int? = R.string.forward_arrow_content_description,
     modifier: Modifier = Modifier,
     singleLine: Boolean = false,
+    borderColor: Color = VibrantPurple65,
     rightIconClick: (() -> Unit)? = null,
     updateTextField: (updatedValue: TextFieldValue) -> Unit
 ) {
@@ -56,7 +57,7 @@ fun TextFieldCustom(
         },
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, VibrantPurple65, RoundedCornerShape(16.dp)),
+            .border(1.dp, borderColor, RoundedCornerShape(16.dp)),
         enabled = true,
         textStyle = TextStyle(
             fontFamily = font_sf_pro,
