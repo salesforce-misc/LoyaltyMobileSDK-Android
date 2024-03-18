@@ -25,7 +25,6 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.google.gson.Gson
-import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
@@ -34,14 +33,14 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrol
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
-import com.salesforce.loyalty.mobile.myntorewards.utilities.FACEBOOK_APP_PACKAGE
-import com.salesforce.loyalty.mobile.myntorewards.utilities.INSTAGRAM_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TWITTER_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.FACEBOOK_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.INSTAGRAM_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.TWITTER_APP_PACKAGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.WHATSAPP_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CLOSE_REFER_POPUP
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMPTY_VIEW
-import com.salesforce.loyalty.mobile.myntorewards.utilities.WHATSAPP_APP_PACKAGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.isAppInstalled
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.views.TEST_TAG_TITLE_VIEW
