@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple65
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 const val TEST_TAG_TEXT_FIELD_RIGHT_ICON = "TEST_TAG_TEXT_FIELD_RIGHT_ICON"
@@ -39,6 +39,7 @@ fun TextFieldCustom(
     rightIconContentDescription: Int? = R.string.forward_arrow_content_description,
     modifier: Modifier = Modifier,
     singleLine: Boolean = false,
+    borderColor: Color = VibrantPurple65,
     rightIconClick: (() -> Unit)? = null,
     updateTextField: (updatedValue: TextFieldValue) -> Unit
 ) {
@@ -56,7 +57,7 @@ fun TextFieldCustom(
         },
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, VibrantPurple40, RoundedCornerShape(16.dp)),
+            .border(1.dp, borderColor, RoundedCornerShape(16.dp)),
         enabled = true,
         textStyle = TextStyle(
             fontFamily = font_sf_pro,

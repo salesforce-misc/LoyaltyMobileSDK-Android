@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROMO_ID
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DEFAULT_PROMOTION_ID
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
@@ -46,14 +46,22 @@ import kotlinx.coroutines.launch
 
 const val LOG_TAG = "MyReferralsScreen"
 
+/**
+ * Referrals feature main screen, where users can see total no.of referrals sent, friends signed-up and completed details.
+ * Users can also enroll to the configured default promotion and refer friends
+ */
 @Composable
-fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) -> Unit, showBottomSheet: (Boolean) -> Unit) {
+fun MyReferralsScreen(
+    viewModel: MyReferralsViewModel,
+    showBottomBar: (Boolean) -> Unit,
+    showBottomSheet: (Boolean) -> Unit,
+    backAction: () -> Boolean
+) {
     val viewState by viewModel.uiState.observeAsState(null)
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        viewModel.checkIfGivenPromotionIsInCache(context, REFERRAL_PROMO_ID)
+        viewModel.checkIfGivenPromotionIsInCache(context, REFERRAL_DEFAULT_PROMOTION_ID)
     }
-
     viewState?.let {
         when(it) {
             is MyReferralsViewState.MyReferralsFetchSuccess -> {
@@ -64,11 +72,7 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
             }
 
             is MyReferralsViewState.MyReferralsFetchFailure -> {
-                ErrorPopup(
-                    it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
-                    tryAgainClicked = { viewModel.fetchReferralsInfo(context) },
-                    textButtonClicked = {  }
-                )
+                ShowErrorScreen(stringResource(id = R.string.game_error_msg), backAction)
             }
 
             is MyReferralsViewState.MyReferralsFetchInProgress -> {
@@ -84,19 +88,11 @@ fun MyReferralsScreen(viewModel: MyReferralsViewModel, showBottomBar: (Boolean) 
             }
 
             is MyReferralsViewState.MyReferralsPromotionStatusFailure -> {
-                ErrorPopup(
-                    it.errorMessage ?: stringResource(id = R.string.receipt_scanning_error_desc),
-                    tryAgainClicked = { viewModel.fetchReferralProgramStatus(context) },
-                    textButtonClicked = {  }
-                )
+                ShowErrorScreen(it.errorMessage, backAction)
             }
 
             is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
-                ErrorPopup(
-                    it.error ?: stringResource(id = R.string.receipt_scanning_error_desc),
-                    tryAgainClicked = { viewModel.checkIfGivenPromotionIsReferralAndEnrolled(context, REFERRAL_PROMO_ID) },
-                    textButtonClicked = {  }
-                )
+                ShowErrorScreen(it.error, backAction)
             }
             MyReferralsViewState.PromotionStateNonReferral -> {
                 Logger.d(LOG_TAG, "PromotionStateNonReferral")
@@ -205,9 +201,19 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
                     showBottomBar(it)
                 }, {
                     openBottomsheet = it
-                })
+                }, backAction)
             }
             PullRefreshIndicator(refreshing, state)
         }
     }
+}
+
+@Composable
+private fun ShowErrorScreen(errorMessage: String?, closePopup: () -> Boolean) {
+    ErrorPopup(
+        errorMessage ?: stringResource(id = R.string.game_error_msg),
+        tryAgainClicked = { closePopup() },
+        tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
+        textButtonClicked = { }
+    )
 }

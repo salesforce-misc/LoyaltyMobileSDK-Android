@@ -63,3 +63,4 @@ val SpinnerDefaultColour = "#2636E3"
 val SaffronColor = Color(0xFFDC9F4B)
 val SaffronColorLight = Color(0x80dbb074)
 val CopyColor = Color(0xFF8C4B02)
+val VibrantPurple65 = Color(0xFFB78DEF)
