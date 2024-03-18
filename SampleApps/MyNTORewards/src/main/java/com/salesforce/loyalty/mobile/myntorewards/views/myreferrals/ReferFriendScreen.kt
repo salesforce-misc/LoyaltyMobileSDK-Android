@@ -101,7 +101,10 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
         when(it) {
             is ERROR -> ErrorPopup(
                 it.errorMessage ?: stringResource(id = R.string.game_error_msg),
-                tryAgainClicked = { closeAction() },
+                tryAgainClicked = {
+                    closeAction()
+                    viewModel.resetProgramTypeOnError()
+                },
                 tryAgainButtonText = stringResource(id = R.string.referral_back_button_text),
                 textButtonClicked = { }
             )

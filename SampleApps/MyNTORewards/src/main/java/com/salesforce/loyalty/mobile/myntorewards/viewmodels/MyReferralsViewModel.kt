@@ -343,4 +343,13 @@ class MyReferralsViewModel @Inject constructor(
     private fun setPromoCode(promoCode: String?) {
         promoCode?.let { promotionCode = it }
     }
+
+    fun resetProgramTypeOnError() {
+        val isEnrolled = localRepository.getReferralStatusFromCache(REFERRAL_DEFAULT_PROMOTION_CODE).second
+        if (isEnrolled) {
+            _programState.value = ReferralProgramType.START_REFERRING
+        } else {
+            _programState.value = ReferralProgramType.JOIN_PROGRAM
+        }
+    }
 }
