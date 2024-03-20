@@ -273,6 +273,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
 @Composable
 fun MyProfileScreen(
     profileModel: MembershipProfileViewModelInterface,
+    badgeViewModel:BadgeViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     benefitViewModel: BenefitViewModelInterface,
     transactionViewModel: TransactionViewModelInterface
@@ -288,6 +289,7 @@ fun MyProfileScreen(
             MyProfileLandingView(
                 navProfileViewController,
                 profileModel,
+                badgeViewModel,
                 voucherModel,
                 benefitViewModel,
                 transactionViewModel
