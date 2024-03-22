@@ -269,7 +269,7 @@ class MyReferralsViewModel @Inject constructor(
         return memberReferralCode?.let { "$it-$promotionCode" }
     }
 
-    fun referralLink(context: Context, promoPageUrl: String): String {
+    fun referralLink(promoPageUrl: String): String {
         return "$promoPageUrl?referralCode="
     }
 
@@ -318,7 +318,7 @@ class MyReferralsViewModel @Inject constructor(
         viewModelScope.launch {
             when(val result = localRepository.checkIfReferralIsEnabled()) {
                 is ApiResponse.Success -> {
-                    val referralFeatureEnabled = result.data.records?.isNotEmpty() ?: false/*first()?.isReferralPromotion*/
+                    val referralFeatureEnabled = result.data.records?.isNotEmpty() ?: false
                     updateReferralEnableStatus(referralFeatureEnabled)
                 }
                 else -> {

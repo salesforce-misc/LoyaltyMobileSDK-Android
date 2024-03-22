@@ -268,7 +268,7 @@ fun ColumnScope.JoinReferralProgramUi(
 @Composable
 private fun ColumnScope.StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: ReferralPromotionStatusAndPromoCode? = null, doneAction: () -> Unit) {
     val context = LocalContext.current
-    val referralLink = viewModel.referralLink(context, promotionDetails?.promotionPageUrl.orEmpty())
+    val referralLink = viewModel.referralLink(promotionDetails?.promotionPageUrl.orEmpty())
     val referralCode = viewModel.referralCode(context).orEmpty()
     val extraText = context.getString(R.string.share_referral_message, referralLink.plus(referralCode))
     val focusManager = LocalFocusManager.current

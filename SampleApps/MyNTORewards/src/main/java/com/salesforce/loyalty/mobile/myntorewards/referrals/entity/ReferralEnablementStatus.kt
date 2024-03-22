@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class ReferralEnablementStatus(
     @SerializedName("QualifiedApiName")
-    val QualifiedApiName: Boolean?
+    val qualifiedApiName: String?
 )
