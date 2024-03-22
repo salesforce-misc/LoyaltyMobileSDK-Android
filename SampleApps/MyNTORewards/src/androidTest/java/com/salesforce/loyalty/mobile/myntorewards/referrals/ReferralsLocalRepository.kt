@@ -6,6 +6,7 @@ import com.salesforce.loyalty.mobile.myntorewards.mockResponse
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnablementStatus
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
@@ -13,6 +14,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import com.salesforce.referral.api.ApiResponse
 import kotlinx.coroutines.delay
+import retrofit2.Response
 
 
 class ReferralsLocalRepository constructor(
@@ -22,11 +24,13 @@ class ReferralsLocalRepository constructor(
 
     companion object {
         private var cachedReferralStatus = mutableMapOf<String, Pair<Boolean, Boolean>>()
-        private var cachedPromoCode = mutableMapOf<String, Pair<String?, String?>>()
+        private var cachedPromoCode = mutableMapOf<String, ReferralPromotionStatusAndPromoCode>()
         private var isReferralPromotion: Boolean = true
         private var isReferralsListApiSuccess: Boolean = true
         private var isReferralEnrollmentStatusApiSuccess: Boolean = true
         private var isPromotionTypeAndCodeApiSuccess: Boolean = true
+        private var isReferralFeatureEnabled: Boolean? = null
+        private var endDate: String? = "2030-12-31"
 
         fun clearReferralsData() {
             cachedReferralStatus = mutableMapOf()
@@ -35,6 +39,7 @@ class ReferralsLocalRepository constructor(
             isReferralsListApiSuccess = true
             isReferralEnrollmentStatusApiSuccess = true
             isPromotionTypeAndCodeApiSuccess = true
+            isReferralFeatureEnabled = null
         }
     }
 
@@ -71,6 +76,9 @@ class ReferralsLocalRepository constructor(
                 "Default Referral Promotion",
                 "TEMPRP7",
                 "https://rb.gy/wa6jw7",
+                "Invite your friends and get a voucher when they shop for the first time.",
+                endDate,
+                "https://rb.gy/wa6jw7",
                 isReferralPromotion
             )
         )
@@ -80,6 +88,12 @@ class ReferralsLocalRepository constructor(
         } else {
             ApiResponse.NetworkError
         }
+    }
+
+    suspend fun checkIfReferralIsEnabled(): ApiResponse<QueryResult<ReferralEnablementStatus>> {
+        val responseType = object : TypeToken<QueryResult<ReferralEnablementStatus>>() {}.type
+        val response = mockResponse("ReferralEnrollmentInfo.json", responseType) as QueryResult<ReferralEnablementStatus>
+        return ApiResponse.Success(response)
     }
 
     fun getDefaultPromotionDetailsFromCache(context: Context, memberShipNumber: String, promotionId: String): Results? {
@@ -96,15 +110,29 @@ class ReferralsLocalRepository constructor(
     }
 
     fun savePromoCodeAndUrlInCache(promotionId: String, promotionDetails: ReferralPromotionStatusAndPromoCode?) {
-        cachedPromoCode[promotionId] = Pair(promotionDetails?.promotionCode, promotionDetails?.promotionPageUrl)
+        promotionDetails?.let {
+            cachedPromoCode[promotionId] = it
+        }
     }
 
     fun getPromoCodeFromCache(promotionId: String): String? {
-        return cachedPromoCode[promotionId]?.first
+        return cachedPromoCode[promotionId]?.promotionCode
     }
 
     fun getPromoUrlFromCache(promotionId: String): String {
-        return cachedPromoCode[promotionId]?.second.orEmpty()
+        return cachedPromoCode[promotionId]?.promotionPageUrl.orEmpty()
+    }
+
+    fun getReferralPromotionDetails(promotionId: String): ReferralPromotionStatusAndPromoCode? {
+        return cachedPromoCode[promotionId]
+    }
+
+    fun setReferralFeatureEnabled(enabled: Boolean) {
+        isReferralFeatureEnabled = enabled
+    }
+
+    fun isReferralFeatureEnabled(): Boolean? {
+        return isReferralFeatureEnabled
     }
 
     fun setPromotionType(isReferral: Boolean) {
@@ -121,5 +149,9 @@ class ReferralsLocalRepository constructor(
 
     fun setPromotionTypeAndCodeApiSuccess(success: Boolean) {
         isPromotionTypeAndCodeApiSuccess = success
+    }
+
+    fun setPromotionExpiredDate(date: String) {
+        endDate = date
     }
 }

@@ -41,7 +41,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrolla
 import com.salesforce.loyalty.mobile.myntorewards.views.components.bottomSheetShape
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.ErrorPopup
-import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
 const val LOG_TAG = "MyReferralsScreen"
@@ -60,7 +59,7 @@ fun MyReferralsScreen(
     val viewState by viewModel.uiState.observeAsState(null)
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        viewModel.checkIfGivenPromotionIsInCache(context, REFERRAL_DEFAULT_PROMOTION_ID)
+        viewModel.checkIfReferralIsEnabled()
     }
     viewState?.let {
         when(it) {
@@ -94,9 +93,11 @@ fun MyReferralsScreen(
             is MyReferralsViewState.PromotionReferralApiStatusFailure -> {
                 ShowErrorScreen(it.error, backAction)
             }
-            MyReferralsViewState.PromotionStateNonReferral -> {
-                Logger.d(LOG_TAG, "PromotionStateNonReferral")
-                // Do nothing
+            MyReferralsViewState.PromotionStateNonReferral, MyReferralsViewState.ReferralFeatureNotEnabled -> {
+                ShowErrorScreen(stringResource(id = R.string.referral_feature_not_enabled_error_message), backAction)
+            }
+            MyReferralsViewState.ReferralFeatureEnabled -> {
+                viewModel.checkIfGivenPromotionIsInCache(context, REFERRAL_DEFAULT_PROMOTION_ID)
             }
         }
     }
@@ -166,14 +167,14 @@ fun MyReferralsListScreen(viewModel: MyReferralsViewModel = hiltViewModel(), bac
     var refreshing by remember { mutableStateOf(false) }
     val refreshScope = rememberCoroutineScope()
     fun refresh() = refreshScope.launch {
-        viewModel.fetchReferralsInfo(context)
+        viewModel.checkIfReferralIsEnabled(true)
     }
     val state = rememberPullRefreshState(refreshing, ::refresh)
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            val promotionDetails = viewModel.fetchDefaultPromotionDetails(context)
+            val promotionDetails = viewModel.fetchReferralPromotionDetailsFromCache(context, REFERRAL_DEFAULT_PROMOTION_ID)
             ReferFriendScreen(viewModel, promotionDetails = promotionDetails, backAction = backAction) {
                 if (viewModel.programState.value!! == ReferralProgramType.START_REFERRING
                     && viewModel.forceRefreshReferralsInfo) {

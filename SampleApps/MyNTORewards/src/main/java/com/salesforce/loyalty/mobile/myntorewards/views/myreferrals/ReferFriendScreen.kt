@@ -48,6 +48,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_TANDC_LINK
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.SpinnerBackground
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
@@ -92,7 +93,7 @@ const val TEST_TAG_REFER_FRIEND_SCREEN = "TEST_TAG_REFER_FRIEND_SCREEN"
  * If user already enrolled tot he promotion, shows UI to refer friends
  */
 @Composable
-fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results? = null, backAction: () -> Any, closeAction: () -> Unit) {
+fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: ReferralPromotionStatusAndPromoCode? = null, backAction: () -> Any, closeAction: () -> Unit) {
     val programState by viewModel.programState.observeAsState()
     val viewState by viewModel.viewState.observeAsState(null)
     val context = LocalContext.current
@@ -141,7 +142,7 @@ fun ReferFriendScreen(viewModel: MyReferralsViewModel, promotionDetails: Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: ReferralProgramType, promotionDetails: Results? = null, backAction: () -> Any, closeAction: () -> Unit) {
+fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: ReferralProgramType, promotionDetails: ReferralPromotionStatusAndPromoCode? = null, backAction: () -> Any, closeAction: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight(0.9f)
@@ -166,7 +167,7 @@ fun ReferFriendScreenUI(viewModel: MyReferralsViewModel, referralProgramType: Re
                 contentScale = ContentScale.Crop
             )
 
-            promotionDetails?.promotionImageUrl?.let {
+            promotionDetails?.imageUrl?.let {
                 GlideImage(
                     model = it,
                     contentDescription = stringResource(id = R.string.refer_friend_banner_content_description),
@@ -242,11 +243,11 @@ fun SignupToReferUi(viewModel: MyReferralsViewModel) {
 @Composable
 fun ColumnScope.JoinReferralProgramUi(
     viewModel: MyReferralsViewModel,
-    promotionDetails: Results? = null,
+    promotionDetails: ReferralPromotionStatusAndPromoCode? = null,
     backAction: () -> Any
 ) {
     val context = LocalContext.current
-    BodyTextBold(text = promotionDetails?.promotionName ?: stringResource(R.string.join_referral_program_header), modifier = Modifier.testTag(REFER_FRIEND_PROMOTION_NAME))
+    BodyTextBold(text = promotionDetails?.name ?: stringResource(R.string.join_referral_program_header), modifier = Modifier.testTag(REFER_FRIEND_PROMOTION_NAME))
     promotionDetails?.description?.let {
         BodyText(text = it, modifier = Modifier.testTag(REFER_FRIEND_PROMOTION_DESC))
     }
@@ -265,16 +266,16 @@ fun ColumnScope.JoinReferralProgramUi(
 }
 
 @Composable
-private fun ColumnScope.StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: Results? = null, doneAction: () -> Unit) {
+private fun ColumnScope.StartReferUi(viewModel: MyReferralsViewModel, promotionDetails: ReferralPromotionStatusAndPromoCode? = null, doneAction: () -> Unit) {
     val context = LocalContext.current
-    val referralLink = viewModel.referralLink(context, promotionDetails?.promotionId.orEmpty())
+    val referralLink = viewModel.referralLink(context, promotionDetails?.promotionPageUrl.orEmpty())
     val referralCode = viewModel.referralCode(context).orEmpty()
     val extraText = context.getString(R.string.share_referral_message, referralLink.plus(referralCode))
     val focusManager = LocalFocusManager.current
     var textField by remember { mutableStateOf(TextFieldValue("")) }
     val invalidEmailMessage = stringResource(R.string.invalid_email_error_message)
 
-    BodyTextBold(text = promotionDetails?.promotionName ?: stringResource(R.string.refer_a_friend_and_earn_header), modifier = Modifier.testTag(
+    BodyTextBold(text = promotionDetails?.name ?: stringResource(R.string.refer_a_friend_and_earn_header), modifier = Modifier.testTag(
         REFER_FRIEND_PROMOTION_NAME))
     promotionDetails?.description?.let {
         BodyText(text = it, modifier = Modifier.testTag(REFER_FRIEND_PROMOTION_DESC))
@@ -322,7 +323,7 @@ fun SocialMediaRow(referralContent: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)
+        horizontalArrangement = Arrangement.Center
     ) {
         val context = LocalContext.current
         ShareType.values().forEach {
@@ -333,6 +334,7 @@ fun SocialMediaRow(referralContent: String) {
                     context.shareReferralCode(referralContent, it)
                 }
             )
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

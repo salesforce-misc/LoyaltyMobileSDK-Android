@@ -43,7 +43,7 @@ fun PromotionDifferentiator(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        referralViewModel.checkIfGivenPromotionIsInCache(context, promotionId)
+        referralViewModel.checkIfReferralIsEnabled()
     }
 
     Popup(
@@ -74,13 +74,15 @@ fun PromotionDifferentiator(
                 }
 
                 MyReferralsViewState.MyReferralsPromotionEnrolled -> {
-                    ReferFriendScreen(referralViewModel, promotionDetails = results, backAction = closePopup) {
+                    val promotionDetails = referralViewModel.fetchReferralPromotionDetailsFromCache(context, results.promotionId.orEmpty())
+                    ReferFriendScreen(referralViewModel, promotionDetails = promotionDetails, backAction = closePopup) {
                         closePopup()
                     }
                 }
 
                 is MyReferralsViewState.MyReferralsPromotionNotEnrolled -> {
-                    ReferFriendScreen(referralViewModel, promotionDetails = results, backAction = closePopup) {
+                    val promotionDetails = referralViewModel.fetchReferralPromotionDetailsFromCache(context, results.promotionId.orEmpty())
+                    ReferFriendScreen(referralViewModel, promotionDetails = promotionDetails, backAction = closePopup) {
                         closePopup()
                     }
                 }
@@ -93,7 +95,7 @@ fun PromotionDifferentiator(
                     ShowErrorScreen(it.error, closePopup)
                 }
 
-                MyReferralsViewState.PromotionStateNonReferral -> {
+                MyReferralsViewState.PromotionStateNonReferral, MyReferralsViewState.ReferralFeatureNotEnabled -> {
                     PromotionEnrollPopupUI(
                         results,
                         closePopup = {
@@ -102,6 +104,10 @@ fun PromotionDifferentiator(
                         navCheckOutFlowController,
                         promotionViewModel
                     )
+                }
+
+                MyReferralsViewState.ReferralFeatureEnabled -> {
+                    referralViewModel.checkIfGivenPromotionIsInCache(context, promotionId)
                 }
             }
         }

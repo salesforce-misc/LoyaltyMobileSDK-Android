@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards.referrals.api
 
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnablementStatus
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
@@ -38,4 +39,10 @@ interface ReferralsLocalApiService {
         @Url url: String,
         @Query("q") query: String?
     ): Response<QueryResult<ReferralPromotionStatusAndPromoCode>>
+
+    @GET
+    suspend fun checkIfReferralIsEnabled(
+        @Url url: String,
+        @Query("q") query: String?
+    ): Response<QueryResult<ReferralEnablementStatus>>
 }

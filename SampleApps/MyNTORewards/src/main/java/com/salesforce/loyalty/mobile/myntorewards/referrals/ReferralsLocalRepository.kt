@@ -5,6 +5,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFER
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnablementStatus
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
@@ -31,11 +32,12 @@ class ReferralsLocalRepository @Inject constructor(
         const val QUERY = "/query/"
 
         private var cachedReferralStatus = mutableMapOf<String, Pair<Boolean, Boolean>>()
-        private var cachedPromoCode = mutableMapOf<String, Pair<String?, String?>>()
-
+        private var cachedPromoCode = mutableMapOf<String, ReferralPromotionStatusAndPromoCode>()
+        private var isReferralFeatureEnabled: Boolean? = null
         fun clearReferralsData() {
             cachedReferralStatus = mutableMapOf()
             cachedPromoCode = mutableMapOf()
+            isReferralFeatureEnabled = null
         }
     }
 
@@ -77,10 +79,20 @@ class ReferralsLocalRepository @Inject constructor(
         }
     }
 
+    suspend fun checkIfReferralIsEnabled(): ApiResponse<QueryResult<ReferralEnablementStatus>> {
+        return safeApiCall {
+            apiService.checkIfReferralIsEnabled(
+                sObjectUrl(),
+                memberEnrollmentAndReferralStatusQuery()
+            )
+        }
+    }
 
+    private fun memberEnrollmentAndReferralStatusQuery() =
+        "SELECT Id, QualifiedApiName, DurableId FROM EntityDefinition WHERE  QualifiedApiName ='Referral'"
 
     private fun memberEnrollmentAndReferralStatusQuery(promoId: String) =
-        "SELECT Id, IsReferralPromotion, PromotionCode, PromotionPageUrl, Name FROM Promotion Where Id= \'$promoId\'"
+        "SELECT Id, IsReferralPromotion, PromotionCode, PromotionPageUrl, Name, Description, EndDate, ImageUrl FROM Promotion Where Id= \'$promoId\'"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, contactId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$contactId\' and Promotion.PromotionCode=\'$promoCode\'"
@@ -111,14 +123,29 @@ class ReferralsLocalRepository @Inject constructor(
     }
 
     fun savePromoCodeAndUrlInCache(promotionId: String, promotionDetails: ReferralPromotionStatusAndPromoCode?) {
-        cachedPromoCode[promotionId] = Pair(promotionDetails?.promotionCode, promotionDetails?.promotionPageUrl)
+        promotionDetails?.let {
+            cachedPromoCode[promotionId] = it
+        }
+    }
+
+    fun getReferralPromotionDetails(promotionId: String): ReferralPromotionStatusAndPromoCode? {
+        return cachedPromoCode[promotionId]
     }
 
     fun getPromoCodeFromCache(promotionId: String): String? {
-        return cachedPromoCode[promotionId]?.first
+        return cachedPromoCode[promotionId]?.promotionCode
     }
 
     fun getPromoUrlFromCache(promotionId: String): String {
-        return cachedPromoCode[promotionId]?.second.orEmpty()
+        return cachedPromoCode[promotionId]?.promotionPageUrl.orEmpty()
     }
+
+    fun setReferralFeatureEnabled(enabled: Boolean) {
+        isReferralFeatureEnabled = enabled
+    }
+
+    fun isReferralFeatureEnabled(): Boolean? {
+        return isReferralFeatureEnabled
+    }
+
 }

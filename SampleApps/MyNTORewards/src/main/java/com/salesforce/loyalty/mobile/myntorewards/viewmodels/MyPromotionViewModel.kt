@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
@@ -56,6 +57,8 @@ class MyPromotionViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : V
             val membershipKey = member.membershipNumber ?: ""
             if(refreshRequired)
             {
+                // Clear Referral Promotions data on pull to refresh to fetch the updated data
+                ReferralsLocalRepository.clearReferralsData()
                 fetchPromotions(context, memberId, membershipKey)
             }
             else{

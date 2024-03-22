@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.*
@@ -16,7 +17,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import retrofit2.Response
@@ -178,6 +178,9 @@ class ReferralsLocalRepositoryTest {
                 name = "123456789",
                 promotionCode = "TEMPRP9",
                 promotionPageUrl = null,
+                "Invite your friends and get a voucher when they shop for the first time.",
+                "2030-12-31",
+                "https://rb.gy/wa6jw7",
                 isReferralPromotion = true
             )
             coEvery {
@@ -228,6 +231,9 @@ class ReferralsLocalRepositoryTest {
                     name = "123456789",
                     promotionCode = "TEMPRP9",
                     promotionPageUrl = "http://abc",
+                    "Invite your friends and get a voucher when they shop for the first time.",
+                    "2030-12-31",
+                    "https://rb.gy/wa6jw7",
                     isReferralPromotion = true
                 )
             )
@@ -276,6 +282,42 @@ class ReferralsLocalRepositoryTest {
 
             // Then
             TestCase.assertNotNull(promotionResponse)
+        }
+    }
+
+    @Test
+    fun `Given Referral enable API status, fetching the status, then verify success data returned`() {
+        runBlocking {
+            // Given
+            val responseType = object : TypeToken<QueryResult<ReferralEnablementStatus>>() {}.type
+            val mockResponse = mockResponse("ReferralEnbleStatus.json", responseType) as QueryResult<ReferralEnablementStatus>
+            coEvery {
+                apiService.checkIfReferralIsEnabled(any(), any())
+            } returns Response.success(mockResponse)
+
+            val result = repository.checkIfReferralIsEnabled()
+
+            // Then
+            assert(result is ApiResponse.Success)
+            val queryResult = result as ApiResponse.Success<QueryResult<ReferralEnablementStatus>>
+            TestCase.assertEquals(1, queryResult.data.records?.size)
+        }
+    }
+
+    @Test
+    fun `Given Referral disable API status, fetching the status, then verify success data returned`() {
+        runBlocking {
+            // Given
+            coEvery {
+                apiService.checkIfReferralIsEnabled(any(), any())
+            } returns Response.success(QueryResult(records = emptyList(), isDone = true, nextRecordsUrl = "", totalSize = 0))
+
+            val result = repository.checkIfReferralIsEnabled()
+
+            // Then
+            assert(result is ApiResponse.Success)
+            val queryResult = result as ApiResponse.Success<QueryResult<ReferralEnablementStatus>>
+            TestCase.assertEquals(0, queryResult.data.records?.size)
         }
     }
 

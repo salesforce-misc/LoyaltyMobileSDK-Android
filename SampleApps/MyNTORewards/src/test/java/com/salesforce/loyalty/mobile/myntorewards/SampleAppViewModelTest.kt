@@ -2652,7 +2652,7 @@ class SampleAppViewModelTest {
         coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(false, false))
         coEvery { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
             .returns(ApiResponse.Success(QueryResult(0, true, listOf(
-                ReferralPromotionStatusAndPromoCode("promo_name", "1234", "", true)
+                ReferralPromotionStatusAndPromoCode("promo_name", "1234", "", "", "", "", true)
             ), "")))
 
         coEvery { referralsLocalRepository.savePromoCodeAndUrlInCache(any(), any()) }
