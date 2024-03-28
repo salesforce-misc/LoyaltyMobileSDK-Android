@@ -89,7 +89,7 @@ class ReferralsLocalRepository @Inject constructor(
     }
 
     private fun memberEnrollmentAndReferralStatusQuery() =
-        "SELECT Id, QualifiedApiName, DurableId FROM EntityDefinition WHERE  QualifiedApiName ='Referral'"
+        "SELECT FIELDS(ALL) FROM Promotion LIMIT 1"
 
     private fun memberEnrollmentAndReferralStatusQuery(promoId: String) =
         "SELECT Id, IsReferralPromotion, PromotionCode, PromotionPageUrl, Name, Description, EndDate, ImageUrl FROM Promotion Where Id= \'$promoId\'"
