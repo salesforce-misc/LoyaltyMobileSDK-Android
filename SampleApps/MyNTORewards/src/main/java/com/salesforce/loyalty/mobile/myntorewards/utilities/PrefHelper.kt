@@ -2,12 +2,15 @@ package com.salesforce.loyalty.mobile.sources
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.INSTANCE_PREF_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PREF_NAME
 
 object PrefHelper {
     fun customPrefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
+    fun instancePrefs(context: Context): SharedPreferences =
+        context.getSharedPreferences(INSTANCE_PREF_NAME, Context.MODE_PRIVATE)
     private inline fun SharedPreferences.edit(operation: (SharedPreferences.Editor) -> Unit) {
         val editor = this.edit()
         operation(editor)
