@@ -129,9 +129,9 @@ class MyReferralsViewModel @Inject constructor(
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             val member = getMember(context)
-            when(val result = localRepository.fetchReferralsInfo(member?.membershipNumber.orEmpty(), REFERRAL_DURATION)) {
+            when(val result = localRepository.fetchReferralsInfo(member?.contactId.orEmpty(), REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
-                    val data: List<ReferralEntity>? = result.data
+                    val data: List<ReferralEntity>? = result.data.records
                     Logger.d("Success", "$data")
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(data)))
                     forceRefreshReferralsInfo = false
