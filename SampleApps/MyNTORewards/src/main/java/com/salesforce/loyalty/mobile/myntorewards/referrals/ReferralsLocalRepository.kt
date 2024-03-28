@@ -43,11 +43,10 @@ class ReferralsLocalRepository @Inject constructor(
 
     private fun sObjectUrl() = instanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY
 
-    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
+    suspend fun fetchReferralsInfo(membershipNumber: String, durationInDays: Int): ApiResponse<List<ReferralEntity>> {
         return safeApiCall {
             apiService.fetchReferralsInfo(
-                sObjectUrl(),
-                referralListQuery(contactId, durationInDays)
+                referralListQuery(membershipNumber, durationInDays)
             )
         }
     }
@@ -100,8 +99,11 @@ class ReferralsLocalRepository @Inject constructor(
     private fun memberReferralCodeQuery(contactId: String, programName: String) =
         "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and Program.Name='$programName'"
 
-    private fun referralListQuery(contactId: String, durationInDays: Int) =
-        "SELECT ReferredPartyId, ReferralDate, CurrentPromotionStage.Type, TYPEOF ReferredParty WHEN Contact THEN Account.PersonEmail WHEN Account THEN PersonEmail END FROM Referral WHERE ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
+    /**
+     * APEX url to fetch Referrals info
+     */
+    private fun referralListQuery(membershipNumber: String, durationInDays: Int) =
+        "$instanceUrl/services/apexrest/get-referral-details/?membershipnumber=$membershipNumber&duration=$durationInDays"
 
     fun getDefaultPromotionDetailsFromCache(context: Context, memberShipNumber: String, promotionId: String): Results? {
         val promotionCache = LocalFileManager.getData(

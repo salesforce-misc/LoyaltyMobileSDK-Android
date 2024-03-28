@@ -129,9 +129,9 @@ class MyReferralsViewModel @Inject constructor(
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             val member = getMember(context)
-            when(val result = localRepository.fetchReferralsInfo(member?.contactId.orEmpty(), REFERRAL_DURATION)) {
+            when(val result = localRepository.fetchReferralsInfo(member?.membershipNumber.orEmpty(), REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
-                    val data: List<ReferralEntity>? = result.data.records
+                    val data: List<ReferralEntity>? = result.data
                     Logger.d("Success", "$data")
                     uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(data)))
                     forceRefreshReferralsInfo = false
@@ -318,7 +318,7 @@ class MyReferralsViewModel @Inject constructor(
         viewModelScope.launch {
             when(val result = localRepository.checkIfReferralIsEnabled()) {
                 is ApiResponse.Success -> {
-                    val referralFeatureEnabled = result.data.records?.isNotEmpty() ?: false
+                    val referralFeatureEnabled = result.data.records?.firstOrNull()?.isReferralPromotion != null
                     updateReferralEnableStatus(referralFeatureEnabled)
                 }
                 else -> {

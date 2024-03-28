@@ -18,9 +18,8 @@ import retrofit2.http.Url
 interface ReferralsLocalApiService {
     @GET
     suspend fun fetchReferralsInfo(
-        @Url url: String,
-        @Query("q") query: String?
-    ): Response<QueryResult<ReferralEntity>>
+        @Url url: String
+    ): Response<List<ReferralEntity>>
 
     @GET
     suspend fun fetchMemberReferralId(
