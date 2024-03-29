@@ -11,6 +11,7 @@ class AppConstants {
         const val CONNECTED_APP_PREF_NAME =
             "com.salesforce.loyalty.mobile.myntorewards.CONNECTED_APP_PREF"
         const val AUTH_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.AUTH_PREF"
+        const val INSTANCE_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.INSTANCE_PREF"
         const val KEY_SELECTED_INSTANCE_URL = "selected_instance_url"
         const val KEY_OPEN_CONNECTED_APP_INSTANCE = "open_connected_app_instance"
         const val KEY_USER_IDENTIFIER = "user_identifier"

@@ -257,11 +257,11 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator, GameAuthentic
     }
 
     fun getInstanceUrl(): String? {
-        return PrefHelper.customPrefs(mContext)
+        return PrefHelper.instancePrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
     }
     fun getConnectedApp(): ConnectedApp {
-        val selectedConnectedApp = PrefHelper.customPrefs(mContext)
+        val selectedConnectedApp = PrefHelper.instancePrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, null)
         val connectedApp = selectedConnectedApp?.let { selectedConnectedApp ->
             ForceConnectedAppEncryptedPreference.getConnectedApp(

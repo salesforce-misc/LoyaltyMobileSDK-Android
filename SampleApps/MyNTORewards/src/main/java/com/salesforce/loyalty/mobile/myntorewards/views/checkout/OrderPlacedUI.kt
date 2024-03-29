@@ -57,9 +57,9 @@ fun OrderPlacedUI(
     LaunchedEffect(key1 = true) {
         profileModel.loadProfile(context, true)
     }
-/*    orderID?.let {
+    orderID?.let {
         checkOutFlowViewModel.fetchOrderDetails(orderID)
-    }*/
+    }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -87,7 +87,7 @@ fun OrderPlacedUI(
             Spacer(modifier = Modifier.height(11.dp))
             Text(
                 text = stringResource(
-                    id = R.string.text_order_placed, orderID
+                    id = R.string.text_order_placed, orderDetails?.orderNumber
                         ?: ""
                 ),
                 fontFamily = font_sf_pro,
