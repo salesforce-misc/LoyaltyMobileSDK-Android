@@ -2,6 +2,7 @@ package com.salesforce.loyalty.mobile.myntorewards
 
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.*
@@ -16,7 +17,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import retrofit2.Response
@@ -43,21 +43,18 @@ class ReferralsLocalRepositoryTest {
                 CurrentPromotionStage("Friend Signs Up"),
                 ReferredParty(ReferredAccount(personEmail = "testemail@test.com"))
             )
-            coEvery { apiService.fetchReferralsInfo(any(), any()) } returns (
-                    Response.success(QueryResult(1, true, listOf(referralEntity), null))
+            coEvery { apiService.fetchReferralsInfo(any()) } returns (
+                    Response.success(ReferralsInfoEntity(listOf(referralEntity)))
             )
 
 
             val result = repository.fetchReferralsInfo("1234", 90)
 
             assert(result is ApiResponse.Success)
-            val queryResult = result as ApiResponse.Success<QueryResult<ReferralEntity>>
-            val entityQueryResult = queryResult.data
-            TestCase.assertEquals(1, entityQueryResult.records?.size)
-            TestCase.assertEquals(1, entityQueryResult.totalSize)
-            TestCase.assertEquals(true, entityQueryResult.isDone)
-            TestCase.assertNull(entityQueryResult.nextRecordsUrl)
-            val referralEntityResponse = entityQueryResult.records?.firstOrNull()
+            val queryResult = result as ApiResponse.Success<ReferralsInfoEntity>
+            val entityQueryResult = queryResult.data.referralList
+            TestCase.assertEquals(1, entityQueryResult?.size)
+            val referralEntityResponse = entityQueryResult?.firstOrNull()
             TestCase.assertEquals("Friend Signs Up", referralEntityResponse?.promotionStage?.type)
             TestCase.assertEquals("2024-01-22", referralEntityResponse?.referralDate)
             TestCase.assertEquals("testemail@test.com", referralEntityResponse?.referredParty?.account?.personEmail)
@@ -68,7 +65,7 @@ class ReferralsLocalRepositoryTest {
     fun `Given API failure with error info, when fetching referral list, then verify api failure with error data`(){
         runBlocking {
             // Given
-            coEvery { apiService.fetchReferralsInfo(any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralEntity>>)
+            coEvery { apiService.fetchReferralsInfo(any()) } returns (errorResponse() as Response<ReferralsInfoEntity>)
 
             // When
             val result = repository.fetchReferralsInfo("1234",  90)
@@ -178,6 +175,9 @@ class ReferralsLocalRepositoryTest {
                 name = "123456789",
                 promotionCode = "TEMPRP9",
                 promotionPageUrl = null,
+                "Invite your friends and get a voucher when they shop for the first time.",
+                "2030-12-31",
+                "https://rb.gy/wa6jw7",
                 isReferralPromotion = true
             )
             coEvery {
@@ -228,6 +228,9 @@ class ReferralsLocalRepositoryTest {
                     name = "123456789",
                     promotionCode = "TEMPRP9",
                     promotionPageUrl = "http://abc",
+                    "Invite your friends and get a voucher when they shop for the first time.",
+                    "2030-12-31",
+                    "https://rb.gy/wa6jw7",
                     isReferralPromotion = true
                 )
             )
@@ -276,6 +279,42 @@ class ReferralsLocalRepositoryTest {
 
             // Then
             TestCase.assertNotNull(promotionResponse)
+        }
+    }
+
+    @Test
+    fun `Given Referral enable API status, fetching the status, then verify success data returned`() {
+        runBlocking {
+            // Given
+            val responseType = object : TypeToken<QueryResult<ReferralEnablementStatus>>() {}.type
+            val mockResponse = mockResponse("ReferralEnbleStatus.json", responseType) as QueryResult<ReferralEnablementStatus>
+            coEvery {
+                apiService.checkIfReferralIsEnabled(any(), any())
+            } returns Response.success(mockResponse)
+
+            val result = repository.checkIfReferralIsEnabled()
+
+            // Then
+            assert(result is ApiResponse.Success)
+            val queryResult = result as ApiResponse.Success<QueryResult<ReferralEnablementStatus>>
+            TestCase.assertEquals(1, queryResult.data.records?.size)
+        }
+    }
+
+    @Test
+    fun `Given Referral disable API status, fetching the status, then verify success data returned`() {
+        runBlocking {
+            // Given
+            coEvery {
+                apiService.checkIfReferralIsEnabled(any(), any())
+            } returns Response.success(QueryResult(records = emptyList(), isDone = true, nextRecordsUrl = "", totalSize = 0))
+
+            val result = repository.checkIfReferralIsEnabled()
+
+            // Then
+            assert(result is ApiResponse.Success)
+            val queryResult = result as ApiResponse.Success<QueryResult<ReferralEnablementStatus>>
+            TestCase.assertEquals(0, queryResult.data.records?.size)
         }
     }
 

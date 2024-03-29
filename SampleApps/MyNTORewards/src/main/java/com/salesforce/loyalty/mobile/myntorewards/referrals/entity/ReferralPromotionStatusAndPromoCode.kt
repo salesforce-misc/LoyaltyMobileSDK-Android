@@ -9,6 +9,12 @@ data class ReferralPromotionStatusAndPromoCode(
     val promotionCode: String?,
     @SerializedName("PromotionPageUrl")
     val promotionPageUrl: String?,
+    @SerializedName("Description")
+    val description: String?,
+    @SerializedName("EndDate")
+    val endDate: String?,
+    @SerializedName("ImageUrl")
+    val imageUrl: String?,
     @SerializedName("IsReferralPromotion")
     val isReferralPromotion: Boolean
 )

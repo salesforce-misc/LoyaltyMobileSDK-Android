@@ -322,6 +322,7 @@
     <string name="join_referral_program_button_text">Join Referral Program</string>
     <string name="referral_back_button_text">Back</string>
     <string name="referral_promotion_expired_error_message">You missed the boat\n\nYou can no longer refer your friends because the referral promotion has expired.</string>
+    <string name="referral_feature_not_enabled_error_message">The referral promotion isn’t available.</string>
     <!-- My Referrals Strings End -->
 
     <string name="text_go_to_voucher_section">Go to Vouchers</string>

@@ -5,9 +5,10 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFER
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnablementStatus
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
-import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
@@ -31,20 +32,20 @@ class ReferralsLocalRepository @Inject constructor(
         const val QUERY = "/query/"
 
         private var cachedReferralStatus = mutableMapOf<String, Pair<Boolean, Boolean>>()
-        private var cachedPromoCode = mutableMapOf<String, Pair<String?, String?>>()
-
+        private var cachedPromoCode = mutableMapOf<String, ReferralPromotionStatusAndPromoCode>()
+        private var isReferralFeatureEnabled: Boolean? = null
         fun clearReferralsData() {
             cachedReferralStatus = mutableMapOf()
             cachedPromoCode = mutableMapOf()
+            isReferralFeatureEnabled = null
         }
     }
 
     private fun sObjectUrl() = instanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY
 
-    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
+    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<ReferralsInfoEntity> {
         return safeApiCall {
             apiService.fetchReferralsInfo(
-                sObjectUrl(),
                 referralListQuery(contactId, durationInDays)
             )
         }
@@ -77,10 +78,20 @@ class ReferralsLocalRepository @Inject constructor(
         }
     }
 
+    suspend fun checkIfReferralIsEnabled(): ApiResponse<QueryResult<ReferralEnablementStatus>> {
+        return safeApiCall {
+            apiService.checkIfReferralIsEnabled(
+                sObjectUrl(),
+                memberEnrollmentAndReferralStatusQuery()
+            )
+        }
+    }
 
+    private fun memberEnrollmentAndReferralStatusQuery() =
+        "SELECT FIELDS(ALL) FROM Promotion LIMIT 1"
 
     private fun memberEnrollmentAndReferralStatusQuery(promoId: String) =
-        "SELECT Id, IsReferralPromotion, PromotionCode, PromotionPageUrl, Name FROM Promotion Where Id= \'$promoId\'"
+        "SELECT Id, IsReferralPromotion, PromotionCode, PromotionPageUrl, Name, Description, EndDate, ImageUrl FROM Promotion Where Id= \'$promoId\'"
 
     private fun memberEnrollmentStatusQuery(promoCode: String, contactId: String) =
         "SELECT Id, Name, PromotionId, LoyaltyProgramMemberId, LoyaltyProgramMember.ContactId FROM LoyaltyProgramMbrPromotion where LoyaltyProgramMember.ContactId=\'$contactId\' and Promotion.PromotionCode=\'$promoCode\'"
@@ -88,8 +99,13 @@ class ReferralsLocalRepository @Inject constructor(
     private fun memberReferralCodeQuery(contactId: String, programName: String) =
         "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and Program.Name='$programName'"
 
-    private fun referralListQuery(contactId: String, durationInDays: Int) =
-        "SELECT ReferredPartyId, ReferralDate, CurrentPromotionStage.Type, TYPEOF ReferredParty WHEN Contact THEN Account.PersonEmail WHEN Account THEN PersonEmail END FROM Referral WHERE ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
+    /**
+     * APEX api to fetch Referrals list info
+     * @param membershipNumber - Member ship number of the Referral Program
+     * @param durationInDays - Fetch referrals data only for the given no.of days (TODO: Remove if not required as part of API after confirmation)
+     */
+    private fun referralListQuery(membershipNumber: String, durationInDays: Int) =
+        "$instanceUrl/services/apexrest/get-referral-details/?membershipnumber=$membershipNumber"
 
     fun getDefaultPromotionDetailsFromCache(context: Context, memberShipNumber: String, promotionId: String): Results? {
         val promotionCache = LocalFileManager.getData(
@@ -111,14 +127,29 @@ class ReferralsLocalRepository @Inject constructor(
     }
 
     fun savePromoCodeAndUrlInCache(promotionId: String, promotionDetails: ReferralPromotionStatusAndPromoCode?) {
-        cachedPromoCode[promotionId] = Pair(promotionDetails?.promotionCode, promotionDetails?.promotionPageUrl)
+        promotionDetails?.let {
+            cachedPromoCode[promotionId] = it
+        }
+    }
+
+    fun getReferralPromotionDetails(promotionId: String): ReferralPromotionStatusAndPromoCode? {
+        return cachedPromoCode[promotionId]
     }
 
     fun getPromoCodeFromCache(promotionId: String): String? {
-        return cachedPromoCode[promotionId]?.first
+        return cachedPromoCode[promotionId]?.promotionCode
     }
 
     fun getPromoUrlFromCache(promotionId: String): String {
-        return cachedPromoCode[promotionId]?.second.orEmpty()
+        return cachedPromoCode[promotionId]?.promotionPageUrl.orEmpty()
     }
+
+    fun setReferralFeatureEnabled(enabled: Boolean) {
+        isReferralFeatureEnabled = enabled
+    }
+
+    fun isReferralFeatureEnabled(): Boolean? {
+        return isReferralFeatureEnabled
+    }
+
 }

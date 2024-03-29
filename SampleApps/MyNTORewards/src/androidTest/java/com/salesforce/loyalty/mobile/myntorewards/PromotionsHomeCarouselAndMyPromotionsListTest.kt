@@ -62,6 +62,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
         val repository = ReferralsRepository(getAPIService())
         val localRepository = ReferralsLocalRepository(getLocalAPIService(), "")
         localRepository.setPromotionType(isReferral = isReferralPromotion)
+        localRepository.setReferralFeatureEnabled(isReferralPromotion)
         var myReferralsViewModel = MyReferralsViewModel(repository, localRepository, "")
 
         // Launch the screen
@@ -93,13 +94,13 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
         composeTestRule.run {
             onNodeWithText("Home").assertIsDisplayed().performClick()
 
-            onNodeWithTag(TestTags.TEST_TAG_PROMOTION_CARD).assertIsDisplayed().performClick()
+            onNodeWithTag(TestTags.TEST_TAG_PROMO_CARD).assertIsDisplayed().performClick()
             Thread.sleep(500)
             onNodeWithTag(CIRCULAR_PROGRESS_TEST_TAG).assertIsDisplayed()
 
             Thread.sleep(2000)
             verifyStartReferringScreen()
-            onNodeWithTag(TestTags.TEST_TAG_PROMOTION_CARD).assertIsDisplayed().performClick()
+            onNodeWithTag(TestTags.TEST_TAG_PROMO_CARD).assertIsDisplayed().performClick()
             Thread.sleep(500)
             verifyReferFriendScreen()
             Thread.sleep(1000)
@@ -144,7 +145,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
         composeTestRule.run {
             onNodeWithText("Home").assertIsDisplayed().performClick()
             onNodeWithText("Default Referral Promotion").assertIsDisplayed()
-            onNodeWithTag(TestTags.TEST_TAG_PROMOTION_CARD).assertIsDisplayed().performClick()
+            onNodeWithTag(TestTags.TEST_TAG_PROMO_CARD).assertIsDisplayed().performClick()
             Thread.sleep(1000)
             onNode(
                 hasTestTag(TEST_TAG_PROMO_NAME)
@@ -158,7 +159,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             ).assertIsDisplayed()
             onNodeWithTag(TestTags.TEST_TAG_CLOSE_POPUP_PROMOTION).assertIsDisplayed().performClick()
             Thread.sleep(500)
-            onNodeWithTag(TestTags.TEST_TAG_PROMOTION_CARD).assertIsDisplayed()
+            onNodeWithTag(TestTags.TEST_TAG_PROMO_CARD).assertIsDisplayed()
             Thread.sleep(1000)
         }
     }

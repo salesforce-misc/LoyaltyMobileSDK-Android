@@ -26,6 +26,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredAccount
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferredParty
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
@@ -2132,7 +2133,7 @@ class SampleAppViewModelTest {
                 any(),
                 any()
             )
-        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
+        }.returns(ApiResponse.Success(ReferralsInfoEntity(listOf())))
 
         myReferralsViewModel.fetchReferralsInfo(context)
 
@@ -2183,7 +2184,7 @@ class SampleAppViewModelTest {
                 any(),
                 any()
             )
-        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(reffralEntity), "")))
+        }.returns(ApiResponse.Success(ReferralsInfoEntity(listOf(reffralEntity))))
 
         myReferralsViewModel.fetchReferralsInfo(context)
 
@@ -2215,7 +2216,7 @@ class SampleAppViewModelTest {
                 any(),
                 any(),
             )
-        }.returns(ApiResponse.Success(QueryResult(0, true, listOf(reffralEntity), "")))
+        }.returns(ApiResponse.Success(ReferralsInfoEntity(listOf(reffralEntity))))
 
         myReferralsViewModel.fetchReferralsInfo(context)
 
@@ -2652,7 +2653,7 @@ class SampleAppViewModelTest {
         coEvery { referralsLocalRepository.getReferralStatusFromCache(any()) }.returns(Pair(false, false))
         coEvery { referralsLocalRepository.checkIfGivenPromotionIsReferralAndEnrolled(any()) }
             .returns(ApiResponse.Success(QueryResult(0, true, listOf(
-                ReferralPromotionStatusAndPromoCode("promo_name", "1234", "", true)
+                ReferralPromotionStatusAndPromoCode("promo_name", "1234", "", "", "", "", true)
             ), "")))
 
         coEvery { referralsLocalRepository.savePromoCodeAndUrlInCache(any(), any()) }

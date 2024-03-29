@@ -5,13 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DEFAULT_PROMOTION_CODE
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DURATION
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROGRAM_NAME
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DEFAULT_PROMOTION_CODE
-import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DEFAULT_PROMOTION_ID
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.getMember
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
@@ -28,7 +29,6 @@ import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs.
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import com.salesforce.referral.EnrollmentStatus
 import com.salesforce.referral.api.ApiResponse
 import com.salesforce.referral.entities.ReferralEnrollmentResponse
@@ -130,11 +130,11 @@ class MyReferralsViewModel @Inject constructor(
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             val member = getMember(context)
-            when(val result = localRepository.fetchReferralsInfo(member?.contactId.orEmpty(), REFERRAL_DURATION)) {
+            when(val result = localRepository.fetchReferralsInfo(member?.membershipNumber.orEmpty(), REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
-                    val data: List<ReferralEntity>? = result.data.records
+                    val data: ReferralsInfoEntity? = result.data
                     Logger.d("Success", "$data")
-                    uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(data)))
+                    uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(data?.referralList)))
                     forceRefreshReferralsInfo = false
                 }
                 is ApiResponse.Error -> {
@@ -270,8 +270,8 @@ class MyReferralsViewModel @Inject constructor(
         return memberReferralCode?.let { "$it-$promotionCode" }
     }
 
-    fun referralLink(context: Context, promotionId: String): String {
-        return localRepository.getPromoUrlFromCache(promotionId) + "?referralCode="
+    fun referralLink(promoPageUrl: String): String {
+        return "$promoPageUrl?referralCode="
     }
 
     fun setReferralCode(context: Context, memberReferralCode: String?) {
@@ -306,7 +306,39 @@ class MyReferralsViewModel @Inject constructor(
         }
     }
 
-    fun checkIfGivenPromotionIsReferralAndEnrolled(context: Context, promotionId: String) {
+    fun checkIfReferralIsEnabled(forceRefresh: Boolean = false) {
+        if (forceRefresh) {
+            ReferralsLocalRepository.clearReferralsData()
+        }
+        uiMutableState.value = null
+        uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
+        localRepository.isReferralFeatureEnabled()?.let {
+            updateReferralEnableStatus(it)
+            return
+        }
+        viewModelScope.launch {
+            when(val result = localRepository.checkIfReferralIsEnabled()) {
+                is ApiResponse.Success -> {
+                    val referralFeatureEnabled = result.data.records?.firstOrNull()?.isReferralPromotion != null
+                    updateReferralEnableStatus(referralFeatureEnabled)
+                }
+                else -> {
+                    updateReferralEnableStatus(false)
+                }
+            }
+        }
+    }
+
+    private fun updateReferralEnableStatus(referralEnabled: Boolean) {
+        localRepository.setReferralFeatureEnabled(referralEnabled)
+        if (referralEnabled) {
+            uiMutableState.postValue(MyReferralsViewState.ReferralFeatureEnabled)
+        } else {
+            uiMutableState.postValue(MyReferralsViewState.ReferralFeatureNotEnabled)
+        }
+    }
+
+    private fun checkIfGivenPromotionIsReferralAndEnrolled(context: Context, promotionId: String) {
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             when(val result = localRepository.checkIfGivenPromotionIsReferralAndEnrolled(promotionId)) {
@@ -330,9 +362,8 @@ class MyReferralsViewModel @Inject constructor(
         }
     }
 
-    fun fetchDefaultPromotionDetails(context: Context): Results? {
-        val member = getMember(context)
-        return localRepository.getDefaultPromotionDetailsFromCache(context = context, member?.membershipNumber.orEmpty(), REFERRAL_DEFAULT_PROMOTION_ID)?.let {
+    fun fetchReferralPromotionDetailsFromCache(context: Context, promotionId: String): ReferralPromotionStatusAndPromoCode? {
+        return localRepository.getReferralPromotionDetails(promotionId)?.let {
             if (isEndDateExpired(it.endDate)) {
                 _programState.value = ReferralProgramType.ERROR(context.getString(R.string.referral_promotion_expired_error_message))
             }

@@ -13,6 +13,8 @@ sealed class MyReferralsViewState {
     object MyReferralsPromotionNotEnrolled : MyReferralsViewState()
     data class MyReferralsPromotionStatusFailure(val errorMessage: String? = null): MyReferralsViewState()
     object PromotionStateNonReferral : MyReferralsViewState()
+    object ReferralFeatureNotEnabled : MyReferralsViewState()
+    object ReferralFeatureEnabled : MyReferralsViewState()
     data class PromotionReferralApiStatusFailure(val error: String? = null) : MyReferralsViewState()
 }
 

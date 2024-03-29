@@ -29,9 +29,10 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalReposi
 import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnablementStatus
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
-import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.FACEBOOK_APP_PACKAGE
@@ -103,6 +104,7 @@ class MyReferralsScreenTest {
 
     @Test
     fun givenReferralsListApiSuccessThenVerifyMyReferralsScreenFlows() {
+        localRepository.setReferralFeatureEnabled(true)
         mockReferralsDataLaunchScreen()
 
         composeTestRule.run {
@@ -170,6 +172,7 @@ class MyReferralsScreenTest {
 
     @Test
     fun testReferralScreenFetchReferralsAPiFailureFlow() {
+        localRepository.setReferralFeatureEnabled(true)
         localRepository.setReferralsListApiSuccess(false)
         mockReferralsDataLaunchScreen()
 
@@ -180,6 +183,7 @@ class MyReferralsScreenTest {
 
     @Test
     fun testReferralEnrollmentApiFailureFlow() {
+        localRepository.setReferralFeatureEnabled(true)
         localRepository.setReferralsListApiSuccess(true)
         localRepository.setReferralEnrollmentStatusApiSuccess(false)
         mockReferralsDataLaunchScreen()
@@ -191,11 +195,37 @@ class MyReferralsScreenTest {
 
     @Test
     fun testPromotionTypeAndCodeApiFailureFlow() {
+        localRepository.setReferralFeatureEnabled(true)
         localRepository.setReferralsListApiSuccess(true)
         localRepository.setReferralEnrollmentStatusApiSuccess(true)
         localRepository.setPromotionTypeAndCodeApiSuccess(false)
         mockReferralsDataLaunchScreen()
 
+        verifyErrorScreenDisplayed()
+    }
+
+    @Test
+    fun testReferralFeatureDisabledFlow() {
+        localRepository.setReferralFeatureEnabled(false)
+        mockReferralsDataLaunchScreen()
+
+        verifyErrorScreenDisplayed()
+    }
+
+    @Test
+    fun testReferNowActionWhenPromotionSetToPastDate() {
+        localRepository.setReferralFeatureEnabled(true)
+        localRepository.setPromotionExpiredDate("2023-12-31")
+
+        mockReferralsDataLaunchScreen()
+        composeTestRule.run {
+            onNodeWithTag(TEST_TAG_TITLE_VIEW)
+                .assertTextEquals("My Referrals")
+                .assertIsDisplayed()
+            Thread.sleep(5000)
+            onNodeWithText("Refer Now").assertIsDisplayed().performClick()
+            Thread.sleep(500)
+        }
         verifyErrorScreenDisplayed()
     }
 
@@ -332,10 +362,9 @@ fun getAPIService(): ApiService{
 fun getLocalAPIService(): ReferralsLocalApiService {
     return object : ReferralsLocalApiService {
         override suspend fun fetchReferralsInfo(
-            url: String,
-            query: String?
-        ): Response<QueryResult<ReferralEntity>> {
-            return Response.success("" as QueryResult<ReferralEntity>)
+            query: String
+        ): Response<ReferralsInfoEntity> {
+            return Response.success("" as ReferralsInfoEntity)
         }
 
         override suspend fun fetchMemberReferralId(
@@ -366,6 +395,13 @@ fun getLocalAPIService(): ReferralsLocalApiService {
             query: String?
         ): Response<QueryResult<ReferralPromotionStatusAndPromoCode>> {
             return Response.success("" as QueryResult<ReferralPromotionStatusAndPromoCode>)
+        }
+
+        override suspend fun checkIfReferralIsEnabled(
+            url: String,
+            query: String?
+        ): Response<QueryResult<ReferralEnablementStatus>> {
+            return Response.success("" as QueryResult<ReferralEnablementStatus>)
         }
     }
 }
