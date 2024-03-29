@@ -10,6 +10,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnabl
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import com.salesforce.referral.api.ApiResponse
@@ -43,9 +44,8 @@ class ReferralsLocalRepository constructor(
         }
     }
 
-    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
-        val responseType = object : TypeToken<QueryResult<ReferralEntity>>() {}.type
-        val response = mockResponse("ReferralEntityResponse.json", responseType) as QueryResult<ReferralEntity>
+    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<ReferralsInfoEntity> {
+        val response = mockResponse("ReferralEntityResponse.json", ReferralsInfoEntity::class.java) as ReferralsInfoEntity
         return if (isReferralsListApiSuccess) {
             ApiResponse.Success(response)
         } else {

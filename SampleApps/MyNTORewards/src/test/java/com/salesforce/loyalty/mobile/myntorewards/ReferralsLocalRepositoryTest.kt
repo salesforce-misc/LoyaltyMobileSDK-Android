@@ -43,21 +43,18 @@ class ReferralsLocalRepositoryTest {
                 CurrentPromotionStage("Friend Signs Up"),
                 ReferredParty(ReferredAccount(personEmail = "testemail@test.com"))
             )
-            coEvery { apiService.fetchReferralsInfo(any(), any()) } returns (
-                    Response.success(QueryResult(1, true, listOf(referralEntity), null))
+            coEvery { apiService.fetchReferralsInfo(any()) } returns (
+                    Response.success(ReferralsInfoEntity(listOf(referralEntity)))
             )
 
 
             val result = repository.fetchReferralsInfo("1234", 90)
 
             assert(result is ApiResponse.Success)
-            val queryResult = result as ApiResponse.Success<QueryResult<ReferralEntity>>
-            val entityQueryResult = queryResult.data
-            TestCase.assertEquals(1, entityQueryResult.records?.size)
-            TestCase.assertEquals(1, entityQueryResult.totalSize)
-            TestCase.assertEquals(true, entityQueryResult.isDone)
-            TestCase.assertNull(entityQueryResult.nextRecordsUrl)
-            val referralEntityResponse = entityQueryResult.records?.firstOrNull()
+            val queryResult = result as ApiResponse.Success<ReferralsInfoEntity>
+            val entityQueryResult = queryResult.data.referralList
+            TestCase.assertEquals(1, entityQueryResult?.size)
+            val referralEntityResponse = entityQueryResult?.firstOrNull()
             TestCase.assertEquals("Friend Signs Up", referralEntityResponse?.promotionStage?.type)
             TestCase.assertEquals("2024-01-22", referralEntityResponse?.referralDate)
             TestCase.assertEquals("testemail@test.com", referralEntityResponse?.referredParty?.account?.personEmail)
@@ -68,7 +65,7 @@ class ReferralsLocalRepositoryTest {
     fun `Given API failure with error info, when fetching referral list, then verify api failure with error data`(){
         runBlocking {
             // Given
-            coEvery { apiService.fetchReferralsInfo(any(), any()) } returns (errorResponse() as Response<QueryResult<ReferralEntity>>)
+            coEvery { apiService.fetchReferralsInfo(any()) } returns (errorResponse() as Response<ReferralsInfoEntity>)
 
             // When
             val result = repository.fetchReferralsInfo("1234",  90)

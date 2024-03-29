@@ -12,6 +12,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalReposi
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.getMember
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
@@ -129,11 +130,11 @@ class MyReferralsViewModel @Inject constructor(
         uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchInProgress)
         viewModelScope.launch {
             val member = getMember(context)
-            when(val result = localRepository.fetchReferralsInfo(member?.contactId.orEmpty(), REFERRAL_DURATION)) {
+            when(val result = localRepository.fetchReferralsInfo(member?.membershipNumber.orEmpty(), REFERRAL_DURATION)) {
                 is ApiResponse.Success -> {
-                    val data: List<ReferralEntity>? = result.data.records
+                    val data: ReferralsInfoEntity? = result.data
                     Logger.d("Success", "$data")
-                    uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(data)))
+                    uiMutableState.postValue(MyReferralsViewState.MyReferralsFetchSuccess(successState(data?.referralList)))
                     forceRefreshReferralsInfo = false
                 }
                 is ApiResponse.Error -> {

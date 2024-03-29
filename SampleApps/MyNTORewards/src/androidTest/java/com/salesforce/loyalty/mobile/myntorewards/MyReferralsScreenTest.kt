@@ -31,8 +31,8 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnablementStatus
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
-import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ShareType.Companion.FACEBOOK_APP_PACKAGE
@@ -362,10 +362,9 @@ fun getAPIService(): ApiService{
 fun getLocalAPIService(): ReferralsLocalApiService {
     return object : ReferralsLocalApiService {
         override suspend fun fetchReferralsInfo(
-            url: String,
-            query: String?
-        ): Response<QueryResult<ReferralEntity>> {
-            return Response.success("" as QueryResult<ReferralEntity>)
+            query: String
+        ): Response<ReferralsInfoEntity> {
+            return Response.success("" as ReferralsInfoEntity)
         }
 
         override suspend fun fetchMemberReferralId(

@@ -6,6 +6,7 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnabl
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -18,9 +19,8 @@ import retrofit2.http.Url
 interface ReferralsLocalApiService {
     @GET
     suspend fun fetchReferralsInfo(
-        @Url url: String,
-        @Query("q") query: String?
-    ): Response<QueryResult<ReferralEntity>>
+        @Url url: String
+    ): Response<ReferralsInfoEntity>
 
     @GET
     suspend fun fetchMemberReferralId(

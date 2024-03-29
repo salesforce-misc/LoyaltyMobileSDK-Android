@@ -38,7 +38,6 @@ object AppModule {
         retrofit.create(ReferralsLocalApiService::class.java)
 
     @Provides
-    @Singleton
     fun provideReferralForceAuthenticatorImpl(forceAuthManager: ForceAuthManager): ReferralForceAuthenticator =
         ReferralForceAuthenticatorImpl(forceAuthManager)
 

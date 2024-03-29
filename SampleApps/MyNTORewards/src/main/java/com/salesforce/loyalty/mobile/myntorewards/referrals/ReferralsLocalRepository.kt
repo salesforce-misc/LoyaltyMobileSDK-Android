@@ -7,8 +7,8 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnablementStatus
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrollmentInfo
-import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
+import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
 import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
@@ -43,10 +43,9 @@ class ReferralsLocalRepository @Inject constructor(
 
     private fun sObjectUrl() = instanceUrl + SOQL_QUERY_PATH + SOQL_QUERY_VERSION + QUERY
 
-    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<QueryResult<ReferralEntity>> {
+    suspend fun fetchReferralsInfo(contactId: String, durationInDays: Int): ApiResponse<ReferralsInfoEntity> {
         return safeApiCall {
             apiService.fetchReferralsInfo(
-                sObjectUrl(),
                 referralListQuery(contactId, durationInDays)
             )
         }
@@ -100,8 +99,13 @@ class ReferralsLocalRepository @Inject constructor(
     private fun memberReferralCodeQuery(contactId: String, programName: String) =
         "SELECT MembershipNumber, ContactId, ProgramId, ReferralCode FROM LoyaltyProgramMember where contactId = '$contactId' and Program.Name='$programName'"
 
-    private fun referralListQuery(contactId: String, durationInDays: Int) =
-        "SELECT ReferredPartyId, ReferralDate, CurrentPromotionStage.Type, TYPEOF ReferredParty WHEN Contact THEN Account.PersonEmail WHEN Account THEN PersonEmail END FROM Referral WHERE ReferrerId = \'$contactId\' and ReferralDate = LAST_N_DAYS:$durationInDays ORDER BY ReferralDate DESC"
+    /**
+     * APEX api to fetch Referrals list info
+     * @param membershipNumber - Member ship number of the Referral Program
+     * @param durationInDays - Fetch referrals data only for the given no.of days (TODO: Remove if not required as part of API after confirmation)
+     */
+    private fun referralListQuery(membershipNumber: String, durationInDays: Int) =
+        "$instanceUrl/services/apexrest/get-referral-details/?membershipnumber=$membershipNumber"
 
     fun getDefaultPromotionDetailsFromCache(context: Context, memberShipNumber: String, promotionId: String): Results? {
         val promotionCache = LocalFileManager.getData(
