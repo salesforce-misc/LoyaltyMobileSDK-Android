@@ -57,8 +57,6 @@ class MyPromotionViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : V
             val membershipKey = member.membershipNumber ?: ""
             if(refreshRequired)
             {
-                // Clear Referral Promotions data on pull to refresh to fetch the updated data
-                ReferralsLocalRepository.clearReferralsData()
                 fetchPromotions(context, memberId, membershipKey)
             }
             else{
@@ -94,6 +92,8 @@ class MyPromotionViewModel(private val loyaltyAPIManager: LoyaltyAPIManager) : V
                     )
                     membershipPromo.value= it
                     viewState.postValue(PromotionViewState.PromotionsFetchSuccess)
+                    // Clear Referral Promotions data on pull to refresh to fetch the updated data
+                    ReferralsLocalRepository.clearReferralsData()
                 } else {
                     viewState.postValue(PromotionViewState.PromotionsFetchFailure)
                 }

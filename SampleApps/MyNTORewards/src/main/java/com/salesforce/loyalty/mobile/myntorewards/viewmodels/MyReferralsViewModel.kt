@@ -329,9 +329,9 @@ class MyReferralsViewModel @Inject constructor(
         }
     }
 
-    private fun updateReferralEnableStatus(it: Boolean) {
-        localRepository.setReferralFeatureEnabled(it)
-        if (it) {
+    private fun updateReferralEnableStatus(referralEnabled: Boolean) {
+        localRepository.setReferralFeatureEnabled(referralEnabled)
+        if (referralEnabled) {
             uiMutableState.postValue(MyReferralsViewState.ReferralFeatureEnabled)
         } else {
             uiMutableState.postValue(MyReferralsViewState.ReferralFeatureNotEnabled)
