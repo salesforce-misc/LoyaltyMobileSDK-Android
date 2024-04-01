@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -69,13 +70,14 @@ fun SettingsAppBar(
     }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ConnectedAppSetting(navController: NavController, closeSheet: () -> Unit) {
     Scaffold(topBar = {
         SettingsAppBar(
             closeSheet
         )
-    }) { innerPadding ->
+    }) {
 
         Column(
             modifier = Modifier
@@ -83,42 +85,51 @@ fun ConnectedAppSetting(navController: NavController, closeSheet: () -> Unit) {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            val interactionSource = remember { MutableInteractionSource() }
-            Row(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .background(Color.White, shape = RoundedCornerShape(6.dp))
-                    .padding(12.dp)
-
-            ) {
-                androidx.compose.material.Text(
-                    text = stringResource(id = R.string.label_connected_app),
-                    modifier = Modifier
-                        .padding(start = 4.dp)
-                        .weight(0.8f)
-                        .align(Alignment.CenterVertically),
-                    fontFamily = font_sf_pro,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black,
-                    textAlign = TextAlign.Start,
-                    fontSize = 16.sp
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
-                    contentDescription = stringResource(R.string.label_selected_connected_app),
-                    colorFilter = ColorFilter.tint(TextGray),
-                    modifier = Modifier
-                        .wrapContentSize(Alignment.CenterEnd)
-                        .padding(vertical = 6.dp, horizontal = 4.dp)
-                        .weight(0.2f)
-                        .clickable(interactionSource = interactionSource, indication = null) {
-                            navController.navigate(SettingsScreen.ConnectedAppSettings.name)
-                        }
-                )
+            Spacer(modifier = Modifier.height(4.dp))
+            SettingListItem(title = R.string.label_connected_app) {
+                navController.navigate(SettingsScreen.ConnectedAppSettings.name)
+            }
+            SettingListItem(title = R.string.menu_app_settings) {
+                navController.navigate(SettingsScreen.AppSettings.name)
             }
         }
+    }
+}
+@Composable
+fun SettingListItem(title: Int, onClick: ()-> Unit){
+    val interactionSource = remember { MutableInteractionSource() }
+    Row(
+        modifier = Modifier
+            .padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(Color.White, shape = RoundedCornerShape(6.dp))
+            .padding(12.dp)
+
+    ) {
+        androidx.compose.material.Text(
+            text = stringResource(title),
+            modifier = Modifier
+                .padding(start = 4.dp)
+                .weight(0.8f)
+                .align(Alignment.CenterVertically),
+            fontFamily = font_sf_pro,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black,
+            textAlign = TextAlign.Start,
+            fontSize = 16.sp
+        )
+        Image(
+            painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+            contentDescription = stringResource(title),
+            colorFilter = ColorFilter.tint(TextGray),
+            modifier = Modifier
+                .wrapContentSize(Alignment.CenterEnd)
+                .padding(vertical = 6.dp, horizontal = 4.dp)
+                .weight(0.2f)
+                .clickable(interactionSource = interactionSource, indication = null) {
+                    onClick()
+                }
+        )
     }
 }

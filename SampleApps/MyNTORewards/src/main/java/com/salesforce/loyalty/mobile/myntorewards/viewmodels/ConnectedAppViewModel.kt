@@ -13,6 +13,7 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyConfig
 import kotlinx.coroutines.launch
 
 class ConnectedAppViewModel : ViewModel() {
@@ -87,5 +88,56 @@ class ConnectedAppViewModel : ViewModel() {
                 ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
         selectedInstanceUrl.value = instanceUrl
         return instanceUrl
+    }
+
+    fun setLoyaltyProgramName(context: Context, programName: String) {
+        viewModelScope.launch {
+            PrefHelper.instancePrefs(context)
+                .set(AppConstants.KEY_LOYALTY_PROGRAM_NAME, programName)
+        }
+    }
+    fun getLoyaltyProgramName(context: Context): String {
+        val programName =
+            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_LOYALTY_PROGRAM_NAME)
+                ?: AppSettings.LOYALTY_PROGRAM_NAME
+        return programName
+    }
+
+    fun setRewardCurrencyName(context: Context, currencyName: String) {
+        viewModelScope.launch {
+            PrefHelper.instancePrefs(context)
+                .set(AppConstants.KEY_REWARD_CURRENCY_NAME, currencyName)
+        }
+    }
+    fun getRewardCurrencyName(context: Context): String {
+        val programName =
+            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_REWARD_CURRENCY_NAME)
+                ?: AppSettings.REWARD_CURRENCY_NAME
+        return programName
+    }
+
+    fun setRewardCurrencyNameShort(context: Context, currencyNameShort: String) {
+        viewModelScope.launch {
+            PrefHelper.instancePrefs(context)
+                .set(AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT, currencyNameShort)
+        }
+    }
+    fun getRewardCurrencyNameShort(context: Context): String {
+        val programName =
+            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT)
+                ?: AppSettings.REWARD_CURRENCY_NAME_SHORT
+        return programName
+    }
+    fun setTierCurrencyName(context: Context, tierCurrencyName: String) {
+        viewModelScope.launch {
+            PrefHelper.instancePrefs(context)
+                .set(AppConstants.KEY_TIER_CURRENCY_NAME, tierCurrencyName)
+        }
+    }
+    fun getTierCurrencyName(context: Context): String {
+        val programName =
+            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_TIER_CURRENCY_NAME)
+                ?: AppSettings.TIER_CURRENCY_NAME
+        return programName
     }
 }

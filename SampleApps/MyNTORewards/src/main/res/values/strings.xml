@@ -339,4 +339,11 @@
     <string name="receipt_error_confidence_status_failure">We couldn’t process the receipt.</string>
     <string name="receipt_error_confidence_status_partial">We couldn’t process some items in the receipt.</string>
     <string name="receipt_submit_manual_review">Submit for Manual Review</string>
+
+    <string name="menu_app_settings">App Settings</string>
+    <string name="mnu_loyalty_program_name">Loyalty Program Name</string>
+    <string name="menu_reward_currency">Reward Currency</string>
+    <string name="label_currency_name">Currency Name</string>
+    <string name="label_currency_name_short">Currency Name Short</string>
+    <string name="label_tier_currency">Tier Currency Name</string>
 </resources>

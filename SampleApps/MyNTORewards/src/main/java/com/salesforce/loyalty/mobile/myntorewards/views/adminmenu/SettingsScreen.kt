@@ -22,7 +22,13 @@ enum class SettingsScreen(@StringRes val title: Int) {
     OpenSettings(title = R.string.label_settings),
     ConnectedAppSettings(title = R.string.label_connected_app),
     OpenConnectedAppDetail(title = R.string.label_connected_app),
-    NewConnectedApp(title = R.string.text_new_connectedapp_details)
+    NewConnectedApp(title = R.string.text_new_connectedapp_details),
+    AppSettings(title = R.string.menu_app_settings),
+    LoyaltyProgramNameSettings(title = R.string.mnu_loyalty_program_name),
+    CurrencySettings(title = R.string.menu_reward_currency),
+    RewardCurrencyNameSettings(title = R.string.label_currency_name),
+    RewardCurrencyNameShortSettings(title = R.string.label_currency_name_short),
+    TierCurrencyNameSettings(title = R.string.label_tier_currency)
 }
 
 @Composable
@@ -60,6 +66,24 @@ fun SettingsMain(
             }
             composable(route = SettingsScreen.NewConnectedApp.name) {
                 ConnectedAppDetails(navController, SettingsScreen.NewConnectedApp, isNew = true)
+            }
+            composable(route = SettingsScreen.AppSettings.name) {
+                AppSettings(navController)
+            }
+            composable(route = SettingsScreen.LoyaltyProgramNameSettings.name) {
+                LoyaltyProgramNameSettings(navController)
+            }
+            composable(route = SettingsScreen.CurrencySettings.name) {
+                CurrencySettings(navController)
+            }
+            composable(route = SettingsScreen.RewardCurrencyNameSettings.name) {
+                RewardCurrencyNameSettings(navController)
+            }
+            composable(route = SettingsScreen.RewardCurrencyNameShortSettings.name) {
+                RewardCurrencyNameShortSettings(navController)
+            }
+            composable(route = SettingsScreen.TierCurrencyNameSettings.name) {
+                TierCurrencyNameSettings(navController)
             }
         }
     }

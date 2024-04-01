@@ -90,6 +90,7 @@ fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionVie
                     } else {
                         count
                     }
+                    val rewardCurrencyName = Common.getRewardCurrencymName(context)
                     var index = 0
                     var previewTransactionCount = 0
                     Column(
@@ -101,7 +102,7 @@ fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionVie
                         while (previewTransactionCount < pageCount && index < count) {
                             transactions?.transactionJournals?.get(index)?.apply {
                                 val transactionName = this.journalTypeName
-                                val points = getCurrencyPoints(this.pointsChange)
+                                val points = getCurrencyPoints(rewardCurrencyName, this.pointsChange)
                                 val date = this.activityDate?.let { activityDate ->
                                     formatTransactionDateTime(activityDate, context)
                                 }
@@ -189,6 +190,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
             TransactionEmptyView()
         }
 
+        val rewardCurrencyName = Common.getRewardCurrencymName(context)
         val recentTransactions = transactionJournals?.filter {
             it.activityDate?.let { activityDate ->
                 Common.isTransactionDateWithinCurrentMonth(activityDate)
@@ -217,7 +219,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
                     LazyColumn() {
                         items(transactionsJournals) {
                             val transactionName = it.journalTypeName
-                            val points = getCurrencyPoints(it.pointsChange)
+                            val points = getCurrencyPoints(rewardCurrencyName, it.pointsChange)
                             val date = it.activityDate?.let { activityDate ->
                                 formatTransactionDateTime(activityDate, context)
                             }
@@ -244,7 +246,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
                     LazyColumn() {
                         items(transactionsJournals) {
                             val transactionName = it.journalTypeName
-                            val points = getCurrencyPoints(it.pointsChange)
+                            val points = getCurrencyPoints(rewardCurrencyName, it.pointsChange)
                             val date = it.activityDate?.let { activityDate ->
                                 formatTransactionDateTime(activityDate, context)
                             }
@@ -259,10 +261,10 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
     }
 }
 
-fun getCurrencyPoints(pointsChange: List<PointsChange>): Double? {
+fun getCurrencyPoints(rewardCurrencyName: String, pointsChange: List<PointsChange>): Double? {
     for (pointChange in pointsChange) {
         pointChange.loyaltyMemberCurrency?.let {
-            if (it.uppercase() == AppConstants.REWARD_CURRENCY_NAME.uppercase()) {
+            if (it.uppercase() == rewardCurrencyName.uppercase()) {
                 return pointChange.changeInPoints
             }
         }
@@ -274,6 +276,7 @@ fun getCurrencyPoints(pointsChange: List<PointsChange>): Double? {
 fun ListItemTransaction(transactionName: String, points: Double, date: String) {
     Spacer(modifier = Modifier.height(12.dp))
 
+    val rewardCurrencyNameShort = Common.getRewardCurrencyShortName(LocalContext.current)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -317,10 +320,10 @@ fun ListItemTransaction(transactionName: String, points: Double, date: String) {
 
             if (points > 0) {
                 pointsString =
-                    "+" + pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+                    "+" + pointsRoundOff.toString() + " " + rewardCurrencyNameShort
             } else {
                 pointsString =
-                    pointsRoundOff.toString() + " " + AppConstants.TRANSACTION_REWARD_POINTS
+                    pointsRoundOff.toString() + " " + rewardCurrencyNameShort
                 color = TextRed
             }
 
