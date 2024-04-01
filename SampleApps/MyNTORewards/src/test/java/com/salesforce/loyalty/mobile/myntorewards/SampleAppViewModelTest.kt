@@ -2384,7 +2384,7 @@ class SampleAppViewModelTest {
 
     //below test case causing coverage issue. Although its being passed when execute without coverage. While coverage calculation
     //comment below test case.
-    /*@Test
+    @Test
     fun `for enroll To referral promotion network error tryAgain false should have enrollment failed with network error`() {
 
         val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
@@ -2419,7 +2419,7 @@ class SampleAppViewModelTest {
             programDataState[0]
         )
 
-    }*/
+    }
 
     @Test
     fun `for enroll To referral promotion success tryAgain false contact id not null enrollment status false then enrollment should fail`() {
