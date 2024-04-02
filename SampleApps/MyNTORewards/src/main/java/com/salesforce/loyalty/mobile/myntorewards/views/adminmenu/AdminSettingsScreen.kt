@@ -10,21 +10,27 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.ConnectedAppViewModelFactory
 
 @Composable
 fun SettingsAppBar(
@@ -95,8 +101,11 @@ fun ConnectedAppSetting(navController: NavController, closeSheet: () -> Unit) {
         }
     }
 }
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingListItem(title: Int, onClick: ()-> Unit){
+fun SettingListItem(title: Int, settingValue: String? = null, onClick: ()-> Unit){
     val interactionSource = remember { MutableInteractionSource() }
     Row(
         modifier = Modifier
@@ -104,21 +113,36 @@ fun SettingListItem(title: Int, onClick: ()-> Unit){
             .fillMaxWidth()
             .wrapContentHeight()
             .background(Color.White, shape = RoundedCornerShape(6.dp))
-            .padding(12.dp)
+            .padding(12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
 
     ) {
-        androidx.compose.material.Text(
-            text = stringResource(title),
-            modifier = Modifier
-                .padding(start = 4.dp)
-                .weight(0.8f)
-                .align(Alignment.CenterVertically),
-            fontFamily = font_sf_pro,
-            fontWeight = FontWeight.Normal,
-            color = Color.Black,
-            textAlign = TextAlign.Start,
-            fontSize = 16.sp
-        )
+        Column(
+            modifier = Modifier.weight(0.8f),
+        ) {
+            androidx.compose.material.Text(
+                text = stringResource(title),
+                modifier = Modifier
+                    .padding(start = 4.dp),
+                fontFamily = font_sf_pro,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black,
+                textAlign = TextAlign.Start,
+                fontSize = 16.sp
+            )
+            settingValue?.let {
+                androidx.compose.material.Text(
+                    text = settingValue,
+                    modifier = Modifier
+                        .padding(start = 4.dp),
+                    fontFamily = font_sf_pro,
+                    fontWeight = FontWeight.Normal,
+                    color = CardFieldText,
+                    textAlign = TextAlign.Start,
+                    fontSize = 14.sp)
+            }
+        }
         Image(
             painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
             contentDescription = stringResource(title),

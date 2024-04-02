@@ -75,6 +75,10 @@ fun AppSettingAppBar(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AppSettings(navController: NavController) {
+    val viewModel: ConnectedAppViewModel =
+        viewModel(factory = ConnectedAppViewModelFactory())
+    val context = LocalContext.current
+    val loyaltyProgramName: String? = viewModel.getLoyaltyProgramName(context)
     Scaffold(topBar = {
         AppSettingAppBar(
             title = SettingsScreen.AppSettings.title,
@@ -89,7 +93,7 @@ fun AppSettings(navController: NavController) {
             verticalArrangement = Arrangement.Top
         ) {
             Spacer(modifier = Modifier.height(4.dp))
-            SettingListItem(R.string.mnu_loyalty_program_name) {
+            SettingListItem(R.string.mnu_loyalty_program_name, settingValue = loyaltyProgramName) {
                 navController.navigate(SettingsScreen.LoyaltyProgramNameSettings.name)
             }
             SettingListItem(R.string.menu_reward_currency) {
@@ -167,6 +171,13 @@ fun TierCurrencyNameSettings(navController: NavController) {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CurrencySettings(navController: NavController) {
+    val viewModel: ConnectedAppViewModel =
+        viewModel(factory = ConnectedAppViewModelFactory())
+    val context = LocalContext.current
+    val rewardCurrencyName: String? = viewModel.getRewardCurrencyName(context)
+    val rewardCurrencyNameShort: String? = viewModel.getRewardCurrencyNameShort(context)
+    val tierCurrencyName: String? = viewModel.getTierCurrencyName(context)
+
     Scaffold(topBar = {
         AppSettingAppBar(
             title = SettingsScreen.CurrencySettings.title,
@@ -181,13 +192,13 @@ fun CurrencySettings(navController: NavController) {
             verticalArrangement = Arrangement.Top
         ) {
             Spacer(modifier = Modifier.height(4.dp))
-            SettingListItem(title = R.string.label_currency_name) {
+            SettingListItem(title = R.string.label_currency_name, rewardCurrencyName) {
                 navController.navigate(SettingsScreen.RewardCurrencyNameSettings.name)
             }
-            SettingListItem(title = R.string.label_currency_name_short) {
+            SettingListItem(title = R.string.label_currency_name_short, rewardCurrencyNameShort) {
                 navController.navigate(SettingsScreen.RewardCurrencyNameShortSettings.name)
             }
-            SettingListItem(R.string.label_tier_currency) {
+            SettingListItem(R.string.label_tier_currency, tierCurrencyName) {
                 navController.navigate(SettingsScreen.TierCurrencyNameSettings.name)
             }
         }
