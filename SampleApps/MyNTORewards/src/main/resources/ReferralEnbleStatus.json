@@ -8,8 +8,7 @@
         "url": "/services/data/v59.0/sobjects/EntityDefinition/Referral"
       },
       "Id": "000000000000000AAA",
-      "QualifiedApiName": "Referral",
-      "DurableId": "Referral"
+      "IsReferralPromotion": true
     }
   ]
 }
