@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.salesforce.gamification.api.GameAuthenticator
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
@@ -257,13 +258,11 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator, GameAuthentic
     }
 
     fun getInstanceUrl(): String? {
-        return PrefHelper.instancePrefs(mContext)
-            .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
+        return Common.getInstanceUrl(mContext)
     }
 
     fun getLoyaltyProgramName(): String? {
-        return PrefHelper.instancePrefs(mContext)
-            .get<String>(AppConstants.KEY_LOYALTY_PROGRAM_NAME, AppSettings.LOYALTY_PROGRAM_NAME)
+        return Common.getLoyaltyProgramName(mContext)
     }
 
     fun getConnectedApp(): ConnectedApp {

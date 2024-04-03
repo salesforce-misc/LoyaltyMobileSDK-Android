@@ -165,20 +165,47 @@ class Common {
             }
         }
 
-        fun getRewardCurrencymName(context: Context): String {
-            return PrefHelper.instancePrefs(context)
-                .get<String>(
-                    AppConstants.KEY_REWARD_CURRENCY_NAME,
-                    AppSettings.REWARD_CURRENCY_NAME
-                ) ?: AppSettings.REWARD_CURRENCY_NAME
+        fun getRewardCurrencyName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context, AppConstants.KEY_REWARD_CURRENCY_NAME,
+                AppSettings.REWARD_CURRENCY_NAME
+            )
         }
 
         fun getRewardCurrencyShortName(context: Context): String {
-            return PrefHelper.instancePrefs(context)
-                .get<String>(
-                    AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT,
-                    AppSettings.REWARD_CURRENCY_NAME_SHORT
-                ) ?: AppSettings.REWARD_CURRENCY_NAME_SHORT
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT,
+                AppSettings.REWARD_CURRENCY_NAME_SHORT
+            )
+        }
+
+        fun getLoyaltyProgramName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_LOYALTY_PROGRAM_NAME,
+                AppSettings.LOYALTY_PROGRAM_NAME
+            )
+        }
+
+        fun getTierCurrencyName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_TIER_CURRENCY_NAME,
+                AppSettings.TIER_CURRENCY_NAME
+            )
+        }
+
+        fun getInstanceUrl(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_SELECTED_INSTANCE_URL,
+                AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+            )
+        }
+
+        fun getInstancePreferenceValueOrDefault(context: Context, key: String, defaultValue: String): String {
+            return PrefHelper.instancePrefs(context).get<String>(key) ?: defaultValue
         }
 
     }
