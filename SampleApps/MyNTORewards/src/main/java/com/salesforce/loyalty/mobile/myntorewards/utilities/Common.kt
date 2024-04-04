@@ -6,6 +6,7 @@ import android.util.Log
 import com.google.gson.Gson
 
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_APP_DATE
@@ -13,6 +14,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import java.text.SimpleDateFormat
@@ -79,9 +81,9 @@ class Common {
             return false
         }
 
-        fun getCurrencyPointBalance(currencyList: List<MemberCurrency>): Double? {
+        fun getCurrencyPointBalance(rewardCurrencyName: String, currencyList: List<MemberCurrency>): Double? {
             for (currency in currencyList) {
-                if (currency.loyaltyMemberCurrencyName?.uppercase() == AppConstants.REWARD_CURRENCY_NAME.uppercase()) {
+                if (currency.loyaltyMemberCurrencyName?.uppercase() == rewardCurrencyName.uppercase()) {
                     return currency.pointsBalance
                 }
             }
@@ -161,6 +163,49 @@ class Common {
                 val formattedDate = appDateFormat.format(endDate)
                 return context.getString(R.string.game_expiring_date, formattedDate)
             }
+        }
+
+        fun getRewardCurrencyName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context, AppConstants.KEY_REWARD_CURRENCY_NAME,
+                AppSettings.REWARD_CURRENCY_NAME
+            )
+        }
+
+        fun getRewardCurrencyShortName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT,
+                AppSettings.REWARD_CURRENCY_NAME_SHORT
+            )
+        }
+
+        fun getLoyaltyProgramName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_LOYALTY_PROGRAM_NAME,
+                AppSettings.LOYALTY_PROGRAM_NAME
+            )
+        }
+
+        fun getTierCurrencyName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_TIER_CURRENCY_NAME,
+                AppSettings.TIER_CURRENCY_NAME
+            )
+        }
+
+        fun getInstanceUrl(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_SELECTED_INSTANCE_URL,
+                AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+            )
+        }
+
+        fun getInstancePreferenceValueOrDefault(context: Context, key: String, defaultValue: String): String {
+            return PrefHelper.instancePrefs(context).get<String>(key) ?: defaultValue
         }
 
     }

@@ -20,7 +20,7 @@ import java.lang.RuntimeException
 /**
  * LoyaltyAPIManager class manages the requests related to loyalty program and it inturn invokes the rest APIs
  */
-class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: String, loyaltyClient: NetworkClient){
+class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: String, programName: String, loyaltyClient: NetworkClient){
 
     companion object {
         private const val TAG = "LoyaltyAPIManager"
@@ -32,10 +32,13 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
 
     private val mInstanceUrl: String
 
+    private val mProgramName: String
+
     init {
         authenticator = auth
         mInstanceUrl = instanceUrl
         mLoyaltyClient = loyaltyClient
+        mProgramName = programName
     }
 
     /**
@@ -95,7 +98,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         return mLoyaltyClient.getNetworkClient().postEnrollment(
             LoyaltyConfig.getRequestUrl(
                 mInstanceUrl,
-                LoyaltyConfig.Resource.IndividualEnrollment(LoyaltyConfig.LOYALTY_PROGRAM_NAME)
+                LoyaltyConfig.Resource.IndividualEnrollment(programName = mProgramName)
             ),
             body
         )
@@ -120,7 +123,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         return mLoyaltyClient.getNetworkClient().getMemberProfile(
             LoyaltyConfig.getRequestUrl(
                 mInstanceUrl,
-                LoyaltyConfig.Resource.MemberProfile(LoyaltyConfig.LOYALTY_PROGRAM_NAME)
+                LoyaltyConfig.Resource.MemberProfile(mProgramName)
             ),
             memberId = memberId,
             membershipNumber = memberShipNumber,
@@ -172,7 +175,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         return mLoyaltyClient.getNetworkClient().getTransactions(
             LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.TransactionsHistory(
-                    LoyaltyConfig.LOYALTY_PROGRAM_NAME, membershipNumber
+                    mProgramName, membershipNumber
                 )
             ),
             transPageNumber,
@@ -211,7 +214,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         return mLoyaltyClient.getNetworkClient().getEligiblePromotions(
             LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
-                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    mProgramName,
                     LoyaltyConfig.ProgramProcessName.GET_PROMOTIONS
                 )
             ),
@@ -239,7 +242,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         return mLoyaltyClient.getNetworkClient().enrollInPromotion(
             LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
-                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    mProgramName,
                     LoyaltyConfig.ProgramProcessName.ENROLL_IN_PROMOTION
                 )
             ),
@@ -267,7 +270,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
         return mLoyaltyClient.getNetworkClient().unenrollPromotion(
             LoyaltyConfig.getRequestUrl(mInstanceUrl,
                 LoyaltyConfig.Resource.LoyaltyProgramProcess(
-                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    mProgramName,
                     LoyaltyConfig.ProgramProcessName.UNENROLL_PROMOTION
                 )
             ),
@@ -308,7 +311,7 @@ class LoyaltyAPIManager constructor(auth: ForceAuthenticator, instanceUrl: Strin
             LoyaltyConfig.getRequestUrl(
                 mInstanceUrl,
                 LoyaltyConfig.Resource.Vouchers(
-                    LoyaltyConfig.LOYALTY_PROGRAM_NAME,
+                    mProgramName,
                     membershipNumber
                 )
             ),
