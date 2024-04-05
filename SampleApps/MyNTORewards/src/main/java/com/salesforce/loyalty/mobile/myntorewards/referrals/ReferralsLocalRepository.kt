@@ -102,10 +102,10 @@ class ReferralsLocalRepository @Inject constructor(
     /**
      * APEX api to fetch Referrals list info
      * @param membershipNumber - Member ship number of the Referral Program
-     * @param durationInDays - Fetch referrals data only for the given no.of days (TODO: Remove if not required as part of API after confirmation)
+     * @param durationInDays - Fetch referrals data only for the given no.of days
      */
     private fun referralListQuery(membershipNumber: String, durationInDays: Int) =
-        "$instanceUrl/services/apexrest/get-referral-details/?membershipnumber=$membershipNumber"
+        "$instanceUrl/services/apexrest/get-referral-details/?membershipnumber=$membershipNumber&noOfDays=$durationInDays"
 
     fun getDefaultPromotionDetailsFromCache(context: Context, memberShipNumber: String, promotionId: String): Results? {
         val promotionCache = LocalFileManager.getData(
