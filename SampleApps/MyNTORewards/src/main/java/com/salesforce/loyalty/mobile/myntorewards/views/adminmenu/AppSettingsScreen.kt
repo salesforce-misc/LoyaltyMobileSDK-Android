@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -178,12 +179,22 @@ fun Setting(
             )
         )
     }
+    val context = LocalContext.current
     Scaffold(topBar = {
         AppSettingAppBar(
             title = title,
             canNavigateBack = navController.previousBackStackEntry != null,
             navigateUp = {
-                onClose(name.text)
+                val value = name.text
+                if (value.isNullOrEmpty()) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.error_app_setting_no_value),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    onClose(value)
+                }
             }
         )
     }) { innerPadding ->
