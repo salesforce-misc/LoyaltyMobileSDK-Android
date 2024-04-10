@@ -45,9 +45,11 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
 
         val mInstanceUrl =
             forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        val mLoyaltyProgramName = forceAuthManager.getLoyaltyProgramName() ?: AppSettings.LOYALTY_PROGRAM_NAME
         val loyaltyAPIManager = LoyaltyAPIManager(
             auth = forceAuthManager,
             instanceUrl = mInstanceUrl,
+            mLoyaltyProgramName,
             loyaltyClient = LoyaltyClient(forceAuthManager, mInstanceUrl)
         )
         val onboardingModel: OnboardingScreenViewModel =

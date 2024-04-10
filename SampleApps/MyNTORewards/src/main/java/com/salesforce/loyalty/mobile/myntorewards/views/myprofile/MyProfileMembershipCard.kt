@@ -32,7 +32,6 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.REWARD_CURRENCY_NAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Assets
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_QR_CODE
@@ -124,9 +123,9 @@ fun CardContent(profileModel: MembershipProfileViewModelInterface, blurBG: (Dp) 
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-
+                val rewardCurrencyName = Common.getRewardCurrencymName(context)
                 membershipProfile?.memberCurrencies?.let {
-                    RewardPointsAndExpiry(Common.getCurrencyPointBalance(it))
+                    RewardPointsAndExpiry(Common.getCurrencyPointBalance(rewardCurrencyName, it))
                 }
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -207,7 +206,7 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?, blurBG: (Dp) -> Unit) {
 
     val membershipID =
         membershipProfile?.loyaltyProgramMemberId ?: ""
-    val loyaltyMemberCurrencyName = REWARD_CURRENCY_NAME
+    val loyaltyMemberCurrencyName = Common.getRewardCurrencymName(LocalContext.current)
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,

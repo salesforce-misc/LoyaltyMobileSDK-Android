@@ -11,7 +11,6 @@ package com.salesforce.loyalty.mobile.sources.loyaltyAPI
  * LoyaltyConfig class is a utility class for holding constant values.
  */
 object LoyaltyConfig {
-    const val LOYALTY_PROGRAM_NAME = "NTO Insider"
     const val API_VERSION_55 = "v55.0"
     const val API_VERSION_56 = "v56.0"
     const val API_VERSION_58 = "v58.0"

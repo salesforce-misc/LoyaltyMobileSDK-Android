@@ -29,6 +29,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.getCurrencyPointBalance
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_APP_LOGO_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
@@ -107,8 +108,9 @@ fun UserNameAndRewardRow(profileModel: MembershipProfileViewModelInterface) {
         )
 
         membershipProfile?.memberCurrencies?.let {
+            val rewardCurrencyName = Common.getRewardCurrencymName(context)
             Text(
-                text = "${getCurrencyPointBalance(it).toString()} " + stringResource(id = R.string.reward_type_points),
+                text = "${getCurrencyPointBalance(rewardCurrencyName, it).toString()} " + stringResource(id = R.string.reward_type_points),
                 fontWeight = FontWeight.Normal,
                 fontFamily = font_sf_pro,
                 color = Color.Black,

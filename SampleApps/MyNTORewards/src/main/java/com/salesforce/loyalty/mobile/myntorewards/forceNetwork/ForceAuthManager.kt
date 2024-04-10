@@ -259,6 +259,12 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator, GameAuthentic
         return PrefHelper.instancePrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
     }
+
+    fun getLoyaltyProgramName(): String? {
+        return PrefHelper.instancePrefs(mContext)
+            .get<String>(AppConstants.KEY_LOYALTY_PROGRAM_NAME, AppSettings.LOYALTY_PROGRAM_NAME)
+    }
+
     fun getConnectedApp(): ConnectedApp {
         val selectedConnectedApp = PrefHelper.instancePrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, null)
