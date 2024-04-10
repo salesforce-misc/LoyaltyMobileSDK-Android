@@ -19,7 +19,6 @@ object LoyaltyConfig {
     const val KEY_MEMBERSHIP_NUMBER = "MembershipNumber"
     const val KEY_MEMBER_ID = "MemberId"
     const val KEY_PROMOTION_NAME = "PromotionName"
-    const val KEY_PROGRAM_NAME = "programName"
     const val HEADER_AUTHORIZATION = "Authorization"
     const val HEADER_SFORCE_OPTION_KEY = "Sforce-Call-Options"
     const val HEADER_SFORCE_OPTION_Value = "client=loyaltyMobileSdk-Android"
