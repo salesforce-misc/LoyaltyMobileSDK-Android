@@ -90,7 +90,7 @@ fun TransactionListView(modifier: Modifier, transactionViewModel: TransactionVie
                     } else {
                         count
                     }
-                    val rewardCurrencyName = Common.getRewardCurrencymName(context)
+                    val rewardCurrencyName = Common.getRewardCurrencyName(context)
                     var index = 0
                     var previewTransactionCount = 0
                     Column(
@@ -190,7 +190,7 @@ fun TransactionFullScreenListView(transactionViewModel: TransactionViewModelInte
             TransactionEmptyView()
         }
 
-        val rewardCurrencyName = Common.getRewardCurrencymName(context)
+        val rewardCurrencyName = Common.getRewardCurrencyName(context)
         val recentTransactions = transactionJournals?.filter {
             it.activityDate?.let { activityDate ->
                 Common.isTransactionDateWithinCurrentMonth(activityDate)

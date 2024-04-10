@@ -1,6 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.adminmenu
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.ConnectedAppViewModelFactory
 
@@ -103,69 +105,25 @@ fun AppSettings(navController: NavController) {
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoyaltyProgramNameSettings(navController: NavController) {
-    val viewModel: ConnectedAppViewModel =
-        viewModel(factory = ConnectedAppViewModelFactory())
-    val context = LocalContext.current
-    var loyaltyProgramName: String? = viewModel.getLoyaltyProgramName(context)
-    loyaltyProgramName?.let { currencyName ->
-        Setting(navController, R.string.mnu_loyalty_program_name, currencyName) {
-            viewModel.setLoyaltyProgramName(context, it)
-            navController.navigateUp()
-        }
-    }
+    ProgramSetting(AppConstants.KEY_LOYALTY_PROGRAM_NAME, navController)
 }
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardCurrencyNameSettings(navController: NavController) {
-    val viewModel: ConnectedAppViewModel =
-        viewModel(factory = ConnectedAppViewModelFactory())
-    val context = LocalContext.current
-    var rewardCurrencyName: String? = viewModel.getRewardCurrencyName(context)
-    rewardCurrencyName?.let { currencyName ->
-        Setting(navController, R.string.label_currency_name, currencyName) {
-            viewModel.setRewardCurrencyName(context, it)
-            navController.navigateUp()
-        }
-    }
+    ProgramSetting(AppConstants.KEY_REWARD_CURRENCY_NAME, navController)
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardCurrencyNameShortSettings(navController: NavController) {
-    val viewModel: ConnectedAppViewModel =
-        viewModel(factory = ConnectedAppViewModelFactory())
-    val context = LocalContext.current
-    var rewardCurrencyName: String? = viewModel.getRewardCurrencyNameShort(context)
-    rewardCurrencyName?.let { currencyName ->
-        Setting(navController, R.string.label_currency_name_short, currencyName) {
-            viewModel.setRewardCurrencyNameShort(context, it)
-            navController.navigateUp()
-        }
-    }
+    ProgramSetting(AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT, navController)
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TierCurrencyNameSettings(navController: NavController) {
-    val viewModel: ConnectedAppViewModel =
-        viewModel(factory = ConnectedAppViewModelFactory())
-    val context = LocalContext.current
-    var tierCurrencyName: String? = viewModel.getTierCurrencyName(context)
-    tierCurrencyName?.let { currencyName ->
-        Setting(navController, R.string.label_tier_currency, currencyName) {
-            viewModel.setTierCurrencyName(context, it)
-            navController.navigateUp()
-        }
-    }
+    ProgramSetting(AppConstants.KEY_TIER_CURRENCY_NAME, navController)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -174,9 +132,9 @@ fun CurrencySettings(navController: NavController) {
     val viewModel: ConnectedAppViewModel =
         viewModel(factory = ConnectedAppViewModelFactory())
     val context = LocalContext.current
-    val rewardCurrencyName: String? = viewModel.getRewardCurrencyName(context)
-    val rewardCurrencyNameShort: String? = viewModel.getRewardCurrencyNameShort(context)
-    val tierCurrencyName: String? = viewModel.getTierCurrencyName(context)
+    val rewardCurrencyName: String = viewModel.getRewardCurrencyName(context)
+    val rewardCurrencyNameShort: String = viewModel.getRewardCurrencyNameShort(context)
+    val tierCurrencyName: String = viewModel.getTierCurrencyName(context)
 
     Scaffold(topBar = {
         AppSettingAppBar(
@@ -221,12 +179,22 @@ fun Setting(
             )
         )
     }
+    val context = LocalContext.current
     Scaffold(topBar = {
         AppSettingAppBar(
             title = title,
             canNavigateBack = navController.previousBackStackEntry != null,
             navigateUp = {
-                onClose(name.text)
+                val value = name.text
+                if (value.isNullOrEmpty()) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.error_app_setting_no_value),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    onClose(value)
+                }
             }
         )
     }) { innerPadding ->
@@ -275,6 +243,43 @@ fun Setting(
                     }
                 )
 
+            }
+        }
+    }
+}
+
+@Composable
+fun ProgramSetting(settingKey: String, navController: NavController) {
+    val viewModel: ConnectedAppViewModel =
+        viewModel(factory = ConnectedAppViewModelFactory())
+    val context = LocalContext.current
+    when (settingKey) {
+        AppConstants.KEY_LOYALTY_PROGRAM_NAME -> {
+            val loyaltyProgramName: String = viewModel.getLoyaltyProgramName(context)
+            Setting(navController, R.string.mnu_loyalty_program_name, loyaltyProgramName) {
+                viewModel.setLoyaltyProgramName(context, it)
+                navController.navigateUp()
+            }
+        }
+        AppConstants.KEY_REWARD_CURRENCY_NAME -> {
+            val rewardCurrencyName: String = viewModel.getRewardCurrencyName(context)
+            Setting(navController, R.string.label_currency_name, rewardCurrencyName) {
+                viewModel.setRewardCurrencyName(context, it)
+                navController.navigateUp()
+            }
+        }
+        AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT -> {
+            val rewardCurrencyName: String = viewModel.getRewardCurrencyNameShort(context)
+            Setting(navController, R.string.label_currency_name_short, rewardCurrencyName) {
+                viewModel.setRewardCurrencyNameShort(context, it)
+                navController.navigateUp()
+            }
+        }
+        AppConstants.KEY_TIER_CURRENCY_NAME -> {
+            val tierCurrencyName: String = viewModel.getTierCurrencyName(context)
+            Setting(navController, R.string.label_tier_currency, tierCurrencyName) {
+                viewModel.setTierCurrencyName(context, it)
+                navController.navigateUp()
             }
         }
     }

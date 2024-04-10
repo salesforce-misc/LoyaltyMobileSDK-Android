@@ -11,26 +11,23 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.ConnectedAppViewModel
-import com.salesforce.loyalty.mobile.myntorewards.viewmodels.factory.ConnectedAppViewModelFactory
+import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyText
+import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
 
 @Composable
 fun SettingsAppBar(
@@ -121,26 +118,13 @@ fun SettingListItem(title: Int, settingValue: String? = null, onClick: ()-> Unit
         Column(
             modifier = Modifier.weight(0.8f),
         ) {
-            androidx.compose.material.Text(
-                text = stringResource(title),
-                modifier = Modifier
-                    .padding(start = 4.dp),
-                fontFamily = font_sf_pro,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black,
-                textAlign = TextAlign.Start,
-                fontSize = 16.sp
-            )
+            BodyText(text = stringResource(id = title), Modifier.padding(start = 4.dp))
             settingValue?.let {
-                androidx.compose.material.Text(
+                CommonText(
                     text = settingValue,
-                    modifier = Modifier
-                        .padding(start = 4.dp),
-                    fontFamily = font_sf_pro,
-                    fontWeight = FontWeight.Normal,
-                    color = CardFieldText,
-                    textAlign = TextAlign.Start,
-                    fontSize = 14.sp)
+                    modifier = Modifier.padding(start = 4.dp),
+                    color = CardFieldText
+                )
             }
         }
         Image(

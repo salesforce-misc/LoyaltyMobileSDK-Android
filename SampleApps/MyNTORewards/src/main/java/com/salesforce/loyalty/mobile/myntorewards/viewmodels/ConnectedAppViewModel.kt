@@ -9,11 +9,11 @@ import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ConnectedApp
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceConnectedAppEncryptedPreference
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.PrefHelper.set
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
-import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyConfig
 import kotlinx.coroutines.launch
 
 class ConnectedAppViewModel : ViewModel() {
@@ -77,10 +77,8 @@ class ConnectedAppViewModel : ViewModel() {
 
     fun setSelectedApp(context: Context, instanceUrl: String) {
         selectedInstanceUrl.value = instanceUrl
-        viewModelScope.launch {
-            PrefHelper.instancePrefs(context)
-                .set(AppConstants.KEY_SELECTED_INSTANCE_URL, instanceUrl)
-        }
+        PrefHelper.instancePrefs(context)
+            .set(AppConstants.KEY_SELECTED_INSTANCE_URL, instanceUrl)
     }
     fun getSelectedApp(context: Context): String {
         val instanceUrl =
@@ -91,16 +89,11 @@ class ConnectedAppViewModel : ViewModel() {
     }
 
     fun setLoyaltyProgramName(context: Context, programName: String) {
-        viewModelScope.launch {
-            PrefHelper.instancePrefs(context)
-                .set(AppConstants.KEY_LOYALTY_PROGRAM_NAME, programName)
-        }
+        PrefHelper.instancePrefs(context)
+            .set(AppConstants.KEY_LOYALTY_PROGRAM_NAME, programName)
     }
     fun getLoyaltyProgramName(context: Context): String {
-        val programName =
-            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_LOYALTY_PROGRAM_NAME)
-                ?: AppSettings.LOYALTY_PROGRAM_NAME
-        return programName
+        return Common.getLoyaltyProgramName(context)
     }
 
     fun setRewardCurrencyName(context: Context, currencyName: String) {
@@ -110,34 +103,21 @@ class ConnectedAppViewModel : ViewModel() {
         }
     }
     fun getRewardCurrencyName(context: Context): String {
-        val programName =
-            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_REWARD_CURRENCY_NAME)
-                ?: AppSettings.REWARD_CURRENCY_NAME
-        return programName
+        return Common.getRewardCurrencyName(context)
     }
 
     fun setRewardCurrencyNameShort(context: Context, currencyNameShort: String) {
-        viewModelScope.launch {
-            PrefHelper.instancePrefs(context)
-                .set(AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT, currencyNameShort)
-        }
+        PrefHelper.instancePrefs(context)
+            .set(AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT, currencyNameShort)
     }
     fun getRewardCurrencyNameShort(context: Context): String {
-        val programName =
-            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT)
-                ?: AppSettings.REWARD_CURRENCY_NAME_SHORT
-        return programName
+        return Common.getRewardCurrencyShortName(context)
     }
     fun setTierCurrencyName(context: Context, tierCurrencyName: String) {
-        viewModelScope.launch {
-            PrefHelper.instancePrefs(context)
-                .set(AppConstants.KEY_TIER_CURRENCY_NAME, tierCurrencyName)
-        }
+        PrefHelper.instancePrefs(context)
+            .set(AppConstants.KEY_TIER_CURRENCY_NAME, tierCurrencyName)
     }
     fun getTierCurrencyName(context: Context): String {
-        val programName =
-            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_TIER_CURRENCY_NAME)
-                ?: AppSettings.TIER_CURRENCY_NAME
-        return programName
+        return Common.getTierCurrencyName(context)
     }
 }

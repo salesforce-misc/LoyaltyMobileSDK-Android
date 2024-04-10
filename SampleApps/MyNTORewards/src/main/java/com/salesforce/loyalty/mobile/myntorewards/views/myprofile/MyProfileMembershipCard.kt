@@ -123,7 +123,7 @@ fun CardContent(profileModel: MembershipProfileViewModelInterface, blurBG: (Dp) 
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
-                val rewardCurrencyName = Common.getRewardCurrencymName(context)
+                val rewardCurrencyName = Common.getRewardCurrencyName(context)
                 membershipProfile?.memberCurrencies?.let {
                     RewardPointsAndExpiry(Common.getCurrencyPointBalance(rewardCurrencyName, it))
                 }
@@ -206,7 +206,7 @@ fun QRCodeRow(membershipProfile: MemberProfileResponse?, blurBG: (Dp) -> Unit) {
 
     val membershipID =
         membershipProfile?.loyaltyProgramMemberId ?: ""
-    val loyaltyMemberCurrencyName = Common.getRewardCurrencymName(LocalContext.current)
+    val loyaltyMemberCurrencyName = Common.getRewardCurrencyName(LocalContext.current)
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
