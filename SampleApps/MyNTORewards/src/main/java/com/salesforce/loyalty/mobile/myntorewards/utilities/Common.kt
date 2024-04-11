@@ -71,10 +71,10 @@ class Common {
         }
         fun badgeEmptyViewMsg(selectedTab: Int): Int {
             return when (selectedTab) {
-                0 -> R.string.label_empty_badges
-                1 -> R.string.label_empty_badges_redeem_tab
+                0 -> R.string.label_empty_achieved_badges
+                1 -> R.string.label_empty_badges_available_tab
                 2 -> R.string.label_empty_badges_expired_tab
-                else -> R.string.label_empty_badges
+                else -> R.string.label_empty_achieved_badges
             }
         }
 

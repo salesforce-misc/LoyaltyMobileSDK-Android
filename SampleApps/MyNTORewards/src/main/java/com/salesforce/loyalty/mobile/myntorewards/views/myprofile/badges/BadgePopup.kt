@@ -168,7 +168,7 @@ fun BadgePopupUI(
                     popupBGColour= LightGrey5
                 }
                 else{
-                    expiringText= stringResource(id = R.string.text_valid_till)
+                    expiringText= stringResource(id = R.string.text_badge_expires_on)
                     popupBGColour= VibrantPurple90
                 }
 
@@ -224,7 +224,7 @@ fun BadgePopupUI(
             )
 
             Text(
-                text = badge.description,
+                text = stringResource(id = R.string.badge_learn_more)+ badge.description,
                 fontWeight = FontWeight.Normal,
                 color = LightBlack,
                 textAlign = TextAlign.Start,

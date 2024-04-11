@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 
@@ -27,7 +28,7 @@ fun EmptyView(header: String, description: String? = null) {
             painter = painterResource(id = R.drawable.ic_empty_view),
             contentDescription = header
         )
-        BodyTextBold(text = header,  modifier = Modifier.padding(top = 4.dp))
+        BodyTextBold(text = header,  modifier = Modifier.padding(top = 4.dp), textAlign = TextAlign.Center)
         description?.let {
             BodyTextSmall(text = it, modifier = Modifier.padding(top = 4.dp))
         }

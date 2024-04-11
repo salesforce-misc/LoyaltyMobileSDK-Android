@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_AVAILABLE
@@ -41,9 +42,9 @@ fun BadgeFullScreen(
     navCheckOutFlowController: NavController,
     badgeViewModel: BadgeViewModelInterface
 ) {
-    val TAB_ACHIEVED= 0
-    val TAB_AVAILABLE= 1
-    val TAB_EXPIRED= 2
+    val TAB_ACHIEVED = 0
+    val TAB_AVAILABLE = 1
+    val TAB_EXPIRED = 2
 
     var refreshing by remember { mutableStateOf(false) }
     var blurBG by remember { mutableStateOf(0.dp) }
@@ -54,6 +55,7 @@ fun BadgeFullScreen(
     var filteredBadges: List<LoyaltyProgramBadgeListRecord>? =
         remember { listOf() }
     var isInProgress by remember { mutableStateOf(true) }
+    var isError by remember { mutableStateOf(false) }
 
     val context: Context = LocalContext.current
 
@@ -107,9 +109,11 @@ fun BadgeFullScreen(
             }
             var selectedTab by remember { mutableStateOf(0) }
 
-            Row(modifier = Modifier
-                .background(Color.White)
-                .testTag(TEST_TAG_BADGE_TABS_ROW)) {
+            Row(
+                modifier = Modifier
+                    .background(Color.White)
+                    .testTag(TEST_TAG_BADGE_TABS_ROW)
+            ) {
 
                 val tabItems =
                     listOf(
@@ -118,21 +122,23 @@ fun BadgeFullScreen(
                         BadgeTabs.TabExpired
                     )
 
-                CustomScrollableTab(tabItems,selectedTab){
+                CustomScrollableTab(tabItems, selectedTab) {
                     selectedTab = it
                 }
             }
 
-            if(badgeProgramFetchStatus is BadgeViewState.BadgeFetchInProgress ||
-                badgeMemberProgramFetchStatus is BadgeViewState.BadgeFetchInProgress) {
+            if (badgeProgramFetchStatus is BadgeViewState.BadgeFetchInProgress ||
+                badgeMemberProgramFetchStatus is BadgeViewState.BadgeFetchInProgress
+            ) {
                 isInProgress = true
-            }
-            else if(badgeProgramFetchStatus is BadgeViewState.BadgeFetchFailure ||
-                badgeMemberProgramFetchStatus is BadgeViewState.BadgeFetchFailure){
+            } else if (badgeProgramFetchStatus is BadgeViewState.BadgeFetchFailure ||
+                badgeMemberProgramFetchStatus is BadgeViewState.BadgeFetchFailure
+            ) {
                 isInProgress = false
-            }
-            else{
+                isError = true
+            } else {
                 isInProgress = false
+                isError = false
             }
 
             if (isInProgress) {
@@ -146,6 +152,8 @@ fun BadgeFullScreen(
                     )
                 }
 
+            } else if (isError) {
+                EmptyView(stringResource(id = R.string.label_badge_error))
             } else {
 
                 Box {
