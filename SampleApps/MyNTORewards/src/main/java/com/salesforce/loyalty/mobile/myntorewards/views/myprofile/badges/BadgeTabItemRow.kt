@@ -71,9 +71,9 @@ fun BadgeFullScreenTabList(
             LazyColumn(
                 modifier = Modifier
                     .background(VeryLightPurple)
-                    .padding(16.dp)
-                    .width(346.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                    .padding(start=16.dp, end= 16.dp, top= 8.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 items(filteredBadge) { filteredBadgeItem ->
                     ListItemBadge(filteredBadgeItem, programMemberMap.get(filteredBadgeItem.id)) {

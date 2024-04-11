@@ -303,18 +303,23 @@
     <string name="badge_text_achieved">"Achieved"</string>
     <string name="badge_text_available">"Available"</string>
     <string name="badge_text_expired">"Expired"</string>
-    <string name="badge_popup_description">"Description"</string>
-    <string name="badge_learn_more">"Learn More \n"</string>
-    <string name="badge_empty_view_text_achieved">"No badges achievements."</string>
+    <string name="badge_learn_more">"Learn More"</string>
+    <string name="badge_empty_view_text_achieved">"After you earn a badge, you’ll find it here."</string>
     <string name="badge_text_not_achieved_yet">"Not Achieved Yet"</string>
-    <string name="badge_expired_days_ago">"Expired \n %s days ago"</string>
+    <string name="badge_expired_days_ago">"Badge Expired \n %s days ago"</string>
     <string name="badge_expires_today">Expires Today</string>
-    <string name="badge_expires_in_days"> "Expires in\n  %s days"</string>
+    <string name="badge_expires_in_days"> "Badge Expires in\n  %s days"</string>
     <string name="text_badges">"Badges"</string>
     <string name="text_badge_expires_on"> "Badge expires on "</string>
-    <string name="label_empty_achieved_badges">No badges earned \nAfter you earn a badge, you’ll find it here.</string>
-    <string name="label_empty_badges_available_tab">No badges to earn yet \nWatch this space for badges that are made available to earn.</string>
-    <string name="label_empty_badges_expired_tab">No expired badges \nWhen your badges expire, you’ll find them here.</string>
+    <string name="label_empty_achieved_badges_header">No badges earned</string>
+    <string name="label_empty_achieved_badges_description">After you earn a badge, you’ll find it here.</string>
+
+    <string name="label_empty_badges_available_tab_header">No badges to earn yet</string>
+    <string name="label_empty_badges_available_tab_description">Watch this space for badges that are made available to earn.</string>
+
+    <string name="label_empty_badges_expired_tab_header">No expired badges</string>
+    <string name="label_empty_badges_expired_tab_description">When your badges expire, you’ll find them here.</string>
+
     <string name="label_badge_error">We couldn’t get your badges.</string>
 
 </resources>

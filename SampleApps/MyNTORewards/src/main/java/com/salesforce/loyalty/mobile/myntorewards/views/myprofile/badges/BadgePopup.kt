@@ -2,7 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.views.myprofile.badges
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -133,7 +132,6 @@ fun BadgePopupUI(
                         contentDescription = stringResource(R.string.cd_close_button_badge_popup),
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
-                            .background(Color.White, CircleShape)
                             .padding(3.dp)
                             .clickable {
                                 closePopup()
@@ -212,7 +210,7 @@ fun BadgePopupUI(
 
 
             Text(
-                text = stringResource(id = R.string.badge_popup_description),
+                text = stringResource(id = R.string.badge_learn_more),
                 fontWeight = FontWeight.SemiBold,
                 color = LightBlack,
                 textAlign = TextAlign.Start,
@@ -224,7 +222,7 @@ fun BadgePopupUI(
             )
 
             Text(
-                text = stringResource(id = R.string.badge_learn_more)+ badge.description,
+                text = badge.description,
                 fontWeight = FontWeight.Normal,
                 color = LightBlack,
                 textAlign = TextAlign.Start,

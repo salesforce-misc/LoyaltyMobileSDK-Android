@@ -138,13 +138,7 @@ fun BadgeRow(
             else if(badgeProgramFetchStatus is BadgeViewState.BadgeFetchFailure ||
                 badgeMemberProgramFetchStatus is BadgeViewState.BadgeFetchFailure){
                 isInProgress = false
-                var errorMsg= ""
-                if(badgeMemberProgramFetchStatus is BadgeViewState.BadgeFetchFailure) {
-                    errorMsg=  (badgeMemberProgramFetchStatus as BadgeViewState.BadgeFetchFailure).errorMessage?:""
-                }else{
-                    errorMsg=  (badgeProgramFetchStatus as BadgeViewState.BadgeFetchFailure).errorMessage?:""
-                }
-                BadgeErrorAndEmptyViewMiniScreen(R.drawable.badge_error_icon, errorMsg, TextRed)
+                BadgeErrorAndEmptyViewMiniScreen(R.drawable.badge_error_icon, stringResource(id = R.string.label_badge_error), TextRed)
 
             }
             else{

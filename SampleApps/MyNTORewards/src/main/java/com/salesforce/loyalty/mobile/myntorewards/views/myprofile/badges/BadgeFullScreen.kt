@@ -24,7 +24,8 @@ import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBad
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_AVAILABLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_EXPIRED
-import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.badgeEmptyViewMsg
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.badgeEmptyViewMsgDescription
+import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.badgeEmptyViewMsgHeader
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BADGE_TABS_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VIEW_ALL_BADGE_FULL_SCREEN
@@ -32,7 +33,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BadgeViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BadgeViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrollableTab
-import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
+import com.salesforce.loyalty.mobile.myntorewards.views.components.ErrorOrEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BadgeTabs
 import kotlinx.coroutines.launch
 
@@ -153,7 +154,7 @@ fun BadgeFullScreen(
                 }
 
             } else if (isError) {
-                EmptyView(stringResource(id = R.string.label_badge_error))
+                ErrorOrEmptyView(viewImageID = R.drawable.ic_astronaut, header= stringResource(id = R.string.label_badge_error))
             } else {
 
                 Box {
@@ -204,7 +205,8 @@ fun BadgeFullScreen(
                     }
                     Box {
                         if (filteredBadges?.isEmpty() == true) {
-                            EmptyView(stringResource(id = badgeEmptyViewMsg(selectedTab)))
+                            ErrorOrEmptyView(header=stringResource(id = badgeEmptyViewMsgHeader(selectedTab)),
+                                description = stringResource(id = badgeEmptyViewMsgDescription(selectedTab)))
                         }
                     }
 
