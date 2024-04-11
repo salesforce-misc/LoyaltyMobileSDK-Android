@@ -33,7 +33,7 @@ class NetworkClientTest {
         mockWebServer.start()
         loyaltyClient = MockNetworkClient(MockAuthenticator, "https://instanceUrl", mockWebServer)
         loyaltyAPIManager =
-            LoyaltyAPIManager(MockAuthenticator, "https://instanceUrl", loyaltyClient)
+            LoyaltyAPIManager(MockAuthenticator, "https://instanceUrl", "MyNTORewards", loyaltyClient)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

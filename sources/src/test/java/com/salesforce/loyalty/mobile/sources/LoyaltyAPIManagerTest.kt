@@ -34,7 +34,7 @@ class LoyaltyAPIManagerTest {
         loyaltyApiInterface = mockk<LoyaltyApiInterface>(relaxed = true)
 
         loyaltyAPIManager =
-            LoyaltyAPIManager(authenticator, "https://instanceUrl", loyaltyClient)
+            LoyaltyAPIManager(authenticator, "https://instanceUrl", "MyNTORewards", loyaltyClient)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -230,7 +230,7 @@ class LoyaltyAPIManagerTest {
             val mockVouchersResponse =
                 Gson().fromJson(mockResponse, VoucherResult::class.java)
             val mockClass = spyk(
-                LoyaltyAPIManager(authenticator, "https://instanceUrl", loyaltyClient),
+                LoyaltyAPIManager(authenticator, "https://instanceUrl", "MyNTORewards", loyaltyClient),
                 recordPrivateCalls = true
             )
             every {
