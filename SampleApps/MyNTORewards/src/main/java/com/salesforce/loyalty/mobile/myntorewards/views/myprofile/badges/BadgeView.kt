@@ -66,7 +66,7 @@ fun BadgeView(badge: LoyaltyProgramBadgeListRecord, endDate: String?, blurBG: (D
         ) {
 
             GlideImage(
-                model = R.drawable.badge_icon_dummy1,
+                model = badge.imageUrl,
                 contentDescription = badge.name,
                 modifier = Modifier
                     .size(39.dp, 48.dp)
@@ -75,6 +75,7 @@ fun BadgeView(badge: LoyaltyProgramBadgeListRecord, endDate: String?, blurBG: (D
                 contentScale = ContentScale.Crop
             ) {
                 it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .placeholder(R.drawable.default_badge_placeholder)
             }
 
         }

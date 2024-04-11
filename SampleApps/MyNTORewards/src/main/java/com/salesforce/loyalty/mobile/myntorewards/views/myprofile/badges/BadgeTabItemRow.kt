@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -34,6 +36,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
@@ -82,6 +87,7 @@ fun BadgeFullScreenTabList(
 }
 
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ListItemBadge(badge: LoyaltyProgramBadgeListRecord, date: String?, blurBG: (Dp) -> Unit) {
     Spacer(modifier = Modifier.height(12.dp))
@@ -102,14 +108,18 @@ fun ListItemBadge(badge: LoyaltyProgramBadgeListRecord, date: String?, blurBG: (
     ) {
 
         Column(modifier = Modifier.weight(0.15f)) {
-            Image(
-                painter = painterResource(R.drawable.dummy_badge_icon2),
+
+            GlideImage(
+                model = badge.imageUrl,
                 contentDescription = stringResource(R.string.cd_badge_icon_full_screen),
                 modifier = Modifier
-                    .width(64.dp)
-                    .height(64.dp),
-                contentScale = ContentScale.FillWidth
-            )
+                    .size(64.dp, 64.dp)
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                contentScale = ContentScale.Fit
+            ) {
+                it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .placeholder(R.drawable.default_badge_placeholder)
+            }
         }
         Column(modifier = Modifier
             .weight(0.7f)

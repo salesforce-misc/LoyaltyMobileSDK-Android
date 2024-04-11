@@ -108,7 +108,7 @@ fun BadgePopupUI(
                 )
                 {
                     GlideImage(
-                        model = R.drawable.dummy_badge_icon2,
+                        model = badge.imageUrl,
                         contentDescription = stringResource(id = R.string.cd_badge_popup_icon),
                         modifier = Modifier
                             .size(107.dp, 128.dp)
@@ -117,7 +117,7 @@ fun BadgePopupUI(
                         contentScale = ContentScale.Crop
                     ) {
                         it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                            .placeholder(R.drawable.promotion_card_placeholder)
+                            .placeholder(R.drawable.default_badge_placeholder)
 
                     }
                 }
