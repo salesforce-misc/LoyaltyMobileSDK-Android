@@ -19,6 +19,10 @@ class AppConstants {
         const val KEY_COMMUNITY_MEMBER = "community_member_details"
         const val KEY_EMAIL = "email"
         const val KEY_PHONE = "Phone"
+        const val KEY_LOYALTY_PROGRAM_NAME = "loyalty_program_name"
+        const val KEY_REWARD_CURRENCY_NAME = "reward_currency_name"
+        const val KEY_REWARD_CURRENCY_NAME_SHORT = "reward_currency_name_short"
+        const val KEY_TIER_CURRENCY_NAME = "tier_currency_name"
 
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"
@@ -73,9 +77,6 @@ class AppConstants {
         const val TRANSACTION_SOCIAL_MEDIA = "Social Media Activity"
         const val TRANSACTION_ENROLLMENT = "Enrollment"
         const val MAX_TRANSACTION_COUNT = 3
-        const val TRANSACTION_REWARD_POINTS = "Points"
-        const val REWARD_CURRENCY_NAME = "Reward Points"
-
 
         //tabs vouchers
         const val VOUCHER_ISSUED = "Issued"

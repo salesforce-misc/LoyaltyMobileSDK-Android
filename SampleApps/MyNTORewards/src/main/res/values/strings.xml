@@ -283,8 +283,15 @@
     <string name="receipt_error_confidence_status_failure">We couldn’t process the receipt.</string>
     <string name="receipt_error_confidence_status_partial">We couldn’t process some items in the receipt.</string>
     <string name="receipt_submit_manual_review">Submit for Manual Review</string>
-
-
+  
+   <string name="menu_app_settings">Loyalty Program Settings</string>
+    <string name="mnu_loyalty_program_name">Program</string>
+    <string name="menu_reward_currency">Currencies</string>
+    <string name="label_currency_name">Redeemable Currency</string>
+    <string name="label_currency_name_short">Redeemable Currency Alias</string>
+    <string name="label_tier_currency">Tier Qualification Currency</string>
+    <string name="error_app_setting_no_value">Please enter the value</string>
+  
     <string name="text_my_badges">"My Badges"</string>
     <string name="cd_close_button_badge_popup">"badge popup close button icon"</string>
     <string name="cd_badge_error_empty_view_mini_screen">"badge empty error empty view mini screen"</string>
@@ -307,6 +314,5 @@
     <string name="label_empty_badges">No badges yet \nWhen you have badges available for redemption, you’ll see them here.</string>
     <string name="label_empty_badges_redeem_tab">Nothing to report \nAfter you redeem a badges, you’ll find it here.</string>
     <string name="label_empty_badges_expired_tab">No expired badges \nWhen your badges expire, you’ll see them here.</string>
-
 
 </resources>

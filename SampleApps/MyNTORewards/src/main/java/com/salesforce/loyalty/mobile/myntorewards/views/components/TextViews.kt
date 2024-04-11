@@ -3,6 +3,8 @@ package com.salesforce.loyalty.mobile.myntorewards.views.components
 import android.text.method.LinkMovementMethod
 import android.view.Gravity
 import android.widget.TextView
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
@@ -50,14 +53,17 @@ fun BodyTextSmall(text: String, color: Color = Color.Black, modifier: Modifier =
 }
 
 @Composable
-private fun CommonText(
+fun CommonText(
     text: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.fillMaxWidth(),
     fontFamily: FontFamily = font_sf_pro,
     color: Color = Color.Black,
-    fontSize: TextUnit = 16.sp,
-    textAlign: TextAlign = TextAlign.Center,
+    fontSize: TextUnit = 14.sp,
+    textAlign: TextAlign = TextAlign.Start,
     fontWeight: FontWeight = FontWeight.Normal,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
+    style: androidx.compose.ui.text.TextStyle = LocalTextStyle.current
 ) {
     Text(
         text = text,
@@ -66,7 +72,10 @@ private fun CommonText(
         fontSize = fontSize,
         modifier = modifier,
         textAlign = textAlign,
-        fontWeight = fontWeight
+        fontWeight = fontWeight,
+        maxLines = maxLines,
+        overflow = overflow,
+        style = style
     )
 }
 
