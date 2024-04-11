@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 /**
@@ -27,6 +28,10 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 @Composable
 fun HeaderText(text: String, modifier: Modifier = Modifier) {
     CommonText(text = text, fontSize = 24.sp, fontWeight = FontWeight.Bold, modifier = modifier)
+}
+@Composable
+fun HeaderTextSmaller(text: String, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 18.sp, fontFamily = font_archivo_bold , fontWeight = FontWeight.Bold, modifier = modifier)
 }
 
 @Composable

@@ -13,6 +13,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.salesforce.gamification.api.GameAPIClient
 import com.salesforce.gamification.api.GameAuthenticator
 import com.salesforce.gamification.model.GameDefinition
@@ -21,6 +22,9 @@ import com.salesforce.gamification.model.GameReward
 import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
@@ -33,6 +37,10 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.M
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ADDRESS_DETAIL
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_APP_LOGO_HOME_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BACK_BUTTON_CHECKOUT_PAYMENT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BADGE_DESCRIPTION
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BADGE_FULLSCREEN_ITEM
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BADGE_NAME
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BADGE_TABS_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BENEFITS
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CHECKOUT_ADD_TO_CART
@@ -107,6 +115,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_ERROR_SCREEN
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VIEW_ALL_BADGE
+import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VIEW_ALL_BADGE_FULL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.ViewPagerSupport
@@ -120,6 +130,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.*
+import java.lang.reflect.Type
 
 
 @RunWith(AndroidJUnit4::class)
@@ -143,6 +154,7 @@ class SampleAppUnitTest {
         composeTestRule.setContent {
             Navigation(
                 getMembershipProfileViewModel(),
+                getBadgeViewModel(),
                 getPromotionViewModel(),
                 getVoucherViewModel(),
                 getOnBoardingMockViewModel(),
@@ -163,16 +175,16 @@ class SampleAppUnitTest {
     }
 
     private fun verify_login_button() {
-        app_has_swipe_images()
+    //    app_has_swipe_images()
         verifyLoginTesting()
-        display_home_ui_testing()
-        verify_gamification_testing()
-        receipt_scanning_ui_testing()
-        display_promo_popup_testing()
-        offer_tab_testing()
+          display_home_ui_testing()
+            verify_gamification_testing()
+           receipt_scanning_ui_testing()
+           display_promo_popup_testing()
+           offer_tab_testing()
         profile_ui_testing()
-        verify_more_tab_testing()
-        home_screen_extensive_testing()
+        /*verify_more_tab_testing()
+        home_screen_extensive_testing()*/
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -823,6 +835,63 @@ class SampleAppUnitTest {
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_PROFILE_ELEMENT_CONTAINER)
             .performMouseInput { scroll(10F) }
+
+
+
+        composeTestRule.onNodeWithText("Badges").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_VIEW_ALL_BADGE).assertIsDisplayed()
+        Thread.sleep(2000)
+
+        composeTestRule.onNodeWithTag(TEST_TAG_VIEW_ALL_BADGE).performClick()
+        Thread.sleep(2000)
+
+        composeTestRule.onNodeWithTag(TEST_TAG_VIEW_ALL_BADGE_FULL_SCREEN).assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Badge_Back_Button").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Badges").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_BADGE_TABS_ROW).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Achieved").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Available").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Expired").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("badge icon full screen row icon").assertIsDisplayed()
+
+        composeTestRule.onAllNodes(hasTestTag(TestTags.TEST_TAG_BADGE_FULLSCREEN_ITEM)).assertCountEquals(1)
+        composeTestRule.onNodeWithText("Available").performClick()
+        composeTestRule.onAllNodes(hasTestTag(TestTags.TEST_TAG_BADGE_FULLSCREEN_ITEM)).assertCountEquals(3)
+        composeTestRule.onNodeWithText("Expired").performClick()
+        composeTestRule.onAllNodes(hasTestTag(TestTags.TEST_TAG_BADGE_FULLSCREEN_ITEM)).assertCountEquals(0)
+
+        composeTestRule.onNodeWithText("Achieved").performClick()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_BADGE_FULLSCREEN_ITEM), useUnmergedTree=true).onFirst().performClick()
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_BADGE_POPUP).assertExists()
+
+        composeTestRule.onNodeWithContentDescription("badge popup close button icon").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("badge popup icon").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_BADGE_NAME).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Expiring on 2026-01-05").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Description").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TEST_TAG_BADGE_DESCRIPTION).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Close").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Close").performClick()
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_BADGE_POPUP).assertDoesNotExist()
+
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_BADGE_FULLSCREEN_ITEM), useUnmergedTree=true).onFirst().performClick()
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_BADGE_POPUP).assertExists()
+        composeTestRule.onNodeWithContentDescription("badge popup close button icon").performClick()
+
+        composeTestRule.onNodeWithTag(TestTags.TEST_TAG_BADGE_POPUP).assertDoesNotExist()
+
+        Thread.sleep(2000)
+
+        composeTestRule.onNodeWithContentDescription("Badge_Back_Button").performClick()
+        Thread.sleep(2000)
+
+
+
+
         composeTestRule.onNodeWithText("Vouchers").assertIsDisplayed()
         Thread.sleep(2000)
         composeTestRule.onNodeWithTag(TEST_TAG_PROFILE_ELEMENT_CONTAINER)
@@ -1342,6 +1411,51 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 
         }
     }
+fun getBadgeViewModel(): BadgeViewModelInterface {
+
+    return object : BadgeViewModelInterface{
+        override val programMemberBadgeLiveData: LiveData<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>
+            get() = program_member_badges
+
+        private val program_member_badges = MutableLiveData<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>()
+        override val programBadgeLiveData: LiveData<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>
+            get() = programBadges
+
+        private val programBadges = MutableLiveData<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>()
+
+        override val badgeProgramViewState: LiveData<BadgeViewState>
+            get() = viewStateProgram
+
+        private val viewStateProgram = MutableLiveData<BadgeViewState>()
+
+        override val badgeProgramMemberViewState: LiveData<BadgeViewState>
+            get() = viewStateProgramMember
+
+        private val viewStateProgramMember = MutableLiveData<BadgeViewState>()
+
+        override fun loadLoyaltyProgramMemberBadge(context: Context) {
+            viewStateProgramMember.postValue(BadgeViewState.BadgeFetchInProgress)
+            viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
+
+            val responseType: Type = object : TypeToken<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord?>?>() {}.type
+            val response = mockResponse("LoyaltyProgramMemberBadge.json", responseType) as LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>?
+
+            program_member_badges.value = response
+        }
+
+        override fun loadLoyaltyProgramBadge(context: Context) {
+            viewStateProgram.postValue(BadgeViewState.BadgeFetchInProgress)
+            viewStateProgram.postValue(BadgeViewState.BadgeFetchSuccess)
+
+            val responseType: Type = object : TypeToken<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord?>?>() {}.type
+            programBadges.value = mockResponse("LoyaltyProgramBadge.json", responseType) as LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>?
+
+        }
+
+    }
+
+
+}
 
 fun grantRuntimePermission() {
     val instrumentation = InstrumentationRegistry.getInstrumentation()

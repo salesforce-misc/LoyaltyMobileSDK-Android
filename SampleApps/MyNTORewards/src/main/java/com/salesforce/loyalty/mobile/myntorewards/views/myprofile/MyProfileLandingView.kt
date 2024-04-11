@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROFILE_ELEMENT_CONTAINER
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BadgeViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BenefitViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MembershipProfileViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.TransactionViewModelInterface
@@ -30,12 +31,14 @@ import com.salesforce.loyalty.mobile.myntorewards.views.ScreenTabHeader
 import com.salesforce.loyalty.mobile.myntorewards.views.TransactionCard
 import com.salesforce.loyalty.mobile.myntorewards.views.UserInfoRow
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherRow
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.badges.BadgeRow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MyProfileLandingView(navProfileViewController: NavHostController,
                          profileModel: MembershipProfileViewModelInterface,
+                         badgeViewModel: BadgeViewModelInterface,
                          voucherModel: VoucherViewModelInterface,
                          benefitViewModel: BenefitViewModelInterface,
                          transactionViewModel: TransactionViewModelInterface
@@ -50,6 +53,11 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
         transactionViewModel.loadTransactions(context, true)
         voucherModel.loadVoucher(context,true )
         benefitViewModel.loadBenefits(context, true)
+    }
+
+    LaunchedEffect(key1 = true) {
+        badgeViewModel.loadLoyaltyProgramBadge(context)
+        badgeViewModel.loadLoyaltyProgramMemberBadge(context)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
@@ -104,6 +112,10 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                             .fillMaxWidth()
                             .background(MyProfileScreenBG)
                     )
+                    BadgeRow(navProfileViewController, badgeViewModel){
+                        blurBG= it
+                    }
+
                     VoucherRow(navProfileViewController, voucherModel){
                         blurBG= it
                     }

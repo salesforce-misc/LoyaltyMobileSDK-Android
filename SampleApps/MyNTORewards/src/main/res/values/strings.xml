@@ -283,4 +283,30 @@
     <string name="receipt_error_confidence_status_failure">We couldn’t process the receipt.</string>
     <string name="receipt_error_confidence_status_partial">We couldn’t process some items in the receipt.</string>
     <string name="receipt_submit_manual_review">Submit for Manual Review</string>
+
+
+    <string name="text_my_badges">"My Badges"</string>
+    <string name="cd_close_button_badge_popup">"badge popup close button icon"</string>
+    <string name="cd_badge_error_empty_view_mini_screen">"badge empty error empty view mini screen"</string>
+    <string name="cd_badge_popup_icon">"badge popup icon"</string>
+    <string name="cd_badge_icon_full_screen">"badge icon full screen row icon"</string>
+    <string name="badge_back_button">"Badge_Back_Button"</string>
+    <string name="text_expired_on"> "Badge expired on "</string>
+
+    <string name="badge_text_achieved">"Achieved"</string>
+    <string name="badge_text_available">"Available"</string>
+    <string name="badge_text_expired">"Expired"</string>
+    <string name="badge_popup_description">"Description"</string>
+    <string name="badge_empty_view_text_achieved">"No badges achievements."</string>
+    <string name="badge_text_not_achieved_yet">"Not Achieved Yet"</string>
+    <string name="badge_expired_days_ago">"Expired \n %s days ago"</string>
+    <string name="badge_expires_today">Expires Today</string>
+    <string name="badge_expires_in_days"> "Expires in\n  %s days"</string>
+    <string name="text_badges">"Badges"</string>
+
+    <string name="label_empty_badges">No badges yet \nWhen you have badges available for redemption, you’ll see them here.</string>
+    <string name="label_empty_badges_redeem_tab">Nothing to report \nAfter you redeem a badges, you’ll find it here.</string>
+    <string name="label_empty_badges_expired_tab">No expired badges \nWhen your badges expire, you’ll see them here.</string>
+
+
 </resources>

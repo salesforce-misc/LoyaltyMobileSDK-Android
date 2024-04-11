@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.salesforce.loyalty.mobile.myntorewards.badge.LoyaltyBadgeManager
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
@@ -95,10 +96,20 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             ViewModelProvider(this, ScanningViewModelFactory(receiptManager)).get(
                 ScanningViewModel::class.java
             )
-/*        val gameViewModel: GameViewModel =
-            ViewModelProvider(this, GameViewModelFactory(loyaltyAPIManager)).get(
-                GameViewModel::class.java
-            )*/
+        val badgeManager = LoyaltyBadgeManager(
+            forceAuthManager,
+            forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+        )
+        val badgeViewModel: BadgeViewModel =
+            ViewModelProvider(this, BadgeViewModelFactory(badgeManager)).get(
+                BadgeViewModel::class.java
+            )
+
+
+        /*        val gameViewModel: GameViewModel =
+                    ViewModelProvider(this, GameViewModelFactory(loyaltyAPIManager)).get(
+                        GameViewModel::class.java
+                    )*/
         setContent {
             if (loginSuccess == true) {
 
@@ -106,6 +117,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                 //SpinWheelLandingPage(loyaltyAPIManager)
                 HomeTabScreen(
                     profileModel,
+                    badgeViewModel,
                     promotionModel,
                     voucherModel,
                     onboardingModel,
@@ -117,6 +129,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             } else {
                 MainScreenStart(
                     profileModel,
+                    badgeViewModel,
                     promotionModel,
                     voucherModel,
                     onboardingModel,
@@ -134,6 +147,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         observeSessionExpiry(onboardingModel, forceAuthManager)
         observeLoginStatus(
             profileModel,
+            badgeViewModel,
             promotionModel,
             voucherModel,
             onboardingModel,
@@ -156,6 +170,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.P)
     private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
+                                   badgeViewModel: BadgeViewModelInterface,
                                    promotionModel: MyPromotionViewModelInterface,
                                    voucherModel: VoucherViewModelInterface,
                                    onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -172,6 +187,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                         rememberNavController().clearBackStack(0)
                         MainScreenStart(
                             profileModel,
+                            badgeViewModel,
                             promotionModel,
                             voucherModel,
                             onboardingModel,

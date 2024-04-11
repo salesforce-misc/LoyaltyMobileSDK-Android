@@ -28,6 +28,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 @Composable
 fun HomeTabScreen(
     profileModel: MembershipProfileViewModelInterface,
+    badgeViewModel:BadgeViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -51,8 +52,9 @@ fun HomeTabScreen(
                 .background(TextPurpleLightBG)
                 .testTag(TEST_TAG_HOME_SCREEN)
         ) {
-            TabNavigation(bottomTabsNavController, profileModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel) {
+            TabNavigation(bottomTabsNavController, profileModel, badgeViewModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel) {
                 bottomBarState.value = it
+
             }
         }
     }
@@ -63,6 +65,7 @@ fun HomeTabScreen(
 fun TabNavigation(
     bottomTabsNavController: NavHostController,
     profileModel: MembershipProfileViewModelInterface,
+    badgeViewModel:BadgeViewModelInterface,
     promotionModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -88,7 +91,7 @@ fun TabNavigation(
             }
         }
         composable(route = BottomNavTabs.MyProfile.route) {
-            MyProfileScreen(profileModel,voucherModel, benefitViewModel, transactionViewModel)
+            MyProfileScreen(profileModel, badgeViewModel, voucherModel, benefitViewModel, transactionViewModel)
         }
         //part of UX but not part of MVP
         /*  composable(route = BottomNavTabs.Redeem.route) {

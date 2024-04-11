@@ -1,0 +1,19 @@
+{
+  "totalSize": 1,
+  "done": true,
+  "records": [
+    {
+      "attributes": {
+        "type": "LoyaltyProgramMemberBadge",
+        "url": "/services/data/v59.0/sobjects/LoyaltyProgramMemberBadge/0w9B0000000GnoWIAS"
+      },
+      "Name": "00000017",
+      "StartDate": "2024-01-05",
+      "EndDate": "2026-01-05",
+      "Reason": "Assign badge to the member for the activity.",
+      "Status": "Active",
+      "LoyaltyProgramMemberId": "0lMB0000000TW41MAG",
+      "LoyaltyProgramBadgeId": "0w8B0000000KyjmIAC"
+    }
+  ]
+}
