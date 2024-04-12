@@ -118,7 +118,7 @@ fun ListItemBadge(badge: LoyaltyProgramBadgeListRecord, date: String?, blurBG: (
                 contentScale = ContentScale.Fit
             ) {
                 it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .placeholder(R.drawable.default_badge_placeholder)
+                    .placeholder(R.drawable.default_badge)
             }
         }
         Column(modifier = Modifier

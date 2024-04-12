@@ -116,6 +116,13 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                         blurBG= it
                     }
 
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(MyProfileScreenBG)
+                    )
+
                     VoucherRow(navProfileViewController, voucherModel){
                         blurBG= it
                     }

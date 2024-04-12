@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
-import com.salesforce.loyalty.mobile.myntorewards.ui.theme.PromotionCardBG
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextRed
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
@@ -91,8 +91,8 @@ fun BadgeRow(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .wrapContentSize(Alignment.Center)
-            .background(PromotionCardBG)
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            .background(MyProfileScreenBG)
+            .padding(start = 16.dp, end = 16.dp),
     ) {
 
         Row(
@@ -103,7 +103,7 @@ fun BadgeRow(
                 .padding(top = 16.dp, bottom = 16.dp)
         ) {
             Text(
-                text = stringResource(R.string.text_badges),
+                text = stringResource(R.string.text_my_badges),
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 textAlign = TextAlign.Center,

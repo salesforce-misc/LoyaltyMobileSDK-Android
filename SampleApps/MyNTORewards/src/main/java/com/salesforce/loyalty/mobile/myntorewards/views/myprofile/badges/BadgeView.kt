@@ -49,7 +49,7 @@ fun BadgeView(badge: LoyaltyProgramBadgeListRecord, endDate: String?, blurBG: (D
     Column(
         modifier = Modifier
             .width(106.dp)
-            .background(Color.White, RoundedCornerShape(16.dp))
+            .background(Color.White, RoundedCornerShape(8.dp))
             .clickable {
                 badgePopupState = true
                 blurBG(AppConstants.BLUR_BG)
@@ -75,7 +75,7 @@ fun BadgeView(badge: LoyaltyProgramBadgeListRecord, endDate: String?, blurBG: (D
                 contentScale = ContentScale.Crop
             ) {
                 it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .placeholder(R.drawable.default_badge_placeholder)
+                    .placeholder(R.drawable.default_badge)
             }
 
         }
@@ -85,7 +85,7 @@ fun BadgeView(badge: LoyaltyProgramBadgeListRecord, endDate: String?, blurBG: (D
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = BadgeBG)
+                .background(color = BadgeBG, RoundedCornerShape(bottomStart=8.dp, bottomEnd= 8.dp))
         )
 
         {
@@ -99,7 +99,7 @@ fun BadgeView(badge: LoyaltyProgramBadgeListRecord, endDate: String?, blurBG: (D
                     fontSize = 13.sp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(15.dp),
+                        .padding(10.dp),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )

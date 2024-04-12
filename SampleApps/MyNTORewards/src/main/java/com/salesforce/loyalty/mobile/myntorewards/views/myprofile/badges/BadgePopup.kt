@@ -116,7 +116,7 @@ fun BadgePopupUI(
                         contentScale = ContentScale.Crop
                     ) {
                         it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                            .placeholder(R.drawable.default_badge_placeholder)
+                            .placeholder(R.drawable.default_badge)
 
                     }
                 }

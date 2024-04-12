@@ -309,7 +309,6 @@
     <string name="badge_expired_days_ago">"Badge Expired \n %s days ago"</string>
     <string name="badge_expires_today">Expires Today</string>
     <string name="badge_expires_in_days"> "Badge Expires in\n  %s days"</string>
-    <string name="text_badges">"Badges"</string>
     <string name="text_badge_expires_on"> "Badge expires on "</string>
     <string name="label_empty_achieved_badges_header">No badges earned</string>
     <string name="label_empty_achieved_badges_description">After you earn a badge, you’ll find it here.</string>
