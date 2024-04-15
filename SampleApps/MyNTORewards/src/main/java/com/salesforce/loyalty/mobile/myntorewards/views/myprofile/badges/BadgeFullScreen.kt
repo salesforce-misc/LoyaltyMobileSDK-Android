@@ -61,8 +61,8 @@ fun BadgeFullScreen(
     val context: Context = LocalContext.current
 
     fun refresh() = refreshScope.launch {
-        badgeViewModel.loadLoyaltyProgramBadge(context)
-        badgeViewModel.loadLoyaltyProgramMemberBadge(context)
+        badgeViewModel.getCahchedProgramBadge(context, true)
+        badgeViewModel.getCahchedProgramMemberBadge(context, true)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
@@ -73,8 +73,8 @@ fun BadgeFullScreen(
     val badgeMemberProgramFetchStatus by badgeViewModel.badgeProgramMemberViewState.observeAsState() // collecting livedata as state
 
     LaunchedEffect(true) {
-        badgeViewModel.loadLoyaltyProgramMemberBadge(context)
-        badgeViewModel.loadLoyaltyProgramBadge(context)
+        badgeViewModel.getCahchedProgramMemberBadge(context)
+        badgeViewModel.getCahchedProgramBadge(context)
     }
 
     LaunchedEffect(true) {

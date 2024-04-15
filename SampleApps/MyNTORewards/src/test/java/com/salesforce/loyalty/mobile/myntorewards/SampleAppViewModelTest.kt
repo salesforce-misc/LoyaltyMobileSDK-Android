@@ -2083,7 +2083,7 @@ class SampleAppViewModelTest {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
         } returns Result.success(mockResponse) as Result<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>
 
-        badgeViewModel.loadLoyaltyProgramBadge(context)
+        badgeViewModel.getCahchedProgramBadge(context)
 
         coVerify {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
@@ -2103,7 +2103,7 @@ class SampleAppViewModelTest {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
         } returns Result.failure(java.lang.RuntimeException("Run Time Exception"))
 
-        badgeViewModel.loadLoyaltyProgramBadge(context)
+        badgeViewModel.getCahchedProgramBadge(context)
 
         coVerify {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
@@ -2127,7 +2127,7 @@ class SampleAppViewModelTest {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
         } returns Result.success(mockResponse) as Result<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>
 
-        badgeViewModel.loadLoyaltyProgramMemberBadge(context)
+        badgeViewModel.getCahchedProgramMemberBadge(context)
 
         coVerify {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
@@ -2147,7 +2147,7 @@ class SampleAppViewModelTest {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
         } returns Result.failure(java.lang.RuntimeException("Run Time Exception"))
 
-        badgeViewModel.loadLoyaltyProgramMemberBadge(context)
+        badgeViewModel.getCahchedProgramMemberBadge(context)
 
         coVerify {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())

@@ -20,6 +20,8 @@ object LocalFileManager {
     const val DIRECTORY_VOUCHERS = "Vouchers"
     const val DIRECTORY_RECEIPT_LIST = "ReceiptList"
     const val DIRECTORY_RECEIPTS = "Receipts"
+    const val DIRECTORY_PROGRAM_MEMBER_BADGES = "ProgramMemberBadges"
+    const val DIRECTORY_PROGRAM_BADGES = "ProgramBadges"
 
     /**
      * Utility method to save data to internal storage

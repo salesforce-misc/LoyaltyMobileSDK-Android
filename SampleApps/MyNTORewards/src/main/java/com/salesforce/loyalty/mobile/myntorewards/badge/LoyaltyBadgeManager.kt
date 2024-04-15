@@ -1,8 +1,7 @@
 package com.salesforce.loyalty.mobile.myntorewards.badge
 import com.salesforce.loyalty.mobile.myntorewards.badge.api.BadgeConfig
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeListProgramMember
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeProgramList
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
@@ -27,7 +26,7 @@ class LoyaltyBadgeManager constructor(auth: ForceAuthenticator, instanceUrl: Str
 
 
     suspend fun fetchLoyaltyProgramMemberBadge(membershipKey: String= ""
-    ): Result<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>> {
+    ): Result<LoyaltyBadgeListProgramMember> {
         Logger.d(TAG, "BadgeList")
 
         return badgeClient.badgeApi.badgeList(
@@ -36,7 +35,7 @@ class LoyaltyBadgeManager constructor(auth: ForceAuthenticator, instanceUrl: Str
     }
 
     suspend fun fetchLoyaltyProgramBadge(membershipKey: String=""
-    ): Result<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>> {
+    ): Result<LoyaltyBadgeProgramList> {
         Logger.d(TAG, "fetchBadgeDetails")
 
         return badgeClient.badgeApi.badgeDetail(

@@ -5,12 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.salesforce.loyalty.mobile.myntorewards.badge.LoyaltyBadgeManager
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeListProgramMember
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeProgramList
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
+import com.salesforce.loyalty.mobile.myntorewards.utilities.LocalFileManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BadgeViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BadgeViewState
+import com.salesforce.loyalty.mobile.sources.PrefHelper
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import kotlinx.coroutines.launch
 
@@ -19,15 +23,15 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
     BadgeViewModelInterface {
 
     private val TAG = BadgeViewModel::class.java.simpleName
-    override val programMemberBadgeLiveData: LiveData<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>
+    override val programMemberBadgeLiveData: LiveData<LoyaltyBadgeListProgramMember>
         get() = program_member_badges
     private val program_member_badges =
-        MutableLiveData<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>()
+        MutableLiveData<LoyaltyBadgeListProgramMember>()
 
-    override val programBadgeLiveData: LiveData<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>
+    override val programBadgeLiveData: LiveData<LoyaltyBadgeProgramList>
         get() = programBadges
 
-    private val programBadges = MutableLiveData<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>()
+    private val programBadges = MutableLiveData<LoyaltyBadgeProgramList>()
 
     override val badgeProgramViewState: LiveData<BadgeViewState>
         get() = viewStateProgram
@@ -42,13 +46,56 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
 
 
 
+    override fun getCahchedProgramMemberBadge(context: Context, refreshRequired:Boolean) {
+        viewStateProgramMember.postValue(BadgeViewState.BadgeFetchInProgress)
+        viewModelScope.launch {
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Logger.d(TAG, "failed: member getBadge Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            val membershipKey = member.membershipNumber ?: ""
+            if(refreshRequired)
+            {
+                loadLoyaltyProgramMemberBadge(context, membershipKey)
+            }
+            else{
+                val badgeCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_PROGRAM_MEMBER_BADGES,
+                    LoyaltyBadgeListProgramMember::class.java
+                )
 
-    override fun loadLoyaltyProgramMemberBadge(context: Context) {
+                Logger.d(TAG, "cache : $badgeCache")
+                if (badgeCache == null) {
+                    loadLoyaltyProgramMemberBadge(context, membershipKey)
+                } else {
+                     program_member_badges.value = badgeCache!!
+                    viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
+                }
+            }
+
+        }
+    }
+
+
+    override fun loadLoyaltyProgramMemberBadge(context: Context, membershipKey:String) {
         viewStateProgramMember.postValue(BadgeViewState.BadgeFetchInProgress)
         viewModelScope.launch {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge().onSuccess {
-                viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
                 program_member_badges.value = it
+                LocalFileManager.saveData(
+                    context,
+                    it,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_PROGRAM_MEMBER_BADGES
+                )
+
+                viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
+
                 Logger.d(TAG, "**** loadLoyaltyProgramMemberBadge *******" + it.toString())
             }.onFailure {
                 Logger.d(TAG, "loadLoyaltyProgramMemberBadge failed: ${it.message}")
@@ -59,12 +106,60 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
 
     }
 
-    override fun loadLoyaltyProgramBadge(context: Context) {
+
+    override fun getCahchedProgramBadge(context: Context, refreshRequired:Boolean) {
+        viewStateProgram.postValue(BadgeViewState.BadgeFetchInProgress)
+        viewModelScope.launch {
+            val memberJson =
+                PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            if (memberJson == null) {
+                Logger.d(TAG, "failed: member getBadge Member details not present")
+                return@launch
+            }
+            val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            val membershipKey = member.membershipNumber ?: ""
+
+            if(refreshRequired)
+            {
+                loadLoyaltyProgramBadge(context, membershipKey)
+            }
+            else{
+                var badgeCache = LocalFileManager.getData(
+                    context,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_PROGRAM_BADGES,
+                    LoyaltyBadgeProgramList::class.java
+                )
+
+                Logger.d(TAG, "cache : $badgeCache")
+                if (badgeCache == null || badgeCache.records == null) {
+                    loadLoyaltyProgramBadge(context, membershipKey)
+                } else {
+                    programBadges.value = badgeCache!!
+                    viewStateProgram.postValue(BadgeViewState.BadgeFetchSuccess)
+                }
+            }
+
+        }
+    }
+
+
+    override fun loadLoyaltyProgramBadge(context: Context, membershipKey:String) {
         viewModelScope.launch {
             viewStateProgram.postValue(BadgeViewState.BadgeFetchInProgress)
             loyaltyBadgeManager.fetchLoyaltyProgramBadge().onSuccess {
-                viewStateProgram.postValue(BadgeViewState.BadgeFetchSuccess)
+
                 programBadges.value = it
+
+                LocalFileManager.saveData(
+                    context,
+                    it,
+                    membershipKey,
+                    LocalFileManager.DIRECTORY_PROGRAM_BADGES
+                )
+
+                viewStateProgram.postValue(BadgeViewState.BadgeFetchSuccess)
+
                 Logger.d(TAG, "loadLoyaltyProgramBadge" + it.toString())
             }.onFailure {
                 Logger.d(TAG, "loadLoyaltyProgramBadge call failed: ${it.message}")

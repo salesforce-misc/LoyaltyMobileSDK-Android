@@ -66,8 +66,8 @@ fun BadgeRow(
     val programBadgeIDListMap = remember { mutableMapOf<String, String>() }
 
     LaunchedEffect(true) {
-        badgeViewModel.loadLoyaltyProgramMemberBadge(context)
-        badgeViewModel.loadLoyaltyProgramBadge(context)
+        badgeViewModel.getCahchedProgramMemberBadge(context)
+        badgeViewModel.getCahchedProgramBadge(context)
         isInProgress = true
     }
 

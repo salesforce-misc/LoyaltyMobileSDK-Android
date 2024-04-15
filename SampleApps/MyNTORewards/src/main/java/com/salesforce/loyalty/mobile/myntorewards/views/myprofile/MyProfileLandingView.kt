@@ -53,11 +53,9 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
         transactionViewModel.loadTransactions(context, true)
         voucherModel.loadVoucher(context,true )
         benefitViewModel.loadBenefits(context, true)
-    }
+        badgeViewModel.getCahchedProgramMemberBadge(context, true)
+        badgeViewModel.getCahchedProgramBadge(context, true)
 
-    LaunchedEffect(key1 = true) {
-        badgeViewModel.loadLoyaltyProgramBadge(context)
-        badgeViewModel.loadLoyaltyProgramMemberBadge(context)
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
