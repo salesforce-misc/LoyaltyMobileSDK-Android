@@ -11,11 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 
 @Composable
-fun EmptyView(header: String, description: String? = null) {
+fun ErrorOrEmptyView(viewImageID:Int= R.drawable.ic_empty_view, header: String, description: String? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize().verticalScroll(rememberScrollState())
@@ -24,10 +25,10 @@ fun EmptyView(header: String, description: String? = null) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_empty_view),
+            painter = painterResource(id = viewImageID),
             contentDescription = header
         )
-        BodyTextBold(text = header,  modifier = Modifier.padding(top = 4.dp))
+        BodyTextBold(text = header,  modifier = Modifier.padding(top = 4.dp), textAlign = TextAlign.Center)
         description?.let {
             BodyTextSmall(text = it, modifier = Modifier.padding(top = 4.dp))
         }

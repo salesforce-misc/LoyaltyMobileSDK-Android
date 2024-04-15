@@ -190,5 +190,12 @@ class AppConstants {
         const val GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC = 1500L // 1.5 sec
         const val GAME_STATUS_PLAYED= "Played"
 
+        const val ROUTE_BADGE_FULL_SCREEN = "route_badge_screen"
+        const val BADGES_ACHIEVED = "Achieved"
+        const val BADGES_AVAILABLE = "Active"
+        const val BADGES_EXPIRED = "Expired"
+
+
+
     }
 }

@@ -69,6 +69,24 @@ class Common {
             }
             return false
         }
+        fun badgeEmptyViewMsgHeader(selectedTab: Int): Int {
+            return when (selectedTab) {
+                0 -> R.string.label_empty_achieved_badges_header
+                1 -> R.string.label_empty_badges_available_tab_header
+                2 -> R.string.label_empty_badges_expired_tab_header
+                else -> R.string.label_empty_achieved_badges_header
+            }
+        }
+
+        fun badgeEmptyViewMsgDescription(selectedTab: Int): Int {
+            return when (selectedTab) {
+                0 -> R.string.label_empty_achieved_badges_description
+                1 -> R.string.label_empty_badges_available_tab_description
+                2 -> R.string.label_empty_badges_expired_tab_description
+                else -> R.string.label_empty_achieved_badges_description
+            }
+        }
+
 
         fun getCurrencyPointBalance(rewardCurrencyName: String, currencyList: List<MemberCurrency>): Double? {
             for (currency in currencyList) {

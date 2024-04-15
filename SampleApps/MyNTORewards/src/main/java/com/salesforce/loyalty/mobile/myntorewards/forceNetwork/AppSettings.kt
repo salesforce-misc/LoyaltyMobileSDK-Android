@@ -4,7 +4,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.BuildConfig
 
 object AppSettings {
 
-    const val LOYALTY_PROGRAM_NAME = "NTO Insider"
+    const val LOYALTY_PROGRAM_NAME = "VIP Pro"
     const val REWARD_CURRENCY_NAME = "Reward Points"
     const val REWARD_CURRENCY_NAME_SHORT = "Points"
     const val TIER_CURRENCY_NAME = "Tier Points"

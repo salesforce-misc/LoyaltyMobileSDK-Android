@@ -58,3 +58,6 @@ val ScratchCardBackground = Color(0xFFE5E5E5)
 val SpinnerBackground = Color(0xFF7526E3)
 val SpinnerFrameColour = Color(0xFF23475F)
 val SpinnerDefaultColour = "#2636E3"
+val BadgeBG = Color(0xFFFAFAFA)
+val VibrantPurple65 = Color(0xFFB78DEF)
+val LightGrey5 = Color(0xFFEAEAEA)

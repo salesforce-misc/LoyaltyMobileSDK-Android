@@ -40,7 +40,7 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_ZONE_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.GamesViewState
-import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
+import com.salesforce.loyalty.mobile.myntorewards.views.components.ErrorOrEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.GameZoneTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
@@ -430,17 +430,17 @@ fun GameZoneScreen(navController: NavHostController, gameViewModel: GameViewMode
 fun ShowEmptyView(selectedTab: Int){
     when (selectedTab) {
         TAB_ACTIVE_GAMES -> {
-            EmptyView(
+            ErrorOrEmptyView(
                 header = stringResource(id = R.string.label_empty_active_games)
             )
         }
         TAB_EXPIRED_GAMES -> {
-            EmptyView(
+            ErrorOrEmptyView(
                 header = stringResource(id = R.string.label_empty_expired_games)
             )
         }
         TAB_PLAYED_GAMES -> {
-            EmptyView(
+            ErrorOrEmptyView(
                 header = stringResource(id = R.string.label_empty_played_games)
             )
         }
