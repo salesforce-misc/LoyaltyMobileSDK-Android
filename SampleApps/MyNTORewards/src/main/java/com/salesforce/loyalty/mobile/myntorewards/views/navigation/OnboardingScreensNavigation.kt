@@ -16,7 +16,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
-                    badgeViewModel:BadgeViewModelInterface,
+                    badgeViewModel: BadgeViewModelInterface,
                     promotionModel: MyPromotionViewModelInterface,
                     voucherModel: VoucherViewModelInterface,
                     onboardingModel: OnBoardingViewModelAbstractInterface,
@@ -65,9 +65,7 @@ fun Navigation(
             OnboardingScreenBox(navController, onboardingModel)
         }
         composable(route = Screen.HomeScreen.route) {
-
-            HomeTabScreen(profileModel, badgeViewModel, promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel, referralViewModel)
-
+            HomeTabScreen(profileModel,badgeViewModel, promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel, referralViewModel)
         }
     }
 }

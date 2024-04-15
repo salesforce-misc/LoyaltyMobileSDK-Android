@@ -27,7 +27,6 @@ import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-
 fun HomeTabScreen(
     profileModel: MembershipProfileViewModelInterface,
     badgeViewModel:BadgeViewModelInterface,
@@ -56,9 +55,7 @@ fun HomeTabScreen(
                 .background(TextPurpleLightBG)
                 .testTag(TEST_TAG_HOME_SCREEN)
         ) {
-
-            TabNavigation(bottomTabsNavController, profileModel, badgeViewModel, promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel, referralViewModel) {
-
+            TabNavigation(bottomTabsNavController, profileModel, badgeViewModel,promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel,checkOutFlowViewModel, scanningViewModel, gameViewModel, referralViewModel) {
                 bottomBarState.value = it
             }
         }

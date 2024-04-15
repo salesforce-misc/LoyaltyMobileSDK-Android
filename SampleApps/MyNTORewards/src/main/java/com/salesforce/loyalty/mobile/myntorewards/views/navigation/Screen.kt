@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.navigation
 
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_BADGE_FULL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_MY_REFERRALS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_BENEFIT_FULL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_CAPTURE_IMAGE_SCREEN
@@ -41,6 +42,7 @@ sealed class ProfileViewScreen(val route: String) {
     object LandingProfileViewScreen : ProfileViewScreen(ROUTE_PROFILE_LANDING_SCREEN)
     object BenefitFullScreen : ProfileViewScreen(ROUTE_BENEFIT_FULL_SCREEN)
     object TransactionFullScreen : ProfileViewScreen(ROUTE_TRANSACTION_FULL_SCREEN)
+    object BadgeFullScreen : ProfileViewScreen(ROUTE_BADGE_FULL_SCREEN)
 }
 
 sealed class MoreScreens(val route: String) {

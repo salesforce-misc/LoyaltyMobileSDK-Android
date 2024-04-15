@@ -46,8 +46,8 @@ class NetworkClient constructor(auth: ForceAuthenticator, instanceUrl: String) {
     val receiptApi: ReceiptScanningNetworkInterface by lazy {
         authRetrofit.create(ReceiptScanningNetworkInterface::class.java)
     }
-
     val badgeApi: BadgeNetworkInterface by lazy {
         authRetrofit.create(BadgeNetworkInterface::class.java)
     }
+
 }

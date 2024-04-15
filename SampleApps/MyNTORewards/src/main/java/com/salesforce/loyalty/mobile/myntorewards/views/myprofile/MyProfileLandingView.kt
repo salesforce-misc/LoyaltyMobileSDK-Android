@@ -30,8 +30,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.MyBenefitMiniScreenView
 import com.salesforce.loyalty.mobile.myntorewards.views.ScreenTabHeader
 import com.salesforce.loyalty.mobile.myntorewards.views.TransactionCard
 import com.salesforce.loyalty.mobile.myntorewards.views.UserInfoRow
-import com.salesforce.loyalty.mobile.myntorewards.views.home.BadgeRow
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherRow
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.badges.BadgeRow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -48,16 +48,14 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
     val context: Context = LocalContext.current //fetching reference of viewmodel
     var blurBG by remember { mutableStateOf(0.dp) }
 
-    LaunchedEffect(key1 = true) {
-        badgeViewModel.loadBadge(context)
-        badgeViewModel.loadBadgeDetails(context)
-    }
-
     fun refresh() = refreshScope.launch {
         profileModel.loadProfile(context, true)
         transactionViewModel.loadTransactions(context, true)
         voucherModel.loadVoucher(context,true )
         benefitViewModel.loadBenefits(context, true)
+        badgeViewModel.getCahchedProgramMemberBadge(context, true)
+        badgeViewModel.getCahchedProgramBadge(context, true)
+
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh)
@@ -115,6 +113,13 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                     BadgeRow(navProfileViewController, badgeViewModel){
                         blurBG= it
                     }
+
+                    Spacer(
+                        modifier = Modifier
+                            .height(24.dp)
+                            .fillMaxWidth()
+                            .background(MyProfileScreenBG)
+                    )
 
                     VoucherRow(navProfileViewController, voucherModel){
                         blurBG= it

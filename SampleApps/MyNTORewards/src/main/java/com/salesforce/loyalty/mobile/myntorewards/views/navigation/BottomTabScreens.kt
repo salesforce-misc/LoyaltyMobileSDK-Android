@@ -37,6 +37,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWhe
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.badges.BadgeFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.MyReferralsListScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
@@ -273,7 +274,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
 @Composable
 fun MyProfileScreen(
     profileModel: MembershipProfileViewModelInterface,
-    badgeViewModel:BadgeViewModelInterface,
+    badgeViewModel: BadgeViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     benefitViewModel: BenefitViewModelInterface,
     transactionViewModel: TransactionViewModelInterface
@@ -301,6 +302,10 @@ fun MyProfileScreen(
         composable(route = ProfileViewScreen.TransactionFullScreen.route) {
             MyProfileTransactionFullScreenView(navProfileViewController, transactionViewModel)
         }
+        composable(route = ProfileViewScreen.BadgeFullScreen.route) {
+            BadgeFullScreen(navProfileViewController, badgeViewModel)
+        }
+
         composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
             VoucherFullScreen(navProfileViewController, voucherModel)
         }

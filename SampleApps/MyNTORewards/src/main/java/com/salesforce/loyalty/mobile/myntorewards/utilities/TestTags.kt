@@ -116,6 +116,14 @@ class TestTags {
         const val TEST_TAG_RECEIPT_FIRST_STEP_COMPLETED= "first_step_completed"
         const val TEST_TAG_RECEIPT_SECOND_STEP_COMPLETED= "second_step_completed"
 
+        const val TEST_TAG_VIEW_ALL_BADGE= "test_tag_view_all_badge"
+        const val TEST_TAG_VIEW_ALL_BADGE_FULL_SCREEN= "test_tag_view_all_badge_full_screen"
+        const val TEST_TAG_BADGE_TABS_ROW= "test_tag_badge_tabs_row"
+        const val TEST_TAG_BADGE_FULLSCREEN_ITEM= "test_tag_badge_full_screen_item"
+        const val TEST_TAG_BADGE_POPUP= "test_tag_badge_popup"
+        const val TEST_TAG_BADGE_NAME= "test_tag_badge_name"
+        const val TEST_TAG_BADGE_DESCRIPTION= "test_tag_badge_description"
+
         const val TEST_TAG_EMPTY_VIEW= "empty_view"
         const val TEST_TAG_CLOSE_REFER_POPUP= "close_refer_popup"
         const val REFER_FRIEND_PROMOTION_NAME= "REFER_FRIEND_PROMOTION_NAME"

@@ -28,8 +28,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
-
 
 /**
  * This file has all Text Views related Composables with different shapes/styles.
@@ -38,6 +38,10 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 fun HeaderText(text: String, modifier: Modifier = Modifier) {
     CommonText(text = text, fontSize = 24.sp, fontWeight = FontWeight.Bold, modifier = modifier)
 }
+@Composable
+fun HeaderTextSmaller(text: String, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 18.sp, fontFamily = font_archivo_bold , fontWeight = FontWeight.Bold, modifier = modifier)
+}
 
 @Composable
 fun BodyText(text: String, modifier: Modifier = Modifier) {
@@ -45,8 +49,8 @@ fun BodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BodyTextBold(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier) {
-    CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier)
+fun BodyTextBold(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start) {
+    CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier, textAlign= textAlign)
 }
 @Composable
 fun BodyTextBoldCentered(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier) {

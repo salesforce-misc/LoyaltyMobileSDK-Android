@@ -98,7 +98,6 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             ViewModelProvider(this, ScanningViewModelFactory(receiptManager)).get(
                 ScanningViewModel::class.java
             )
-            
         val badgeManager = LoyaltyBadgeManager(
             forceAuthManager,
             forceAuthManager.getInstanceUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
@@ -109,11 +108,10 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             )
 
 
-/*        val gameViewModel: GameViewModel =
-            ViewModelProvider(this, GameViewModelFactory(loyaltyAPIManager)).get(
-                GameViewModel::class.java
-            )*/
-      
+        /*        val gameViewModel: GameViewModel =
+                    ViewModelProvider(this, GameViewModelFactory(loyaltyAPIManager)).get(
+                        GameViewModel::class.java
+                    )*/
         setContent {
             val referralViewModel: MyReferralsViewModel = hiltViewModel()
             if (loginSuccess == true) {
@@ -176,7 +174,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.P)
     private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
-                                   badgeViewModel:BadgeViewModelInterface,
+                                   badgeViewModel: BadgeViewModelInterface,
                                    promotionModel: MyPromotionViewModelInterface,
                                    voucherModel: VoucherViewModelInterface,
                                    onboardingModel: OnBoardingViewModelAbstractInterface,

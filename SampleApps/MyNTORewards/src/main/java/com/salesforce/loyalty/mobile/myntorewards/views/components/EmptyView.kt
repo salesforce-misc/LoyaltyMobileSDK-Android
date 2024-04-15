@@ -15,7 +15,7 @@ import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_EMPTY_VIEW
 
 @Composable
-fun EmptyView(header: String, description: String? = null) {
+fun ErrorOrEmptyView(viewImageID:Int= R.drawable.ic_empty_view, header: String, description: String? = null) {
     Column(
         modifier = Modifier
             .fillMaxSize().verticalScroll(rememberScrollState()).testTag(TEST_TAG_EMPTY_VIEW)
@@ -24,10 +24,10 @@ fun EmptyView(header: String, description: String? = null) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_empty_view),
+            painter = painterResource(id = viewImageID),
             contentDescription = header
         )
-        BodyTextBoldCentered(text = header,  modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
+        BodyTextBold(text = header,  modifier = Modifier.padding(top = 4.dp), textAlign = TextAlign.Center)
         description?.let {
             BodyTextSmall(text = it, modifier = Modifier.padding(top = 4.dp), textAlign = TextAlign.Center)
         }
