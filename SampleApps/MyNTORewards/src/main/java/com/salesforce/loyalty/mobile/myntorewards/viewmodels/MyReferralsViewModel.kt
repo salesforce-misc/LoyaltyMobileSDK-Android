@@ -13,12 +13,9 @@ import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEnrol
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralEntity
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralPromotionStatusAndPromoCode
 import com.salesforce.loyalty.mobile.myntorewards.referrals.entity.ReferralsInfoEntity
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.*
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.getMember
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.isEndDateExpired
-import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
-import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePeriodType
-import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralScreenState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferFriendViewState
@@ -147,7 +144,10 @@ class MyReferralsViewModel @Inject constructor(
 
     private fun fetchReferralAndPromotionCode(context: Context) {
         viewModelScope.launch {
-            when(val result = localRepository.fetchMemberReferralCode(getMember(context)?.contactId.orEmpty())) {
+            when (val result = localRepository.fetchMemberReferralCode(
+                getMember(context)?.contactId.orEmpty(),
+                getReferralProgramName(context)
+            )) {
                 is ApiResponse.Success -> {
                     result.data.records?.firstOrNull()?.referralCode?.let {
                         setReferralCode(context, it)
@@ -170,15 +170,19 @@ class MyReferralsViewModel @Inject constructor(
             val result = when {
                 member?.contactId != null -> {
                     repository.enrollExistingAdvocateToPromotionWithContactId(
-                        REFERRAL_PROGRAM_NAME, promotionCode, member.contactId
+                        getReferralProgramName(context), promotionCode, member.contactId
                     )
                 }
                 member?.membershipNumber != null -> {
                     repository.enrollExistingAdvocateToPromotionWithMembershipNumber(
-                        REFERRAL_PROGRAM_NAME, promotionCode, member.membershipNumber
+                        getReferralProgramName(context), promotionCode, member.membershipNumber
                     )
                 }
-                else -> enrollNewCustomerAsAdvocateOfPromotion(REFERRAL_PROGRAM_NAME, promotionCode, member)
+                else -> enrollNewCustomerAsAdvocateOfPromotion(
+                    getReferralProgramName(context),
+                    promotionCode,
+                    member
+                )
             }
             when(result) {
                 is ApiResponse.Success -> {
@@ -382,5 +386,9 @@ class MyReferralsViewModel @Inject constructor(
         } else {
             _programState.value = ReferralProgramType.JOIN_PROGRAM
         }
+    }
+
+    private fun getReferralProgramName(context: Context): String {
+        return Common.getLoyaltyProgramName(context)
     }
 }
