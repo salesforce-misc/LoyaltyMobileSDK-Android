@@ -27,7 +27,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DateUtils.formatDate
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.ReferralItemState
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CommonText
-import com.salesforce.loyalty.mobile.myntorewards.views.components.EmptyView
+import com.salesforce.loyalty.mobile.myntorewards.views.components.ErrorOrEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 
 const val TEST_TAG_REFERRALS_LIST = "TEST_TAG_REFERRALS_LIST"
@@ -36,7 +36,7 @@ const val TEST_TAG_REFERRALS_LIST_ITEM = "TEST_TAG_REFERRALS_LIST_ITEM"
 @Composable
 fun ReferralList(itemStates: List<ReferralItemState>) {
     if (itemStates.isEmpty()) {
-        EmptyView(header = stringResource(R.string.no_referrals_label))
+        ErrorOrEmptyView(header = stringResource(R.string.no_referrals_label))
         return
     }
     // Group Items based on section name to show items under the respective section header
