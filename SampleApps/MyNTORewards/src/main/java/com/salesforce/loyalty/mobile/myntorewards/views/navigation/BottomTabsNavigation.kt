@@ -101,7 +101,7 @@ fun TabNavigation(
               RedeemScreen()
           }*/
         composable(route = BottomNavTabs.More.route) {
-            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel, voucherModel){
+            MoreScreenNavigation( onboardingModel, scanningViewModel, gameViewModel, voucherModel, referralViewModel){
                 showBottomBar(it)
             }
         }
