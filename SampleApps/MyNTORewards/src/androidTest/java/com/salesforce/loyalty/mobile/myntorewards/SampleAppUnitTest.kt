@@ -18,11 +18,9 @@ import com.salesforce.gamification.api.GameAPIClient
 import com.salesforce.gamification.api.GameAuthenticator
 import com.salesforce.gamification.model.GameDefinition
 import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mockReceiptResponse
-import com.salesforce.gamification.model.GameReward
 import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
@@ -112,10 +110,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_FRAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_HEADER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_POINTER
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_TEXT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_ERROR_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VIEW_ALL_BADGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VIEW_ALL_BADGE_FULL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
@@ -125,7 +121,6 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.TEST_TAG_REFER_FRIEND_SCREEN
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
 import com.salesforce.referral.repository.ReferralsRepository
 import org.junit.Before

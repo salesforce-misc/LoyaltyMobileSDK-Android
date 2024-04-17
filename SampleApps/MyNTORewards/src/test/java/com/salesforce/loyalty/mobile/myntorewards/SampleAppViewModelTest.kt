@@ -11,7 +11,6 @@ import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.badge.LoyaltyBadgeManager
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
