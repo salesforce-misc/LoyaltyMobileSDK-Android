@@ -2869,205 +2869,205 @@ class SampleAppViewModelTest {
     }
 
     @Test
-fun `for get game  reward success, data must be available`() {
+    fun `for get game  reward success, data must be available`() {
 
-    val mockGameResponse =
-        Gson().fromJson(
-            MockResponseFileReader("GameRewards.json").content,
-            GameRewardResponse::class.java
-        )
-    coEvery {
-        gameRemoteRepository.getGameReward("12345", false)
-    } returns Result.success(mockGameResponse)
-
-
-    gameViewModel.getGameReward("12345", false)
-
-    coVerify {
-        gameRemoteRepository.getGameReward(any(), any())
-    }
-
-    Assert.assertEquals(
-        GameRewardViewState.GameRewardFetchInProgress,
-        rewardViewState[0]
-    )
-    Assert.assertEquals(gameViewModel.rewardLiveData.value, mockGameResponse)
-
-    Assert.assertEquals(
-        GameRewardViewState.GameRewardFetchSuccess,
-        rewardViewState[1]
-    )
-}
-
-@Test
-fun `for get game  reward failure, data must not be available`() {
-
-    coEvery {
-        gameRemoteRepository.getGameReward("12345", false)
-    } returns Result.failure(RuntimeException())
-
-    gameViewModel.getGameReward("12345", false)
-
-    coVerify {
-        gameRemoteRepository.getGameReward(any(), any())
-    }
-
-    Assert.assertEquals(
-        GameRewardViewState.GameRewardFetchInProgress,
-        rewardViewState[0]
-    )
-
-    Assert.assertEquals(gameViewModel.rewardLiveData.value, null)
-
-    Assert.assertEquals(
-        GameRewardViewState.GameRewardFetchFailure,
-        rewardViewState[1]
-    )
-}
-
-@OptIn(DelicateCoroutinesApi::class)
-@Test
-fun `for get game  reward result success, data must be available`() {
-    var results: Result<GameRewardResponse>? = null
-    var response: GameRewardResponse? = null
-
-    val mockGameResponse =
-        Gson().fromJson(
-            MockResponseFileReader("GameRewards.json").content,
-            GameRewardResponse::class.java
-        )
-    coEvery {
-        gameRemoteRepository.getGameReward("12345", false)
-    } returns Result.success(mockGameResponse)
+        val mockGameResponse =
+            Gson().fromJson(
+                MockResponseFileReader("GameRewards.json").content,
+                GameRewardResponse::class.java
+            )
+        coEvery {
+            gameRemoteRepository.getGameReward("12345", false)
+        } returns Result.success(mockGameResponse)
 
 
-    GlobalScope.launch {
-        results= gameViewModel.getGameRewardResult("12345", false)
-        results?.onSuccess {
-            response= it
+        gameViewModel.getGameReward("12345", false)
+
+        coVerify {
+            gameRemoteRepository.getGameReward(any(), any())
         }
-    }
 
-    coVerify {
-        gameRemoteRepository.getGameReward(any(), any())
-    }
-
-    Assert.assertEquals(
-        results?.isSuccess,
-        true
-    )
-    Assert.assertEquals(
-        response,
-        mockGameResponse
-    )
-}
-
-@OptIn(DelicateCoroutinesApi::class)
-@Test
-fun `for get game  reward result Failure, data must not be available`() {
-    var results: Result<GameRewardResponse>? = null
-    var response: Throwable? = null
-
-    coEvery {
-        gameRemoteRepository.getGameReward("12345", false)
-    } returns Result.failure(RuntimeException("run time exception"))
-
-
-    GlobalScope.launch {
-        results= gameViewModel.getGameRewardResult("12345", false)
-        results?.onFailure {
-            response= it
-        }
-    }
-
-    coVerify {
-        gameRemoteRepository.getGameReward(any(), any())
-    }
-
-    Assert.assertEquals(
-        results?.isFailure,
-        true
-    )
-    Assert.assertEquals(
-        response?.message,
-        "run time exception"
-    )
-}
-
-@Test
-fun `for get game success, data must be available`() {
-
-    val mockGameResponse =
-        Gson().fromJson(
-            MockResponseFileReader("Games.json").content,
-            Games::class.java
+        Assert.assertEquals(
+            GameRewardViewState.GameRewardFetchInProgress,
+            rewardViewState[0]
         )
-    val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
-    val context = mockk<Context>(relaxed = true)
-    val mockResponse = MockResponseFileReader("MemberInfo.json").content
-    every { context.getSharedPreferences(any(), any()) }
-        .returns(sharedPrefs)
-    every { sharedPrefs.getString(any(), any()) }
-        .returns(mockResponse)
+        Assert.assertEquals(gameViewModel.rewardLiveData.value, mockGameResponse)
 
-    coEvery {
-        gameRemoteRepository.getGames(any(), "0lMB0000000TW41MAG", false)
-    } returns Result.success(mockGameResponse)
-
-
-    gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
-
-    coVerify {
-        gameRemoteRepository.getGames(any(), any(), any())
+        Assert.assertEquals(
+            GameRewardViewState.GameRewardFetchSuccess,
+            rewardViewState[1]
+        )
     }
 
-    Assert.assertEquals(
-        GamesViewState.GamesFetchInProgress,
-        viewState[0]
-    )
-    Assert.assertEquals(gameViewModel.gamesLiveData.value, mockGameResponse)
+    @Test
+    fun `for get game  reward failure, data must not be available`() {
 
-    Assert.assertEquals(
-        GamesViewState.GamesFetchSuccess,
-        viewState[1]
-    )
-}
+        coEvery {
+            gameRemoteRepository.getGameReward("12345", false)
+        } returns Result.failure(RuntimeException())
 
-@Test
-fun `for get game failure, data must be available`() {
+        gameViewModel.getGameReward("12345", false)
 
-    val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
-    val context = mockk<Context>(relaxed = true)
-    val mockResponse = MockResponseFileReader("MemberInfo.json").content
-    every { context.getSharedPreferences(any(), any()) }
-        .returns(sharedPrefs)
-    every { sharedPrefs.getString(any(), any()) }
-        .returns(mockResponse)
+        coVerify {
+            gameRemoteRepository.getGameReward(any(), any())
+        }
 
-    coEvery {
-        gameRemoteRepository.getGames(any(),"0lMB0000000TW41MAG", false)
-    } returns Result.failure(RuntimeException())
+        Assert.assertEquals(
+            GameRewardViewState.GameRewardFetchInProgress,
+            rewardViewState[0]
+        )
 
+        Assert.assertEquals(gameViewModel.rewardLiveData.value, null)
 
-    gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
-
-    coVerify {
-        gameRemoteRepository.getGames(any(), any(), any())
+        Assert.assertEquals(
+            GameRewardViewState.GameRewardFetchFailure,
+            rewardViewState[1]
+        )
     }
 
-    Assert.assertEquals(
-        GamesViewState.GamesFetchInProgress,
-        viewState[0]
-    )
-    Assert.assertEquals(gameViewModel.gamesLiveData.value, null)
+    @OptIn(DelicateCoroutinesApi::class)
+    @Test
+    fun `for get game  reward result success, data must be available`() {
+        var results: Result<GameRewardResponse>? = null
+        var response: GameRewardResponse? = null
 
-    Assert.assertEquals(
-        GamesViewState.GamesFetchFailure,
-        viewState[1]
-    )
-}
+        val mockGameResponse =
+            Gson().fromJson(
+                MockResponseFileReader("GameRewards.json").content,
+                GameRewardResponse::class.java
+            )
+        coEvery {
+            gameRemoteRepository.getGameReward("12345", false)
+        } returns Result.success(mockGameResponse)
 
-    /*@Test
+
+        GlobalScope.launch {
+            results= gameViewModel.getGameRewardResult("12345", false)
+            results?.onSuccess {
+                response= it
+            }
+        }
+
+        coVerify {
+            gameRemoteRepository.getGameReward(any(), any())
+        }
+
+        Assert.assertEquals(
+            results?.isSuccess,
+            true
+        )
+        Assert.assertEquals(
+            response,
+            mockGameResponse
+        )
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    @Test
+    fun `for get game  reward result Failure, data must not be available`() {
+        var results: Result<GameRewardResponse>? = null
+        var response: Throwable? = null
+
+        coEvery {
+            gameRemoteRepository.getGameReward("12345", false)
+        } returns Result.failure(RuntimeException("run time exception"))
+
+
+        GlobalScope.launch {
+            results= gameViewModel.getGameRewardResult("12345", false)
+            results?.onFailure {
+                response= it
+            }
+        }
+
+        coVerify {
+            gameRemoteRepository.getGameReward(any(), any())
+        }
+
+        Assert.assertEquals(
+            results?.isFailure,
+            true
+        )
+        Assert.assertEquals(
+            response?.message,
+            "run time exception"
+        )
+    }
+
+    @Test
+    fun `for get game success, data must be available`() {
+
+        val mockGameResponse =
+            Gson().fromJson(
+                MockResponseFileReader("Games.json").content,
+                Games::class.java
+            )
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponse)
+
+        coEvery {
+            gameRemoteRepository.getGames(any(), "0lMB0000000TW41MAG", false)
+        } returns Result.success(mockGameResponse)
+
+
+        gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
+
+        coVerify {
+            gameRemoteRepository.getGames(any(), any(), any())
+        }
+
+        Assert.assertEquals(
+            GamesViewState.GamesFetchInProgress,
+            viewState[0]
+        )
+        Assert.assertEquals(gameViewModel.gamesLiveData.value, mockGameResponse)
+
+        Assert.assertEquals(
+            GamesViewState.GamesFetchSuccess,
+            viewState[1]
+        )
+    }
+
+    @Test
+    fun `for get game failure, data must be available`() {
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+        val context = mockk<Context>(relaxed = true)
+        val mockResponse = MockResponseFileReader("MemberInfo.json").content
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponse)
+
+        coEvery {
+            gameRemoteRepository.getGames(any(),"0lMB0000000TW41MAG", false)
+        } returns Result.failure(RuntimeException())
+
+
+        gameViewModel.getGames(context, "0lMB0000000TW41MAG",false)
+
+        coVerify {
+            gameRemoteRepository.getGames(any(), any(), any())
+        }
+
+        Assert.assertEquals(
+            GamesViewState.GamesFetchInProgress,
+            viewState[0]
+        )
+        Assert.assertEquals(gameViewModel.gamesLiveData.value, null)
+
+        Assert.assertEquals(
+            GamesViewState.GamesFetchFailure,
+            viewState[1]
+        )
+    }
+
+    @Test
     fun `for loadLoyaltyProgramBadge success resource, program badges must be available`() {
         val context = mockk<Context>(relaxed = true)
         val mockResponse =
@@ -3090,7 +3090,7 @@ fun `for get game failure, data must be available`() {
         Assert.assertEquals(BadgeViewState.BadgeFetchSuccess, badgeProgramViewStates[1])
         Assert.assertEquals(badgeViewModel.programBadgeLiveData.value, mockResponse)
 
-    }*/
+    }
 
     @Test
     fun `for loadLoyaltyProgramBadge failure resource, viewstate should be failure along with error msg`() {
@@ -3111,7 +3111,7 @@ fun `for get game failure, data must be available`() {
     }
 
 
-    /*@Test
+    @Test
     fun `for loadLoyaltyProgramMemberBadge success resource, program member badges must be available`() {
         val context = mockk<Context>(relaxed = true)
         val mockResponse =
@@ -3134,7 +3134,7 @@ fun `for get game failure, data must be available`() {
         Assert.assertEquals(BadgeViewState.BadgeFetchSuccess, badgeProgramMemberViewStates[1])
         Assert.assertEquals(badgeViewModel.programMemberBadgeLiveData.value, mockResponse)
 
-    }*/
+    }
 
     @Test
     fun `for loadLoyaltyProgramMemberBadge failure resource, viewstate should be failure along with error msg`() {
