@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,16 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.RequestBuilderTransform
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
@@ -44,7 +38,6 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.for
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_CARD
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.ReferFriendScreen
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -184,7 +177,7 @@ fun PromotionCard(
 
     if (currentPromotionDetailPopupState) {
         membershipPromo?.get(page)?.let {
-            PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, it, it.promotionId.orEmpty(), referralViewModel) {
+            PromotionGatewayView(promotionViewModel, navCheckOutFlowController, it, it.promotionId.orEmpty(), referralViewModel) {
                 currentPromotionDetailPopupState = false
                 blurBG(NO_BLUR_BG)
             }

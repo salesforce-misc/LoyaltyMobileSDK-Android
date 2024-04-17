@@ -382,7 +382,6 @@ fun MoreScreenNavigation(
             GameZoneNavigation(gameViewModel = gameViewModel, voucherModel, showBottomBar = showBottomBar)
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
-//            showBottomBar(true)
             MyReferralsListScreen(backAction = { navController.popBackStack() }) {
                 showBottomBar(it)
             }
@@ -453,7 +452,6 @@ fun GameZoneNavigation(
             }
         }
         composable(route = MoreScreens.MyReferralsScreen.route) {
-//            showBottomBar(true)
             MyReferralsListScreen(backAction = { navController.popBackStack() }) {
                 showBottomBar(it)
             }

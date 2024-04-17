@@ -89,6 +89,7 @@ android {
         resources.excludes.add("META-INF/ASL2.0")
         resources.excludes.add("META-INF/*.kotlin_module")
     }
+
 }
 
 
@@ -111,8 +112,6 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
-//    implementation("androidx.test.uiautomator:uiautomator:2.2.0")
-//    implementation(project(mapOf("path" to ":ReferralSDK")))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -157,11 +156,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
-    //Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-compiler:2.44")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-
     //Rx
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("io.reactivex.rxjava2:rxjava:2.2.12")
@@ -201,6 +195,11 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.31.3-beta")
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-compiler:2.44")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation(kotlin("reflect"))
 }
 

@@ -31,7 +31,7 @@ import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 const val LOG_TAG = "PromotionDifferentiator"
 
 @Composable
-fun PromotionDifferentiator(
+fun PromotionGatewayView(
     promotionViewModel: MyPromotionViewModelInterface,
     navCheckOutFlowController: NavController,
     results: Results,

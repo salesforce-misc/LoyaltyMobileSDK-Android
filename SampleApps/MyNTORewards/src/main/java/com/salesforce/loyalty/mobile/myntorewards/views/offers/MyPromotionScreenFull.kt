@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -52,9 +51,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.PromotionViewState
-import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionDifferentiator
+import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionGatewayView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.PromotionEmptyView
-import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.PromotionTabs
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 import kotlinx.coroutines.launch
@@ -325,7 +323,7 @@ fun PromotionItem(
     var currentPromotionDetailPopupState by remember { mutableStateOf(false) }
 
     if (currentPromotionDetailPopupState) {
-        PromotionDifferentiator(promotionViewModel, navCheckOutFlowController, results, results.promotionId.orEmpty(), referralViewModel) {
+        PromotionGatewayView(promotionViewModel, navCheckOutFlowController, results, results.promotionId.orEmpty(), referralViewModel) {
             currentPromotionDetailPopupState = false
             blurBG(NO_BLUR_BG)
         }

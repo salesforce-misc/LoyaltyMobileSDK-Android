@@ -2,9 +2,6 @@ package com.salesforce.loyalty.mobile.myntorewards.badge
 import com.salesforce.loyalty.mobile.myntorewards.badge.api.BadgeConfig
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeListProgramMember
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeProgramList
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeList
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.RecordBadgeDetails
-import com.salesforce.loyalty.mobile.myntorewards.badge.models.RecordBadgeList
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.NetworkClient
 import com.salesforce.loyalty.mobile.sources.forceUtils.ForceAuthenticator
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger

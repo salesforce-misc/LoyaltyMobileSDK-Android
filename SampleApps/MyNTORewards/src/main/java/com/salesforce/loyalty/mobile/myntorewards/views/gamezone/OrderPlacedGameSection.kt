@@ -14,7 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_GAME_PLAYED_SCREEN
-import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBoldCentered
+import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextBold
+import com.salesforce.loyalty.mobile.myntorewards.views.components.BodyTextSmall
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ImageComponent
 
 @Composable
@@ -29,7 +30,7 @@ fun OrderConfirmationGameSection(gameType: GameType) {
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        BodyTextBoldCentered(text = stringResource(headerId))
+        BodyTextBold(text = stringResource(headerId))
         ImageComponent(
             drawableId = gameType.placeHolderId,
             contentDescription = stringResource(headerId),
