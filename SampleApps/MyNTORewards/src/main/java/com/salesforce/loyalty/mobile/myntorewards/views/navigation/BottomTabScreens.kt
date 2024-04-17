@@ -341,6 +341,7 @@ fun MoreScreenNavigation(
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModel,
     voucherModel: VoucherViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -352,7 +353,7 @@ fun MoreScreenNavigation(
 
         composable(route = MoreScreens.MoreScreenOptions.route) {
             showBottomBar(true)
-            MoreOptions(onboardingModel, navController)
+            MoreOptions(onboardingModel, navController, referralViewModel)
         }
         composable(route = MoreScreens.ReceiptListScreen.route) {
             showBottomBar(true)
