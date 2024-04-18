@@ -69,6 +69,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
         composeTestRule.setContent {
             HomeTabScreen(
                 getMembershipProfileViewModel(),
+                getBadgeViewModel(),
                 getPromotionViewModel(),
                 getVoucherViewModel(),
                 getOnBoardingMockViewModel(),

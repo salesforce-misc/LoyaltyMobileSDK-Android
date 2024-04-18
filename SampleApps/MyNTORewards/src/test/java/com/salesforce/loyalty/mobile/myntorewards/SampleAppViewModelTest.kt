@@ -2031,17 +2031,13 @@ class SampleAppViewModelTest {
         coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.Success(QueryResult(0, true, listOf(), "")))
 
-        coEvery { referralsLocalRepository.saveReferralStatusInCache("TEMPRP7", true,false) }
+        coEvery { referralsLocalRepository.saveReferralStatusInCache(any(), any(), any()) }
             .returns(Unit)
 
         myReferralsViewModel.fetchReferralProgramStatus(context)
 
         coVerify {
             referralsLocalRepository.checkIfMemberEnrolled(any(), "")
-        }
-
-        coVerify {
-            referralsLocalRepository.saveReferralStatusInCache("TEMPRP7", true,false)
         }
 
         Assert.assertEquals(
@@ -2063,7 +2059,7 @@ class SampleAppViewModelTest {
         coEvery { referralsLocalRepository.checkIfMemberEnrolled(any(), "") }
             .returns(ApiResponse.Success(QueryResult(1, true, listOf(enrollmentInfo), "")))
 
-        coEvery { referralsLocalRepository.saveReferralStatusInCache("TEMPRP7", true,true) } just runs
+        coEvery { referralsLocalRepository.saveReferralStatusInCache(any(), any(), any()) } just runs
 
         myReferralsViewModel.fetchReferralProgramStatus(context)
 

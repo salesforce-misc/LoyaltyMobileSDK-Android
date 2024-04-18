@@ -268,6 +268,9 @@ class MyReferralsScreenTest {
             // Test Social Media Share Icons
             onNodeWithText("Share Invite").assertIsDisplayed()
 
+            onNodeWithContentDescription("Copy").assertIsDisplayed().performClick()
+            assertEquals("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", clipboardManager.text)
+
             onNodeWithContentDescription(ShareType.TWITTER.name)
                 .assertIsDisplayed().performClick()
             Thread.sleep(1000)
@@ -323,10 +326,6 @@ class MyReferralsScreenTest {
             } else {
                 onAllNodesWithText("No apps can perform this action.")
             }
-            uiDevice.pressBack()
-
-            onNodeWithContentDescription("Copy").assertIsDisplayed().performClick()
-            assertEquals("https://rb.gy/wa6jw7?referralCode=9RCLSYJO-TEMPRP7", clipboardManager.text)
             uiDevice.pressBack()
         }
     }
