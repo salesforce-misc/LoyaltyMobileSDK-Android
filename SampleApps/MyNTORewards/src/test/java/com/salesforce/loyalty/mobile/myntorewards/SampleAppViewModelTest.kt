@@ -11,6 +11,8 @@ import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.badge.LoyaltyBadgeManager
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeListProgramMember
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeProgramList
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
@@ -214,6 +216,7 @@ class SampleAppViewModelTest {
         scanningViewModel.cancellingSubmissionLiveData.observeForever {
             cancelSubmissionViewState.add(it)
         }
+
         gameViewModel = GameViewModel(gameRemoteRepository)
         rewardViewState = mutableListOf()
         viewState = mutableListOf()
@@ -3068,21 +3071,65 @@ class SampleAppViewModelTest {
 
     @Test
     fun `for loadLoyaltyProgramBadge success resource, program badges must be available`() {
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
         val context = mockk<Context>(relaxed = true)
+        val mockResponseInfo = MockResponseFileReader("MemberInfo.json").content
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponseInfo)
+
+
         val mockResponse =
             Gson().fromJson(
                 MockResponseFileReader("LoyaltyProgramBadge.json").content,
-                LoyaltyBadgeList::class.java
+                LoyaltyBadgeProgramList::class.java
             )
 
         coEvery {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
-        } returns Result.success(mockResponse) as Result<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>
+        } returns Result.success(mockResponse) as Result<LoyaltyBadgeProgramList>
 
-        badgeViewModel.getCahchedProgramBadge(context)
+        badgeViewModel.getCahchedProgramBadge(context, true)
 
         coVerify {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
+        }
+
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramViewStates[0])
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramViewStates[1])
+        Assert.assertEquals(BadgeViewState.BadgeFetchSuccess, badgeProgramViewStates[2])
+        Assert.assertEquals(badgeViewModel.programBadgeLiveData.value, mockResponse)
+
+    }
+
+    @Test
+    fun `for for refresh true cache fetch loadLoyaltyProgramBadge success resource, program badges must be available`() {
+        val context = mockk<Context>(relaxed = true)
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val mockResponseInfo = MockResponseFileReader("MemberInfo.json").content
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponseInfo)
+
+        val mockResponse =
+            Gson().fromJson(
+                MockResponseFileReader("LoyaltyProgramBadge.json").content,
+                LoyaltyBadgeProgramList::class.java
+            )
+
+        coEvery {
+            loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
+        } returns Result.success(mockResponse)
+
+        badgeViewModel.getCahchedProgramBadge(context, false)
+
+        coVerify( inverse=true) {
+            loyaltyBadgeManager.fetchLoyaltyProgramBadge(org.mockito.kotlin.any())
         }
 
         Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramViewStates[0])
@@ -3091,41 +3138,139 @@ class SampleAppViewModelTest {
 
     }
 
+
+    @Test
+    fun `for refresh true cache should not fetch loadLoyaltyProgramBadge success resource, program badges must be available`() {
+        val context = mockk<Context>(relaxed = true)
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val mockResponseInfo = MockResponseFileReader("MemberInfo.json").content
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponseInfo)
+
+        val mockResponse =
+            Gson().fromJson(
+                MockResponseFileReader("LoyaltyProgramBadge.json").content,
+                LoyaltyBadgeProgramList::class.java
+            )
+
+        coEvery {
+            loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
+        } returns Result.success(mockResponse)
+
+        badgeViewModel.getCahchedProgramBadge(context, true)
+
+        coVerify( inverse=true) {
+            loyaltyBadgeManager.fetchLoyaltyProgramBadge(org.mockito.kotlin.any())
+        }
+
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramViewStates[0])
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramViewStates[1])
+        Assert.assertEquals(BadgeViewState.BadgeFetchSuccess, badgeProgramViewStates[2])
+        Assert.assertEquals(badgeViewModel.programBadgeLiveData.value, mockResponse)
+
+    }
+
     @Test
     fun `for loadLoyaltyProgramBadge failure resource, viewstate should be failure along with error msg`() {
         val context = mockk<Context>(relaxed = true)
+
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val mockResponseInfo = MockResponseFileReader("MemberInfo.json").content
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponseInfo)
+
 
         coEvery {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
         } returns Result.failure(java.lang.RuntimeException("Run Time Exception"))
 
-        badgeViewModel.getCahchedProgramBadge(context)
+        badgeViewModel.getCahchedProgramBadge(context, true)
 
         coVerify {
             loyaltyBadgeManager.fetchLoyaltyProgramBadge(any())
         }
 
         Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramViewStates[0])
-        Assert.assertEquals(BadgeViewState.BadgeFetchFailure("Run Time Exception"), badgeProgramViewStates[1])
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramViewStates[1])
+        Assert.assertEquals(BadgeViewState.BadgeFetchFailure("Run Time Exception"), badgeProgramViewStates[2])
     }
 
 
     @Test
     fun `for loadLoyaltyProgramMemberBadge success resource, program member badges must be available`() {
         val context = mockk<Context>(relaxed = true)
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val mockResponseInfo = MockResponseFileReader("MemberInfo.json").content
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponseInfo)
+
         val mockResponse =
             Gson().fromJson(
                 MockResponseFileReader("LoyaltyProgramMemberBadge.json").content,
-                LoyaltyBadgeList::class.java
+                LoyaltyBadgeListProgramMember::class.java
             )
+
 
         coEvery {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
-        } returns Result.success(mockResponse) as Result<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>
+        } returns Result.success(mockResponse)
 
-        badgeViewModel.getCahchedProgramMemberBadge(context)
+        badgeViewModel.getCahchedProgramMemberBadge(context, true)
 
         coVerify {
+            loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
+        }
+
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramMemberViewStates[0])
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramMemberViewStates[1])
+        Assert.assertEquals(BadgeViewState.BadgeFetchSuccess, badgeProgramMemberViewStates[2])
+        Assert.assertEquals(badgeViewModel.programMemberBadgeLiveData.value, mockResponse)
+
+    }
+
+
+    @Test
+    fun `for fetch from cache refresh false loadLoyaltyProgramMemberBadge success resource, program member badges must be available`() {
+        val context = mockk<Context>(relaxed = true)
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val mockResponseInfo = MockResponseFileReader("MemberInfo.json").content
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponseInfo)
+
+        val mockResponse =
+            Gson().fromJson(
+                MockResponseFileReader("LoyaltyProgramMemberBadge.json").content,
+                LoyaltyBadgeListProgramMember::class.java
+            )
+
+
+        coEvery {
+            loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
+        } returns Result.success(mockResponse)
+
+        badgeViewModel.getCahchedProgramMemberBadge(context, false)
+
+        coVerify(inverse = true) {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
         }
 
@@ -3134,23 +3279,32 @@ class SampleAppViewModelTest {
         Assert.assertEquals(badgeViewModel.programMemberBadgeLiveData.value, mockResponse)
 
     }
-
     @Test
     fun `for loadLoyaltyProgramMemberBadge failure resource, viewstate should be failure along with error msg`() {
         val context = mockk<Context>(relaxed = true)
+
+        val sharedPrefs = mockk<SharedPreferences>(relaxed = true)
+
+        val mockResponseInfo = MockResponseFileReader("MemberInfo.json").content
+
+        every { context.getSharedPreferences(any(), any()) }
+            .returns(sharedPrefs)
+        every { sharedPrefs.getString(any(), any()) }
+            .returns(mockResponseInfo)
 
         coEvery {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
         } returns Result.failure(java.lang.RuntimeException("Run Time Exception"))
 
-        badgeViewModel.getCahchedProgramMemberBadge(context)
+        badgeViewModel.getCahchedProgramMemberBadge(context, true)
 
         coVerify {
             loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(any())
         }
 
         Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramMemberViewStates[0])
-        Assert.assertEquals(BadgeViewState.BadgeFetchFailure("Run Time Exception"), badgeProgramMemberViewStates[1])
+        Assert.assertEquals(BadgeViewState.BadgeFetchInProgress, badgeProgramMemberViewStates[1])
+        Assert.assertEquals(BadgeViewState.BadgeFetchFailure("Run Time Exception"), badgeProgramMemberViewStates[2])
     }
 
 

@@ -13,7 +13,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.salesforce.gamification.api.GameAPIClient
 import com.salesforce.gamification.api.GameAuthenticator
 import com.salesforce.gamification.model.GameDefinition
@@ -21,6 +20,8 @@ import com.salesforce.loyalty.mobile.myntorewards.SampleAppUnitTest.Companion.mo
 import com.salesforce.gamification.model.GameRewardResponse
 import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeListProgramMember
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeProgramList
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
@@ -178,16 +179,16 @@ class SampleAppUnitTest {
     }
 
     private fun verify_login_button() {
-    //    app_has_swipe_images()
+        app_has_swipe_images()
         verifyLoginTesting()
-          display_home_ui_testing()
-            verify_gamification_testing()
-           receipt_scanning_ui_testing()
-           display_promo_popup_testing()
-           offer_tab_testing()
+        display_home_ui_testing()
+        verify_gamification_testing()
+        receipt_scanning_ui_testing()
+        display_promo_popup_testing()
+        offer_tab_testing()
         profile_ui_testing()
-        /*verify_more_tab_testing()
-        home_screen_extensive_testing()*/
+        verify_more_tab_testing()
+        home_screen_extensive_testing()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -236,9 +237,9 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
 
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
-        composeTestRule.onNodeWithText("Back").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Back").performClick()
+        composeTestRule.onNodeWithText("Cancel").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PLAYED_GAME_PUPUP).assertIsNotDisplayed()
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onFirst().performClick()
         composeTestRule.onNodeWithText("Go to Vouchers").performClick()
@@ -260,7 +261,7 @@ class SampleAppUnitTest {
 
         composeTestRule.onAllNodes(hasTestTag(TEST_TAG_GAME_ZONE_ITEM_IMAGE), useUnmergedTree=true).onLast().performClick()
 
-        composeTestRule.onNodeWithText("Back").performClick()
+        composeTestRule.onNodeWithText("Cancel").performClick()
 
         composeTestRule.onNodeWithText("Expired").performClick()
         composeTestRule.onNodeWithText("No longer available").assertIsDisplayed()
@@ -591,8 +592,8 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Request a Manual Review").performClick()
         Thread.sleep(2000)
 
-        composeTestRule.onNode(hasText("Back"))
-        composeTestRule.onNode(hasText("Back")).performClick()
+        composeTestRule.onNode(hasText("Cancel"))
+        composeTestRule.onNode(hasText("Cancel")).performClick()
 
         composeTestRule.onNodeWithText("Request a Manual Review").assertIsDisplayed()
         composeTestRule.onNodeWithText("Request a Manual Review").performClick()
@@ -658,7 +659,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithText("Upload").performClick()
         composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_ERROR_SCREEN), 10000)
         composeTestRule.onNodeWithText(
-            "Oops! The required information in the receipt could not be read and processed.",
+            "We couldn’t process the receipt.",
             substring = true
         ).assertIsDisplayed()
         Thread.sleep(1000)
@@ -678,7 +679,7 @@ class SampleAppUnitTest {
 
         composeTestRule.waitUntilExactlyOneExists(hasTestTag(TEST_TAG_RECEIPT_TABLE_SCREEN), 10000)
         composeTestRule.onNodeWithText(
-            "Oops! Some items in the receipt could not be read and processed.",
+            "We couldn’t process some items in the receipt.",
             substring = true
         ).assertIsDisplayed().performClick()
         Thread.sleep(1000)
@@ -693,7 +694,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("shutter button").performClick()
         Thread.sleep(1000)
         composeTestRule.onNodeWithText("Upload").performClick()
-        composeTestRule.waitUntilExactlyOneExists(hasText("No Eligible Items found in the Receipt!"), 10000)
+        composeTestRule.waitUntilExactlyOneExists(hasText("We couldn’t find any eligible items in the receipt."), 10000)
 
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_ROW_STORE_DETAILS).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.TEST_TAG_RECEIPT_TABLE).assertIsDisplayed()
@@ -841,7 +842,7 @@ class SampleAppUnitTest {
 
 
 
-        composeTestRule.onNodeWithText("Badges").assertIsDisplayed()
+        composeTestRule.onNodeWithText("My Badges").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_VIEW_ALL_BADGE).assertIsDisplayed()
         Thread.sleep(2000)
 
@@ -851,7 +852,7 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithTag(TEST_TAG_VIEW_ALL_BADGE_FULL_SCREEN).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Badge_Back_Button").assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Badges").assertIsDisplayed()
+        composeTestRule.onNodeWithText("My Badges").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_BADGE_TABS_ROW).assertIsDisplayed()
         composeTestRule.onNodeWithText("Achieved").assertIsDisplayed()
         composeTestRule.onNodeWithText("Available").assertIsDisplayed()
@@ -873,8 +874,8 @@ class SampleAppUnitTest {
         composeTestRule.onNodeWithContentDescription("badge popup close button icon").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("badge popup icon").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_BADGE_NAME).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Expiring on 2026-01-05").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Description").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Badge expires on 2026-01-05").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Learn More").assertIsDisplayed()
         composeTestRule.onNodeWithTag(TEST_TAG_BADGE_DESCRIPTION).assertIsDisplayed()
         composeTestRule.onNodeWithText("Close").assertIsDisplayed()
         composeTestRule.onNodeWithText("Close").performClick()
@@ -1413,14 +1414,14 @@ fun getCheckoutFlowViewModel(): CheckOutFlowViewModelInterface {
 fun getBadgeViewModel(): BadgeViewModelInterface {
 
     return object : BadgeViewModelInterface{
-        override val programMemberBadgeLiveData: LiveData<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>
+        override val programMemberBadgeLiveData: LiveData<LoyaltyBadgeListProgramMember>
             get() = program_member_badges
 
-        private val program_member_badges = MutableLiveData<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>>()
-        override val programBadgeLiveData: LiveData<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>
+        private val program_member_badges = MutableLiveData<LoyaltyBadgeListProgramMember>()
+        override val programBadgeLiveData: LiveData<LoyaltyBadgeProgramList>
             get() = programBadges
 
-        private val programBadges = MutableLiveData<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>>()
+        private val programBadges = MutableLiveData<LoyaltyBadgeProgramList>()
 
         override val badgeProgramViewState: LiveData<BadgeViewState>
             get() = viewStateProgram
@@ -1430,25 +1431,37 @@ fun getBadgeViewModel(): BadgeViewModelInterface {
         override val badgeProgramMemberViewState: LiveData<BadgeViewState>
             get() = viewStateProgramMember
 
+
         private val viewStateProgramMember = MutableLiveData<BadgeViewState>()
 
-        override fun loadLoyaltyProgramMemberBadge(context: Context) {
+        override fun getCahchedProgramMemberBadge(context: Context, refreshRequired: Boolean) {
             viewStateProgramMember.postValue(BadgeViewState.BadgeFetchInProgress)
             viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
 
-            val responseType: Type = object : TypeToken<LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord?>?>() {}.type
-            val response = mockResponse("LoyaltyProgramMemberBadge.json", responseType) as LoyaltyBadgeList<LoyaltyProgramMemberBadgeListRecord>?
+            program_member_badges.value = mockResponse("LoyaltyProgramMemberBadge.json", LoyaltyBadgeListProgramMember::class.java) as LoyaltyBadgeListProgramMember
 
-            program_member_badges.value = response
         }
 
-        override fun loadLoyaltyProgramBadge(context: Context) {
+        override fun loadLoyaltyProgramMemberBadge(context: Context, membershipKey: String) {
+            viewStateProgramMember.postValue(BadgeViewState.BadgeFetchInProgress)
+            viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
+
+            program_member_badges.value = mockResponse("LoyaltyProgramMemberBadge.json", LoyaltyBadgeListProgramMember::class.java) as LoyaltyBadgeListProgramMember
+
+        }
+
+        override fun getCahchedProgramBadge(context: Context, refreshRequired: Boolean) {
             viewStateProgram.postValue(BadgeViewState.BadgeFetchInProgress)
             viewStateProgram.postValue(BadgeViewState.BadgeFetchSuccess)
 
-            val responseType: Type = object : TypeToken<LoyaltyBadgeList<LoyaltyProgramBadgeListRecord?>?>() {}.type
-            programBadges.value = mockResponse("LoyaltyProgramBadge.json", responseType) as LoyaltyBadgeList<LoyaltyProgramBadgeListRecord>?
+            programBadges.value = mockResponse("LoyaltyProgramBadge.json", LoyaltyBadgeProgramList::class.java) as  LoyaltyBadgeProgramList
+        }
 
+        override fun loadLoyaltyProgramBadge(context: Context, membershipKey: String) {
+            viewStateProgram.postValue(BadgeViewState.BadgeFetchInProgress)
+            viewStateProgram.postValue(BadgeViewState.BadgeFetchSuccess)
+
+            programBadges.value = mockResponse("LoyaltyProgramBadge.json", LoyaltyBadgeProgramList::class.java) as  LoyaltyBadgeProgramList
         }
 
     }
