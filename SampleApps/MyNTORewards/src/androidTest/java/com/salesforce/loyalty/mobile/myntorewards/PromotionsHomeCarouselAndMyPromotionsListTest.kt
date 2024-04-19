@@ -37,6 +37,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewMode
 import com.salesforce.loyalty.mobile.myntorewards.views.HomeTabScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.components.CIRCULAR_PROGRESS_TEST_TAG
 import com.salesforce.loyalty.mobile.myntorewards.views.components.TEST_TAG_TEXT_FIELD_RIGHT_ICON
+import com.salesforce.loyalty.mobile.sources.loyaltyModels.PromotionsResponse
 import com.salesforce.referral.repository.ReferralsRepository
 import junit.framework.Assert.assertEquals
 import org.junit.After
@@ -70,7 +71,7 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             HomeTabScreen(
                 getMembershipProfileViewModel(),
                 getBadgeViewModel(),
-                getPromotionViewModel(),
+                getPromotionViewModel(getPromotionResponse()),
                 getVoucherViewModel(),
                 getOnBoardingMockViewModel(),
                 getBenefitViewModel(),
@@ -313,4 +314,8 @@ class PromotionsHomeCarouselAndMyPromotionsListTest {
             uiDevice.pressBack()
         }
     }
+}
+
+private fun getPromotionResponse(): PromotionsResponse {
+    return  mockResponse("Promotions.json", PromotionsResponse::class.java) as PromotionsResponse
 }
