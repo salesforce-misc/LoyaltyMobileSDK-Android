@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextGray
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ReferralTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.TabBaseItem
 
 const val TEST_TAG_TAB_VIEW = "TEST_TAG_TAB_VIEW"
@@ -58,7 +59,7 @@ fun CustomScrollableTab(
 @Preview
 @Composable
 fun CustomScrollableTabPreview() {
-    /*CustomScrollableTab(
+    CustomScrollableTab(
         listOf(ReferralTabs.Success, ReferralTabs.InProgress), 0, {}
-    )*/
+    )
 }

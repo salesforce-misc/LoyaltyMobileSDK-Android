@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.Screen
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
@@ -22,7 +23,9 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
                     benefitModel: BenefitViewModelInterface,
                     transactionModel: TransactionViewModelInterface,
                     checkoutFlowModel: CheckOutFlowViewModelInterface,
-                    scanningViewModel: ScanningViewModelInterface, gameViewModel: GameViewModel = hiltViewModel()) {
+                    scanningViewModel: ScanningViewModelInterface,
+                    gameViewModel: GameViewModel = hiltViewModel(),
+                    referralViewModel: MyReferralsViewModel = hiltViewModel()) {
 
     Navigation(
         profileModel,
@@ -35,6 +38,7 @@ fun MainScreenStart(profileModel: MembershipProfileViewModelInterface,
         checkoutFlowModel,
         scanningViewModel,
         gameViewModel,
+        referralViewModel
     )
 }
 
@@ -51,7 +55,7 @@ fun Navigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModel,
-
+    referralViewModel: MyReferralsViewModel
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.OnboardingScreen.route)
@@ -61,7 +65,7 @@ fun Navigation(
             OnboardingScreenBox(navController, onboardingModel)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeTabScreen(profileModel,badgeViewModel, promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel)
+            HomeTabScreen(profileModel,badgeViewModel, promotionModel,voucherModel, onboardingModel, benefitViewModel, transactionViewModel, checkOutFlowViewModel, scanningViewModel, gameViewModel, referralViewModel)
         }
     }
 }

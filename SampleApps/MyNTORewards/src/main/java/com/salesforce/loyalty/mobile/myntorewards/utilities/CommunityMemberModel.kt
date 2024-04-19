@@ -6,5 +6,6 @@ data class CommunityMemberModel(
     val email: String?,
     val loyaltyProgramMemberId: String?,
     val loyaltyProgramName: String?,
-    val membershipNumber: String?
+    val membershipNumber: String?,
+    val contactId: String?
 )

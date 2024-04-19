@@ -352,7 +352,7 @@ class NetworkClientTest {
             assertEquals(actualResponse.isSuccess, true)
             actualResponse.onSuccess { it ->
                 assertEquals(it.status, true)
-                assertEquals(it.outputParameters?.outputParameters?.results?.size, 8)
+                assertEquals(it.outputParameters?.outputParameters?.results?.size, 9)
                 assertEquals(it.message, null)
                 assertEquals(it.simulationDetails, mapOf<String, Any?>())
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.loyaltyPromotionType, "STANDARD")

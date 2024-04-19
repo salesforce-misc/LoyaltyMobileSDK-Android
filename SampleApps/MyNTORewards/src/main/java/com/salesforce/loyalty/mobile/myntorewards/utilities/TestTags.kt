@@ -40,6 +40,7 @@ class TestTags {
         const val TEST_TAG_PROMO_POPUP = "promotion_popup"
         const val TEST_TAG_CLOSE_POPUP_PROMOTION = "close_button"
         const val TEST_TAG_PROMO_NAME = "promo_name"
+        const val TEST_TAG_PROMO_IMAGE = "promo_image"
         const val TEST_TAG_DETAIL_HEADING = "detail_heading"
         const val TEST_TAG_PROMO_DESCRIPTION = "promo_description"
         const val TEST_TAG_EXPIRATION_DATE = "expiration_date"
@@ -123,6 +124,10 @@ class TestTags {
         const val TEST_TAG_BADGE_NAME= "test_tag_badge_name"
         const val TEST_TAG_BADGE_DESCRIPTION= "test_tag_badge_description"
 
+        const val TEST_TAG_EMPTY_VIEW= "empty_view"
+        const val TEST_TAG_CLOSE_REFER_POPUP= "close_refer_popup"
+        const val REFER_FRIEND_PROMOTION_NAME= "REFER_FRIEND_PROMOTION_NAME"
+        const val REFER_FRIEND_PROMOTION_DESC= "REFER_FRIEND_PROMOTION_DESC"
 
     }
 }

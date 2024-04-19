@@ -22,6 +22,8 @@ import com.salesforce.gamification.model.Games
 import com.salesforce.gamification.repository.GamificationRemoteRepository
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeListProgramMember
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyBadgeProgramList
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramMemberBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderAttributes
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderCreationResponse
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.OrderDetailsResponse
@@ -29,6 +31,7 @@ import com.salesforce.loyalty.mobile.myntorewards.checkout.models.ShippingMethod
 import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.AnalyzeExpenseResponse
 import com.salesforce.loyalty.mobile.myntorewards.receiptscanning.models.ReceiptListResponse
+import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.MY_PROFILE_FULL_SCREEN_HEADER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ADDRESS_DETAIL
@@ -108,10 +111,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_FRAME
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_HEADER
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_POINTER
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SPIN_WHEEL_TEXT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_SUBHEADER_CONGRATS_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRANSACTION_LIST
-import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_TRY_AGAIN_ERROR_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VIEW_ALL_BADGE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VIEW_ALL_BADGE_FULL_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_VOUCHER_ROW
@@ -122,6 +123,7 @@ import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.*
 import com.salesforce.loyalty.mobile.myntorewards.views.*
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.*
+import com.salesforce.referral.repository.ReferralsRepository
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -144,9 +146,13 @@ class SampleAppUnitTest {
     @Before
     fun init() {
         //might needed in future
-        //val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        val repository = ReferralsRepository(getAPIService())
+        val localRepository =  ReferralsLocalRepository(getLocalAPIService(), "")
+        localRepository.setPromotionType(false)
+        var myReferralsViewModel = MyReferralsViewModel(repository, localRepository, "")
 
         composeTestRule.setContent {
             Navigation(
@@ -159,7 +165,8 @@ class SampleAppUnitTest {
                 getTransactionViewModel(),
                 getCheckoutFlowViewModel(),
                 getScanningViewModel(),
-                getGameViewModel() as GameViewModel
+                getGameViewModel() as GameViewModel,
+                myReferralsViewModel
             )
         }
 
@@ -368,14 +375,14 @@ class SampleAppUnitTest {
 
         composeTestRule.onNodeWithText("All").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
 
 
         Thread.sleep(2000)
         composeTestRule.onNodeWithText("Opted In").performClick()
         composeTestRule.onNodeWithTag(TEST_TAG_PROMO_LIST).assertIsDisplayed()
 
-        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(2)
+        composeTestRule.onAllNodes(hasTestTag(TEST_TAG_PROMO_ITEM)).assertCountEquals(3)
 
 
 
@@ -954,7 +961,7 @@ class SampleAppUnitTest {
 
 }
 
-private fun getOnBoardingMockViewModel(): OnBoardingViewModelAbstractInterface {
+fun getOnBoardingMockViewModel(): OnBoardingViewModelAbstractInterface {
     return object : OnBoardingViewModelAbstractInterface {
         override val loginStatusLiveData: LiveData<LoginState>
             get() = loginStatus
@@ -1064,11 +1071,7 @@ fun getPromotionViewModel(): MyPromotionViewModelInterface {
         }
 
         override fun loadPromotions(context: Context, refreshRequired: Boolean) {
-            val gson = Gson()
-            val promotionResponse = gson.fromJson(
-                "{\"outputParameters\":{\"outputParameters\":{\"results\":[{\"description\":\"Double point promotion on member activities to promote NTO\",\"endDate\":\"2023-06-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CzEoIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/C2zhShTnl5I/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MXx8ZXZlcnl3aGVyZXxlbnwwfHx8fDE2ODM2NjE0MTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Always\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0},{\"description\":\"Welcome to be a new customer and take 20% off on your first order.\",\"endDate\":\"2023-06-30\",\"loyaltyPromotionType\":\"STANDARD\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000CwWpIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/OGND72jS-HE/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8M3x8d2VsY29tZXxlbnwwfHx8fDE2ODM2NzM3OTY\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Welcome Promotion\",\"startDate\":\"2023-05-01\"},{\"description\":\"Spend \$500 in a month and Earn a Stellar Media Voucher.\",\"endDate\":\"2023-07-31\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"CUMULATIVE\",\"memberEligibilityCategory\":\"EligibleButNotEnrolled\",\"promEnrollmentStartDate\":\"2023-05-01\",\"promotionEnrollmentEndDate\":\"2023-07-31\",\"promotionEnrollmentRqr\":true,\"promotionId\":\"0c8B0000000Cx06IAC\",\"promotionImageUrl\":\"https://cdn.pixabay.com/photo/2018/05/10/11/34/concert-3387324_1280.jpg\",\"promotionName\":\"Your next concert experience is on us!\",\"startDate\":\"2023-05-01\"},{\"description\":\"Promotion to rejuvenate gold tier with 500 reward points for purchases during promotion period\",\"endDate\":\"2024-01-01\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwVrIAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/_Q0dP8xiUGA/download?ixid\\u003dMnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgzNjYxODcy\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":500},{\"description\":\"Promotion on Ironman watches\",\"endDate\":\"2025-03-30\",\"fulfillmentAction\":\"ISSUE_VOUCHER\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW5IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/rkaahInFlBg/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8Mnx8aXJvbiUyMG1hbnxlbnwwfHx8fDE2ODM2MDQzMDc\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"Gold Tier Rejuvenation\",\"startDate\":\"2022-10-01\"},{\"description\":\"Thank you for members purchasing more than \$500 in a quarter and give a discount of 10% (Surprise and Delight)\",\"endDate\":\"2025-03-31\",\"fulfillmentAction\":\"CREDIT_POINTS\",\"loyaltyProgramCurrency\":\"0lcB0000000TQlyIAG\",\"loyaltyPromotionType\":\"STANDARD\",\"maximumPromotionRewardValue\":0,\"memberEligibilityCategory\":\"Eligible\",\"promotionEnrollmentRqr\":false,\"promotionId\":\"0c8B0000000CwW7IAK\",\"promotionImageUrl\":\"https://unsplash.com/photos/IPx7J1n_xUc/download?ixid\\u003dMnwxMjA3fDB8MXxzZWFyY2h8MTJ8fGdpZnR8ZW58MHx8fHwxNjgzNjQ3OTg5\\u0026amp;force\\u003dtrue\\u0026amp;w\\u003d640\",\"promotionName\":\"NTO Surprise and Delight\",\"startDate\":\"2023-01-01\",\"totalPromotionRewardPointsVal\":0}]}}}",
-                PromotionsResponse::class.java
-            )
+            val promotionResponse = mockResponse("Promotions.json", PromotionsResponse::class.java) as PromotionsResponse
             membershipPromo.value = promotionResponse
             viewState.postValue(PromotionViewState.PromotionsFetchSuccess)
         }

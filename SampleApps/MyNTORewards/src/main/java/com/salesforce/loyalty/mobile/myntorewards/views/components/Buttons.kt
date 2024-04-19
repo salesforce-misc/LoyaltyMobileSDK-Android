@@ -96,7 +96,7 @@ private fun ButtonText(textContent: String, textColor: Color) {
         textAlign = TextAlign.Center,
         fontSize = 16.sp,
         color = textColor,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.ExtraBold,
         modifier = Modifier
             .padding(top = 3.dp, bottom = 3.dp)
     )
