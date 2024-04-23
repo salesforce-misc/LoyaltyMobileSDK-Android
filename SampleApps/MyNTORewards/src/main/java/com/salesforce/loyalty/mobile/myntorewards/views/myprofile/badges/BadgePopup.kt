@@ -18,6 +18,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.POPUP_ROUNDED_CORNER_SIZE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_BADGE_DESCRIPTION
@@ -38,6 +40,7 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.PrimaryButton
 
 @Composable
 fun BadgePopup(
+    badgeType:String,
     badges: LoyaltyProgramBadgeListRecord,
     endDate: String?,
     closePopup: () -> Unit,
@@ -52,9 +55,8 @@ fun BadgePopup(
             dismissOnClickOutside = false
         ),
     ) {
-
-
         BadgePopupUI(
+            badgeType,
             badges,
             endDate,
             closePopup = {
@@ -67,6 +69,7 @@ fun BadgePopup(
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun BadgePopupUI(
+    badgeType:String="",
     badge: LoyaltyProgramBadgeListRecord,
     endDate: String?,
     closePopup: () -> Unit,
@@ -106,19 +109,16 @@ fun BadgePopupUI(
                         .height(181.dp)
                 )
                 {
-                    GlideImage(
-                        model = badge.imageUrl,
-                        contentDescription = stringResource(id = R.string.cd_badge_popup_icon),
-                        modifier = Modifier
-                            .size(107.dp, 128.dp)
-                            .align(Alignment.Center)
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                        contentScale = ContentScale.Crop
-                    ) {
-                        it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                            .placeholder(R.drawable.default_badge)
-
+                    if(badgeType== AppConstants.BADGES_AVAILABLE) {
+                        LoadIconImagePopup(R.drawable.loyalty_available_badge, 107.dp, 128.dp)
                     }
+                    else if(badgeType== AppConstants.BADGES_EXPIRED) {
+                        LoadIconImageExpiredPopup(badge.imageUrl,107.dp, 128.dp )
+                    }
+                    else{
+                        LoadIconImagePopup(badge.imageUrl, 107.dp, 128.dp)
+                    }
+
                 }
                 Row(
                     modifier = Modifier
@@ -163,7 +163,7 @@ fun BadgePopupUI(
 
                 if(Common.isEndDateExpired(endDate)){
                     expiringText= stringResource(id = R.string.text_expired_on)
-                    popupBGColour= LightGrey5
+                    popupBGColour=  VibrantPurple90.copy(alpha = 0.8f)
                 }
                 else{
                     expiringText= stringResource(id = R.string.text_badge_expires_on)
@@ -243,4 +243,73 @@ fun BadgePopupUI(
           closePopup()
         })
     }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun LoadIconImagePopup(iconImage: Any, width: Dp, height: Dp){
+    Box(contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize().background( VibrantPurple90.copy(alpha = 0.8f))
+    )
+    {
+        GlideImage(
+            model = iconImage,
+            contentDescription = stringResource(id = R.string.cd_badge_popup_icon),
+            modifier = Modifier
+                .size(width, height)
+                .align(Alignment.Center)
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+            contentScale = ContentScale.Crop
+        ) {
+            it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .placeholder(R.drawable.default_badge)
+
+        }
+    }
+
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun LoadIconImageExpiredPopup(iconImage: Any?, width: Dp, height: Dp){
+
+    Box(contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize().background( VibrantPurple90.copy(alpha = 0.8f))
+    )
+    {
+
+        GlideImage(
+            model = iconImage,
+            contentDescription = stringResource(R.string.cd_badge_icon_full_screen),
+            modifier = Modifier
+                .size(width, height)
+                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)).background(
+                    color = VibrantPurple90.copy(alpha = 0.8f)
+                )
+                .align(Alignment.Center)
+            ,
+            contentScale = ContentScale.Fit
+        ) {
+            it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .placeholder(R.drawable.default_badge)
+        }
+        Box(modifier = Modifier
+            .background(
+                color = VibrantPurple90.copy(alpha = 0.8f)
+            ).size(width, height)){
+
+            GlideImage(
+                model = R.drawable.expired_badge_icon,
+                contentDescription = stringResource(R.string.cd_badge_icon_full_screen),
+                modifier = Modifier
+                    .size(48.dp, 48.dp)
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .align(Alignment.Center),
+                contentScale = ContentScale.Fit
+            )
+
+        }
+
+    }
+
 }

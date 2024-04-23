@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_ACHIEVED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_AVAILABLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_EXPIRED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.badgeEmptyViewMsgDescription
@@ -167,7 +168,7 @@ fun BadgeFullScreen(
                                             programBadgeIDListMap.contains(it.id)
                                 }
 
-                                BadgeFullScreenTabList(filteredBadges, programBadgeIDListMap) {
+                                BadgeFullScreenTabList(BADGES_ACHIEVED, filteredBadges, programBadgeIDListMap) {
                                     badgePopupState = true
                                     blurBG = it
                                 }
@@ -181,7 +182,7 @@ fun BadgeFullScreen(
                                     )
                                 }
 
-                                BadgeFullScreenTabList(filteredBadges, programBadgeIDListMap) {
+                                BadgeFullScreenTabList(BADGES_AVAILABLE, filteredBadges, programBadgeIDListMap) {
                                     badgePopupState = true
                                     blurBG = it
                                 }
@@ -194,6 +195,7 @@ fun BadgeFullScreen(
 
                                 }
                                 BadgeFullScreenTabList(
+                                    BADGES_EXPIRED,
                                     filteredBadges,
                                     programBadgeIDListExpiredMap
                                 ) {
