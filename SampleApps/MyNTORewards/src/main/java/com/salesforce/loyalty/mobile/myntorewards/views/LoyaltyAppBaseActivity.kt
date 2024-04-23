@@ -1,8 +1,13 @@
 package com.salesforce.loyalty.mobile.myntorewards.views
+
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.view.*
+import androidx.annotation.RequiresApi
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.salesforce.loyalty.mobile.myntorewards.checkout.CheckoutManager
@@ -18,11 +23,14 @@ import com.salesforce.loyalty.mobile.sources.PrefHelper.get
 import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyClient
+import dagger.hilt.android.AndroidEntryPoint
 
 //Main Activity Application Entry Point
+@AndroidEntryPoint
 class LoyaltyAppBaseActivity : ComponentActivity() {
     private val TAG = LoyaltyAppBaseActivity::class.java.simpleName
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -87,9 +95,15 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
             ViewModelProvider(this, ScanningViewModelFactory(receiptManager)).get(
                 ScanningViewModel::class.java
             )
-
+/*        val gameViewModel: GameViewModel =
+            ViewModelProvider(this, GameViewModelFactory(loyaltyAPIManager)).get(
+                GameViewModel::class.java
+            )*/
         setContent {
             if (loginSuccess == true) {
+
+               
+                //SpinWheelLandingPage(loyaltyAPIManager)
                 HomeTabScreen(
                     profileModel,
                     promotionModel,
@@ -111,6 +125,10 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
                     checkoutFlowModel,
                     scanningViewModel
                 )
+                // Added for testing purpose.
+                //ScratchCardView(loyaltyAPIManager)
+
+
             }
         }
         observeSessionExpiry(onboardingModel, forceAuthManager)
@@ -136,6 +154,7 @@ class LoyaltyAppBaseActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     private fun observeLoginStatus(profileModel: MembershipProfileViewModelInterface,
                                    promotionModel: MyPromotionViewModelInterface,
                                    voucherModel: VoucherViewModelInterface,

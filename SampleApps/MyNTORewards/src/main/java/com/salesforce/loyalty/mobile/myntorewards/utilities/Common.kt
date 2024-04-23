@@ -1,21 +1,20 @@
 package com.salesforce.loyalty.mobile.myntorewards.utilities
 
 import android.content.Context
+import android.text.format.DateUtils
 import android.util.Log
+
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_APP_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_API_FORMAT
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DATE_API_FORMAT
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT
-import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_DETAILS_API_DATETIME_FORMAT2
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.util.*
 
 class Common {
@@ -117,6 +116,38 @@ class Common {
                 1 -> R.string.label_empty_vouchers_redeem_tab
                 2 -> R.string.label_empty_vouchers_expired_tab
                 else -> R.string.label_empty_vouchers
+            }
+        }
+
+        fun isGameExpired(expirationDate: String): Boolean {
+            try {
+                val currentDate = Date()
+                val sdf = SimpleDateFormat(GAME_DATETIME_FORMAT, Locale.getDefault())
+                val endDate = sdf.parse(expirationDate)
+                if (currentDate.after(endDate)) {
+                    return true
+                }
+                return false
+            } catch (e: Exception) {
+                return false
+            }
+        }
+
+        fun formatGameDateTime(apiDateTime: String?, context: Context): String {
+            if (apiDateTime == null) {
+                return context.getString(R.string.game_never_expires)
+            }
+            val sdf = SimpleDateFormat(GAME_DATETIME_FORMAT, Locale.getDefault())
+            val endDate = sdf.parse(apiDateTime)
+            if (DateUtils.isToday(endDate.time)) {
+                return context.getString(R.string.game_expiring_today)
+            } else if (DateUtils.isToday(endDate.time - DateUtils.DAY_IN_MILLIS)) {
+                return context.getString(R.string.game_expiring_tomorrow)
+            } else {
+                val appDateFormat =
+                    SimpleDateFormat(getApplicationDateFormat(context), Locale.getDefault())
+                val formattedDate = appDateFormat.format(endDate)
+                return context.getString(R.string.game_expiring_date, formattedDate)
             }
         }
 

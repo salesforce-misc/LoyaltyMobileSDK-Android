@@ -138,7 +138,6 @@ open class OnboardingScreenViewModel(
             forceAuthManager.revokeAccessToken()
             // clear Shared Preferences
             ForceAuthEncryptedPreference.clearAll(context)
-            ForceConnectedAppEncryptedPreference.clearAll(context)
             PrefHelper.clearAll(context)
 
             //clear cache
@@ -153,7 +152,6 @@ open class OnboardingScreenViewModel(
             forceAuthManager.revokeAccessToken()
             // clear Shared Preferences
             ForceAuthEncryptedPreference.clearAll(context)
-            ForceConnectedAppEncryptedPreference.clearAll(context)
             PrefHelper.clearAll(context)
 
             //clear cache

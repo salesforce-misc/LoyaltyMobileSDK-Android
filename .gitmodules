@@ -1,0 +1,4 @@
+[submodule "GamificationMobileSDK-Android"]
+	path = GamificationMobileSDK-Android
+	url = git@github.com:loyaltysampleapp/GamificationMobileSDK-Android.git
+	branch = release-246.patch
