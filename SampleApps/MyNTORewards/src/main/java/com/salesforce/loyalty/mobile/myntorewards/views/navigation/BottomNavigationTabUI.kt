@@ -41,53 +41,61 @@ fun BottomNavigationUI(
         //BottomNavTabs.Redeem,  //part of UX but not part of MVP
         BottomNavTabs.More
     )
-    AnimatedVisibility(
+
+    // TODO: Commenting this code as its causing flicker issue when bottom bar is shown/hidden
+    /*AnimatedVisibility(
         visible = bottomBarState.value,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
-        content = {
-
+        content = {*/
+            val bottomViewHeight = if (bottomBarState.value) {
+                83.dp
+            } else {
+                0.dp
+            }
             BottomNavigation(
                 backgroundColor = colorResource(id = R.color.white),
                 contentColor = Color.Black,
-                modifier = Modifier.height(83.dp)
+                modifier = Modifier.height(bottomViewHeight)
             ) {
                 val navBackStackEntry by bottomTabsNavController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
                 items.forEach { item ->
-                    BottomNavigationItem(
-                        modifier = Modifier
-                            .padding(bottom = 10.dp)
-                            .fillMaxWidth(),
-                        icon = {
-                            Icon(
-                                painterResource(id = item.iconID),
-                                contentDescription = stringResource(id = item.titleID),
-                                modifier = Modifier.size(24.dp, 24.dp)
-                            )
-                        },
-                        label = {   Text(
-                            text = stringResource(id = item.titleID),
-                            fontFamily = font_sf_pro,
-                            textAlign = TextAlign.Center,
-                            fontSize = 10.sp,
-                        ) },
-                        selectedContentColor = VibrantPurple40,
-                        unselectedContentColor = TextDarkGray,
-                        alwaysShowLabel = true,
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            bottomTabsNavController.navigate(item.route) {
+                    if (currentRoute != null) {
+                        BottomNavigationItem(
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
+                                .fillMaxWidth(),
+                            icon = {
+                                Icon(
+                                    painterResource(id = item.iconID),
+                                    contentDescription = stringResource(id = item.titleID),
+                                    modifier = Modifier.size(24.dp, 24.dp)
+                                )
+                            },
+                            label = {   Text(
+                                text = stringResource(id = item.titleID),
+                                fontFamily = font_sf_pro,
+                                textAlign = TextAlign.Center,
+                                fontSize = 10.sp,
+                            ) },
+                            selectedContentColor = VibrantPurple40,
+                            unselectedContentColor = TextDarkGray,
+                            alwaysShowLabel = true,
+                            selected = currentRoute.contains(item.route),
+                            onClick = {
+                                bottomTabsNavController.navigate(item.route) {
 
-                                bottomTabsNavController.graph.startDestinationRoute?.let { screen_route ->
-                                    popUpTo(0)
+                                    bottomTabsNavController.graph.startDestinationRoute?.let { screen_route ->
+                                        popUpTo(0)
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                    )
+                            },
+                        )
+                    }
                 }
             }
-        })
+//        })
 }

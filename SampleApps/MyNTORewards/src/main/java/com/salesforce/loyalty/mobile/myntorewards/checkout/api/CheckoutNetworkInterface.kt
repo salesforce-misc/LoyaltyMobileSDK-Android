@@ -27,4 +27,10 @@ interface CheckoutNetworkInterface {
         @Url url: String,
         @Query("q") query: String?
     ): Result<QueryResult<ShippingBillingAddressRecord>>
+
+    @POST()
+    suspend fun createOrderAndGetParticipantReward(
+        @Url url: String,
+        @Body json: OrderCreationRequest
+    ): Result<OrderCreationResponse>
 }

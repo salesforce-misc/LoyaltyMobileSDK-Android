@@ -16,24 +16,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderPlacedUI
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.GameZoneScreen
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.scratchcard.ScratchCardView
+import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWheelLandingPage
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
+import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.offers.MyPromotionScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.onboarding.MoreOptions
 import com.salesforce.loyalty.mobile.myntorewards.views.receipts.*
+import com.salesforce.loyalty.mobile.sources.loyaltyAPI.LoyaltyAPIManager
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
@@ -47,6 +57,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     transactionViewModel: TransactionViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
+    gameViewModel: GameViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -76,7 +87,8 @@ fun HomeScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 voucherModel,
                 checkOutFlowViewModel,
-                profileModel
+                profileModel,
+                gameViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
@@ -111,16 +123,57 @@ fun HomeScreenAndCheckOutFlowNavigation(
             showBottomBar(false)
 //            ScanningProgress(navCheckOutFlowController)
         }
+        composable(route = MoreScreens.GameZoneScreen.route) {
+            showBottomBar(true)
+            GameZoneScreen(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            ScratchCardView(navCheckOutFlowController, gameViewModel, gamePartRewardId)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel, gamePartRewardId)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+            val rewardType = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE)?:""
+            val rewardValue = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE)?:""
+
+            CongratulationsScreen(rewardType, rewardValue) {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
     }
 }
 
 
 @Composable
 fun PromotionScreenAndCheckOutFlowNavigation(
+    bottomTabsNavController: NavController,
     promotionViewModel: MyPromotionViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
+    gameViewModel: GameViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -148,14 +201,53 @@ fun PromotionScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 voucherModel,
                 checkOutFlowViewModel,
-                profileModel
+                profileModel,
+                gameViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderConfirmationScreen.route) {
             showBottomBar(false)
             OrderPlacedUI(navCheckOutFlowController, checkOutFlowViewModel, profileModel)
         }
+        composable(route = MoreScreens.GameZoneScreen.route) {
+            showBottomBar(true)
+            GameZoneScreen(navCheckOutFlowController, gameViewModel)
+        }
+        composable(route = MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            ScratchCardView(navCheckOutFlowController, gameViewModel, gamePartRewardId)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            SpinWheelLandingPage(navCheckOutFlowController, gameViewModel, gamePartRewardId)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+            val rewardType = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE)?:""
+            val rewardValue = navCheckOutFlowController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE)?:""
 
+            CongratulationsScreen(rewardType, rewardValue ) {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                bottomTabsNavController.navigate(BottomNavTabs.More.route + "/$ROUTE_GAME_ZONE"){
+                    popUpTo(0)
+                }
+            }
+        }
     }
 }
 
@@ -221,6 +313,8 @@ fun RedeemScreen() {
 fun MoreScreenNavigation(
     onboardingModel: OnBoardingViewModelAbstractInterface,
     scanningViewModel: ScanningViewModelInterface,
+    gameViewModel: GameViewModel,
+    voucherModel: VoucherViewModelInterface,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -257,6 +351,74 @@ fun MoreScreenNavigation(
         composable(route = MoreScreens.ScanningProgressScreen.route) {
             showBottomBar(false)
 //            ScanningProgress(navController)
+        }
+        composable(route = MoreScreens.GameZoneScreen.route) {
+            GameZoneNavigation(gameViewModel = gameViewModel, voucherModel, showBottomBar = showBottomBar)
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.P)
+@Composable
+fun GameZoneNavigation(
+    gameViewModel: GameViewModel,
+    voucherModel: VoucherViewModelInterface,
+    showBottomBar: (bottomBarVisible: Boolean) -> Unit
+) {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = MoreScreens.GameZoneScreen.route
+    )
+    {
+        composable(route = MoreScreens.GameZoneScreen.route) {
+            showBottomBar(true)
+            GameZoneScreen(navController, gameViewModel)
+        }
+        composable(route = MoreScreens.ScratchCardScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+            arguments = listOf(navArgument("gameParticipantRewardId"){
+                type = NavType.StringType
+            })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            ScratchCardView(navController, gameViewModel, gamePartRewardId)
+        }
+        composable(route = MoreScreens.SpinWheelScreen.route + "?gameParticipantRewardId={gameParticipantRewardId}",
+        arguments = listOf(navArgument("gameParticipantRewardId"){
+            type = NavType.StringType
+        })) {
+            showBottomBar(true)
+            val gamePartRewardId = it.arguments?.getString("gameParticipantRewardId") ?: ""
+            SpinWheelLandingPage(navController, gameViewModel, gamePartRewardId)
+        }
+        composable(route = MoreScreens.GameCongratsScreen.route) {
+            showBottomBar(false)
+
+            val rewardType = navController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_TYPE)?:""
+            val rewardValue = navController.currentBackStackEntry?.arguments?.getString(AppConstants.KEY_CONFIRMARION_SCREEN_REWARD_VALUE)?:""
+
+
+            CongratulationsScreen(rewardType,rewardValue ) {
+                navController.popBackStack(
+                    MoreScreens.GameZoneScreen.route,
+                    false
+                )
+            }
+        }
+
+        composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
+            showBottomBar(true)
+            VoucherFullScreen(navController, voucherModel)
+        }
+
+        composable(route = MoreScreens.GameBetterLuckScreen.route) {
+            showBottomBar(false)
+            BetterLuckScreen {
+                navController.popBackStack(
+                    MoreScreens.GameZoneScreen.route,
+                    false
+                )
+            }
         }
     }
 }

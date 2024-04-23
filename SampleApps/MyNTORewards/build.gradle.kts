@@ -1,8 +1,11 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 import java.util.Properties
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 apply(from = "${project.rootDir}/jacoco.gradle")
 
@@ -67,12 +70,33 @@ android {
         abortOnError = false
         lintConfig = file("$rootDir/lint-baseline.xml")
     }
+
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/DEPENDENCIES")
+        resources.excludes.add("META-INF/LICENSE")
+        resources.excludes.add("META-INF/LICENSE.txt")
+        resources.excludes.add("META-INF/license.txt")
+        resources.excludes.add("META-INF/NOTICE")
+        resources.excludes.add("META-INF/NOTICE.txt")
+        resources.excludes.add("META-INF/notice.txt")
+        resources.excludes.add("META-INF/ASL2.0")
+        resources.excludes.add("META-INF/*.kotlin_module")
+    }
+
 }
 
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(project(":Sources"))
+    implementation(project(":GamificationMobileSDK-Android:GamificationMobileSDK"))
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.0")
@@ -102,6 +126,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("androidx.compose.ui:ui:1.4.1")
     implementation("androidx.compose.ui:ui-tooling-preview:${composeVersion}")
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${composeVersion}")
     debugImplementation("androidx.compose.ui:ui-tooling:${composeVersion}")
     debugImplementation("androidx.compose.ui:ui-test-manifest:${composeVersion}")
@@ -170,4 +195,14 @@ dependencies {
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-compiler:2.44")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

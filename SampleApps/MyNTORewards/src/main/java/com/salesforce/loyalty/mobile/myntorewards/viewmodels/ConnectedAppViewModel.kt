@@ -77,13 +77,13 @@ class ConnectedAppViewModel : ViewModel() {
     fun setSelectedApp(context: Context, instanceUrl: String) {
         selectedInstanceUrl.value = instanceUrl
         viewModelScope.launch {
-            PrefHelper.customPrefs(context)
+            PrefHelper.instancePrefs(context)
                 .set(AppConstants.KEY_SELECTED_INSTANCE_URL, instanceUrl)
         }
     }
     fun getSelectedApp(context: Context): String {
         val instanceUrl =
-            PrefHelper.customPrefs(context).get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL)
+            PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL)
                 ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
         selectedInstanceUrl.value = instanceUrl
         return instanceUrl

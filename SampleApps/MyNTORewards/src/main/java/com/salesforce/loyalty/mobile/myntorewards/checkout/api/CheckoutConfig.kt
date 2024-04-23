@@ -5,6 +5,7 @@ object CheckoutConfig {
     const val HEADER_AUTHORIZATION = "Authorization"
     const val CHECKOUT_ORDER_CREATION = "/services/apexrest/NTOOrderCheckOut"
     const val CHECKOUT_SHIPPING_METHODS = "/services/apexrest/ShippingMethods"
+    const val CHECKOUT_ORDER_CREATION_PARTICIPANT_REWARD = "/services/apexrest/NTOOrderCheckOutAndGameParticipantReward"
     const val CHECKOUT_ORDER_ID = "orderId"
 
     const val SOQL_QUERY_PATH = "/services/data/v"

@@ -20,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.LighterBlack
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextDarkGray
@@ -30,10 +29,11 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_ERROR_SCREEN
 
 @Composable
-fun ScanningErrorPopup(
+fun ErrorPopup(
     errorMessage: String,
-    closePopup: () -> Unit,
-    scanAnotherReceipt: () -> Unit
+    textButtonClicked: () -> Unit,
+    tryAgainClicked: () -> Unit,
+    textButton:String= ""
 ) {
     Column(
         modifier = Modifier
@@ -81,10 +81,9 @@ fun ScanningErrorPopup(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN),
-                onClick = {
-                    scanAnotherReceipt()
-                },
+                    .testTag(TestTags.TEST_TAG_TRY_AGAIN_ERROR_SCREEN)
+                    .fillMaxWidth(), onClick = {
+                    tryAgainClicked()},
                 colors = ButtonDefaults.buttonColors(VibrantPurple40),
                 shape = RoundedCornerShape(100.dp)
 
@@ -100,21 +99,20 @@ fun ScanningErrorPopup(
                         .padding(top = 3.dp, bottom = 3.dp)
                 )
             }
+                Text(
+                    text = textButton,
+                    fontFamily = font_sf_pro,
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 3.dp)
+                        .clickable {
+                            textButtonClicked()
+                        },
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    color = LighterBlack,
+                    fontWeight = FontWeight.Normal,
+                    )
 
-            Text(
-                text = stringResource(id = R.string.back_text),
-                fontFamily = font_sf_pro,
-                modifier = Modifier
-                    .padding(top = 12.dp, bottom = 3.dp)
-                    .clickable {
-                        closePopup()
-                    },
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                color = LighterBlack,
-                fontWeight = FontWeight.Normal,
-
-                )
         }
     }
 }

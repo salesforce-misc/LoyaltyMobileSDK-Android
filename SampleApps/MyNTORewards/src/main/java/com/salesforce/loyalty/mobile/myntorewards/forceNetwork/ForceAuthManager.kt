@@ -3,6 +3,7 @@ package com.salesforce.loyalty.mobile.myntorewards.forceNetwork
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.salesforce.gamification.api.GameAuthenticator
 import com.salesforce.loyalty.mobile.myntorewards.checkout.models.QueryResult
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.sources.PrefHelper
@@ -17,7 +18,7 @@ import java.net.HttpURLConnection
 /**
  * ForceAuthManager class handles authentication of Salesforce credentials
  */
-class ForceAuthManager(val mContext: Context): ForceAuthenticator {
+class ForceAuthManager(val mContext: Context): ForceAuthenticator, GameAuthenticator {
 
     enum class AuthenticationStatus {
         AUTHENTICATED,
@@ -255,11 +256,11 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator {
     }
 
     fun getInstanceUrl(): String? {
-        return PrefHelper.customPrefs(mContext)
+        return PrefHelper.instancePrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl)
     }
     fun getConnectedApp(): ConnectedApp {
-        val selectedConnectedApp = PrefHelper.customPrefs(mContext)
+        val selectedConnectedApp = PrefHelper.instancePrefs(mContext)
             .get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL, null)
         val connectedApp = selectedConnectedApp?.let { selectedConnectedApp ->
             ForceConnectedAppEncryptedPreference.getConnectedApp(
