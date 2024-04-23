@@ -110,6 +110,7 @@ fun BadgeView(badge: LoyaltyProgramBadgeListRecord, endDate: String?, blurBG: (D
     }
     if (badgePopupState) {
         BadgePopup(
+            AppConstants.BADGES_ACHIEVED,
             badge,
             endDate,
             closePopup = {
