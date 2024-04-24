@@ -110,9 +110,10 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                             .fillMaxWidth()
                             .background(MyProfileScreenBG)
                     )
-                    BadgeRow(navProfileViewController, badgeViewModel){
+                    VoucherRow(navProfileViewController, voucherModel){
                         blurBG= it
                     }
+
 
                     Spacer(
                         modifier = Modifier
@@ -120,10 +121,10 @@ fun MyProfileLandingView(navProfileViewController: NavHostController,
                             .fillMaxWidth()
                             .background(MyProfileScreenBG)
                     )
-
-                    VoucherRow(navProfileViewController, voucherModel){
+                    BadgeRow(navProfileViewController, badgeViewModel){
                         blurBG= it
                     }
+
                     Spacer(
                         modifier = Modifier
                             .height(24.dp)
