@@ -35,7 +35,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_CAMERA_SCREEN
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.ScanningViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.CameraGalleryPickerAndUI
 
 @RequiresApi(Build.VERSION_CODES.P)
 
