@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.MyProfileScreenBG
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextRed
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VeryLightPurple
@@ -46,6 +47,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.T
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.BadgeViewModelInterface
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.BadgeViewState
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun BadgeRow(
@@ -74,7 +77,7 @@ fun BadgeRow(
     programMemberBadges?.let {
         for (programMemberBadgesItem in programMemberBadges!!.records) {
 
-            if (!(Common.isEndDateExpired(programMemberBadgesItem.endDate) || programMemberBadgesItem.status == AppConstants.BADGES_EXPIRED)) {
+            if (!(programMemberBadgesItem.status == AppConstants.BADGES_EXPIRED)) {
                 programBadgeIDListMap[(programMemberBadgesItem.loyaltyProgramBadgeId)] =
                     programMemberBadgesItem.endDate
             }
@@ -87,6 +90,27 @@ fun BadgeRow(
                 programBadgeIDListMap.contains(it.id)
     }
 
+
+    /* We have to iterate again in a list to match the Ids thats why its O(2^n) complexity.
+                                There an scope of improvement in logic but for that API logic needs also to be correct
+                                there is other possibility of code improvement */
+
+    val dateTimeFormatter = DateTimeFormatter.ofPattern(AppConstants.PROMOTION_DATE_API_FORMAT)
+    val programMemberShortedMap: Map<String, String> = programBadgeIDListMap.toSortedMap(compareBy<String> { LocalDate.parse(programBadgeIDListMap[it], dateTimeFormatter) })
+    var sortedFilteredList= mutableListOf<LoyaltyProgramBadgeListRecord>()
+    for(programMemberShortedMapItem in programMemberShortedMap){
+        if (filteredAchievedBadges != null) {
+            for(filteredBadgeItem in filteredAchievedBadges){
+                if(filteredBadgeItem.id== programMemberShortedMapItem.key){
+                    sortedFilteredList.add(filteredBadgeItem)
+                }
+            }
+        }
+    }
+    //limit the item to max 3
+    if (sortedFilteredList.size > 2) {
+        sortedFilteredList= sortedFilteredList.subList(0,3)
+    }
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
@@ -143,18 +167,18 @@ fun BadgeRow(
             }
             else{
                 isInProgress = false
-                if (filteredAchievedBadges?.size == 0) {
+                if (sortedFilteredList.size == 0) {
                     BadgeErrorAndEmptyViewMiniScreen(R.drawable.empty_badge_icon,
                         stringResource(id =R.string.badge_empty_view_text_achieved ), VibrantPurple40)
                 } else {
-                    filteredAchievedBadges?.let {
+                    sortedFilteredList.let {
                         LazyRow(
                             modifier = Modifier
                                 .background(VeryLightPurple)
                                 .width(346.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            items(filteredAchievedBadges) { filteredBadgeItem ->
+                            items(sortedFilteredList) { filteredBadgeItem ->
                                 BadgeView(
                                     filteredBadgeItem,
                                     programBadgeIDListMap[filteredBadgeItem.id]

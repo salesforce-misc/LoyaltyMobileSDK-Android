@@ -1448,7 +1448,7 @@ fun getBadgeViewModel(): BadgeViewModelInterface {
 
         }
 
-        override fun loadLoyaltyProgramMemberBadge(context: Context, membershipKey: String) {
+        override fun loadLoyaltyProgramMemberBadge(context: Context,membershipKey: String,  memberID: String) {
             viewStateProgramMember.postValue(BadgeViewState.BadgeFetchInProgress)
             viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
 

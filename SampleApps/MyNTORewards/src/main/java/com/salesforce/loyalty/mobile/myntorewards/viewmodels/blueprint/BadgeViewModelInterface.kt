@@ -12,7 +12,7 @@ interface BadgeViewModelInterface {
     val badgeProgramViewState: LiveData<BadgeViewState>
 
     val badgeProgramMemberViewState: LiveData<BadgeViewState>
-    fun loadLoyaltyProgramMemberBadge(context: Context, membershipKey:String)
+    fun loadLoyaltyProgramMemberBadge(context: Context, membershipKey:String,  memberId:String)
     fun loadLoyaltyProgramBadge(context: Context, membershipKey:String)
     fun getCahchedProgramMemberBadge(context: Context, refreshRequired:Boolean=false)
     fun getCahchedProgramBadge(context: Context, refreshRequired:Boolean=false)
