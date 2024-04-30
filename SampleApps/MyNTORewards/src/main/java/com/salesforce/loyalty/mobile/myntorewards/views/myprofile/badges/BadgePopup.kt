@@ -242,6 +242,7 @@ fun BadgePopupUI(
             .width(300.dp), onClick = {
           closePopup()
         })
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 

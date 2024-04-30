@@ -110,7 +110,9 @@ fun SettingListItem(title: Int, settingValue: String? = null, onClick: ()-> Unit
             .fillMaxWidth()
             .wrapContentHeight()
             .background(Color.White, shape = RoundedCornerShape(6.dp))
-            .padding(12.dp),
+            .padding(12.dp) .clickable(interactionSource = interactionSource, indication = null) {
+                onClick()
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
 
@@ -135,9 +137,6 @@ fun SettingListItem(title: Int, settingValue: String? = null, onClick: ()-> Unit
                 .wrapContentSize(Alignment.CenterEnd)
                 .padding(vertical = 6.dp, horizontal = 4.dp)
                 .weight(0.2f)
-                .clickable(interactionSource = interactionSource, indication = null) {
-                    onClick()
-                }
         )
     }
 }
