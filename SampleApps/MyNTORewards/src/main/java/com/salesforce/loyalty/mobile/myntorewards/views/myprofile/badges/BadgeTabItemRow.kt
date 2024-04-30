@@ -179,6 +179,8 @@ fun endDateExpiredCountInDaysText(endDateString: String): String{
         /*  if enddate is today---> 28 March till 12 PM
           and if we not add it calculate 28 march 00:00 AM*/
 
+      /*we need to add time as well if we need exact status if it expires on same date*/
+
         if (endDate != null) {
             endDate.time= endDate.time + (24 * 60 * 60 * 1000)
         }
