@@ -87,7 +87,7 @@ fun BadgeFullScreen(
         programMemberBadges?.let {
             for (programMemberBadgesItem in programMemberBadges!!.records) {
 
-                if (isEndDateExpired(programMemberBadgesItem.endDate) || programMemberBadgesItem.status == BADGES_EXPIRED) {
+                if ( programMemberBadgesItem.status == BADGES_EXPIRED) {
                     programBadgeIDListExpiredMap[programMemberBadgesItem.loyaltyProgramBadgeId] =
                         programMemberBadgesItem.endDate
                 } else {
@@ -213,6 +213,8 @@ fun BadgeFullScreen(
                                             programBadgeIDListExpiredMap.contains(it.id)
 
                                 }
+                                // badge is being decided as expired only basis on status only not basis of end date.
+                                //If badge job has not run and status is active badge will still being considered as actice,
 
                                 val programMemberShortedMapExpired: Map<String, String> = programBadgeIDListExpiredMap.toSortedMap(compareBy<String> { LocalDate.parse(programBadgeIDListExpiredMap[it], dateTimeFormatter) }.reversed())
 

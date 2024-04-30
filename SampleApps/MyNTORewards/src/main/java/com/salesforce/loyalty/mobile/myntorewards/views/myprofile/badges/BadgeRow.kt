@@ -77,7 +77,7 @@ fun BadgeRow(
     programMemberBadges?.let {
         for (programMemberBadgesItem in programMemberBadges!!.records) {
 
-            if (!(Common.isEndDateExpired(programMemberBadgesItem.endDate) || programMemberBadgesItem.status == AppConstants.BADGES_EXPIRED)) {
+            if (!(programMemberBadgesItem.status == AppConstants.BADGES_EXPIRED)) {
                 programBadgeIDListMap[(programMemberBadgesItem.loyaltyProgramBadgeId)] =
                     programMemberBadgesItem.endDate
             }

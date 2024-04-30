@@ -248,7 +248,7 @@ fun BadgePopupUI(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun LoadIconImagePopup(iconImage: Any, width: Dp, height: Dp){
+fun LoadIconImagePopup(iconImage: Any?, width: Dp, height: Dp){
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize().background( VibrantPurple90.copy(alpha = 0.8f))
     )
