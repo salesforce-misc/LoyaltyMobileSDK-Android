@@ -288,7 +288,8 @@ fun SelectedConnectedApp(navController: NavController) {
                                                             app.instanceUrl?.let { instance ->
                                                                 model.setSelectedApp(
                                                                     context,
-                                                                    instance
+                                                                    instance,
+                                                                    app.communityUrl
                                                                 )
                                                             }
                                                         }

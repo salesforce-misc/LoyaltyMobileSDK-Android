@@ -1507,7 +1507,7 @@ class SampleAppViewModelTest {
         every { sharedPrefs.getString(any(), any()) }
             .returns(mockResponse)
 
-        connectedAppViewModel.setSelectedApp(context, "instance_url")
+        connectedAppViewModel.setSelectedApp(context, "instance_url", "Community_url")
 
         coVerify {
             sharedPrefs.edit().putString(AppConstants.KEY_SELECTED_INSTANCE_URL, "instance_url")

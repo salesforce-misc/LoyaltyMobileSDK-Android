@@ -222,6 +222,14 @@ class Common {
             )
         }
 
+        fun getCommunityUrl(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_SELECTED_COMMUNITY_URL,
+                AppSettings.DEFAULT_FORCE_CONNECTED_APP.communityUrl
+            )
+        }
+
         fun getInstancePreferenceValueOrDefault(context: Context, key: String, defaultValue: String): String {
             return PrefHelper.instancePrefs(context).get<String>(key) ?: defaultValue
         }
