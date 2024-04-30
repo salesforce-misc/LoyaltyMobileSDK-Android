@@ -25,12 +25,12 @@ class LoyaltyBadgeManager constructor(auth: ForceAuthenticator, instanceUrl: Str
     }
 
 
-    suspend fun fetchLoyaltyProgramMemberBadge(membershipKey: String= ""
+    suspend fun fetchLoyaltyProgramMemberBadge(memberId: String= ""
     ): Result<LoyaltyBadgeListProgramMember> {
         Logger.d(TAG, "BadgeList")
 
         return badgeClient.badgeApi.badgeList(
-            getBadgeLSOQLUrl(), fetchProgramMemberBadge(membershipKey)
+            getBadgeLSOQLUrl(), fetchProgramMemberBadge(memberId)
         )
     }
 
@@ -49,8 +49,8 @@ class LoyaltyBadgeManager constructor(auth: ForceAuthenticator, instanceUrl: Str
 
 
     //membership Key is not being used. Its placeholder for future use to fetch badges based on membership ID or any other program ID
-    private fun fetchProgramMemberBadge(membershipKey: String): String {
-        return "select Name,StartDate,EndDate,Reason,Status,LoyaltyProgramMemberId,LoyaltyProgramBadgeId FROM LoyaltyProgramMemberBadge"
+    private fun fetchProgramMemberBadge(memberId: String): String {
+        return "select Name,StartDate,EndDate,Reason,Status,LoyaltyProgramMemberId,LoyaltyProgramBadgeId FROM LoyaltyProgramMemberBadge WHERE LoyaltyProgramMemberId = " + "'${memberId}'"
     }
 
     //membership Key is not being used. Its placeholder for future use to fetch badges based on membership ID or any other program ID

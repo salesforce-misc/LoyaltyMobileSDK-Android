@@ -57,9 +57,10 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
             }
             val member = Gson().fromJson(memberJson, CommunityMemberModel::class.java)
             val membershipKey = member.membershipNumber ?: ""
+            val memberId = member.loyaltyProgramMemberId ?: ""
             if(refreshRequired)
             {
-                loadLoyaltyProgramMemberBadge(context, membershipKey)
+                loadLoyaltyProgramMemberBadge(context, membershipKey, memberId)
             }
             else{
                 val badgeCache = LocalFileManager.getData(
@@ -71,7 +72,7 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
 
                 Logger.d(TAG, "cache : $badgeCache")
                 if (badgeCache == null) {
-                    loadLoyaltyProgramMemberBadge(context, membershipKey)
+                    loadLoyaltyProgramMemberBadge(context, membershipKey, memberId)
                 } else {
                      program_member_badges.value = badgeCache!!
                     viewStateProgramMember.postValue(BadgeViewState.BadgeFetchSuccess)
@@ -82,10 +83,10 @@ class BadgeViewModel(private val loyaltyBadgeManager: LoyaltyBadgeManager) : Vie
     }
 
 
-    override fun loadLoyaltyProgramMemberBadge(context: Context, membershipKey:String) {
+    override fun loadLoyaltyProgramMemberBadge(context: Context, membershipKey:String, memberId:String) {
         viewStateProgramMember.postValue(BadgeViewState.BadgeFetchInProgress)
         viewModelScope.launch {
-            loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge().onSuccess {
+            loyaltyBadgeManager.fetchLoyaltyProgramMemberBadge(memberId).onSuccess {
                 program_member_badges.value = it
                 LocalFileManager.saveData(
                     context,

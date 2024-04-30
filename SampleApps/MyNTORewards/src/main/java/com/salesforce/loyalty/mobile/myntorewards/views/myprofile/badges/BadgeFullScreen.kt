@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import com.salesforce.loyalty.mobile.MyNTORewards.R
 import com.salesforce.loyalty.mobile.myntorewards.badge.models.LoyaltyProgramBadgeListRecord
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.*
+import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_ACHIEVED
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_AVAILABLE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.BADGES_EXPIRED
@@ -37,6 +38,8 @@ import com.salesforce.loyalty.mobile.myntorewards.views.components.CustomScrolla
 import com.salesforce.loyalty.mobile.myntorewards.views.components.ErrorOrEmptyView
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BadgeTabs
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -58,6 +61,7 @@ fun BadgeFullScreen(
         remember { listOf() }
     var isInProgress by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
+    val dateTimeFormatter = DateTimeFormatter.ofPattern(AppConstants.PROMOTION_DATE_API_FORMAT)
 
     val context: Context = LocalContext.current
 
@@ -167,8 +171,23 @@ fun BadgeFullScreen(
                                     it.status == BADGES_AVAILABLE &&
                                             programBadgeIDListMap.contains(it.id)
                                 }
+                                val programMemberShortedMapAchieved: Map<String, String> = programBadgeIDListMap.toSortedMap(compareBy<String> { LocalDate.parse(programBadgeIDListMap[it], dateTimeFormatter) })
+                                val sortedFilteredList= mutableListOf<LoyaltyProgramBadgeListRecord>()
 
-                                BadgeFullScreenTabList(BADGES_ACHIEVED, filteredBadges, programBadgeIDListMap) {
+                               /* We have to iterate again in a list to match the Ids thats why its O(2^n) complexity.
+                                There an scope of improvement in logic but for that API logic needs also to be correct
+                                there is other possibility of code improvement */
+                                for(programMemberShortedMapItem in programMemberShortedMapAchieved){
+                                    if (filteredBadges != null) {
+                                        for(filteredBadgeItem in filteredBadges!!){
+                                            if(filteredBadgeItem.id== programMemberShortedMapItem.key){
+                                                sortedFilteredList.add(filteredBadgeItem)
+                                            }
+                                        }
+                                    }
+                                }
+
+                                BadgeFullScreenTabList(BADGES_ACHIEVED, sortedFilteredList, programBadgeIDListMap) {
                                     badgePopupState = true
                                     blurBG = it
                                 }
@@ -194,9 +213,27 @@ fun BadgeFullScreen(
                                             programBadgeIDListExpiredMap.contains(it.id)
 
                                 }
+
+                                val programMemberShortedMapExpired: Map<String, String> = programBadgeIDListExpiredMap.toSortedMap(compareBy<String> { LocalDate.parse(programBadgeIDListExpiredMap[it], dateTimeFormatter) }.reversed())
+
+                                /* We have to iterate again in a list to match the Ids thats why its O(2^n) complexity.
+                                There an scope of improvement in logic but for that API logic needs also to be correct
+                                there is other possibility of code improvement */
+
+                                val sortedFilteredList= mutableListOf<LoyaltyProgramBadgeListRecord>()
+                                for(programMemberShortedMapItem in programMemberShortedMapExpired){
+                                    if (filteredBadges != null) {
+                                        for(filteredBadgeItem in filteredBadges!!){
+                                            if(filteredBadgeItem.id== programMemberShortedMapItem.key){
+                                                sortedFilteredList.add(filteredBadgeItem)
+                                            }
+                                        }
+                                    }
+                                }
+
                                 BadgeFullScreenTabList(
                                     BADGES_EXPIRED,
-                                    filteredBadges,
+                                    sortedFilteredList,
                                     programBadgeIDListExpiredMap
                                 ) {
                                     badgePopupState = true
