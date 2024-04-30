@@ -1,5 +1,6 @@
 package com.salesforce.loyalty.mobile.myntorewards.di
 
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralsLocalRepository
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.referral.repository.ReferralsRepository
@@ -18,6 +19,6 @@ object ViewModelModule {
     fun provideReferralViewModel(
         referralsRepository: ReferralsRepository,
         localRepository: ReferralsLocalRepository,
-        instanceUr: String
-    ) = MyReferralsViewModel(referralsRepository, localRepository, instanceUr)
+        forceAuthManager: ForceAuthManager
+    ) = MyReferralsViewModel(referralsRepository, localRepository, forceAuthManager)
 }

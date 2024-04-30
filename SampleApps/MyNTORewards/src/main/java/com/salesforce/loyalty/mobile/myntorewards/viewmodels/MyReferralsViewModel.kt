@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DEFAULT_PROMOTION_CODE
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_DURATION
 import com.salesforce.loyalty.mobile.myntorewards.referrals.ReferralConfig.REFERRAL_PROGRAM_NAME
@@ -38,7 +40,7 @@ import javax.inject.Inject
 class MyReferralsViewModel @Inject constructor(
     private val repository: ReferralsRepository,
     private val localRepository: ReferralsLocalRepository,
-    instanceUrl: String
+    forceAuthManager: ForceAuthManager
 ): BaseViewModel<MyReferralsViewState>() {
 
     private val _programState: MutableLiveData<ReferralProgramType> = MutableLiveData()
@@ -52,7 +54,8 @@ class MyReferralsViewModel @Inject constructor(
 
     private var emailsToSend: List<String> = mutableListOf()
     init {
-        repository.setInstanceUrl(instanceUrl)
+        val communityBaseUrl = forceAuthManager.getCommunityUrl() ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.communityUrl
+        repository.setInstanceUrl(communityBaseUrl)
     }
 
     fun onSignUpToReferClicked(email: String) {
@@ -190,9 +193,9 @@ class MyReferralsViewModel @Inject constructor(
                     val status = enrollmentResponse.transactionJournals.firstOrNull()?.status
                     /*
                     During the Referral Promotion enrolment process, there is a slight possibility that the enrolment request may not be processed immediately.
-                    If the Transaction Journal status is not Processed, which means Canceled/Error/Pending, you may have to contact the Salesforce support centre to finish the enrolment process.
+                    If the Transaction Journal status is not Processed, which means Canceled/Error, you may have to contact the Salesforce support centre to finish the enrolment process.
                     */
-                    if (status == EnrollmentStatus.PROCESSED.status) {
+                    if (status == EnrollmentStatus.PROCESSED.status || status == EnrollmentStatus.PENDING.status) {
                         _programState.value = ReferralProgramType.START_REFERRING
                         val memberReferralCode = enrollmentResponse.promotionReferralCode.split("-").firstOrNull()
                         setReferralCode(context, memberReferralCode)

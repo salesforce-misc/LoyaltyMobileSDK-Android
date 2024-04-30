@@ -260,6 +260,10 @@ class ForceAuthManager(val mContext: Context): ForceAuthenticator, GameAuthentic
         return Common.getInstanceUrl(mContext)
     }
 
+    fun getCommunityUrl(): String? {
+        return Common.getCommunityUrl(mContext)
+    }
+
     fun getLoyaltyProgramName(): String? {
         return Common.getLoyaltyProgramName(mContext)
     }

@@ -75,11 +75,13 @@ class ConnectedAppViewModel : ViewModel() {
         savedApps.value = ForceConnectedAppEncryptedPreference.retrieveAll(context)
     }
 
-    fun setSelectedApp(context: Context, instanceUrl: String) {
+    fun setSelectedApp(context: Context, instanceUrl: String, communityUrl: String) {
         selectedInstanceUrl.value = instanceUrl
         PrefHelper.instancePrefs(context)
             .set(AppConstants.KEY_SELECTED_INSTANCE_URL, instanceUrl)
+        PrefHelper.instancePrefs(context).set(AppConstants.KEY_SELECTED_COMMUNITY_URL, communityUrl)
     }
+
     fun getSelectedApp(context: Context): String {
         val instanceUrl =
             PrefHelper.instancePrefs(context).get<String>(AppConstants.KEY_SELECTED_INSTANCE_URL)
