@@ -1,0 +1,13 @@
+Index: SampleApps/MyNTORewards/src/androidTest/java/com/salesforce/loyalty/mobile/myntorewards/MyReferralsScreenTest.kt
+===================================================================
+diff --git a/SampleApps/MyNTORewards/src/androidTest/java/com/salesforce/loyalty/mobile/myntorewards/MyReferralsScreenTest.kt b/SampleApps/MyNTORewards/src/androidTest/java/com/salesforce/loyalty/mobile/myntorewards/MyReferralsScreenTest.kt
+--- a/SampleApps/MyNTORewards/src/androidTest/java/com/salesforce/loyalty/mobile/myntorewards/MyReferralsScreenTest.kt	
++++ b/SampleApps/MyNTORewards/src/androidTest/java/com/salesforce/loyalty/mobile/myntorewards/MyReferralsScreenTest.kt	
+@@ -211,6 +211,7 @@
+         }
+     }
+ 
++
+     private fun verifyReferFriendScreen() {
+         composeTestRule.run {
+             onNodeWithText("Refer Now").assertIsDisplayed().performClick()
