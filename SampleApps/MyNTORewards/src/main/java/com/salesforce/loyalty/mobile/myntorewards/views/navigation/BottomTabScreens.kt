@@ -26,6 +26,7 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.TextPurpleLightBG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.ROUTE_GAME_ZONE
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.GameViewModel
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.*
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.CheckOutFlowOrderSelectScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.checkout.OrderDetails
@@ -36,7 +37,9 @@ import com.salesforce.loyalty.mobile.myntorewards.views.gamezone.spinner.SpinWhe
 import com.salesforce.loyalty.mobile.myntorewards.views.home.HomeScreenLandingView
 import com.salesforce.loyalty.mobile.myntorewards.views.home.VoucherFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.MyProfileLandingView
+import com.salesforce.loyalty.mobile.myntorewards.views.myprofile.badges.BadgeFullScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.BottomNavTabs
+import com.salesforce.loyalty.mobile.myntorewards.views.myreferrals.MyReferralsListScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.CheckOutFlowScreen
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.ProfileViewScreen
@@ -58,6 +61,7 @@ fun HomeScreenAndCheckOutFlowNavigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModel,
+    referralViewModel: MyReferralsViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -74,7 +78,8 @@ fun HomeScreenAndCheckOutFlowNavigation(
                 navCheckOutFlowController,
                 profileModel,
                 promotionModel,
-                voucherModel
+                voucherModel,
+                referralViewModel
             )
         }
         composable(route = CheckOutFlowScreen.OrderDetailScreen.route) {
@@ -162,6 +167,13 @@ fun HomeScreenAndCheckOutFlowNavigation(
                 }
             }
         }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            MyReferralsListScreen(backAction = {
+                navCheckOutFlowController.popBackStack()
+            }) {
+                showBottomBar(it)
+            }
+        }
     }
 }
 
@@ -174,6 +186,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
     checkOutFlowViewModel: CheckOutFlowViewModelInterface,
     profileModel: MembershipProfileViewModelInterface,
     gameViewModel: GameViewModel,
+    referralViewModel: MyReferralsViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navCheckOutFlowController = rememberNavController()
@@ -187,7 +200,7 @@ fun PromotionScreenAndCheckOutFlowNavigation(
 
 
             showBottomBar(true)
-            MyPromotionScreen(navCheckOutFlowController, promotionViewModel)
+            MyPromotionScreen(navCheckOutFlowController, promotionViewModel, referralViewModel)
 
 
         }
@@ -248,12 +261,20 @@ fun PromotionScreenAndCheckOutFlowNavigation(
                 }
             }
         }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            MyReferralsListScreen(backAction = {
+                navCheckOutFlowController.popBackStack()
+            }) {
+                showBottomBar(it)
+            }
+        }
     }
 }
 
 @Composable
 fun MyProfileScreen(
     profileModel: MembershipProfileViewModelInterface,
+    badgeViewModel: BadgeViewModelInterface,
     voucherModel: VoucherViewModelInterface,
     benefitViewModel: BenefitViewModelInterface,
     transactionViewModel: TransactionViewModelInterface
@@ -269,6 +290,7 @@ fun MyProfileScreen(
             MyProfileLandingView(
                 navProfileViewController,
                 profileModel,
+                badgeViewModel,
                 voucherModel,
                 benefitViewModel,
                 transactionViewModel
@@ -280,6 +302,10 @@ fun MyProfileScreen(
         composable(route = ProfileViewScreen.TransactionFullScreen.route) {
             MyProfileTransactionFullScreenView(navProfileViewController, transactionViewModel)
         }
+        composable(route = ProfileViewScreen.BadgeFullScreen.route) {
+            BadgeFullScreen(navProfileViewController, badgeViewModel)
+        }
+
         composable(route = CheckOutFlowScreen.VoucherFullScreen.route) {
             VoucherFullScreen(navProfileViewController, voucherModel)
         }
@@ -315,6 +341,7 @@ fun MoreScreenNavigation(
     scanningViewModel: ScanningViewModelInterface,
     gameViewModel: GameViewModel,
     voucherModel: VoucherViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     showBottomBar: (bottomBarVisible: Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -326,7 +353,7 @@ fun MoreScreenNavigation(
 
         composable(route = MoreScreens.MoreScreenOptions.route) {
             showBottomBar(true)
-            MoreOptions(onboardingModel, navController)
+            MoreOptions(onboardingModel, navController, referralViewModel)
         }
         composable(route = MoreScreens.ReceiptListScreen.route) {
             showBottomBar(true)
@@ -354,6 +381,11 @@ fun MoreScreenNavigation(
         }
         composable(route = MoreScreens.GameZoneScreen.route) {
             GameZoneNavigation(gameViewModel = gameViewModel, voucherModel, showBottomBar = showBottomBar)
+        }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            MyReferralsListScreen(backAction = { navController.popBackStack() }) {
+                showBottomBar(it)
+            }
         }
     }
 }
@@ -418,6 +450,11 @@ fun GameZoneNavigation(
                     MoreScreens.GameZoneScreen.route,
                     false
                 )
+            }
+        }
+        composable(route = MoreScreens.MyReferralsScreen.route) {
+            MyReferralsListScreen(backAction = { navController.popBackStack() }) {
+                showBottomBar(it)
             }
         }
     }

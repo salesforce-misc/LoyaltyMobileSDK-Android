@@ -3,14 +3,19 @@ package com.salesforce.loyalty.mobile.myntorewards.utilities
 import android.content.Context
 import android.text.format.DateUtils
 import android.util.Log
+import com.google.gson.Gson
 
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.DEFAULT_SAMPLE_APP_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.GAME_DATETIME_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.KEY_APP_DATE
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.PROMOTION_DATE_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.RECEIPT_API_FORMAT
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.TRANSACTION_HISTORY_DATETIME_FORMAT
+import com.salesforce.loyalty.mobile.sources.PrefHelper
+import com.salesforce.loyalty.mobile.sources.PrefHelper.get
+import com.salesforce.loyalty.mobile.sources.forceUtils.Logger
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.MemberCurrency
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -19,6 +24,15 @@ import java.util.*
 
 class Common {
     companion object {
+        fun getMember(context: Context): CommunityMemberModel? {
+            val memberJson = PrefHelper.customPrefs(context).getString(AppConstants.KEY_COMMUNITY_MEMBER, null)
+            return if (memberJson != null) {
+                Gson().fromJson(memberJson, CommunityMemberModel::class.java)
+            } else {
+                Logger.d("getMember", "failed: member promotion Member details not present")
+                null
+            }
+        }
 
         fun formatPromotionDate(apiDate: String, context: Context): String {
             val apiDateFormat = DateTimeFormatter.ofPattern(PROMOTION_DATE_API_FORMAT)
@@ -66,10 +80,28 @@ class Common {
             }
             return false
         }
+        fun badgeEmptyViewMsgHeader(selectedTab: Int): Int {
+            return when (selectedTab) {
+                0 -> R.string.label_empty_achieved_badges_header
+                1 -> R.string.label_empty_badges_available_tab_header
+                2 -> R.string.label_empty_badges_expired_tab_header
+                else -> R.string.label_empty_achieved_badges_header
+            }
+        }
 
-        fun getCurrencyPointBalance(currencyList: List<MemberCurrency>): Double? {
+        fun badgeEmptyViewMsgDescription(selectedTab: Int): Int {
+            return when (selectedTab) {
+                0 -> R.string.label_empty_achieved_badges_description
+                1 -> R.string.label_empty_badges_available_tab_description
+                2 -> R.string.label_empty_badges_expired_tab_description
+                else -> R.string.label_empty_achieved_badges_description
+            }
+        }
+
+
+        fun getCurrencyPointBalance(rewardCurrencyName: String, currencyList: List<MemberCurrency>): Double? {
             for (currency in currencyList) {
-                if (currency.loyaltyMemberCurrencyName?.uppercase() == AppConstants.REWARD_CURRENCY_NAME.uppercase()) {
+                if (currency.loyaltyMemberCurrencyName?.uppercase() == rewardCurrencyName.uppercase()) {
                     return currency.pointsBalance
                 }
             }
@@ -149,6 +181,57 @@ class Common {
                 val formattedDate = appDateFormat.format(endDate)
                 return context.getString(R.string.game_expiring_date, formattedDate)
             }
+        }
+
+        fun getRewardCurrencyName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context, AppConstants.KEY_REWARD_CURRENCY_NAME,
+                AppSettings.REWARD_CURRENCY_NAME
+            )
+        }
+
+        fun getRewardCurrencyShortName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_REWARD_CURRENCY_NAME_SHORT,
+                AppSettings.REWARD_CURRENCY_NAME_SHORT
+            )
+        }
+
+        fun getLoyaltyProgramName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_LOYALTY_PROGRAM_NAME,
+                AppSettings.LOYALTY_PROGRAM_NAME
+            )
+        }
+
+        fun getTierCurrencyName(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_TIER_CURRENCY_NAME,
+                AppSettings.TIER_CURRENCY_NAME
+            )
+        }
+
+        fun getInstanceUrl(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_SELECTED_INSTANCE_URL,
+                AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
+            )
+        }
+
+        fun getCommunityUrl(context: Context): String {
+            return getInstancePreferenceValueOrDefault(
+                context,
+                AppConstants.KEY_SELECTED_COMMUNITY_URL,
+                AppSettings.DEFAULT_FORCE_CONNECTED_APP.communityUrl
+            )
+        }
+
+        fun getInstancePreferenceValueOrDefault(context: Context, key: String, defaultValue: String): String {
+            return PrefHelper.instancePrefs(context).get<String>(key) ?: defaultValue
         }
 
     }

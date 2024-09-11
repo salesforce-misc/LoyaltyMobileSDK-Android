@@ -1,16 +1,21 @@
 package com.salesforce.loyalty.mobile.myntorewards.di
 
 import android.content.Context
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
+import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralForceAuthenticatorImpl
+import com.salesforce.loyalty.mobile.myntorewards.referrals.api.ReferralsLocalApiService
 import com.salesforce.gamification.api.GameAPIClient
 import com.salesforce.gamification.api.NetworkClient
 import com.salesforce.gamification.repository.GamificationRemoteRepository
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.AppSettings
-import com.salesforce.loyalty.mobile.myntorewards.forceNetwork.ForceAuthManager
+import com.salesforce.referral.api.ReferralForceAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import javax.inject.Singleton
 
 
 @Module
@@ -27,6 +32,14 @@ object AppModule {
         return forceAuthManager.getInstanceUrl()
             ?: AppSettings.DEFAULT_FORCE_CONNECTED_APP.instanceUrl
     }
+
+    @Provides
+    fun provideAPiService(retrofit: Retrofit): ReferralsLocalApiService =
+        retrofit.create(ReferralsLocalApiService::class.java)
+
+    @Provides
+    fun provideReferralForceAuthenticatorImpl(forceAuthManager: ForceAuthManager): ReferralForceAuthenticator =
+        ReferralForceAuthenticatorImpl(forceAuthManager)
 
     @Provides
     fun provideNetworkClient(

@@ -1,8 +1,15 @@
 package com.salesforce.loyalty.mobile.myntorewards.views.components
 
+import android.text.Html
+import android.text.Spannable
+import android.text.TextPaint
 import android.text.method.LinkMovementMethod
+import android.text.style.URLSpan
+import android.text.style.UnderlineSpan
 import android.view.Gravity
 import android.widget.TextView
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,12 +20,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.salesforce.loyalty.mobile.MyNTORewards.R
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.VibrantPurple40
+import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_archivo_bold
 import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 
 /**
@@ -28,6 +38,10 @@ import com.salesforce.loyalty.mobile.myntorewards.ui.theme.font_sf_pro
 fun HeaderText(text: String, modifier: Modifier = Modifier) {
     CommonText(text = text, fontSize = 24.sp, fontWeight = FontWeight.Bold, modifier = modifier)
 }
+@Composable
+fun HeaderTextSmaller(text: String, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 18.sp, fontFamily = font_archivo_bold , fontWeight = FontWeight.Bold, modifier = modifier)
+}
 
 @Composable
 fun BodyText(text: String, modifier: Modifier = Modifier) {
@@ -35,24 +49,41 @@ fun BodyText(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BodyTextBold(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier) {
-    CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier)
+fun BodyTextBold(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start) {
+    CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier, textAlign= textAlign)
+}
+@Composable
+fun BodyTextBoldCentered(text: String,  color: Color = Color.Black, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier, textAlign = TextAlign.Center)
 }
 
 @Composable
-fun BodyTextSmall(text: String, color: Color = Color.Black, modifier: Modifier = Modifier) {
-    CommonText(text = text, fontSize = 12.sp, color = color, modifier = modifier)
+fun BodyTextLargeBold(text: String, color: Color = Color.Black, modifier: Modifier = Modifier) {
+    CommonText(text = text, fontSize = 18.sp, color = color, modifier = modifier, fontWeight = FontWeight.Bold)
 }
 
 @Composable
-private fun CommonText(
+fun BodyTextSmall(text: String, color: Color = Color.Black, modifier: Modifier = Modifier, textAlign: TextAlign = TextAlign.Start) {
+    CommonText(text = text, fontSize = 12.sp, color = color, modifier = modifier, textAlign = textAlign)
+}
+
+@Composable
+fun BodyTextSmallBold(text: String, modifier: Modifier = Modifier, color: Color = Color.Black, maxLines: Int = Int.MAX_VALUE, overflow: TextOverflow = TextOverflow.Clip) {
+    CommonText(text = text, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = color, modifier = modifier, maxLines = maxLines, overflow = overflow)
+}
+
+@Composable
+fun CommonText(
     text: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.fillMaxWidth(),
     fontFamily: FontFamily = font_sf_pro,
     color: Color = Color.Black,
-    fontSize: TextUnit = 16.sp,
-    textAlign: TextAlign = TextAlign.Center,
+    fontSize: TextUnit = 14.sp,
+    textAlign: TextAlign = TextAlign.Start,
     fontWeight: FontWeight = FontWeight.Normal,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip,
+    style: androidx.compose.ui.text.TextStyle = LocalTextStyle.current
 ) {
     Text(
         text = text,
@@ -61,13 +92,17 @@ private fun CommonText(
         fontSize = fontSize,
         modifier = modifier,
         textAlign = textAlign,
-        fontWeight = fontWeight
+        fontWeight = fontWeight,
+        maxLines = maxLines,
+        overflow = overflow,
+        style = style
     )
 }
 
 @Composable
 fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, textGravity: Int = Gravity.START, modifier: Modifier = Modifier) {
     val resources = LocalContext.current.resources
+    val spannable = spannable(text)
     AndroidView(
         modifier = modifier,
         factory = { context ->
@@ -79,8 +114,24 @@ fun HtmlText(text: String, size: Float = 14f, textColor: Color = Color.Black, te
                 movementMethod = LinkMovementMethod.getInstance()
             }
         },
-        update = { it.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT) }
+        update = {
+            it.text = spannable
+            it.setLinkTextColor(VibrantPurple40.toArgb())
+        }
     )
+}
+
+@Composable
+private fun spannable(text: String): Spannable {
+    val spannable = Html.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT) as Spannable
+    for (spannedContent in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
+        spannable.setSpan(object : UnderlineSpan() {
+            override fun updateDrawState(tp: TextPaint) {
+                tp.isUnderlineText = false
+            }
+        }, spannable.getSpanStart(spannedContent), spannable.getSpanEnd(spannedContent), 0)
+    }
+    return spannable
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)

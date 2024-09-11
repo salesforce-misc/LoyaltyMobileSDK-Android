@@ -96,6 +96,7 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(project(":Sources"))
+    implementation(project(":ReferralMobileSDK-Android:ReferralMobileSDK"))
     implementation(project(":GamificationMobileSDK-Android:GamificationMobileSDK"))
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.core:core-ktx:1.9.0")
@@ -199,7 +200,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-compiler:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-
+    implementation(kotlin("reflect"))
 }
 
 // Allow references to generated code

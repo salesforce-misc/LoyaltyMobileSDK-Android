@@ -1,0 +1,380 @@
+{
+  "status" : "",
+  "referralList" : [ {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XPDQA2"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XPDQA2",
+    "ReferralDate" : "2024-03-20",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002kn5XnQAI",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002kn5XnQAI"
+      },
+      "Id" : "0031Q00002kn5XnQAI",
+      "AccountId" : "0011Q00002boRwdQAE",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002boRwdQAE"
+        },
+        "Id" : "0011Q00002boRwdQAE",
+        "PersonEmail" : "sivap@xyz.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XPIQA2"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XPIQA2",
+    "ReferralDate" : "2024-03-20",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002kn6b7QAA",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002kn6b7QAA"
+      },
+      "Id" : "0031Q00002kn6b7QAA",
+      "AccountId" : "0011Q00002boTOeQAM",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002boTOeQAM"
+        },
+        "Id" : "0011Q00002boTOeQAM",
+        "PersonEmail" : "chinay@test.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XOyQAM"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XOyQAM",
+    "ReferralDate" : "2024-03-20",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002kn5LIQAY",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002kn5LIQAY"
+      },
+      "Id" : "0031Q00002kn5LIQAY",
+      "AccountId" : "0011Q00002boRjjQAE",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002boRjjQAE"
+        },
+        "Id" : "0011Q00002boRjjQAE",
+        "PersonEmail" : "test@test.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XOoQAM"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XOoQAM",
+    "ReferralDate" : "2024-03-18",
+    "CurrentPromotionStageId" : "12k1Q000000blOqQAI",
+    "ReferredPartyId" : "0031Q00002kn1wrQAA",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blOqQAI"
+      },
+      "Id" : "12k1Q000000blOqQAI",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002kn1wrQAA"
+      },
+      "Id" : "0031Q00002kn1wrQAA",
+      "AccountId" : "0011Q00002boNcjQAE",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002boNcjQAE"
+        },
+        "Id" : "0011Q00002boNcjQAE",
+        "PersonEmail" : "sivap@testearn.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XOjQAM"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XOjQAM",
+    "ReferralDate" : "2024-03-14",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002kmxLhQAI",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002kmxLhQAI"
+      },
+      "Id" : "0031Q00002kmxLhQAI",
+      "AccountId" : "0011Q00002boHKOQA2",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002boHKOQA2"
+        },
+        "Id" : "0011Q00002boHKOQA2",
+        "PersonEmail" : "sivap@test.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XOZQA2"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XOZQA2",
+    "ReferralDate" : "2024-03-13",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002kmvukQAA",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002kmvukQAA"
+      },
+      "Id" : "0031Q00002kmvukQAA",
+      "AccountId" : "0011Q00002boFWSQA2",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002boFWSQA2"
+        },
+        "Id" : "0011Q00002boFWSQA2",
+        "PersonEmail" : "sivap@test.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XOPQA2"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XOPQA2",
+    "ReferralDate" : "2024-03-12",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002kmTMYQA2",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002kmTMYQA2"
+      },
+      "Id" : "0031Q00002kmTMYQA2",
+      "AccountId" : "0011Q00002bo9ZwQAI",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002bo9ZwQAI"
+        },
+        "Id" : "0011Q00002bo9ZwQAI",
+        "PersonEmail" : "sivap@test.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XNWQA2"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XNWQA2",
+    "ReferralDate" : "2024-02-27",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002jcmqXQAQ",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002jcmqXQAQ"
+      },
+      "Id" : "0031Q00002jcmqXQAQ",
+      "AccountId" : "0011Q00002bnjZTQAY",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002bnjZTQAY"
+        },
+        "Id" : "0011Q00002bnjZTQAY",
+        "PersonEmail" : "sivapp@test.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XNMQA2"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XNMQA2",
+    "ReferralDate" : "2024-02-27",
+    "CurrentPromotionStageId" : "12k1Q000000blPjQAI",
+    "ReferredPartyId" : "0031Q00002jcmZSQAY",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPjQAI"
+      },
+      "Id" : "12k1Q000000blPjQAI",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002jcmZSQAY"
+      },
+      "Id" : "0031Q00002jcmZSQAY",
+      "AccountId" : "0011Q00002bnjDEQAY",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002bnjDEQAY"
+        },
+        "Id" : "0011Q00002bnjDEQAY",
+        "PersonEmail" : "pnaganjaneyulu@salesforce.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XNRQA2"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XNRQA2",
+    "ReferralDate" : "2024-02-27",
+    "CurrentPromotionStageId" : "12k1Q000000blOqQAI",
+    "ReferredPartyId" : "0031Q00002jcmqSQAQ",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blOqQAI"
+      },
+      "Id" : "12k1Q000000blOqQAI",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002jcmqSQAQ"
+      },
+      "Id" : "0031Q00002jcmqSQAQ",
+      "AccountId" : "0011Q00002bnjZOQAY",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002bnjZOQAY"
+        },
+        "Id" : "0011Q00002bnjZOQAY",
+        "PersonEmail" : "siva@test.com"
+      }
+    }
+  }, {
+    "attributes" : {
+      "type" : "Referral",
+      "url" : "/services/data/v60.0/sobjects/Referral/0wi1Q0000008XNbQAM"
+    },
+    "ReferrerId" : "003B000000N5kgwIAB",
+    "Id" : "0wi1Q0000008XNbQAM",
+    "ReferralDate" : "2024-02-27",
+    "CurrentPromotionStageId" : "12k1Q000000blPZQAY",
+    "ReferredPartyId" : "0031Q00002jcnJ8QAI",
+    "CurrentPromotionStage" : {
+      "attributes" : {
+        "type" : "PromotionStage",
+        "url" : "/services/data/v60.0/sobjects/PromotionStage/12k1Q000000blPZQAY"
+      },
+      "Id" : "12k1Q000000blPZQAY",
+      "Type" : "Advocate Refers Friend"
+    },
+    "ReferredParty" : {
+      "attributes" : {
+        "type" : "Contact",
+        "url" : "/services/data/v60.0/sobjects/Contact/0031Q00002jcnJ8QAI"
+      },
+      "Id" : "0031Q00002jcnJ8QAI",
+      "AccountId" : "0011Q00002bnk8yQAA",
+      "Account" : {
+        "attributes" : {
+          "type" : "Account",
+          "url" : "/services/data/v60.0/sobjects/Account/0011Q00002bnk8yQAA"
+        },
+        "Id" : "0011Q00002bnk8yQAA",
+        "PersonEmail" : "lqi@salesforce.com"
+      }
+    }
+  } ],
+  "message" : "",
+  "errorCode" : ""
+}

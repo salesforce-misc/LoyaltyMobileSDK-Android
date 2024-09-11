@@ -13,13 +13,18 @@ class AppConstants {
         const val AUTH_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.AUTH_PREF"
         const val INSTANCE_PREF_NAME = "com.salesforce.loyalty.mobile.myntorewards.INSTANCE_PREF"
         const val KEY_SELECTED_INSTANCE_URL = "selected_instance_url"
+        const val KEY_SELECTED_COMMUNITY_URL = "selected_community_url"
         const val KEY_OPEN_CONNECTED_APP_INSTANCE = "open_connected_app_instance"
         const val KEY_USER_IDENTIFIER = "user_identifier"
         const val KEY_LOGIN_SUCCESSFUL = "login_success"
         const val KEY_COMMUNITY_MEMBER = "community_member_details"
         const val KEY_EMAIL = "email"
         const val KEY_PHONE = "Phone"
-
+        const val KEY_MEMBER_REFERRAL_CODE = "member_referral_code"
+        const val KEY_LOYALTY_PROGRAM_NAME = "loyalty_program_name"
+        const val KEY_REWARD_CURRENCY_NAME = "reward_currency_name"
+        const val KEY_REWARD_CURRENCY_NAME_SHORT = "reward_currency_name_short"
+        const val KEY_TIER_CURRENCY_NAME = "tier_currency_name"
         //Bottom Nav Tabs Route
         const val ROUTE_HOME_SCREEN = "home_screen"
         const val ROUTE_OFFER_SCREEN = "my_offer_screen"
@@ -63,7 +68,7 @@ class AppConstants {
         const val TIER_RUBY = "ruby"
         const val MEMBER_ELIGIBILITY_CATEGORY_NOT_ENROLLED = "EligibleButNotEnrolled"
         const val MEMBER_ELIGIBILITY_CATEGORY_ELIGIBLE = "Eligible"
-        const val MAX_PAGE_COUNT_PROMOTION = 4
+        const val MAX_PAGE_COUNT_PROMOTION = 5
 
         //Transaction types
         const val TRANSACTION_PURCHASE = "Purchase"
@@ -73,9 +78,6 @@ class AppConstants {
         const val TRANSACTION_SOCIAL_MEDIA = "Social Media Activity"
         const val TRANSACTION_ENROLLMENT = "Enrollment"
         const val MAX_TRANSACTION_COUNT = 3
-        const val TRANSACTION_REWARD_POINTS = "Points"
-        const val REWARD_CURRENCY_NAME = "Reward Points"
-
 
         //tabs vouchers
         const val VOUCHER_ISSUED = "Issued"
@@ -159,6 +161,7 @@ class AppConstants {
         const val ROUTE_GAME_SPIN_WHEEL = "game_spin_wheel"
         const val ROUTE_GAME_CONGRATS_SCREEN = "game_congrats_screen"
         const val ROUTE_GAME_BETTER_LUCK_SCREEN = "game_better_luck_screen"
+        const val ROUTE_MY_REFERRALS_SCREEN = "my_referrals_screen"
 
         // Game types
         const val SPIN_THE_WHEEL_GAME = "SpintheWheel"
@@ -186,8 +189,17 @@ class AppConstants {
 
         const val ROUTE_GAME_ZONE = "route_open_game_zone"
 
+        // Referral
+        const val REFERRAL_PROGRAM_JOINED = "REFERRAL_PROGRAM_JOINED"
         const val GAME_CONFIRMATION_SCREEN_DELAY_IN_MSEC = 1500L // 1.5 sec
         const val GAME_STATUS_PLAYED= "Played"
+
+        const val ROUTE_BADGE_FULL_SCREEN = "route_badge_screen"
+        const val BADGES_ACHIEVED = "Achieved"
+        const val BADGES_AVAILABLE = "Active"
+        const val BADGES_EXPIRED = "Expired"
+
+
 
     }
 }

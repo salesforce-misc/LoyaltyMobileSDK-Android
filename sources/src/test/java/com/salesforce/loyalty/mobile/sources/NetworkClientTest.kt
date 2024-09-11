@@ -33,7 +33,7 @@ class NetworkClientTest {
         mockWebServer.start()
         loyaltyClient = MockNetworkClient(MockAuthenticator, "https://instanceUrl", mockWebServer)
         loyaltyAPIManager =
-            LoyaltyAPIManager(MockAuthenticator, "https://instanceUrl", loyaltyClient)
+            LoyaltyAPIManager(MockAuthenticator, "https://instanceUrl", "MyNTORewards", loyaltyClient)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -352,7 +352,7 @@ class NetworkClientTest {
             assertEquals(actualResponse.isSuccess, true)
             actualResponse.onSuccess { it ->
                 assertEquals(it.status, true)
-                assertEquals(it.outputParameters?.outputParameters?.results?.size, 8)
+                assertEquals(it.outputParameters?.outputParameters?.results?.size, 9)
                 assertEquals(it.message, null)
                 assertEquals(it.simulationDetails, mapOf<String, Any?>())
                 assertEquals(it.outputParameters?.outputParameters?.results?.get(0)?.loyaltyPromotionType, "STANDARD")

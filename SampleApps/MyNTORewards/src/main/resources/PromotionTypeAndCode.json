@@ -1,0 +1,17 @@
+{
+  "totalSize": 1,
+  "done": true,
+  "records": [
+    {
+      "attributes": {
+        "type": "Promotion",
+        "url": "/services/data/v59.0/sobjects/Promotion/0c81Q0000004UL4QAM"
+      },
+      "Id": "0c81Q0000004UL4QAM",
+      "IsReferralPromotion": true,
+      "PromotionCode": "TEMPRP7",
+      "Name": "Default Referral Promotion",
+      "PromotionPageUrl": "https://rb.gy/wa6jw7"
+    }
+  ]
+}

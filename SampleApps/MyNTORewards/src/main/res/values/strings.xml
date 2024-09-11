@@ -60,6 +60,7 @@
     <string name="text_details">"Details"</string>
     <string name="text_shop">"Shop"</string>
     <string name="text_vouchers">"Vouchers"</string>
+    <string name="text_badges">"Badges"</string>
     <string name="scan_the_qr_code_text">"Scan the QR Code or enter your membership number at participating store and online sites to earn and redeem points"</string>
 
     <string name="label_transactions_recent">Recent</string>
@@ -136,6 +137,7 @@
     <string name="header_label_dates">Date Format</string>
     <string name="header_label_favourite">Favorites</string>
     <string name="header_label_game_zone">Game Zone</string>
+    <string name="header_label_my_referrals">My Referrals</string>
     <string name="label_opt_in">"Opt In"</string>
     <string name="label_opt_out">"Opt Out"</string>
     <string name="text_voucher_copy_copied">"Code was copied."</string>
@@ -269,6 +271,60 @@
     <string name="game_error_msg">Oops! Something went wrong \u2028 while processing the request. Try again.</string>
     <string name="play_more_text">Play More</string>
 
+    <!-- My Referrals Strings Start -->
+    <string name="referral_card_content_description">Referral Card</string>
+    <string name="referral_card_button_text">Refer Now</string>
+    <string name="referral_tab_success">Completed</string>
+    <string name="referral_tab_in_progress">In Progress</string>
+    <string name="recent_referrals_section_name">Recent</string>
+    <string name="referral_one_month_ago_section_name">One Month Ago</string>
+    <string name="referrals_older_than_three_months_section_name">Three Months Ago</string>
+    <string name="purchase_status_completed">Purchase Completed</string>
+    <string name="purchase_status_pending">Invitations Sent</string>
+    <string name="purchase_status_signed_up">Signed Up</string>
+    <string name="my_referral_card_header"><![CDATA[Your Referrals in Last <b>%s</b> Days]]></string>
+    <string name="my_referral_sent_label">Invitations Sent</string>
+    <string name="my_referrals_accepted_label">Invitations Accepted</string>
+    <string name="my_referrals_vouchers_earned_label">Vouchers Earned</string>
+    <string name="refer_friend_banner_content_description">Refer Friend Banner</string>
+    <string name="refer_a_friend_and_earn_header">Start Referring</string>
+    <string name="refer_a_friend_and_earn_sub_header">Your referral code is ready! Share the referral code with your friends and get rewarded when they place their first order.</string>
+    <string name="separate_emails_with_commas">Add a comma after each email address.</string>
+    <string name="share_via">Share Invite</string>
+    <string name="share_via_facebook_icon_description">Share via Facebook</string>
+    <string name="share_via_instagram_icon_description">Share via Instagram</string>
+    <string name="share_via_whatsapp_icon_description">Share via Whatsapp</string>
+    <string name="share_via_twitter_icon_description">Share via Twitter</string>
+    <string name="share_via_icon_description">Share via</string>
+    <string name="friends_email_address_placeholder">Enter the email addresses of your friends…</string>
+    <string name="forward_arrow_content_description">Forward Arrow</string>
+    <string name="tap_to_copy">Copy</string>
+    <string name="share_referral_message">Use my referral link to sign up: %1$s</string>
+    <string name="emails_warning_message_multiple">Please enter valid E-mails!</string>
+    <string name="share_referral_code_intent_chooser">Share Referral Code</string>
+    <string name="selected_app_is_not_installed">Selected app is not installed!</string>
+
+    <string name="referral_signup_button_text">Sign Up</string>
+    <string name="referral_join_button_text">Start Referring</string>
+    <string name="email_address_placeholder">Email Address</string>
+    <string name="refer_a_friend_and_earn_bottom_text"><![CDATA[To join the promotion and start referring your friends, tap Start Referring. By tapping Start Referring, you agree to the promotion’s <a href="%s">terms and conditions</a>.]]></string>
+
+    <string name="today_label">Today</string>
+    <string name="yesterday_label">One Day Ago</string>
+    <string name="days_ago_label">%s Days Ago</string>
+    <string name="join_referral_program_header">Join Referral Program</string>
+    <string name="join_referral_program_description">Join our referral program and share your referral code with friends to get rewarded.</string>
+    <string name="failed_try_again">We couldn’t send an invitation email to your referred friends. Try again.</string>
+    <string name="emails_sent_successfully">An invitation email was sent to your friends with your referral link.</string>
+    <string name="enrolment_not_processed_message">We couldn’t enroll you as a member of the referral program. Try joining again.</string>
+    <string name="no_referrals_label">After you refer a friend, you’ll see it here.</string>
+    <string name="invalid_email_error_message">Something doesn\'t look right with one of the email addresses.</string>
+    <string name="join_referral_program_button_text">Join Referral Program</string>
+    <string name="referral_back_button_text">Back</string>
+    <string name="referral_promotion_expired_error_message">You missed the boat\n\nYou can no longer refer your friends because the referral promotion has expired.</string>
+    <string name="referral_feature_not_enabled_error_message">The referral promotion isn’t available.</string>
+    <!-- My Referrals Strings End -->
+
     <string name="text_go_to_voucher_section">Go to Vouchers</string>
     <string name="text_better_luck_reward">Thank you for playing! Stay tuned for more offers.</string>
     <string name="text_congratulations">Congratulations!</string>
@@ -283,4 +339,42 @@
     <string name="receipt_error_confidence_status_failure">We couldn’t process the receipt.</string>
     <string name="receipt_error_confidence_status_partial">We couldn’t process some items in the receipt.</string>
     <string name="receipt_submit_manual_review">Submit for Manual Review</string>
+
+   <string name="menu_app_settings">Loyalty Program Settings</string>
+    <string name="mnu_loyalty_program_name">Program</string>
+    <string name="menu_reward_currency">Currencies</string>
+    <string name="label_currency_name">Redeemable Currency</string>
+    <string name="label_currency_name_short">Redeemable Currency Alias</string>
+    <string name="label_tier_currency">Tier Qualification Currency</string>
+    <string name="error_app_setting_no_value">Please enter the value</string>
+
+    <string name="text_my_badges">"My Badges"</string>
+    <string name="cd_close_button_badge_popup">"badge popup close button icon"</string>
+    <string name="cd_badge_error_empty_view_mini_screen">"badge empty error empty view mini screen"</string>
+    <string name="cd_badge_popup_icon">"badge popup icon"</string>
+    <string name="cd_badge_icon_full_screen">"badge icon full screen row icon"</string>
+    <string name="badge_back_button">"Badge_Back_Button"</string>
+    <string name="text_expired_on"> "Badge expired on "</string>
+
+    <string name="badge_text_achieved">"Achieved"</string>
+    <string name="badge_text_available">"Available"</string>
+    <string name="badge_text_expired">"Expired"</string>
+    <string name="badge_learn_more">"Learn More"</string>
+    <string name="badge_empty_view_text_achieved">"After you earn a badge, you’ll find it here."</string>
+    <string name="badge_text_not_achieved_yet">"Not Achieved Yet"</string>
+    <string name="badge_expired_days_ago">"Badge Expired \n %s days ago"</string>
+    <string name="badge_expires_today">Expires Today</string>
+    <string name="badge_expires_in_days"> "Badge Expires in\n  %s days"</string>
+    <string name="text_badge_expires_on"> "Badge expires on "</string>
+    <string name="label_empty_achieved_badges_header">No badges earned</string>
+    <string name="label_empty_achieved_badges_description">After you earn a badge, you’ll find it here.</string>
+
+    <string name="label_empty_badges_available_tab_header">No badges to earn yet</string>
+    <string name="label_empty_badges_available_tab_description">Watch this space for badges that are made available to earn.</string>
+
+    <string name="label_empty_badges_expired_tab_header">No expired badges</string>
+    <string name="label_empty_badges_expired_tab_description">When your badges expire, you’ll find them here.</string>
+
+    <string name="label_badge_error">We couldn’t get your badges.</string>
+
 </resources>

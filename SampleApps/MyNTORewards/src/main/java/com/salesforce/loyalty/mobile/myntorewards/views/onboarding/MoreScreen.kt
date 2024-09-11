@@ -54,7 +54,10 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.CommunityMemberModel
 import com.salesforce.loyalty.mobile.myntorewards.utilities.DatePreferencesManager
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.LogoutState
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.OnBoardingViewModelAbstractInterface
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.viewStates.MyReferralsViewState
+import com.salesforce.loyalty.mobile.myntorewards.views.components.ProgressDialogComposable
 import com.salesforce.loyalty.mobile.myntorewards.views.navigation.MoreScreens
 import com.salesforce.loyalty.mobile.sources.PrefHelper
 import kotlinx.coroutines.launch
@@ -63,7 +66,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MoreOptions(
     onBoardingModel: OnBoardingViewModelAbstractInterface,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    referralsViewModel: MyReferralsViewModel
 ) {
     var openBottomsheet by remember { mutableStateOf(false) }
 
@@ -152,7 +156,7 @@ fun MoreOptions(
                 modifier = Modifier.padding(top = 4.dp)
             )
 
-            MoreOptionList(onBoardingModel, navHostController) {
+            MoreOptionList(onBoardingModel, navHostController, referralsViewModel) {
                 openBottomsheet = true
             }
         }
@@ -164,10 +168,12 @@ fun MoreOptions(
 fun MoreOptionList(
     onBoardingModel: OnBoardingViewModelAbstractInterface,
     navHostController: NavHostController,
+    referralsViewModel: MyReferralsViewModel,
     openBottomSheet: (bottomsheetType: String) -> Unit
 ) {
     val logoutState by onBoardingModel.logoutStateLiveData.observeAsState(LogoutState.LOGOUT_DEFAULT_EMPTY) // collecting livedata as state
     var isInProgress by remember { mutableStateOf(false) }
+    var isReferralEnabled by remember { mutableStateOf(false) }
     when (logoutState) {
         LogoutState.LOGOUT_SUCCESS -> {
             isInProgress = false
@@ -181,6 +187,28 @@ fun MoreOptionList(
         }
 
         else -> {}
+    }
+
+    // Check the Referral licence status and Show My Referrals menu option only if Referral Marketing enabled
+    val viewState by referralsViewModel.uiState.observeAsState(null)
+    LaunchedEffect(key1 = true) {
+        referralsViewModel.checkIfReferralIsEnabled()
+    }
+    viewState?.let {
+        when(it) {
+            is MyReferralsViewState.MyReferralsFetchInProgress -> {
+                ProgressDialogComposable { } // Do nothing on progress dismiss
+            }
+            MyReferralsViewState.ReferralFeatureNotEnabled -> {
+                isReferralEnabled = false
+            }
+            MyReferralsViewState.ReferralFeatureEnabled -> {
+                isReferralEnabled = true
+            }
+            else -> {
+                // Do nothing
+            }
+        }
     }
     Spacer(modifier = Modifier.height(24.dp))
     Box(
@@ -218,6 +246,14 @@ fun MoreOptionList(
                 imageRes = R.drawable.ic_quote,
                 textRes = R.string.header_label_support
             ) {}*/
+            if (isReferralEnabled) {
+                AddMoreOption(
+                    imageRes = R.drawable.ic_referrals,
+                    textRes = R.string.header_label_my_referrals
+                ) {
+                    navHostController.navigate(MoreScreens.MyReferralsScreen.route)
+                }
+            }
             AddMoreOption(
                 imageRes = R.drawable.date_formate,
                 textRes = R.string.header_label_dates

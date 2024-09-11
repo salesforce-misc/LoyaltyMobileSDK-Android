@@ -1,0 +1,14 @@
+{
+  "totalSize": 1,
+  "done": true,
+  "records": [
+    {
+      "attributes": {
+        "type": "EntityDefinition",
+        "url": "/services/data/v59.0/sobjects/EntityDefinition/Referral"
+      },
+      "Id": "000000000000000AAA",
+      "IsReferralPromotion": true
+    }
+  ]
+}

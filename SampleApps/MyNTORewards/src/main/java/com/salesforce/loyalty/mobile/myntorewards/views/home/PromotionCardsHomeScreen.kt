@@ -36,8 +36,8 @@ import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Compani
 import com.salesforce.loyalty.mobile.myntorewards.utilities.AppConstants.Companion.NO_BLUR_BG
 import com.salesforce.loyalty.mobile.myntorewards.utilities.Common.Companion.formatPromotionDate
 import com.salesforce.loyalty.mobile.myntorewards.utilities.TestTags.Companion.TEST_TAG_PROMO_CARD
+import com.salesforce.loyalty.mobile.myntorewards.viewmodels.MyReferralsViewModel
 import com.salesforce.loyalty.mobile.myntorewards.viewmodels.blueprint.MyPromotionViewModelInterface
-import com.salesforce.loyalty.mobile.myntorewards.views.offers.PromotionEnrollPopup
 import com.salesforce.loyalty.mobile.sources.loyaltyModels.Results
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -47,6 +47,7 @@ fun PromotionCard(
     membershipPromo: List<Results>?,
     navCheckOutFlowController: NavController,
     promotionViewModel: MyPromotionViewModelInterface,
+    referralViewModel: MyReferralsViewModel,
     blurBG: (Dp) -> Unit
 ) {
     var promoDescription = membershipPromo?.get(page)?.description ?: ""
@@ -93,7 +94,14 @@ fun PromotionCard(
                     ){
                         it.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     }
-                }
+                } ?: Image(
+                    painter = painterResource(R.drawable.bg_refer_friend_banner),
+                    contentDescription = stringResource(R.string.cd_onboard_screen_bottom_fade),
+                    modifier = Modifier
+                        .size(289.dp, 154.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    contentScale = ContentScale.Crop,
+                )
             }
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -169,16 +177,10 @@ fun PromotionCard(
 
     if (currentPromotionDetailPopupState) {
         membershipPromo?.get(page)?.let {
-
-            PromotionEnrollPopup(
-                it,
-                closePopup = {
-                    currentPromotionDetailPopupState = false
-                    blurBG(NO_BLUR_BG)
-                },
-                navCheckOutFlowController,
-                promotionViewModel
-            )
+            PromotionGatewayView(promotionViewModel, navCheckOutFlowController, it, it.promotionId.orEmpty(), referralViewModel) {
+                currentPromotionDetailPopupState = false
+                blurBG(NO_BLUR_BG)
+            }
         }
     }
 }
